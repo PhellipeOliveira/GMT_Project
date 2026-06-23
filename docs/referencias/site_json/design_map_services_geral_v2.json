@@ -1,0 +1,860 @@
+{
+  "meta": {
+    "arquivo": "design_map_lessestudio_services_geral_v2.json",
+    "fonte": "Conjunto_Services_Geral2.json (11 chaves) + scrape lessestudio.com/services",
+    "versao": "2.0",
+    "data_extracao": "2026-06-23",
+    "nota": "v2 com animations, keyframes, design_tokens e fonts — dados explícitos do JSON de 11 chaves. Substitui o v1 gerado com JSON de 7 chaves."
+  },
+  "tecnologias": {
+    "framework": "SvelteKit (SSR + hydration)",
+    "evidencia_framework": "classes svelte-* (svelte-mzuvwt, svelte-1b2mvyb, svelte-fjr74e, svelte-1cr5s35, svelte-o03wub, svelte-1ycgkir, svelte-1yzrg6q)",
+    "css": "Tailwind CSS v4 (design tokens nativos via --tw-*, oklch/oklab colors, --spacing: .25rem)",
+    "smooth_scroll": "Lenis (confirmado via libs)",
+    "animacoes": "CSS nativo + Lenis (sem GSAP, sem Framer Motion, sem Three.js, sem Lottie)",
+    "imagens": "CDN próprio (cnd.lessestudio.com), formato WebP",
+    "hosting": "SvelteKit adapter (_app/immutable/assets/)",
+    "libs_detectadas": {
+      "lenis": true,
+      "gsap": false,
+      "framerMotion": false,
+      "threejs": false,
+      "lottie": false,
+      "barba": false,
+      "locomotive": false
+    },
+    "componente_mst": "Componente Svelte 'mst' (classe mst__inner svelte-mzuvwt) — willChange:transform confirmado nos dados de animação. Presente e ativo na página Services.",
+    "componente_mouse_alert_bubble": "DIV.mouse-alert-bubble — cursor customizado que segue o mouse (willChange:transform, transform:matrix com coordenadas dinâmicas). Provavelmente tooltip/hover-reveal para serviços.",
+    "tailwind_v4_evidencias": [
+      "oklch() e oklab() em cores computadas",
+      "--spacing: .25rem como token raiz",
+      "font-weight: 500 computado corresponde a --font-weight-medium",
+      "48px font-size para H2 de categorias"
+    ]
+  },
+  "estrutura_da_pagina": {
+    "navbar": {
+      "tipo": "fixed-top com blur (idêntico à Home)",
+      "componentes": [
+        {
+          "elemento": "logo",
+          "src": "logo-white.D2PbM6gr.svg",
+          "dimensoes": "135×39px",
+          "classe": "invisible h-auto w-full"
+        },
+        {
+          "elemento": "cta_primario",
+          "tag": "BUTTON",
+          "texto_semantico": "Start a project",
+          "classes": "navbar-bg group flex h-12 md:h-[3.35vw] cursor-pointer items-center gap-[0.5vw] rounded-lg md:rounded-[1vw]",
+          "dimensoes": "150×48px"
+        },
+        {
+          "elemento": "hamburger",
+          "tag": "BUTTON",
+          "classes": "flex h-12 w-12 flex-col items-center justify-center gap-1.25 rounded-lg backdrop-blur-xl transition-colors duration-300",
+          "dimensoes": "48×48px"
+        },
+        {
+          "elemento": "shopify_experts_badge",
+          "src": "shopifyexperts.B7Ugdseq.png",
+          "dimensoes_desktop": "h-[1.7vw]",
+          "dimensoes_mobile": "103×28px (h-7)"
+        }
+      ],
+      "comportamento": "Fixa no topo, backdrop-blur, transição de cor 300ms"
+    },
+    "sequencia_de_secoes": [
+      {
+        "index": 0,
+        "nome_semantico": "Hero — Introdução + Thumbnails de projetos",
+        "classes": "flex w-screen flex-col justify-center px-[5vw] pt-25 md:pt-[11vw]",
+        "altura_px": 698,
+        "filhos": 1,
+        "conteudo": "H2 'OUR SERVICES' (md:w-1/3) + H3 descritivo (md:w-2/3 — tagline da agência). Layout split 1/3 + 2/3.",
+        "layout": "Texto-only hero — sem imagem de fundo, sem slider. Padding-top generoso (pt-25 mobile / pt-[11vw] desktop) para clearance da navbar.",
+        "media": "3 thumbnails landscape (135×90px cada) — inseridas como credenciais visuais, NÃO como hero background. São imagens de projetos passados.",
+        "nota": "Esta seção é significativamente diferente da v1 que detectava contadores numéricos (6/14/25). Na v2, os contadores NÃO aparecem nos headings — podem ser elementos inline/span."
+      },
+      {
+        "index": 1,
+        "nome_semantico": "Strategy — Categoria de serviço com accordion",
+        "classes": "mt-10 px-[5vw] md:mt-[8vw]",
+        "altura_px": 761,
+        "filhos": 2,
+        "conteudo": "H2 'Strategy' (48px). 2 sub-categorias: Brand Strategy (com 6 sub-serviços em accordion)",
+        "interacao": "BUTTON.flex items-center gap-3 md:gap-[0.8vw] cursor-pointer group text-left — cada serviço é um botão clicável que expande lista de sub-serviços",
+        "sub_servicos": {
+          "Brand Strategy": [
+            "Brand Positioning",
+            "Competitor & Market Research",
+            "Brand Architecture",
+            "Brand Audit",
+            "Brand Naming & Tagline",
+            "Brand Messaging & Tone of Voice"
+          ]
+        },
+        "animacoes_envolvidas": [
+          "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) — botão accordion",
+          "filter 0.3s cubic-bezier(0.4, 0, 0.2, 1) — blur/deblur ao expandir",
+          "border-color 1s — transição lenta entre estados"
+        ]
+      },
+      {
+        "index": 2,
+        "nome_semantico": "Visual — Categoria de serviço com 3 sub-categorias",
+        "classes": "mt-10 px-[5vw] md:mt-[8vw]",
+        "altura_px": 1603,
+        "filhos": 2,
+        "conteudo": "H2 'Visual' (48px). 3 sub-categorias expandíveis.",
+        "sub_servicos": {
+          "Brand Identity": [
+            "Brand Identity Design",
+            "Logo Design",
+            "Visual Language & Design System",
+            "Rebranding",
+            "Packaging Design"
+          ],
+          "User Experience Design": [
+            "UX / UI Design",
+            "Web Design",
+            "Mobile App Design",
+            "UX Research",
+            "Wireframing & Prototyping",
+            "Design System & UI Kit"
+          ],
+          "Visual Content": [
+            "Product Photography",
+            "Lifestyle & Campaign Shoot",
+            "E-commerce Shoot"
+          ]
+        },
+        "total_sub_servicos": 14,
+        "nota": "Seção mais alta (1603px) por conter 3 accordions expandidos"
+      },
+      {
+        "index": 3,
+        "nome_semantico": "Technology — Categoria de serviço com 4 sub-categorias",
+        "classes": "mt-10 px-[5vw] md:mt-[8vw]",
+        "altura_px": 2799,
+        "filhos": 2,
+        "conteudo": "H2 'Technology' (48px). 4 sub-categorias expandíveis — a maior seção da página.",
+        "sub_servicos": {
+          "Web Development": [
+            "Website Development",
+            "Web Applications",
+            "SaaS Platforms",
+            "Content Platforms",
+            "API Integrations",
+            "Maintenance & Support",
+            "Scaling & Performance"
+          ],
+          "eCommerce": [
+            "Shopify Stores",
+            "Custom eCommerce",
+            "Platform Migration & Scaling",
+            "Conversion Rate Optimization",
+            "B2B & Enterprise Portals",
+            "Multi-Vendor Marketplaces",
+            "Membership Platforms"
+          ],
+          "Web & Mobile Applications": [
+            "iOS & Android Apps",
+            "Internal Business Tools",
+            "API Development",
+            "Booking & Scheduling",
+            "LMS & Education Platforms",
+            "Payments Systems"
+          ],
+          "Embedded & Hardware": [
+            "Consumer Electronics UI",
+            "Touch & Display Systems",
+            "Custom Interaction Layers",
+            "Smart Firmware & Sensors",
+            "Industrial HMI & Control"
+          ]
+        },
+        "total_sub_servicos": 25,
+        "nota": "Seção mais alta do site (2799px). Inclui Shopify Experts badge como credencial visual junto de eCommerce."
+      },
+      {
+        "index": 4,
+        "nome_semantico": "CTA + Formulário de contato (fullscreen overlay)",
+        "classes": "flex w-full px-3 md:px-0 md:w-4/5 h-full flex-col items-center justify-center gap-5 md:gap-[2vw]",
+        "altura_px": 480,
+        "filhos": 2,
+        "conteudo": "H2 'Ready to get started?' (desktop: w-1/3, hidden md | mobile: block md:hidden). H3 'Services are interested in' (cabeçalho do form). Formulário com checkboxes de serviços + botão 'Send Message'.",
+        "formulario": {
+          "tipo": "Inline (embutido na seção, não overlay)",
+          "campos_form": "Checkboxes de serviços pré-selecionáveis + campos de contato",
+          "botao_submit": {
+            "tag": "BUTTON",
+            "texto": "Send Message",
+            "classes": "group cursor-pointer flex w-fit items-center transition-all duration-200 hover:scale-102 bg-white/70 text-black hover:bg-*",
+            "estilo": "bg-white/70, text-black, hover:scale-102 — botão claro sobre fundo escuro"
+          },
+          "floating_labels": {
+            "presente": true,
+            "evidencia": "transition: top 0.2s, left 0.2s, font-size 0.2s, opacity 0.2s — floating label CSS-only",
+            "duracao": "0.2s para todas as propriedades"
+          }
+        },
+        "versao_responsiva": "Desktop: H2 hidden (w-1/3, topo_px: 0) + form md:col-span-2. Mobile: H2 visível (block md:hidden, topo_px: 6620)"
+      },
+      {
+        "index": 5,
+        "nome_semantico": "Footer-Grid — Sitemap de serviços",
+        "classes": "mt-0 my-[10vw] w-screen px-[5vw]",
+        "altura_px": 182,
+        "filhos": 2,
+        "conteudo": "Grid de links de serviços dividido em 'Visual and Marketing' e 'Technology'",
+        "layout_desktop": "grid-cols-5 gap-x-[2vw] md:grid",
+        "layout_mobile": "flex-col gap-10 md:hidden",
+        "nota": "Footer-grid idêntico à Home. Não é um footer real — sem copyright, sem social links."
+      }
+    ],
+    "total_secoes": 6,
+    "altura_total_estimada_px": 6522,
+    "nota_estrutural": "Página de catálogo de serviços em formato accordion vertical. Estrutura: Hero textual → 3 categorias (Strategy/Visual/Technology) com sub-categorias expansíveis → CTA com form → Footer-grid. Sem footer dedicado."
+  },
+  "hierarquia_de_conteudo": {
+    "total_headings": 12,
+    "headings_unicos": 9,
+    "duplicacoes_responsivas": "3 headings duplicados (H2 'Ready to get started?' + H3 'Visual and Marketing' desktop/mobile + H3 'Technology' desktop/mobile)",
+    "distribuicao": {
+      "H1": {
+        "quantidade": 0,
+        "nota_seo": "AUSENTE — anti-padrão SEO. Nenhum H1 na página /services. A Home tem H1 invisível, esta página não tem nenhum."
+      },
+      "H2": {
+        "quantidade": 6,
+        "funcoes": [
+          "OUR SERVICES (título da página, topo_px: 100)",
+          "Strategy (categoria, topo_px: 978)",
+          "Visual (categoria, topo_px: 1838)",
+          "Technology (categoria, topo_px: 3541)",
+          "Ready to get started? (CTA desktop, topo_px: 0 = hidden)",
+          "Ready to get started? (CTA mobile, topo_px: 6620)"
+        ],
+        "nota": "H2 com texto duplicado 'Ready to get started? Ready to get started?' na versão desktop — possível bug de concatenação"
+      },
+      "H3": {
+        "quantidade": 6,
+        "funcoes": [
+          "Tagline descritiva (topo_px: 146)",
+          "Services are interested in (label do form, topo_px: 0 = offscreen)",
+          "Visual and Marketing (footer-grid desktop, topo_px: 0)",
+          "Technology (footer-grid desktop, topo_px: 0)",
+          "VISUAL AND MARKETING (footer-grid mobile, topo_px: 6882)",
+          "TECHNOLOGY (footer-grid mobile, topo_px: 7254)"
+        ]
+      }
+    },
+    "padrao_de_nomeacao": "H2 em Title Case para categorias principais (Strategy, Visual, Technology). H3 para subtítulos e labels.",
+    "servicos_como_botoes": "Os 8 serviços (Brand Strategy, Brand Identity, UX Design, Visual Content, Web Development, eCommerce, Web & Mobile Apps, Embedded & Hardware) são BUTTON, não headings — escolha deliberada para accordion interativo."
+  },
+  "padrao_de_catalogo": {
+    "tipo": "Accordion hierárquico de 3 níveis",
+    "estrutura": {
+      "nivel_1": {
+        "nome": "Categorias",
+        "quantidade": 3,
+        "items": [
+          "Strategy",
+          "Visual",
+          "Technology"
+        ],
+        "heading": "H2",
+        "font_size": "48px",
+        "layout": "flex w-fit gap-2 md:gap-[1vw]"
+      },
+      "nivel_2": {
+        "nome": "Serviços",
+        "quantidade": 8,
+        "items": [
+          "Brand Strategy",
+          "Brand Identity",
+          "User Experience Design",
+          "Visual Content",
+          "Web Development",
+          "eCommerce",
+          "Web & Mobile Applications",
+          "Embedded & Hardware"
+        ],
+        "tag": "BUTTON",
+        "classes": "flex items-center gap-3 md:gap-[0.8vw] cursor-pointer group text-left",
+        "interacao": "Click para expandir/colapsar lista de sub-serviços"
+      },
+      "nivel_3": {
+        "nome": "Sub-serviços",
+        "quantidade_total": 45,
+        "distribuicao_por_categoria": {
+          "Strategy": 6,
+          "Visual": 14,
+          "Technology": 25
+        },
+        "tipo": "Lista expandível dentro do accordion"
+      }
+    },
+    "distribuicao_visual": {
+      "Strategy": {
+        "sub_categorias": 1,
+        "sub_servicos": 6,
+        "altura_px": 761
+      },
+      "Visual": {
+        "sub_categorias": 3,
+        "sub_servicos": 14,
+        "altura_px": 1603
+      },
+      "Technology": {
+        "sub_categorias": 4,
+        "sub_servicos": 25,
+        "altura_px": 2799
+      }
+    },
+    "nota_de_design": "A página NÃO usa cards — usa um padrão accordion minimalista com botões de texto. Cada serviço nível 2 é um BUTTON que revela sub-serviços. Isso cria uma experiência de descoberta progressiva (progressive disclosure).",
+    "mouse_alert_bubble": "Cursor customizado (DIV.mouse-alert-bubble) que segue o mouse com willChange:transform — provavelmente exibe preview/tooltip ao hover sobre serviços"
+  },
+  "tokens_visuais": {
+    "cores_por_funcao": {
+      "css_custom_properties": {
+        "--bg-primary": "#000",
+        "--bg-secondary": "#1a1a1a",
+        "--text-primary": "#fff",
+        "--text-secondary": "#999",
+        "--color-black": "#000",
+        "--color-white": "#fff",
+        "--color-transition": "1s"
+      },
+      "cores_computadas": {
+        "texto_principal": "rgb(255, 255, 255) — branco puro",
+        "texto_secundario": "rgb(144, 144, 144) — cinza médio (#909090)",
+        "texto_sutil": "rgb(87, 87, 87) — cinza escuro (#575757)",
+        "texto_overlay_80": "oklab(0.999994 ... / 0.8) — branco 80% (mais opaco que Home)",
+        "badge_text": "rgba(182, 182, 182, 0.8) — cinza claro 80%",
+        "label_escuro_20": "oklab(0 0 0 / 0.2) — preto 20% (labels sutis)",
+        "label_escuro_50": "oklab(0 0 0 / 0.5) — preto 50% (labels médios)",
+        "fundo_pagina": "rgb(235, 235, 235) — LIGHT MODE (#EBEBEB)",
+        "fundo_card": "rgba(36, 36, 36, 0.5) — cinza escuro 50%",
+        "fundo_overlay_escuro": "oklab(0 0 0 / 0.3)",
+        "fundo_hover": "oklab(0 0 0 / 0.02) — quase invisível",
+        "fundo_overlay_claro": "oklab(0 0 0 / 0.1)",
+        "fundo_footer": "rgb(16, 16, 16) — near-black (#101010)",
+        "fundo_section_dark": "rgb(15, 15, 15) — near-black alternativo (#0F0F0F)",
+        "fundo_botao_submit": "rgb(255, 255, 255) — branco (bg-white/70)"
+      },
+      "palette_semantica": {
+        "accent_colors": {
+          "--color-red-300": "oklch(80.8% .114 19.571)",
+          "--color-red-400": "oklch(70.4% .191 22.216)",
+          "--color-red-500": "oklch(63.7% .237 25.331)",
+          "--color-green-500": "oklch(72.3% .219 149.579)",
+          "--color-blue-600": "oklch(54.6% .245 262.881)",
+          "--color-gray-500": "oklch(55.1% .027 264.364)"
+        },
+        "nota": "Accent colors nos tokens mas NÃO usados visualmente na Services. Red provavelmente para validação de form."
+      },
+      "descoberta_critica": "LIGHT MODE PARCIAL — A página Services usa rgb(235, 235, 235) como fundo principal (#EBEBEB), contrastando com --bg-primary: #000 das demais páginas. As seções de categoria (Strategy/Visual/Technology) são sobre fundo claro com texto escuro (oklab 0/0.2/0.5), enquanto o CTA e footer voltam ao dark mode. É um padrão dual-mode intencional."
+    },
+    "tipografia": {
+      "fontes_carregadas": [
+        {
+          "family": "DMSans",
+          "var_css": "--font-dmsans: \"DMSans\", sans-serif",
+          "weight": "500",
+          "style": "normal",
+          "status": "loaded",
+          "uso_nesta_pagina": "Fonte PRINCIPAL da Services — a única efetivamente carregada"
+        },
+        {
+          "family": "HostGrotesk",
+          "var_css": "--font-hostgrotesk: \"HostGrotesk\", sans-serif",
+          "weight": "100–900 (variable)",
+          "style": "normal",
+          "status": "unloaded",
+          "nota": "Declarada mas NÃO carregada na Services — diferente da Home onde está loaded. Fallback para system-ui."
+        },
+        {
+          "family": "LaCerchia",
+          "var_css": "--font-lacerchia: \"LaCerchia\", cursive",
+          "weight": "400",
+          "style": "normal",
+          "status": "unloaded",
+          "nota": "Nunca carregada em nenhuma página analisada"
+        }
+      ],
+      "font_families_computadas": [
+        "DMSans, sans-serif",
+        "ui-sans-serif, system-ui, sans-serif (fallback)"
+      ],
+      "font_sizes_computados": [
+        "12px",
+        "14px",
+        "16px",
+        "18px",
+        "24px",
+        "30px",
+        "48px"
+      ],
+      "escala_tipografica_tokens": {
+        "--text-xs": "0.75rem (12px)",
+        "--text-sm": "0.875rem (14px)",
+        "--text-lg": "1.125rem (18px)",
+        "--text-2xl": "1.5rem (24px)",
+        "--text-3xl": "1.875rem (30px)",
+        "--text-4xl": "2.25rem (36px)",
+        "--text-5xl": "3rem (48px)",
+        "--text-6xl": "3.75rem (60px)",
+        "--text-8xl": "6rem (96px)"
+      },
+      "font_weights": {
+        "computados": [
+          "400 (regular)",
+          "500 (medium)"
+        ],
+        "tokens": {
+          "--font-weight-thin": "100",
+          "--font-weight-medium": "500",
+          "--font-weight-semibold": "600"
+        },
+        "nota": "Weight 100 (thin) NÃO computado na Services — apenas 400 e 500. Consistente com HostGrotesk unloaded (thin era via HostGrotesk)."
+      },
+      "font_sizes_especiais": {
+        "micro_sizes": [
+          "1.2px",
+          "1.35px",
+          "1.5px",
+          "4.5px"
+        ],
+        "nota": "Tamanhos sub-pixel (1.2–4.5px) são usados em separadores visuais (dividers/ornamentos), não em texto legível"
+      },
+      "padrao_tipografico": "DMSans weight 500 (medium) como fonte única efetiva. Sem o contraste thin/regular da Home. Headings H2 de categorias em 48px (--text-5xl). Corpo em 16px. Labels em 14px. Tags em 12px."
+    },
+    "espacamento": {
+      "token_base": "--spacing: 0.25rem (4px)",
+      "padding_lateral": "px-[5vw] (consistente em todas as seções)",
+      "padding_top_hero": "pt-25 (100px mobile) / pt-[11vw] (desktop)",
+      "gap_entre_secoes": "mt-10 (40px mobile) / mt-[8vw] (desktop)",
+      "gap_footer": "my-[10vw]",
+      "paddings_computados": [
+        "0px 20px",
+        "16px",
+        "8px",
+        "14px 20px",
+        "0px 7.5px"
+      ],
+      "margins_computados": [
+        "40px 0px 0px",
+        "24px 0px 0px",
+        "20px 0px 0px",
+        "12px 0px 0px"
+      ],
+      "border_radius": {
+        "--radius-md": "0.375rem (6px)",
+        "--radius-lg": "0.5rem (8px)",
+        "--radius-xl": "0.75rem (12px)",
+        "--radius-2xl": "1rem (16px)"
+      },
+      "nota": "Gap entre seções menor que a Home (mt-10/mt-[8vw] vs mt-20/mt-[10vw]) — ritmo mais compacto, adequado para catálogo denso de 45 serviços."
+    }
+  },
+  "media_inventario": {
+    "total_assets": 6,
+    "imagens_unicas": 5,
+    "formatos": {
+      "webp": 3,
+      "png": 2,
+      "svg": 1
+    },
+    "cdn": "cnd.lessestudio.com + _app/immutable/assets/",
+    "categorias": {
+      "hero_thumbnails": {
+        "quantidade": 3,
+        "dimensoes": "135×90px cada (landscape 3:2)",
+        "formato": "WebP",
+        "classe": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full object-c*",
+        "ids": [
+          "4b2d1f94",
+          "f1c55e51",
+          "7e2e197d"
+        ],
+        "nota": "Thumbnails de projetos no hero — não são decorativas, são credenciais visuais. Aspect ratio landscape incomum para thumbnails (tipicamente portrait em portfolios)."
+      },
+      "shopify_experts_badge": {
+        "quantidade": 2,
+        "src": "shopifyexperts.B7Ugdseq.png",
+        "dimensoes": "desktop: h-[1.7vw] | mobile: 103×28px",
+        "nota": "Duplicado para responsividade (desktop/mobile)"
+      },
+      "logo_site": {
+        "quantidade": 1,
+        "src": "logo-white.D2PbM6gr.svg",
+        "dimensoes": "135×39px",
+        "classe": "invisible h-auto w-full"
+      }
+    },
+    "padrao_media": "Página intencionalmente minimalista em assets visuais — apenas 3 thumbnails decorativas + badges/logo. As 45 sub-serviços são 100% texto. Contraste extremo com a Home (39 assets) e o About (com GIF fullscreen).",
+    "descoberta_v2": "Nenhum asset de vídeo, GIF ou SVG decorativo. A página confia exclusivamente na tipografia e no whitespace para comunicar.",
+    "media": [
+      {
+        "index": 0,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/4b2d1f94-5d38-412b-b423-34f0018f9cbe.webp",
+        "width": 691.203125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full object-c"
+      },
+      {
+        "index": 1,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/f1c55e51-f010-4928-a5ee-89134300820b.webp",
+        "width": 691.203125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full object-c"
+      },
+      {
+        "index": 2,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/7e2e197d-c7d5-4a71-96ef-d81b13a46f96.webp",
+        "width": 691.203125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full object-c"
+      },
+      {
+        "index": 3,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+        "width": 136.875,
+        "height": 26.109375,
+        "classes": "h-[1.7vw]"
+      },
+      {
+        "index": 4,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+        "width": 0,
+        "height": 0,
+        "classes": "h-7"
+      },
+      {
+        "index": 5,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/logo-white.D2PbM6gr.svg",
+        "width": 1382.40625,
+        "height": 400.1640625,
+        "classes": "invisible h-auto w-full"
+      }
+    ]
+  },
+  "sistema_de_animacoes": {
+    "libs_confirmadas": [
+      "Lenis (smooth scroll)"
+    ],
+    "libs_ausentes": [
+      "GSAP",
+      "Framer Motion",
+      "Three.js",
+      "Lottie",
+      "Barba",
+      "Locomotive Scroll"
+    ],
+    "keyframes_identificados": [
+      {
+        "nome": "svelte-1yzrg6q-dot-shine",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Pulsação de dot — opacidade 1→0.5→1. Indicador de atividade no preloader ou nav."
+      },
+      {
+        "nome": "spin",
+        "tipo": "custom",
+        "duracao_tipica": "1s (--animate-spin)",
+        "easing": "linear infinite",
+        "descricao": "Rotação 360° contínua — spinner genérico Tailwind."
+      },
+      {
+        "nome": "bounce",
+        "tipo": "custom",
+        "duracao_tipica": "1s (--animate-bounce)",
+        "easing": "cubic-bezier(0.8, 0, 1, 1) / cubic-bezier(0, 0, 0.2, 1)",
+        "descricao": "Bounce vertical com easing assimétrico."
+      },
+      {
+        "nome": "svelte-fjr74e-rowFadeIn",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade-in + translateY(-6px→0). Usado em rows que entram no viewport."
+      },
+      {
+        "nome": "svelte-1cr5s35-shake",
+        "tipo": "custom",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Shake horizontal decrescente (0→-5→4→-3→2→-1→0px). Validação de formulário."
+      },
+      {
+        "nome": "svelte-1cr5s35-fadeIn",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade in simples → opacidade 1. Toast/notificação."
+      },
+      {
+        "nome": "svelte-1cr5s35-fadeOut",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade out simples → opacidade 0. Dismissal."
+      },
+      {
+        "nome": "svelte-1b2mvyb-scan",
+        "tipo": "custom",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Shimmer diagonal — translate(-100%) skew(-20deg) → translate(250%) skew(-20deg). Loading state de imagens."
+      },
+      {
+        "nome": "svelte-o03wub-scroll-up",
+        "tipo": "slide",
+        "duracao_tipica": "32s",
+        "easing": "linear",
+        "descricao": "Scroll vertical infinito — translateY(0→-50%). Declarado mas possivelmente inativo na Services (não há carousel de testimonials)."
+      },
+      {
+        "nome": "svelte-1ycgkir-slide-in",
+        "tipo": "slide",
+        "duracao_tipica": "1.5s (--slide-duration)",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1) (--ease)",
+        "descricao": "Slide horizontal de entrada. Declarado mas inativo — não há hero slider na Services."
+      },
+      {
+        "nome": "svelte-1ycgkir-slide-out",
+        "tipo": "slide",
+        "duracao_tipica": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Slide horizontal de saída com parallax (20%). Declarado mas inativo na Services."
+      },
+      {
+        "nome": "svelte-1ycgkir-darken",
+        "tipo": "fade",
+        "duracao_tipica": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Overlay escurecedor 0→0.6. Declarado mas inativo na Services."
+      },
+      {
+        "nome": "svelte-1ycgkir-fill",
+        "tipo": "custom",
+        "duracao_tipica": "7s",
+        "easing": "linear",
+        "descricao": "Progress bar fill. Declarado mas inativo na Services."
+      },
+      {
+        "nome": "svelte-1ycgkir-bar-fade-out",
+        "tipo": "fade",
+        "duracao_tipica": "1s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Fade da progress bar. Declarado mas inativo na Services."
+      }
+    ],
+    "keyframes_ativos_vs_declarados": {
+      "total_declarados": 14,
+      "efetivamente_ativos": 0,
+      "nota": "NENHUM keyframe está ativamente rodando (animationName: none em TODOS os 1422 elementos). Os 14 keyframes existem no CSS global do SvelteKit mas não são usados nesta página. As animações reais são todas via CSS transitions."
+    },
+    "elementos_animados": [
+      {
+        "elemento": "SPAN.mst__inner (texto animado linha-a-linha)",
+        "animacao": "CSS transform via JavaScript (componente mst)",
+        "duracao": "variável",
+        "easing": "custom",
+        "willChange": "transform",
+        "momento": "on-scroll (intersection observer)"
+      },
+      {
+        "elemento": "DIV.mouse-alert-bubble (cursor customizado)",
+        "animacao": "transform: matrix(1,0,0,1,x,y) — posição dinâmica",
+        "duracao": "contínuo (mousemove)",
+        "easing": "instantâneo",
+        "willChange": "transform",
+        "momento": "on-hover (segue cursor continuamente)"
+      },
+      {
+        "elemento": "BUTTON accordion (8× serviços nível 2)",
+        "animacao": "transform 0.3s + scale transition",
+        "duracao": "0.3s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-click (expandir/colapsar)"
+      },
+      {
+        "elemento": "Accordion content (sub-serviços)",
+        "animacao": "transform 0.2s + translate + scale",
+        "duracao": "0.2s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-click (reveal de lista)"
+      },
+      {
+        "elemento": "Service items (border transition)",
+        "animacao": "border-color 1s",
+        "duracao": "1s",
+        "easing": "linear",
+        "willChange": "auto",
+        "momento": "on-scroll / on-hover (mudança lenta de border entre estados ativo/inativo)"
+      },
+      {
+        "elemento": "Service items (filter blur)",
+        "animacao": "filter 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "duracao": "0.3s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-hover (blur/deblur de itens não-focados)"
+      },
+      {
+        "elemento": "SVG fill elements",
+        "animacao": "fill 0.5s",
+        "duracao": "0.5s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-hover (mudança de cor de ícones)"
+      },
+      {
+        "elemento": "Floating labels (form inputs)",
+        "animacao": "top 0.2s, left 0.2s, font-size 0.2s, opacity 0.2s",
+        "duracao": "0.2s (todas as props)",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-focus (label sobe ao clicar no campo)"
+      },
+      {
+        "elemento": "BUTTON Send Message (submit)",
+        "animacao": "transition-all 200ms + hover:scale-102",
+        "duracao": "0.2s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-hover (scale sutil 102%)"
+      },
+      {
+        "elemento": "Color transitions (textos, backgrounds)",
+        "animacao": "color 1s / color 0.3s / background-color 1s",
+        "duracao": "0.3s–1s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-scroll (mudança de tema light→dark entre seções)"
+      },
+      {
+        "elemento": "Opacity transitions (scroll reveal)",
+        "animacao": "opacity 1s / 0.2s",
+        "duracao": "0.2s–1s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-scroll (fade-in de elementos)"
+      },
+      {
+        "elemento": "Transform (scroll reveal cards)",
+        "animacao": "transform 1s cubic-bezier(0.76, 0, 0.24, 1)",
+        "duracao": "1s",
+        "easing": "cubic-bezier(0.76, 0, 0.24, 1)",
+        "willChange": "auto",
+        "momento": "on-scroll (translate reveal)"
+      }
+    ],
+    "tokens_de_animacao": {
+      "--ease": "cubic-bezier(0.65, 0.05, 0.1, 1) — easing principal do site",
+      "--slide-duration": "1.5s",
+      "--fade-duration": "1s",
+      "--color-transition": "1s",
+      "--default-transition-duration": "0.15s",
+      "--default-transition-timing-function": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "--tw-duration": "1s",
+      "--tw-ease": "var(--ease-out)"
+    },
+    "padroes_de_transicao": "A página Services é primariamente baseada em CSS transitions, não keyframe animations. O padrão dominante é (1) fill 0.5s em SVGs (479 ocorrências — ícones de seta dos accordions), (2) transitions de 0.2–0.3s para micro-interações (accordion expand, hover, focus), (3) transitions lentas de 1s para mudanças de tema entre seções (light→dark). O blur/deblur nos serviços (filter 0.3s) cria um efeito de 'foco seletivo' — ao passar o mouse em um serviço, os demais ficam sutilmente desfocados. O cursor customizado (mouse-alert-bubble) adiciona uma camada de interatividade proprietária.",
+    "inferidos_visualmente": [
+      "Accordions provavelmente usam max-height transition para expandir/colapsar suavemente",
+      "O cursor customizado (mouse-alert-bubble) deve mostrar um tooltip/preview ao hover sobre serviços",
+      "A transição light→dark entre seções de catálogo e seção CTA cria uma mudança dramática de contexto",
+      "O componente mst anima os headings H2 de categorias (Strategy, Visual, Technology) on-scroll",
+      "Os números/contadores da v1 (6/14/25) podem estar animados com countUp on-scroll via JavaScript"
+    ]
+  },
+  "estrutura_de_conteudo": {
+    "posicao_h1": "AUSENTE — Nenhum H1 na página. Anti-padrão SEO recorrente no lessestudio.com (Home tem H1 invisível, Contact e About não têm, Services também não).",
+    "padrao_ctas": {
+      "primario_persistente": {
+        "texto": "Start a project",
+        "posicao": "Navbar (fixo)",
+        "estilo": "navbar-bg rounded-lg backdrop-blur"
+      },
+      "secundario_contextual": {
+        "texto": "Send Message",
+        "posicao": "Seção 4 (CTA inline com form)",
+        "estilo": "bg-white/70 text-black hover:scale-102",
+        "nota": "CTA invertido (branco sobre fundo escuro) — consistente com Contact page"
+      },
+      "servicos_como_cta_implicito": {
+        "descricao": "Os 8 botões de serviço funcionam como CTAs implícitos — clicar expande detalhes e aprofunda o engajamento",
+        "quantidade": 8
+      },
+      "nota": "Mesmo padrão da Home: poucos CTAs explícitos, engajamento via interação com conteúdo."
+    },
+    "tem_faq": false,
+    "footer": {
+      "tipo": "Footer-grid de serviços (não é footer real)",
+      "colunas_desktop": 5,
+      "categorias": [
+        "Visual and Marketing",
+        "Technology"
+      ],
+      "tem_formulario": false,
+      "tem_social_links": false,
+      "tem_copyright": false,
+      "altura_px": 182,
+      "nota": "Idêntico ao footer-grid da Home. Nenhuma informação legal, social ou institucional."
+    },
+    "formulario_inline": {
+      "presente": true,
+      "posicao": "Seção 4 (antes do footer-grid)",
+      "layout": "md:col-span-2 — grid de 2 colunas no desktop",
+      "campos": "Checkboxes de serviços + inputs de contato",
+      "floating_labels": true,
+      "shake_validacao": "Keyframe svelte-1cr5s35-shake declarado",
+      "honeypot_antispam": "Provável (consistente com Contact page)",
+      "nota": "O formulário combina pré-qualificação (checkboxes de serviços) com captura de lead. Pattern idêntico ao Contact mas integrado na própria página de serviços."
+    }
+  },
+  "conclusao_para_o_projeto": {
+    "essa_pagina_serve_para": "Catálogo exaustivo de serviços em formato accordion hierárquico (3 categorias → 8 serviços → 45 sub-serviços). Funciona como página de referência/descoberta para prospects que já conhecem a agência e querem entender a profundidade da oferta. O formulário inline no final cria um funil direto de catálogo→contato.",
+    "padrao_recomendado_para": "Página de Serviços da GMT: (1) Accordion hierárquico de 3 níveis adaptado para serviços GMT (Automação/IA/Marketing). (2) Padrão de blur seletivo (filter 0.3s) ao hover — sofisticado e replicável. (3) Cursor customizado (mouse-alert-bubble) como diferenciador de UX. (4) Formulário inline com pré-qualificação por checkboxes. (5) Floating labels CSS-only (transition: top/left/font-size/opacity 0.2s). (6) Progressive disclosure — não mostrar tudo de uma vez.",
+    "limitacoes_identificadas": [
+      "Ausência de H1 — SEO comprometido para a página mais importante de conversão",
+      "HostGrotesk NÃO carregada — a Services renderiza apenas DMSans, perdendo o contraste tipográfico thin/regular da Home. Possível bug de font-loading ou decisão deliberada.",
+      "H2 'Ready to get started? Ready to get started?' — texto duplicado (bug de template)",
+      "Zero imagens de portfolio nos serviços — 45 sub-serviços sem nenhum exemplo visual. A GMT deve incluir pelo menos 1 case/visual por categoria.",
+      "479 transitions de fill 0.5s — overhead de SVG transitions possivelmente excessivo",
+      "Nenhum keyframe efetivamente ativo (0/14) — todas as 14 declarações são código global inerte. Peso morto no CSS.",
+      "Footer-grid sem informação legal — a GMT deve ter footer completo",
+      "Sem paginação ou filtragem — 45 serviços em lista linear pode ser overwhelm para o usuário",
+      "O form na Services duplica o da Contact — redundância ou decisão de UX para encurtar o funil?"
+    ],
+    "pontos_fortes_a_replicar": [
+      "Accordion hierárquico de 3 níveis — estrutura clara para catálogo denso de serviços",
+      "Blur seletivo (filter 0.3s) — foco visual nos itens hovered",
+      "Cursor customizado (mouse-alert-bubble) — interatividade premium",
+      "Floating labels CSS-only no formulário — micro-interação elegante",
+      "Progressive disclosure — não sobrecarrega o usuário com informação",
+      "Layout 1/3 + 2/3 no hero — padrão eficiente para título + descrição",
+      "Border-color 1s transition — mudança de estado lenta e elegante nos items",
+      "Thumbnails landscape no hero como credenciais visuais (135×90px)"
+    ],
+    "combina_com_referencias": [
+      "design_map_lessestudio_home_v2.json — os 8 serviços da Home correspondem aos 8 nível-2 da Services",
+      "design_map_lessestudio_contact_v2.json — mesmo padrão de floating labels, shake validation, honeypot. Form quase idêntico.",
+      "design_map_lessestudio_about_v2.json — mesmo componente mst para headings animados",
+      "design_map_lessestudio_services_geral.json (v1) — a v2 revela que HostGrotesk está UNLOADED (v1 não tinha fonts data), 0 keyframes ativos (v1 não tinha animations data), e light mode parcial (#EBEBEB)"
+    ]
+  }
+}

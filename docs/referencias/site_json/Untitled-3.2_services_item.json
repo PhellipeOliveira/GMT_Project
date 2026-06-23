@@ -1,0 +1,66 @@
+[
+  {
+    "index": 0,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/4b2d1f94-5d38-412b-b423-34f0018f9cbe.webp",
+    "width": 1536,
+    "height": 532,
+    "classes": "h-full w-full object-cover transition-opacity duration-500 opacity-100"
+  },
+  {
+    "index": 1,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/38908f96-7f5f-4dc0-a387-b3cab41aa636.webp",
+    "width": 683.5234375,
+    "height": 460.796875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 2,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/a472fc89-69d2-47f6-9f04-a08fd7295f2a.webp",
+    "width": 683.5234375,
+    "height": 460.796875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 3,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/838ae005-fc2e-43d6-a92b-3b43fa9c7398.webp",
+    "width": 337.578125,
+    "height": 430.078125,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 4,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/4b2d1f94-5d38-412b-b423-34f0018f9cbe.webp",
+    "width": 337.578125,
+    "height": 430.078125,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 5,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+    "width": 136.875,
+    "height": 26.109375,
+    "classes": "h-[1.7vw]"
+  },
+  {
+    "index": 6,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+    "width": 0,
+    "height": 0,
+    "classes": "h-7"
+  },
+  {
+    "index": 7,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/logo-white.D2PbM6gr.svg",
+    "width": 1382.40625,
+    "height": 400.1640625,
+    "classes": "invisible h-auto w-full"
+  }
+]

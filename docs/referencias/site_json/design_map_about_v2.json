@@ -1,0 +1,653 @@
+{
+  "meta": {
+    "pagina": "about_v2",
+    "url_referencia": "https://lessestudio.com/about",
+    "arquivo_origem": "Conjunto_About2.json",
+    "versao_conjunto": "v2 — inclui animations, keyframes, design_tokens, fonts",
+    "gerado_em": "2026-06-22",
+    "nota": "Esta é a versão enriquecida do design map do /about. Substitui design_map_lessestudio_about.json (v1) que não continha keyframes nem design_tokens."
+  },
+  "tecnologias": {
+    "framework": "SvelteKit (confirmado — svelte-announcer, classes svelte-mzuvwt, svelte-1b2mvyb, svelte-fjr74e, etc.)",
+    "css_framework": "Tailwind CSS v4 (tokens --tw-* em :root, classes utilitárias)",
+    "cms": "Nenhum detectado — conteúdo hardcoded",
+    "cdn_de_assets": "https://cnd.lessestudio.com",
+    "libs_animacao_confirmadas": [
+      "lenis"
+    ],
+    "libs_ausentes": [
+      "gsap",
+      "framerMotion",
+      "threejs",
+      "lottie",
+      "barba",
+      "locomotive"
+    ],
+    "fontes_detectadas": {
+      "DMSans": {
+        "weight": "500",
+        "status": "loaded",
+        "uso": "fonte principal do site"
+      },
+      "HostGrotesk": {
+        "weight": "100-900 (variable)",
+        "status": "unloaded",
+        "uso": "declarada mas não carregada nesta rota — exclusiva da Home"
+      },
+      "LaCerchia": {
+        "weight": "400",
+        "status": "unloaded",
+        "uso": "fonte serif/cursiva declarada no :root como --font-lacerchia mas não usada visivelmente"
+      }
+    },
+    "descoberta_critica": "3 fontes declaradas no :root mas apenas DMSans efetivamente carregada no /about. HostGrotesk é variable font (100-900) mas não é necessária aqui. LaCerchia (cursiva) aparece no token --font-lacerchia mas não foi aplicada em nenhum heading detectado.",
+    "font_tokens": {
+      "--font-hostgrotesk": "\"HostGrotesk\", sans-serif",
+      "--font-dmsans": "\"DMSans\", sans-serif",
+      "--font-lacerchia": "\"LaCerchia\", cursive"
+    },
+    "componente_svelte_animado": "mst (svelte-mzuvwt) — componente de animação de texto por linha, presente em H2, H3 e P. Gera estrutura mst__lines > mst__mask > mst__inner com willChange: transform."
+  },
+  "estrutura_da_pagina": {
+    "navbar": {
+      "logo_posicao": "esquerda (desktop) / header fixo mobile com logo + hamburguer",
+      "cta_primario": "Start a project (BUTTON.navbar-bg, 150×48px desktop / h-12 mobile)",
+      "comportamento": "fixed — .nav-container.svelte-9pkgjn.visible com transition: opacity 0.3s",
+      "badge_credencial": "Shopify Experts PNG (103×28px) — bg-[#0F0F0F] container",
+      "transicao_navbar": "transition: opacity 0.3s — fade in/out ao scroll",
+      "overlay_pagina": "DIV pointer-events-none fixed inset-0 z-99 — transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1) — usado para page transitions"
+    },
+    "sequencia_de_secoes": [
+      {
+        "ordem": 1,
+        "classe_css": "flex flex-col px-5 md:px-[5vw] pt-30 md:pt-[11vw]",
+        "tipo": "hero-split",
+        "funcao": "Pitch institucional em 2 colunas (manifesto H3 à esquerda + grid de counters de credencial à direita) com GIF animado no slot de mídia",
+        "altura_px": 1236.2,
+        "slots_de_midia": 1,
+        "layout_desktop": "flex-row — md:w-1/2 manifesto | md:w-2/5 grid 2×2 de counters",
+        "nota": "O grid 2×2 (hidden-reveal + aspect-square grid-cols-2 grid-rows-2) é a descoberta principal desta versão — não presente na v1"
+      },
+      {
+        "ordem": 2,
+        "classe_css": "(sem classe registrada — height=600px)",
+        "tipo": "fullscreen-media",
+        "funcao": "Seção de imagem fullscreen (flex h-screen w-screen) com GIF ou vídeo centralizado como elemento de contemplação — sem texto, sem heading",
+        "altura_px": 600,
+        "slots_de_midia": 1,
+        "nota": "Única seção sem classe CSS registrada. Usa div.rounded-[1vw].hidden-reveal com classe svelte-1b2mvyb que tem keyframe 'scan' ativo."
+      },
+      {
+        "ordem": 3,
+        "classe_css": "my-20 md:my-[8vw] flex w-full px-[5vw]",
+        "tipo": "valores-dark",
+        "funcao": "Seção dark (bg #101010) em 2 colunas: H2 'OUR VALUES' à esquerda + 4 valores (H3 + descrição) empilhados à direita sobre fundo escuro",
+        "altura_px": 1909.9,
+        "slots_de_midia": 0,
+        "layout_desktop": "flex-row — md:w-1/2 label | md:w-1/2 lista de valores",
+        "nota": "ÚNICO fundo escuro (#101010) da página /about. Cria contraste forte com o restante claro."
+      },
+      {
+        "ordem": 4,
+        "classe_css": "mt-0 my-[10vw] w-screen px-[5vw]",
+        "tipo": "cta-form + footer",
+        "funcao": "Formulário de contato (hidden md:block — exclusivo desktop) + footer global com ticker e social",
+        "altura_px": 181.8,
+        "slots_de_midia": 0
+      }
+    ]
+  },
+  "hierarquia_de_conteudo": {
+    "ausencia_h1": {
+      "confirmado": true,
+      "elemento_funcional_como_h1": "H3 (topo_px=120) — manifesto institucional no hero, aplicado com classe 'mst font-serif text-3xl md:text-[3vw]'",
+      "anti_padrao_seo": "H1 AUSENTE — padrão confirmado em todas as 8 páginas analisadas do site. NÃO replicar na GMT."
+    },
+    "headings": [
+      {
+        "tag": "H3",
+        "texto": "Lesse is a full-service branding and digital studio helping businesses build brands that are clear, distinctive, and bui[lt to last]",
+        "topo_px": 120,
+        "classe": "mst text-3xl md:text-[3vw] font-serif svelte-mzuvwt",
+        "secao": "hero — flex flex-col px-5 md:px-[5vw] pt-30",
+        "funcao_narrativa": "manifesto principal — funciona como H1 visual e pitch do estúdio",
+        "componente_mst": true
+      },
+      {
+        "tag": "H2",
+        "texto": "OUR VALUES",
+        "topo_px": 2028,
+        "classe": "mst text-md md:text-[1vw] subtitle uppercase svelte-mzuvwt",
+        "secao": "valores-dark — my-20 md:my-[8vw]",
+        "funcao_narrativa": "label de seção (uppercase, pequeno) — âncora da seção de valores",
+        "componente_mst": true
+      },
+      {
+        "tag": "H3",
+        "texto": "Meaningful Design",
+        "topo_px": 2170,
+        "classe": "font-serif text-2xl md:text-[1.5vw]",
+        "secao": "valores-dark",
+        "funcao_narrativa": "título de valor individual — 1 de 4 (propostas filosóficas do estúdio)"
+      },
+      {
+        "tag": "H3",
+        "texto": "Strategic Thinking",
+        "topo_px": 2778,
+        "classe": "font-serif text-2xl md:text-[1.5vw]",
+        "secao": "valores-dark",
+        "funcao_narrativa": "título de valor individual — 2 de 4"
+      },
+      {
+        "tag": "H3",
+        "texto": "Integrated Expertise",
+        "topo_px": 3218,
+        "classe": "font-serif text-2xl md:text-[1.5vw]",
+        "secao": "valores-dark",
+        "funcao_narrativa": "título de valor individual — 3 de 4"
+      },
+      {
+        "tag": "H3",
+        "texto": "Long-Term Vision",
+        "topo_px": 3686,
+        "classe": "font-serif text-2xl md:text-[1.5vw]",
+        "secao": "valores-dark",
+        "funcao_narrativa": "título de valor individual — 4 de 4"
+      },
+      {
+        "tag": "H2",
+        "texto": "Ready to get started? Ready to get started?",
+        "topo_px": 0,
+        "classe": "mst text-[3vw] w-2/3 font-serif svelte-mzuvwt (desktop) / block md:hidden (mobile)",
+        "secao": "cta-form — oculto desktop (hidden md:block wrapper), visível mobile",
+        "funcao_narrativa": "CTA final — duplicado para efeito marquee/ticker",
+        "componente_mst": true
+      },
+      {
+        "tag": "H3",
+        "texto": "Services are interested in",
+        "topo_px": 0,
+        "classe": "text-sm md:text-[1vw] uppercase primary-text",
+        "secao": "cta-form",
+        "funcao_narrativa": "label de grupo de seleção de serviços no formulário"
+      }
+    ],
+    "padrao_de_uso_dos_niveis": {
+      "H1": "AUSENTE",
+      "H2": "2 usos: (1) label de seção 'OUR VALUES' em uppercase pequeno, (2) CTA final com marquee",
+      "H3": "6 usos: (1) manifesto hero como H1 visual, (2-5) 4 títulos de valores, (6) label de formulário"
+    },
+    "descoberta_grid_counters": "O hero da v2 tem um grid 2×2 (md:w-2/5 aspect-square grid-cols-2 grid-rows-2 gap-2) com elementos 'service-title' em font-mono text-8xl md:text-[10vw] — são counters numéricos de credencial (ex: 000+, anos, projetos). Classe hidden-reveal confirma que entram com animação ao scroll."
+  },
+  "padrao_de_catalogo": {
+    "tipo": "N/A — página institucional sem catálogo de produtos/serviços",
+    "padrao_de_valores": "Lista empilhada (flex flex-col gap-8 md:gap-[3vw]) — 4 valores com H3 título + P descrição, sem divisores visuais, sobre fundo escuro",
+    "grid_counters_hero": {
+      "tipo": "grid 2×2",
+      "classe": "hidden-reveal grid aspect-square w-full md:w-2/5 grid-cols-2 grid-rows-2 gap-2",
+      "celula_1": "col-span-2 — célula larga com font-mono text-8xl (counter principal)",
+      "celula_2_3": "células quadradas individuais com service-title text-8xl",
+      "font_size": "text-8xl md:text-[10vw] — ~96px a 10vw",
+      "font_family": "font-mono (ui-monospace) na célula 1, sem font-mono nas outras"
+    }
+  },
+  "tokens_visuais": {
+    "cores_por_funcao": {
+      "acao": [
+        "#fff (botões primários)",
+        "bg-white/70 text-black (Send Message)",
+        "#000 (texto sobre fundo claro)"
+      ],
+      "fundo": [
+        "rgb(235,235,235) — fundo global página (claro)",
+        "#101010 / rgb(16,16,16) — seção valores dark",
+        "#0F0F0F — container badge Shopify e footer",
+        "rgb(15,15,15) — variante footer",
+        "rgba(36,36,36,0.5) — overlay navbar",
+        "rgba(0,0,0,0.8) — overlay de página"
+      ],
+      "neutro": [
+        "rgb(144,144,144)",
+        "rgb(87,87,87) — #575757 (links footer)",
+        "rgba(182,182,182,0.8) — #B6B6B6/80 (links footer hover)"
+      ],
+      "destaque": [
+        "oklab(0,0,0/0.3) — texto secundário",
+        "oklab(0,0,0/0.5) — sombras",
+        "text-black/30 — labels de counter",
+        "text-white/30 — descrições de valores (sobre dark)"
+      ]
+    },
+    "design_tokens_criticos": {
+      "--bg-primary": "#000",
+      "--bg-secondary": "#1a1a1a",
+      "--text-primary": "#fff",
+      "--text-secondary": "#999",
+      "--color-transition": "1s",
+      "--ease": "cubic-bezier(.65, .05, .1, 1)",
+      "--slide-duration": "1.5s",
+      "--fade-duration": "1s",
+      "--font-dmsans": "\"DMSans\", sans-serif",
+      "--font-lacerchia": "\"LaCerchia\", cursive",
+      "--font-hostgrotesk": "\"HostGrotesk\", sans-serif"
+    },
+    "tipografia": {
+      "familias_efetivamente_carregadas": [
+        "DMSans (weight 500, loaded)",
+        "ui-sans-serif (fallback Tailwind)",
+        "ui-monospace (counters hero)"
+      ],
+      "familias_declaradas_nao_carregadas": [
+        "HostGrotesk (unloaded)",
+        "LaCerchia (unloaded)"
+      ],
+      "tamanhos_detectados": [
+        "96px / text-8xl (counters hero grid)",
+        "30px / text-3xl (H3 manifesto hero — md:text-[3vw])",
+        "24px / text-2xl (H3 valores)",
+        "18px / text-lg (body / descrições)",
+        "16px (body padrão)",
+        "14px (labels)",
+        "12px / text-xs (micro)"
+      ],
+      "pesos_detectados": [
+        "400 (dominante)",
+        "500 (labels, mst componente)"
+      ],
+      "nota_font_serif": "A classe font-serif em H3 e H2 usa o token --font-serif do Tailwind (Georgia fallback) — NÃO usa LaCerchia. LaCerchia está declarada mas não aplicada em nenhum elemento rastreado."
+    },
+    "espacamento": {
+      "ritmo_vertical": "Fluido por vw. Hero: pt-30 mobile / md:pt-[11vw] desktop. Entre seções: my-20 mobile / md:my-[8vw] desktop. Footer: my-[10vw]. gap interno: gap-8 / md:gap-[3vw] para valores.",
+      "padding_tokens": [
+        "0px 20px",
+        "16px",
+        "8px",
+        "120px 20px 0px",
+        "12px",
+        "0px 7.5px",
+        "3px"
+      ],
+      "margin_tokens": [
+        "80px 0px",
+        "40px 0px 0px",
+        "24px 0px 0px",
+        "20px 0px 0px",
+        "16px 0px 0px"
+      ],
+      "radius_tokens": {
+        "--radius-md": ".375rem",
+        "--radius-lg": ".5rem",
+        "--radius-xl": ".75rem",
+        "--radius-2xl": "1rem",
+        "uso_real": "md:rounded-[1vw] para cards/counters, rounded-lg para botões e inputs"
+      }
+    }
+  },
+  "media_inventario": {
+    "total_assets": 4,
+    "total_unicos": 3,
+    "tipos": [
+      "GIF",
+      "PNG",
+      "SVG"
+    ],
+    "classificacao": {
+      "gif_animado": [
+        "cnd.lessestudio.com/9f75a1bc-35f8-41ef-be3a-56ead44686f0.gif (60×45px) — hero + fullscreen section"
+      ],
+      "logos_badges": [
+        "lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png (103×28px — navbar badge)",
+        "lessestudio.com/_app/immutable/assets/logo-white.D2PbM6gr.svg (135×39px — invisível/reserva)"
+      ],
+      "icones": [],
+      "videos": []
+    },
+    "dimensoes_tipicas": "GIF 60×45px (4:3) — proporção de câmera de vídeo/preview. Pequeno demais para ser hero visual dominante. Função: elemento de movimento sutil, não de showcase.",
+    "nota_fullscreen_section": "A seção 2 (height=600px, flex h-screen w-screen) parece exibir o GIF em fullscreen via div.relative.h-full.w-full.overflow-hidden. O GIF de 60×45px é redimensionado via object-cover — intencionalmente pixelado/grainy por efeito estético.",
+    "media": [
+      {
+        "index": 0,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/9f75a1bc-35f8-41ef-be3a-56ead44686f0.gif",
+        "width": 1382.3984375,
+        "height": 667.8359375,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 w-full h-full object-c"
+      },
+      {
+        "index": 1,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+        "width": 136.875,
+        "height": 26.109375,
+        "classes": "h-[1.7vw]"
+      },
+      {
+        "index": 2,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+        "width": 0,
+        "height": 0,
+        "classes": "h-7"
+      },
+      {
+        "index": 3,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/logo-white.D2PbM6gr.svg",
+        "width": 1382.40625,
+        "height": 400.1640625,
+        "classes": "invisible h-auto w-full"
+      }
+    ]
+  },
+  "sistema_de_animacoes": {
+    "libs_confirmadas": [
+      "lenis — smooth scroll global (class=lenis no HTML)"
+    ],
+    "keyframes_identificados": [
+      {
+        "nome": "svelte-1yzrg6q-dot-shine",
+        "tipo": "fade",
+        "duracao_tipica": "não especificada no keyframe",
+        "easing": "linear inferido",
+        "descricao": "Pulso de brilho: opacity 1→0.5→1. Usado em indicadores de status (dot/bolinha animada)"
+      },
+      {
+        "nome": "spin",
+        "tipo": "custom",
+        "duracao_tipica": "1s (via --animate-spin token)",
+        "easing": "linear",
+        "descricao": "Rotação 360° contínua. Tailwind padrão — provavelmente usado em loading states"
+      },
+      {
+        "nome": "bounce",
+        "tipo": "custom",
+        "duracao_tipica": "1s (via --animate-bounce token)",
+        "easing": "cubic-bezier(0.8,0,1,1) / cubic-bezier(0,0,0.2,1)",
+        "descricao": "Bounce vertical: translateY(-25%)→nenhum. Tailwind padrão"
+      },
+      {
+        "nome": "svelte-fjr74e-rowFadeIn",
+        "tipo": "fade + slide",
+        "duracao_tipica": "não especificada — inferir ~0.3s",
+        "easing": "ease inferido",
+        "descricao": "Entrada de linha: opacity 0→1 + translateY(-6px)→0. Usado em itens de lista/tabela que aparecem sequencialmente (ex: footer-grid de serviços)"
+      },
+      {
+        "nome": "svelte-1cr5s35-shake",
+        "tipo": "custom",
+        "duracao_tipica": "~0.4s inferido",
+        "easing": "linear",
+        "descricao": "Vibração horizontal: translate 0→-5px→4px→-3px→2px→-1px→0. Feedback de erro em formulário (ex: campo inválido ao submit)"
+      },
+      {
+        "nome": "svelte-1cr5s35-fadeIn",
+        "tipo": "fade",
+        "duracao_tipica": "var(--fade-duration) = 1s",
+        "easing": "var(--ease) = cubic-bezier(.65,.05,.1,1)",
+        "descricao": "Fade in simples: opacity→1. Usado no form ou overlays"
+      },
+      {
+        "nome": "svelte-1cr5s35-fadeOut",
+        "tipo": "fade",
+        "duracao_tipica": "var(--fade-duration) = 1s",
+        "easing": "var(--ease) = cubic-bezier(.65,.05,.1,1)",
+        "descricao": "Fade out: opacity→0. Par do fadeIn — transições de estado do form"
+      },
+      {
+        "nome": "svelte-1b2mvyb-scan",
+        "tipo": "custom",
+        "duracao_tipica": "não especificada — inferir 1-2s em loop",
+        "easing": "linear inferido",
+        "descricao": "Efeito scan/sweep: translate(-100%) skew(-20deg)→translate(250%) skew(-20deg). Linha de luz diagonal que passa sobre a imagem GIF fullscreen — efeito de scanner/glitch"
+      },
+      {
+        "nome": "svelte-o03wub-scroll-up",
+        "tipo": "slide",
+        "duracao_tipica": "não especificada — provavelmente controlada por JS/scroll",
+        "easing": "linear inferido",
+        "descricao": "Ticker vertical: translateY(0)→translateY(-50%). Colunas de texto em scroll contínuo vertical — provavelmente no footer ou em seção de logos"
+      },
+      {
+        "nome": "svelte-1ycgkir-slide-in",
+        "tipo": "slide",
+        "duracao_tipica": "var(--slide-duration) = 1.5s",
+        "easing": "var(--ease) = cubic-bezier(.65,.05,.1,1)",
+        "descricao": "Entrada de slide: translate(var(--dir)*100%)→translate(0). Direção controlada por CSS var --dir. Usado em page transitions ou carrossel"
+      },
+      {
+        "nome": "svelte-1ycgkir-slide-out",
+        "tipo": "slide",
+        "duracao_tipica": "var(--slide-duration) = 1.5s",
+        "easing": "var(--ease)",
+        "descricao": "Saída de slide: translate(0)→translate(var(--dir)*-20%). Par do slide-in — page transition out"
+      },
+      {
+        "nome": "svelte-1ycgkir-darken",
+        "tipo": "fade",
+        "duracao_tipica": "1.5s inferido",
+        "easing": "var(--ease)",
+        "descricao": "Escurecimento de overlay: opacity 0→0.6. Usado durante page transition para escurecer o conteúdo saindo"
+      },
+      {
+        "nome": "svelte-1ycgkir-fill",
+        "tipo": "custom",
+        "duracao_tipica": "1.5s inferido",
+        "easing": "var(--ease)",
+        "descricao": "Preenchimento de barra de progresso: width var(--fill-start,0%)→100%. Loading bar durante page transition"
+      },
+      {
+        "nome": "svelte-1ycgkir-bar-fade-out",
+        "tipo": "fade",
+        "duracao_tipica": "0.3s inferido",
+        "easing": "var(--ease)",
+        "descricao": "Desaparecimento da barra de progresso após carregamento: opacity 1→0 mantendo width"
+      }
+    ],
+    "elementos_animados": [
+      {
+        "elemento": "SPAN.mst__inner.svelte-mzuvwt",
+        "animacao": "transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1)",
+        "duracao": "1s",
+        "easing": "cubic-bezier(0.76, 0, 0.24, 1) — easing forte tipo 'snappy out'",
+        "willChange": "transform",
+        "momento": "on-scroll",
+        "descricao": "Núcleo do componente mst — cada linha de texto sobe de translateY(100%) para 0 ao entrar no viewport. Presente em H3 manifesto, H2 OUR VALUES, H2 CTA. Múltiplas instâncias (uma por linha de texto)."
+      },
+      {
+        "elemento": "BODY",
+        "animacao": "transition: background-color 1s, color 1s",
+        "duracao": "1s",
+        "easing": "ease (padrão)",
+        "willChange": "auto",
+        "momento": "on-load",
+        "descricao": "Transição suave de tema claro/escuro. Junto com --color-transition: 1s — toda a página faz color crossfade."
+      },
+      {
+        "elemento": "DIV.pointer-events-none.fixed.inset-0.z-99",
+        "animacao": "transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+        "duracao": "0.5s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1) — ease-out Tailwind",
+        "willChange": "auto",
+        "momento": "on-load / page-transition",
+        "descricao": "Overlay fullscreen de page transition — fade in/out ao navegar entre rotas SvelteKit"
+      },
+      {
+        "elemento": "DIV.nav-container.svelte-9pkgjn.visible",
+        "animacao": "transition: opacity 0.3s",
+        "duracao": "0.3s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-scroll",
+        "descricao": "Navbar fade — aparece/desaparece conforme scroll"
+      },
+      {
+        "elemento": "BUTTON.navbar-bg",
+        "animacao": "transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "duracao": "0.3s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-hover",
+        "descricao": "CTA Start a project — hover transition global"
+      },
+      {
+        "elemento": "svg (ícone navbar)",
+        "animacao": "transition: transform 0.3s, translate 0.3s, scale 0.3s, rotate 0.3s — cubic-bezier(0.4, 0, 0.2, 1)",
+        "duracao": "0.3s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-hover",
+        "descricao": "Ícone de seta no CTA — micro-animação de translate ao hover"
+      },
+      {
+        "elemento": "rect (SVG logo — hamburguer mobile)",
+        "animacao": "transition: fill 0.5s",
+        "duracao": "0.5s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-hover / on-click",
+        "descricao": "Barras do hamburguer animam fill ao toggle do menu mobile"
+      },
+      {
+        "elemento": "IMG (GIF fullscreen — svelte-1b2mvyb)",
+        "animacao": "transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1)",
+        "duracao": "1s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-load",
+        "descricao": "GIF aparece com fade de 1s ao carregar a seção"
+      },
+      {
+        "elemento": "DIV.hidden-reveal",
+        "animacao": "sem transição explícita — animação por classe aplicada via JS ao entrar no viewport",
+        "duracao": "inferida por --fade-duration: 1s",
+        "easing": "var(--ease) = cubic-bezier(.65,.05,.1,1)",
+        "willChange": "auto",
+        "momento": "on-scroll",
+        "descricao": "Classe utilitária do site para reveal ao scroll — aplicada no grid de counters hero e nos cards escuros da seção valores. Provavelmente aplica opacity: 0→1 + translateY via JS."
+      },
+      {
+        "elemento": "DIV.placeholder-label",
+        "animacao": "transition: top 0.2s, left 0.2s, font-size 0.2s, opacity 0.2s",
+        "duracao": "0.2s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-click / on-focus (input)",
+        "descricao": "Label flutuante dos inputs do formulário — sobe e reduz ao focar no campo (padrão Material/floating label)"
+      },
+      {
+        "elemento": "DIV.transition-opacity.duration-300 (form states)",
+        "animacao": "transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "duracao": "0.3s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-submit",
+        "descricao": "O form tem 2 estados (inputs / sucesso) que alternam via opacity 0.3s — sem hard swap visual"
+      },
+      {
+        "elemento": "BUTTON.group (Send Message)",
+        "animacao": "transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1) — hover:scale-102",
+        "duracao": "0.2s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-hover",
+        "descricao": "Botão de submit com micro-scale 102% ao hover"
+      },
+      {
+        "elemento": "DIV.w-6.rounded-full (radio buttons de serviço)",
+        "animacao": "transition: background-color, border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "duracao": "0.3s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-click",
+        "descricao": "Pill radio de seleção de serviço no form — animação de fill ao selecionar"
+      },
+      {
+        "elemento": "P.mst (secondary-text hero)",
+        "animacao": "transition: color 1s",
+        "duracao": "1s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-load",
+        "descricao": "Texto secundário do hero sincronizado com --color-transition: 1s do tema"
+      }
+    ],
+    "padroes_de_transicao": "Site usa 3 velocidades distintas: RÁPIDA (0.2–0.3s) para hover states e micro-interações; MÉDIA (0.5s) para reveals de imagem e logo; LENTA (1s) para page transitions, color theming e animações de texto (mst). O easing dominante é cubic-bezier(0.4, 0, 0.2, 1) (ease-out Tailwind) para interações. O easing --ease = cubic-bezier(.65,.05,.1,.1) (custom) para page transitions. O componente mst usa cubic-bezier(0.76, 0, 0.24, 1) — o mais agressivo do site, criando um snap de entrada de texto muito característico.",
+    "inferidos_visualmente": [
+      "Counters do grid 2×2 (service-title text-8xl) animam de 0 ao valor real ao entrar no viewport — padrão counter animation com JS",
+      "GIF fullscreen tem efeito scan (svelte-1b2mvyb-scan) — linha de luz diagonal passando sobre a imagem em loop",
+      "Seção valores (dark #101010) com .hidden-reveal pode ter entrada com clip-path ou opacity+translate ao scroll",
+      "Page transitions entre rotas com overlay fade (0.5s) + slide keyframes (1.5s) — experiência de SPA sofisticada"
+    ]
+  },
+  "estrutura_de_conteudo": {
+    "posicao_h1": "AUSENTE — H3 no topo (topo_px=120) funciona como H1 visual com componente mst (animação de linhas). Anti-padrão SEO.",
+    "padrao_ctas": "3 CTAs: (1) 'Start a project' navbar sticky, (2) formulário inline na seção 4 (desktop-only hidden md:block), (3) 'Send Message' submit do form",
+    "formulario": {
+      "campos": [
+        "Nome (input)",
+        "Email (input)",
+        "Telefone (input, opcional)",
+        "Descrição do projeto (textarea)",
+        "Seleção de serviços (radio pills 8 opções)",
+        "Website (honeypot — input#_hp_website, anti-spam)"
+      ],
+      "floating_labels": true,
+      "honeypot": "input#_hp_website — anti-spam field oculto",
+      "estados_visuais": "2 estados com transition-opacity 0.3s (form visível / form enviado)",
+      "nota": "Formulário idêntico ao da página /contact e /services — componente global reutilizado"
+    },
+    "tem_faq": false,
+    "footer": {
+      "tipo": "footer-global com ticker marquee + social links",
+      "ticker": "Crafting Thoughtful Brands and Digital Products — duplicado para efeito marquee horizontal",
+      "social": [
+        "Instagram",
+        "LinkedIn",
+        "Dribbble",
+        "Mail"
+      ],
+      "footer_grid_taxonomia": "Presente nesta página (diferente de /services onde estava oculto) — H3 'Visual and Marketing' e 'Technology' (topo_px=0 apenas no mobile, desktop visible)",
+      "links_footer_mobile": [
+        "VISUAL AND MARKETING (topo_px=4280)",
+        "TECHNOLOGY (topo_px=4652)"
+      ]
+    }
+  },
+  "conclusao_para_o_projeto": {
+    "essa_pagina_serve_para": "Página institucional completa: pitch do estúdio, prova de credencial (counters numéricos), valores filosóficos e captura de lead. A versão v2 revelou a existência do grid 2×2 de counters no hero (não capturado na v1) e o sistema de animações completo (componente mst, scan effect, page transitions).",
+    "padrao_recomendado_para": "Para a GMT /sobre ou /sobre-nos: (1) Hero split com manifesto à esquerda + grid de credenciais à direita (counters: clientes atendidos, automações entregues, projetos concluídos, ROI médio); (2) Seção dark de valores com fundo #101010 — excelente para criar contraste e seriedade; (3) Componente de animação de texto por linha (mst equivalente) para o manifesto; (4) GIF ou vídeo curto em seção fullscreen como elemento contemplativo.",
+    "componente_mst_para_gmt": {
+      "descricao": "O componente mst é o mais sofisticado do site. Quebra cada linha de texto em spans com overflow:hidden + translateY. Easing: cubic-bezier(0.76, 0, 0.24, 1), duration: 1s, willChange: transform. É replicável em React com Intersection Observer + CSS transitions ou com Framer Motion (que o site NÃO usa).",
+      "classes_svelte": [
+        "mst",
+        "mst__measurer",
+        "mst__lines",
+        "mst__mask",
+        "mst__inner",
+        "opacity-20 (linhas fantasma/duplicadas para largura)"
+      ]
+    },
+    "limitacoes_identificadas": [
+      "H1 ausente — anti-padrão SEO sistemático do site",
+      "GIF de apenas 60×45px redimensionado para fullscreen — intencionalmente grainy mas pode parecer desleixado fora do contexto estético do site",
+      "Formulário desktop-only (hidden md:block) — usuários mobile não veem o form na /about, apenas o CTA da navbar",
+      "LaCerchia declarada mas não usada — token --font-lacerchia presente no :root sem aplicação visível",
+      "Sem fotos de equipe — página institucional completamente impessoal",
+      "Counters do grid 2×2 não confirmados semanticamente (textos truncados no JSON)"
+    ],
+    "diferencas_v1_vs_v2": [
+      "v2 revelou o grid 2×2 de counters no hero (hidden-reveal, aspect-square) — ausente na v1",
+      "v2 revelou 14 keyframes do site (page transitions, scan, shake, row fade, counter scroll)",
+      "v2 revelou 3 fontes declaradas no :root (DMSans loaded, HostGrotesk + LaCerchia unloaded)",
+      "v2 revelou ~15 elementos com transições específicas (vs inferências da v1)",
+      "v2 confirmou honeypot anti-spam no formulário (input#_hp_website)",
+      "v2 revelou a seção fullscreen sem classe CSS (height=600px) — era apenas 1 seção na v1"
+    ],
+    "combina_com_referencias": [
+      "design_map_lessestudio_services_geral.json (counters numéricos como credencial — mesmo padrão)",
+      "design_map_lessestudio_home.json (mst componente, scan effect, page transitions idênticos)",
+      "design_map_lessestudio_contact.json (formulário idêntico — componente global)",
+      "design_map_lessestudio_portfolio_item.json (seção fullscreen e hidden-reveal pattern)"
+    ]
+  }
+}

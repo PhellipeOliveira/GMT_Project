@@ -1,0 +1,34 @@
+[
+  {
+    "index": 0,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/9f75a1bc-35f8-41ef-be3a-56ead44686f0.gif",
+    "width": 1382.3984375,
+    "height": 667.8359375,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 w-full h-full object-c"
+  },
+  {
+    "index": 1,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+    "width": 136.875,
+    "height": 26.109375,
+    "classes": "h-[1.7vw]"
+  },
+  {
+    "index": 2,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+    "width": 0,
+    "height": 0,
+    "classes": "h-7"
+  },
+  {
+    "index": 3,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/logo-white.D2PbM6gr.svg",
+    "width": 1382.40625,
+    "height": 400.1640625,
+    "classes": "invisible h-auto w-full"
+  }
+]

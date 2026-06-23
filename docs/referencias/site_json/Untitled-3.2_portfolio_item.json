@@ -1,0 +1,122 @@
+[
+  {
+    "index": 0,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/96ab8861-72d3-4744-8c8a-ab109bcc99a7.webp",
+    "width": 801.796875,
+    "height": 460.796875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 1,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/0a323da3-d73d-4db1-9510-4c08143abfa5.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 2,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/a0639cb2-1c67-4da6-bc35-ebf68197db74.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 3,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/f49edf61-c854-4068-a71e-ce1e8e00531c.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 4,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/100f999c-1fb7-4854-b66b-75cb58483239.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 5,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/96ab8861-72d3-4744-8c8a-ab109bcc99a7.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 6,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/32785274-bfed-4133-8195-afab93cd6b8f.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 7,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/872c2258-cc87-4f55-bc25-ab31f6287f02.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 8,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/7519d285-98cf-42c4-a82f-1e0404fdcbf8.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 9,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/e07eee5f-f071-41f5-92f6-68cf9e96eb54.webp",
+    "width": 801.796875,
+    "height": 601.71875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 10,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/6f8c4c12-3a61-4b58-b687-f992105018ec.webp",
+    "width": 679.6796875,
+    "height": 460.796875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 11,
+    "type": "IMG",
+    "src": "https://cnd.lessestudio.com/38908f96-7f5f-4dc0-a387-b3cab41aa636.webp",
+    "width": 679.6875,
+    "height": 460.796875,
+    "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+  },
+  {
+    "index": 12,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+    "width": 136.875,
+    "height": 26.109375,
+    "classes": "h-[1.7vw]"
+  },
+  {
+    "index": 13,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+    "width": 0,
+    "height": 0,
+    "classes": "h-7"
+  },
+  {
+    "index": 14,
+    "type": "IMG",
+    "src": "https://lessestudio.com/_app/immutable/assets/logo-white.D2PbM6gr.svg",
+    "width": 1382.40625,
+    "height": 400.1640625,
+    "classes": "invisible h-auto w-full"
+  }
+]

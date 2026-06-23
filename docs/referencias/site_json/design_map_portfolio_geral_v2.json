@@ -1,0 +1,847 @@
+{
+  "meta": {
+    "arquivo": "design_map_lessestudio_portfolio_geral_v2.json",
+    "fonte": "Conjunto_Portfolio_Geral2.json (11 chaves) + scrape lessestudio.com/portfolio",
+    "versao": "2.0",
+    "data_extracao": "2026-06-23",
+    "nota": "v2 com animations, keyframes, design_tokens e fonts — dados explícitos do JSON de 11 chaves. Substitui o v1 gerado com JSON de 7 chaves."
+  },
+  "tecnologias": {
+    "framework": "SvelteKit (SSR + hydration)",
+    "evidencia_framework": "classes svelte-* (svelte-mzuvwt, svelte-1b2mvyb, svelte-fjr74e, svelte-1cr5s35, svelte-o03wub, svelte-1ycgkir, svelte-1yzrg6q)",
+    "css": "Tailwind CSS v4 (oklch/oklab colors, --spacing: .25rem, variáveis nativas)",
+    "smooth_scroll": "Lenis (confirmado via libs)",
+    "animacoes": "CSS nativo + Lenis (sem GSAP, sem Framer Motion)",
+    "imagens": "CDN próprio (cnd.lessestudio.com), formato WebP",
+    "hosting": "SvelteKit adapter (_app/immutable/assets/)",
+    "libs_detectadas": {
+      "lenis": true,
+      "gsap": false,
+      "framerMotion": false,
+      "threejs": false,
+      "lottie": false,
+      "barba": false,
+      "locomotive": false
+    },
+    "componente_mst": "SPAN.mst__inner svelte-mzuvwt — willChange:transform confirmado. Animação de texto linha-a-linha on-scroll.",
+    "componente_mouse_alert_bubble": "DIV.mouse-alert-bubble — cursor customizado (willChange:transform, matrix dinâmico). Tooltip/preview ao hover sobre cards de projeto."
+  },
+  "estrutura_da_pagina": {
+    "navbar": {
+      "tipo": "fixed-top com blur (consistente com todas as páginas)",
+      "componentes": [
+        {
+          "elemento": "logo",
+          "src": "logo-white.D2PbM6gr.svg",
+          "dimensoes": "135×39px",
+          "classe": "invisible h-auto w-full"
+        },
+        {
+          "elemento": "cta_primario",
+          "tag": "BUTTON",
+          "texto_semantico": "Start a project",
+          "dimensoes": "150×48px"
+        },
+        {
+          "elemento": "hamburger",
+          "tag": "BUTTON",
+          "dimensoes": "48×48px (colapsado a 5px width no mobile)"
+        },
+        {
+          "elemento": "shopify_experts_badge",
+          "src": "shopifyexperts.B7Ugdseq.png",
+          "dimensoes_desktop": "h-[1.7vw]",
+          "dimensoes_mobile": "103×28px"
+        }
+      ]
+    },
+    "sequencia_de_secoes": [
+      {
+        "index": 0,
+        "nome_semantico": "Hero — Introdução do portfolio com grid de thumbnails",
+        "classes": "pt-30 md:pt-[11vw] px-[5vw]",
+        "altura_px": 986,
+        "filhos": 1,
+        "conteudo": "H3 descritivo (tagline: 'More than 100 projects delivered...') ocupando md:w-1/2. SEM H1 e SEM H2 — o primeiro heading é H3.",
+        "layout": "Texto à esquerda (w-1/2 desktop), grid de thumbnails à direita",
+        "media": "13 thumbnails portrait (135×240px cada) em grid — uma imagem por projeto do catálogo",
+        "nota": "Hero sem heading de nível 1 ou 2. O H3 serve como título efetivo. Padding-top: pt-30 (120px) mobile / pt-[11vw] desktop — clearance generosa para navbar."
+      },
+      {
+        "index": 1,
+        "nome_semantico": "Project List — Catálogo numerado de projetos",
+        "classes": "mt-[10vw] md:mt-[8vw] px-[5vw]",
+        "altura_px": 3976,
+        "filhos": 1,
+        "conteudo": "13 projetos listados verticalmente, cada um com H3 (nome), localização e tag-pills de serviços",
+        "total_projetos": 13,
+        "projetos": [
+          {
+            "nome_semantico": "Duo Nutrition",
+            "topo_px": 1241,
+            "tags": [
+              "brand-identity"
+            ]
+          },
+          {
+            "nome_semantico": "Vora",
+            "topo_px": 1565,
+            "tags": [
+              "brand-identity",
+              "visual-content"
+            ]
+          },
+          {
+            "nome_semantico": "Freja",
+            "topo_px": 1857,
+            "tags": [
+              "brand-strategy",
+              "brand-identity",
+              "user-experience-design"
+            ]
+          },
+          {
+            "nome_semantico": "Esaku",
+            "topo_px": 2149,
+            "tags": [
+              "brand-identity"
+            ]
+          },
+          {
+            "nome_semantico": "Touché",
+            "topo_px": 2441,
+            "tags": [
+              "brand-identity",
+              "user-experience-design"
+            ]
+          },
+          {
+            "nome_semantico": "Everyday",
+            "topo_px": 2733,
+            "tags": [
+              "brand-identity"
+            ]
+          },
+          {
+            "nome_semantico": "Motter",
+            "topo_px": 3025,
+            "tags": [
+              "brand-identity",
+              "visual-content"
+            ]
+          },
+          {
+            "nome_semantico": "Nymph",
+            "topo_px": 3317,
+            "tags": [
+              "brand-identity",
+              "web-development"
+            ]
+          },
+          {
+            "nome_semantico": "Neva Spa",
+            "topo_px": 3609,
+            "tags": [
+              "brand-identity"
+            ]
+          },
+          {
+            "nome_semantico": "OMOI",
+            "topo_px": 3933,
+            "tags": [
+              "brand-identity"
+            ]
+          },
+          {
+            "nome_semantico": "Indio White",
+            "topo_px": 4225,
+            "tags": [
+              "brand-identity",
+              "web-development"
+            ]
+          },
+          {
+            "nome_semantico": "Vivve Synergy",
+            "topo_px": 4549,
+            "tags": [
+              "brand-identity",
+              "web-development"
+            ]
+          },
+          {
+            "nome_semantico": "Within Our Home",
+            "topo_px": 4873,
+            "tags": [
+              "brand-identity"
+            ]
+          }
+        ],
+        "gap_entre_projetos": "292px padrão, 324px em pontos de transição visual",
+        "nota": "Seção mais alta da página (3976px). Layout de lista vertical — cada projeto é um row clicável com thumbnail + nome + tags."
+      },
+      {
+        "index": 2,
+        "nome_semantico": "CTA + Formulário de contato",
+        "classes": "flex w-full px-3 md:px-0 md:w-4/5 h-full flex-col items-center justify-center gap-5 md:gap-[2vw]",
+        "altura_px": 480,
+        "filhos": 2,
+        "conteudo": "H2 'Ready to get started?' + formulário com checkboxes de serviços + 'Send Message'",
+        "formulario": {
+          "tipo": "Inline com pré-qualificação",
+          "campos": "8 checkboxes de serviços + inputs de contato",
+          "floating_labels": true,
+          "botao_submit": {
+            "texto": "Send Message",
+            "classes": "group cursor-pointer flex w-fit items-center transition-all duration-200 hover:scale-102 bg-white/70 text-black"
+          }
+        },
+        "bug_texto_duplicado": "H2 contém 'Ready to get started? Ready to get started?' — mesmo bug do Services page"
+      },
+      {
+        "index": 3,
+        "nome_semantico": "Footer-Grid — Sitemap de serviços",
+        "classes": "mt-0 my-[10vw] w-screen px-[5vw]",
+        "altura_px": 182,
+        "filhos": 2,
+        "conteudo": "Grid de links: 'Visual and Marketing' + 'Technology'",
+        "layout_desktop": "grid-cols-5 gap-x-[2vw] md:grid",
+        "layout_mobile": "flex-col gap-10 md:hidden"
+      }
+    ],
+    "total_secoes": 4,
+    "altura_total_estimada_px": 5624,
+    "nota_estrutural": "Estrutura mais simples que a Home (4 seções vs 6). Fluxo linear: Hero → Lista de projetos → CTA → Footer-grid. A seção de projetos domina a página (71% da altura total)."
+  },
+  "hierarquia_de_conteudo": {
+    "total_headings": 21,
+    "headings_unicos": 18,
+    "duplicacoes_responsivas": "3 duplicados (H2 'Ready to get started?' + H3 'Visual and Marketing' + H3 'Technology')",
+    "distribuicao": {
+      "H1": {
+        "quantidade": 0,
+        "nota_seo": "AUSENTE — anti-padrão SEO recorrente. A página de Portfolio deveria ter H1 'Portfolio' ou equivalente."
+      },
+      "H2": {
+        "quantidade": 2,
+        "funcoes": [
+          "Ready to get started? (CTA desktop, topo_px: 5884)",
+          "Ready to get started? (CTA mobile, topo_px: 5457)"
+        ],
+        "nota": "Nenhum H2 para o título da página — o hero usa H3 diretamente. H2 aparece só no CTA."
+      },
+      "H3": {
+        "quantidade": 19,
+        "funcoes": [
+          "Tagline descritiva do portfolio (topo_px: 120)",
+          "13× nomes de projetos (topo_px: 1241–4873)",
+          "Services are interested in (label do form)",
+          "Visual and Marketing (footer-grid desktop + mobile = 2)",
+          "Technology (footer-grid desktop + mobile = 2)"
+        ]
+      }
+    },
+    "padrao_anomalo": "TODOS os 13 nomes de projetos são H3 — sem H2 de seção pai. A hierarquia pula de H3 (hero tagline) para H3 (projetos) sem nenhum H2 intermediário. Anti-padrão de semântica HTML.",
+    "nota_critica": "A hierarquia de conteúdo é flat: H3 serve tanto como tagline quanto como título de projeto. Sem H1, sem H2 de seção. Para GMT, isso deve ser corrigido com H1 > H2 > H3 adequados."
+  },
+  "padrao_de_catalogo": {
+    "tipo": "Lista vertical numerada com thumbnail + metadados + tags",
+    "total_items": 13,
+    "estrutura_por_item": {
+      "layout": "mt-2 md:mt-[1vw] flex justify-between gap-[2vw]",
+      "heading": "H3 (nome do projeto)",
+      "metadados": "Localização (país/cidade em parênteses)",
+      "tags": {
+        "componente": "SPAN.tag-pill",
+        "classes": "md:rounded-[0.5vw] tag-pill bg-white/80 px-[1vw] py-[0.4vw] text-[0.8vw] backdrop-blur",
+        "estilo": "Pills com fundo branco 80% opacidade, backdrop-blur, rounded-[0.5vw], text-[0.8vw]",
+        "dimensoes": "12–18×3px (extremamente compactos no mobile viewport)"
+      },
+      "imagem": "135×240px portrait WebP (aspect ratio ~9:16)",
+      "interacao": "Row inteiro clicável (A com transição), mouse-alert-bubble como preview"
+    },
+    "distribuicao_de_tags": {
+      "brand-identity": "13/13 projetos (100% — todos incluem)",
+      "web-development": "3/13 projetos",
+      "visual-content": "2/13 projetos",
+      "brand-strategy": "2/13 projetos",
+      "user-experience-design": "2/13 projetos"
+    },
+    "gap_vertical": {
+      "padrao": "292px entre projetos",
+      "expandido": "324px em 4 pontos (Duo→Vora, Neva→OMOI, Indio→Vivve, Vivve→Within)",
+      "nota": "O gap de 324px (vs 292) ocorre antes de projetos que possivelmente têm mais tags ou metadados expandidos"
+    },
+    "paginacao": "Ausente — todos os 13 projetos em lista contínua",
+    "filtragem": "Ausente — não há filtro por tag/categoria",
+    "nota_de_design": "Catálogo minimalista: lista vertical sem cards, sem grid masonry, sem hover-preview explícito. Cada projeto ocupa um row com thumbnail à esquerda e texto à direita. O mouse-alert-bubble funciona como hover-preview."
+  },
+  "tokens_visuais": {
+    "cores_por_funcao": {
+      "css_custom_properties": {
+        "--bg-primary": "#000",
+        "--bg-secondary": "#1a1a1a",
+        "--text-primary": "#fff",
+        "--text-secondary": "#999",
+        "--color-black": "#000",
+        "--color-white": "#fff",
+        "--color-transition": "1s"
+      },
+      "cores_computadas": {
+        "texto_principal": "rgb(255, 255, 255)",
+        "texto_secundario": "rgb(144, 144, 144)",
+        "texto_sutil": "rgb(87, 87, 87)",
+        "badge_text": "rgba(182, 182, 182, 0.8)",
+        "fundo_principal": "rgb(0, 0, 0) — DARK MODE puro (diferente da Services que é light)",
+        "fundo_card": "rgba(36, 36, 36, 0.5)",
+        "fundo_overlay": "oklab(0 0 0 / 0.3)",
+        "fundo_hover": "oklab(0 0 0 / 0.1)",
+        "fundo_footer": "rgb(16, 16, 16)",
+        "fundo_pill": "oklab(0.999994 ... / 0.7) — branco 70%",
+        "botao_submit": "rgb(255, 255, 255)"
+      },
+      "tag_pills": {
+        "fundo": "bg-white/80 (branco 80% opacidade)",
+        "backdrop": "backdrop-blur",
+        "texto": "text-[0.8vw] (viewport-relative)",
+        "nota": "Pills glassmorphism — fundo semi-transparente com blur. Estilo premium diferente dos SPAN.tag da Home (que são opacos)."
+      },
+      "modo": "dark-mode exclusivo (consistente com Home, diferente da Services que é dual-mode)"
+    },
+    "tipografia": {
+      "fontes_carregadas": [
+        {
+          "family": "HostGrotesk",
+          "var_css": "--font-hostgrotesk",
+          "weight_range": "100–900 (variable)",
+          "status": "unloaded",
+          "nota": "UNLOADED — mesmo problema da Services. Fallback para system-ui."
+        },
+        {
+          "family": "DMSans",
+          "var_css": "--font-dmsans",
+          "weight": "500",
+          "status": "loaded",
+          "uso": "Fonte única efetiva na Portfolio"
+        },
+        {
+          "family": "LaCerchia",
+          "var_css": "--font-lacerchia",
+          "weight": "400",
+          "status": "unloaded",
+          "nota": "Nunca carregada em nenhuma página"
+        }
+      ],
+      "font_families_computadas": [
+        "DMSans, sans-serif",
+        "ui-sans-serif, system-ui, sans-serif (fallback)"
+      ],
+      "font_sizes_computados": [
+        "12px",
+        "14px",
+        "16px",
+        "18px",
+        "24px",
+        "30px"
+      ],
+      "font_weights_computados": [
+        "400 (regular)",
+        "500 (medium)"
+      ],
+      "escala_tipografica_tokens": {
+        "--text-xs": "0.75rem (12px)",
+        "--text-sm": "0.875rem (14px)",
+        "--text-lg": "1.125rem (18px)",
+        "--text-2xl": "1.5rem (24px)",
+        "--text-3xl": "1.875rem (30px)",
+        "--text-5xl": "3rem (48px)",
+        "--text-6xl": "3.75rem (60px)",
+        "--text-8xl": "6rem (96px)"
+      },
+      "padrao_tipografico": "DMSans weight 400–500 como fonte única. Sem contraste thin/regular (HostGrotesk unloaded). Nomes de projetos em H3 ~30px. Tag-pills em text-[0.8vw] — viewport-relative, ultra-compactas."
+    },
+    "espacamento": {
+      "token_base": "--spacing: 0.25rem (4px)",
+      "padding_lateral": "px-[5vw]",
+      "padding_top_hero": "pt-30 (120px) / pt-[11vw]",
+      "gap_entre_secoes": "mt-[10vw] / mt-[8vw]",
+      "gap_entre_projetos": "292px padrão / 324px expandido",
+      "gap_titulo_metadados": "mt-2 / mt-[1vw]",
+      "border_radius": {
+        "--radius-md": "0.375rem",
+        "--radius-lg": "0.5rem",
+        "--radius-xl": "0.75rem",
+        "--radius-2xl": "1rem"
+      },
+      "padrao": "Espaçamento generoso — 292px entre projetos cria muita 'respiração'. O catálogo prioriza whitespace sobre densidade."
+    }
+  },
+  "media_inventario": {
+    "total_assets": 16,
+    "imagens_unicas": 15,
+    "formatos": {
+      "webp": 13,
+      "png": 2,
+      "svg": 1
+    },
+    "cdn": "cnd.lessestudio.com + _app/immutable/assets/",
+    "categorias": {
+      "project_thumbnails": {
+        "quantidade": 13,
+        "dimensoes": "135×240px cada (portrait ~9:16)",
+        "formato": "WebP",
+        "classe": "h-full w-full object-cover transition-opacity opacity-100",
+        "nota": "Todas as 13 thumbnails têm dimensões idênticas (135×240px) — grid uniforme no hero. Aspect ratio portrait consistente. IDs únicos no CDN (sem duplicatas lazy-load nesta página)."
+      },
+      "shopify_experts_badge": {
+        "quantidade": 2,
+        "src": "shopifyexperts.B7Ugdseq.png"
+      },
+      "logo_site": {
+        "quantidade": 1,
+        "src": "logo-white.D2PbM6gr.svg",
+        "dimensoes": "135×39px"
+      }
+    },
+    "padrao_media": "Cada projeto tem exatamente 1 thumbnail. Sem hover-reveal de segunda imagem, sem vídeo preview, sem carrossel por projeto. Minimalismo extremo — o mouse-alert-bubble compensa como preview interativo.",
+    "comparacao_com_home": "Home usa 320×432px (portrait 3:4) para portfolio cards. Portfolio page usa 135×240px (~9:16) — menores e mais estreitas, otimizadas para lista densa.",
+    "media": [
+      {
+        "index": 0,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/96ab8861-72d3-4744-8c8a-ab109bcc99a7.webp",
+        "width": 679.6796875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 1,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/6f8c4c12-3a61-4b58-b687-f992105018ec.webp",
+        "width": 679.6875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 2,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/38908f96-7f5f-4dc0-a387-b3cab41aa636.webp",
+        "width": 679.6796875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 3,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/70bbeb87-0ba7-44cc-9ef9-94c26a37ec44.webp",
+        "width": 679.6875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 4,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/a472fc89-69d2-47f6-9f04-a08fd7295f2a.webp",
+        "width": 679.6796875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 5,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/11122428-b78c-40cd-86fb-10b616a02af1.webp",
+        "width": 679.6875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 6,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/782e6ec6-ec79-41ca-9747-bb1b0e1e16cf.webp",
+        "width": 679.6796875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 7,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/1c8889ef-8920-4602-8a99-0b74da28ada8.webp",
+        "width": 679.6875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 8,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/d48f888e-f08e-46ae-9d66-d64c8e316f8e.webp",
+        "width": 679.6796875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 9,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/3cdf1f18-1246-4400-a9a9-d37f2d81a836.webp",
+        "width": 679.6875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 10,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/46daaa86-8bb4-46b1-a6f8-1162eadae5bc.webp",
+        "width": 679.6796875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 11,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/f9666580-3080-41c4-91ba-629b52b0bb26.webp",
+        "width": 679.6875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 12,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/908173da-3954-439f-86de-eec2a13a1fed.webp",
+        "width": 679.6796875,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 13,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+        "width": 136.875,
+        "height": 26.109375,
+        "classes": "h-[1.7vw]"
+      },
+      {
+        "index": 14,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+        "width": 0,
+        "height": 0,
+        "classes": "h-7"
+      },
+      {
+        "index": 15,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/logo-white.D2PbM6gr.svg",
+        "width": 1382.40625,
+        "height": 400.1640625,
+        "classes": "invisible h-auto w-full"
+      }
+    ]
+  },
+  "sistema_de_animacoes": {
+    "libs_confirmadas": [
+      "Lenis (smooth scroll)"
+    ],
+    "libs_ausentes": [
+      "GSAP",
+      "Framer Motion",
+      "Three.js",
+      "Lottie",
+      "Barba",
+      "Locomotive Scroll"
+    ],
+    "keyframes_identificados": [
+      {
+        "nome": "svelte-1yzrg6q-dot-shine",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Pulsação de dot — opacidade 1→0.5→1.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "spin",
+        "tipo": "custom",
+        "duracao_tipica": "1s",
+        "easing": "linear infinite",
+        "descricao": "Rotação 360°. Spinner genérico.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "bounce",
+        "tipo": "custom",
+        "duracao_tipica": "1s",
+        "easing": "cubic-bezier assimétrico",
+        "descricao": "Bounce vertical.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-fjr74e-rowFadeIn",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade-in + translateY(-6px→0). Rows de projetos entrando no viewport.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1cr5s35-shake",
+        "tipo": "custom",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Shake horizontal decrescente para validação de formulário.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1cr5s35-fadeIn",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade in → opacidade 1.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1cr5s35-fadeOut",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade out → opacidade 0.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1b2mvyb-scan",
+        "tipo": "custom",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Shimmer diagonal — loading state de imagens.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-o03wub-scroll-up",
+        "tipo": "slide",
+        "duracao_tipica": "32s",
+        "easing": "linear",
+        "descricao": "Scroll vertical infinito. Não usado nesta página.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1ycgkir-slide-in",
+        "tipo": "slide",
+        "duracao_tipica": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Slide horizontal de entrada. Não usado nesta página.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1ycgkir-slide-out",
+        "tipo": "slide",
+        "duracao_tipica": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Slide horizontal de saída com parallax.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1ycgkir-darken",
+        "tipo": "fade",
+        "duracao_tipica": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Overlay escurecedor.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1ycgkir-fill",
+        "tipo": "custom",
+        "duracao_tipica": "7s",
+        "easing": "linear",
+        "descricao": "Progress bar fill.",
+        "ativo_nesta_pagina": false
+      },
+      {
+        "nome": "svelte-1ycgkir-bar-fade-out",
+        "tipo": "fade",
+        "duracao_tipica": "1s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Fade da progress bar.",
+        "ativo_nesta_pagina": false
+      }
+    ],
+    "keyframes_ativos_vs_declarados": {
+      "total_declarados": 14,
+      "efetivamente_ativos": 0,
+      "nota": "Mesmo padrão da Services: 0/14 keyframes ativos. Todas as animações são via CSS transitions. Os keyframes são código global inerte herdado do bundle SvelteKit."
+    },
+    "elementos_animados": [
+      {
+        "elemento": "SPAN.mst__inner (texto animado — 52 instâncias com willChange:transform)",
+        "animacao": "CSS transform via JavaScript (componente mst)",
+        "duracao": "variável",
+        "easing": "custom",
+        "willChange": "transform",
+        "momento": "on-scroll (intersection observer)",
+        "contagem": 52,
+        "nota": "52 elementos mst é significativo — provavelmente cada nome de projeto + tagline hero + textos descritivos são animados linha-a-linha"
+      },
+      {
+        "elemento": "DIV.mouse-alert-bubble (cursor customizado — 2 instâncias)",
+        "animacao": "transform: matrix(1,0,0,1,x,y) dinâmico",
+        "duracao": "contínuo (mousemove)",
+        "easing": "instantâneo",
+        "willChange": "transform",
+        "momento": "on-hover (segue cursor sobre cards de projeto)"
+      },
+      {
+        "elemento": "Project rows (transform reveal)",
+        "animacao": "transform 1s cubic-bezier(0.76, 0, 0.24, 1)",
+        "duracao": "1s",
+        "easing": "cubic-bezier(0.76, 0, 0.24, 1)",
+        "willChange": "auto",
+        "momento": "on-scroll (slide-up reveal de cada projeto)",
+        "contagem": 33
+      },
+      {
+        "elemento": "Color/background transitions",
+        "animacao": "color 0.3s / color 1s / background-color 1s",
+        "duracao": "0.3s–1s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-hover (links) / on-scroll (tema)",
+        "contagem": 71
+      },
+      {
+        "elemento": "Tag-pills (color + bg + border transition)",
+        "animacao": "color 1s, background-color 1s",
+        "duracao": "1s",
+        "easing": "linear",
+        "willChange": "auto",
+        "momento": "on-hover / on-scroll (mudança de estado)",
+        "contagem": 22
+      },
+      {
+        "elemento": "Opacity reveals (imagens + textos)",
+        "animacao": "opacity 1s cubic-bezier(0.4, 0, 0.2, 1)",
+        "duracao": "1s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-scroll (fade-in progressivo)",
+        "contagem": 13
+      },
+      {
+        "elemento": "SVG fill transitions",
+        "animacao": "fill 0.5s",
+        "duracao": "0.5s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-hover (ícones SVG)",
+        "contagem": 25
+      },
+      {
+        "elemento": "Floating labels (form)",
+        "animacao": "top 0.2s, left 0.2s, font-size 0.2s, opacity 0.2s",
+        "duracao": "0.2s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-focus",
+        "contagem": 4
+      },
+      {
+        "elemento": "Submit button (Send Message)",
+        "animacao": "transition-all 200ms + hover:scale-102",
+        "duracao": "0.2s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-hover"
+      }
+    ],
+    "tokens_de_animacao": {
+      "--ease": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+      "--slide-duration": "1.5s",
+      "--fade-duration": "1s",
+      "--color-transition": "1s",
+      "--default-transition-duration": "0.15s",
+      "--default-transition-timing-function": "cubic-bezier(0.4, 0, 0.2, 1)"
+    },
+    "padroes_de_transicao": "A Portfolio é dominada por dois efeitos: (1) Transform reveal on-scroll — 33 elementos com transform 1s cubic-bezier(0.76, 0, 0.24, 1), criando um efeito de 'cascata' enquanto o usuário rola pela lista de 13 projetos. (2) Color transitions lentas (1s) nos tag-pills e textos — mudanças de cor suaves durante scroll e hover. O componente mst está altamente ativo (52 instâncias) — mais que qualquer outra página analisada. O mouse-alert-bubble complementa com preview interativo ao hover. Menos animações (894 total) que Home (2521) e Services (1422), refletindo a simplicidade estrutural.",
+    "inferidos_visualmente": [
+      "Cada row de projeto provavelmente faz slide-up + fade-in em sequência staggered ao rolar",
+      "O mouse-alert-bubble deve mostrar uma preview ampliada da thumbnail ao hover sobre o nome do projeto",
+      "Tag-pills com backdrop-blur criam efeito glassmorphism sobre as thumbnails",
+      "A grid de thumbnails no hero pode ter animação de entrada staggered (fade + scale) on-load",
+      "Possível parallax vertical sutil nas thumbnails do hero durante scroll"
+    ]
+  },
+  "estrutura_de_conteudo": {
+    "posicao_h1": "AUSENTE — Nenhum H1. O primeiro heading é H3 (tagline descritiva). Pior hierarquia semântica de todas as páginas analisadas (nem H1 nem H2 para o título da seção principal).",
+    "padrao_ctas": {
+      "primario_persistente": {
+        "texto": "Start a project",
+        "posicao": "Navbar (fixo)"
+      },
+      "secundario_contextual": {
+        "texto": "Send Message",
+        "posicao": "Seção 2 (form inline)",
+        "estilo": "bg-white/70 text-black hover:scale-102"
+      },
+      "projeto_como_cta_implicito": {
+        "descricao": "Cada row de projeto é um link clicável — 13 CTAs implícitos para páginas individuais",
+        "transicao": "transform 1s ao hover"
+      }
+    },
+    "tem_faq": false,
+    "footer": {
+      "tipo": "Footer-grid de serviços (não é footer real)",
+      "colunas_desktop": 5,
+      "categorias": [
+        "Visual and Marketing",
+        "Technology"
+      ],
+      "tem_formulario": false,
+      "tem_social_links": false,
+      "tem_copyright": false,
+      "altura_px": 182
+    },
+    "formulario_inline": {
+      "presente": true,
+      "tipo": "Pré-qualificação com 8 checkboxes de serviços",
+      "servicos_disponiveis": [
+        "Brand Strategy",
+        "Brand Identity",
+        "User Experience Design",
+        "Visual Content",
+        "Web Development",
+        "eCommerce",
+        "Web & Mobile Applications",
+        "Embedded & Hardware"
+      ],
+      "floating_labels": true,
+      "shake_validacao": true,
+      "nota": "Formulário idêntico ao Services e Contact — componente reutilizado across pages"
+    }
+  },
+  "conclusao_para_o_projeto": {
+    "essa_pagina_serve_para": "Catálogo numerado de 13 projetos em formato lista vertical com thumbnails, tags de serviço e metadados de localização. Funciona como 'menu de degustação' — visão geral rápida do portfolio com links para case studies individuais. O hero com grid de thumbnails serve como 'preview board' visual antes da lista textual.",
+    "padrao_recomendado_para": "Página de Portfolio/Cases da GMT: (1) Layout de lista vertical numerada — elegante e fácil de scanear. (2) Tag-pills glassmorphism (bg-white/80 + backdrop-blur) — componente visual sofisticado e reutilizável. (3) Mouse-alert-bubble como preview interativo — diferenciador de UX (52 instâncias do mst mostram investimento pesado nesse efeito). (4) Grid de thumbnails no hero como 'preview board' — padrão visual impactante. (5) Gap generoso entre projetos (292px) — 'respiração' premium.",
+    "limitacoes_identificadas": [
+      "Zero H1 e zero H2 de seção — pior hierarquia semântica de todas as páginas. A GMT deve ter H1 'Portfolio' + H2 por categoria.",
+      "HostGrotesk UNLOADED — mesmo problema da Services. Portfolio renderiza apenas DMSans.",
+      "Bug 'Ready to get started? Ready to get started?' — duplicação de texto no H2 do CTA.",
+      "Sem paginação — 13 projetos em lista contínua. Se GMT tiver 20+ cases, precisará de paginação ou lazy-load.",
+      "Sem filtro por categoria — apesar de ter 5 tags distintas, não há UI para filtrar. A GMT deve implementar filtros.",
+      "brand-identity aparece em 100% dos projetos (13/13) — tag redundante, não diferencia nada.",
+      "Thumbnails muito pequenas (135×240px) no mobile — difícil avaliar a qualidade visual do trabalho.",
+      "Sem descrição por projeto — apenas nome + localização + tags. A GMT deve incluir 1-2 linhas de contexto.",
+      "Footer-grid sem info legal — consistente com todas as páginas."
+    ],
+    "pontos_fortes_a_replicar": [
+      "Lista vertical numerada — padrão de catálogo elegante e fácil de scanear",
+      "Tag-pills glassmorphism (bg-white/80 + backdrop-blur + rounded-[0.5vw])",
+      "Mouse-alert-bubble como cursor customizado/preview",
+      "Componente mst com 52 instâncias — investimento pesado em animação de texto",
+      "Grid de thumbnails portrait no hero como 'preview board'",
+      "Gap de 292px entre projetos — whitespace premium",
+      "Transform reveal 1s cubic-bezier(0.76, 0, 0.24, 1) — cascata on-scroll suave",
+      "Formulário inline reutilizado (Services/Contact/Portfolio) — consistência cross-page"
+    ],
+    "combina_com_referencias": [
+      "design_map_lessestudio_home_v2.json — os 3 cases da Home (Duo Nutrition, Everyday, Nymph) são subset dos 13 do Portfolio",
+      "design_map_lessestudio_services_geral_v2.json — mesmos 8 serviços nos checkboxes do form, mesmo bug de H2 duplicado, mesmo HostGrotesk unloaded",
+      "design_map_lessestudio_contact_v2.json — mesmo formulário com floating labels e shake validation",
+      "design_map_lessestudio_about_v2.json — mesmo componente mst, mas Portfolio tem 52 instâncias (máximo de todas as páginas)"
+    ]
+  }
+}

@@ -1,0 +1,1046 @@
+{
+  "meta": {
+    "arquivo": "design_map_lessestudio_home_v2.json",
+    "fonte": "Conjunto_Home2.json (11 chaves) + análise visual lessestudio.com/",
+    "versao": "2.0",
+    "data_extracao": "2026-06-22",
+    "nota": "v2 com animations, keyframes, design_tokens e fonts — dados explícitos, não inferidos"
+  },
+  "tecnologias": {
+    "framework": "SvelteKit (SSR + hydration)",
+    "evidencia_framework": "classes svelte-* em todos os elementos (svelte-1ycgkir, svelte-1b2mvyb, svelte-mzuvwt, svelte-o03wub, svelte-fjr74e, svelte-1cr5s35)",
+    "css": "Tailwind CSS v4 (design tokens nativos via --tw-*, oklch/oklab colors, --spacing: .25rem)",
+    "smooth_scroll": "Lenis (confirmado via libs, classe 'lenis lenis-scrolling' no HTML)",
+    "animacoes": "CSS nativo + Lenis (sem GSAP, sem Framer Motion, sem Three.js, sem Lottie)",
+    "imagens": "CDN próprio (cnd.lessestudio.com), formato WebP + SVG",
+    "hosting": "Evidência de SvelteKit adapter (_app/immutable/assets/)",
+    "libs_detectadas": {
+      "lenis": true,
+      "gsap": false,
+      "framerMotion": false,
+      "threejs": false,
+      "lottie": false,
+      "barba": false,
+      "locomotive": false
+    },
+    "componente_mst": "Componente Svelte 'mst' (classe mst__inner svelte-mzuvwt) — animação de texto linha-a-linha com willChange:transform",
+    "tailwind_v4_evidencias": [
+      "oklch() e oklab() em cores computadas",
+      "variáveis --tw-prose-invert-* para modo escuro",
+      "--spacing: .25rem como token raiz",
+      "--default-transition-duration: .15s",
+      "--tw-gradient-position: to bottom in oklab"
+    ]
+  },
+  "estrutura_da_pagina": {
+    "navbar": {
+      "tipo": "fixed-top com blur",
+      "componentes": [
+        {
+          "elemento": "logo",
+          "descricao": "SVG logo branco (logo-white.D2PbM6gr.svg), 135×39px, classe invisible h-auto w-full — hidden em favor de versão inline/animada"
+        },
+        {
+          "elemento": "cta_primario",
+          "tag": "BUTTON",
+          "texto_semantico": "Start a project",
+          "classes": "navbar-bg group flex h-12 md:h-[3.35vw] cursor-pointer items-center gap-[0.5vw] rounded-lg md:rounded-[1vw] pl-5 pr-5",
+          "dimensoes": "150×48px (mobile), 3.35vw altura (desktop)",
+          "estilo": "backdrop-blur, rounded-lg → rounded-[1vw] em desktop"
+        },
+        {
+          "elemento": "hamburger",
+          "tag": "BUTTON",
+          "classes": "flex h-12 w-12 flex-col items-center justify-center gap-1.25 rounded-lg backdrop-blur-xl transition-colors duration-300",
+          "dimensoes": "48×48px",
+          "estilo": "duas linhas com backdrop-blur-xl"
+        }
+      ],
+      "comportamento": "Fixa no topo, acompanha scroll via Lenis, transição de cor 300ms"
+    },
+    "preloader": {
+      "tipo": "Fullscreen com progress bar e contador percentual",
+      "texto": "LESSE (logo) + 0%→100% (canto direito)",
+      "fundo": "#000 (preto sólido)",
+      "animacoes_envolvidas": [
+        "svelte-1ycgkir-fill (progress bar, 7s linear)",
+        "svelte-1ycgkir-bar-fade-out (fade da barra ao completar, 1s ease)"
+      ],
+      "nota": "O preloader bloqueia a interação até completar — as imagens do hero carregam em background"
+    },
+    "sequencia_de_secoes": [
+      {
+        "index": 0,
+        "nome_semantico": "Hero — Image Slider com autoplay",
+        "classes": "relative h-[80vh] w-screen overflow-hidden bg-black svelte-1ycgkir",
+        "altura_px": 238,
+        "filhos": 5,
+        "conteudo": "Slideshow fullscreen com imagens de projetos, texto H1 (invisível/SEO), H2 'eCommerce' como label de categoria, progress bar na base",
+        "media": "2 imagens de hero (838ae005, fa82836e) — fullscreen cover, absolute inset-0",
+        "animacoes": "slide-in/slide-out (1.5s cubic-bezier), darken overlay (1.5s), fill progress (7s linear), bar-fade-out (1s)"
+      },
+      {
+        "index": 1,
+        "nome_semantico": "Services Grid — Catálogo de serviços",
+        "classes": "mt-20 md:mt-[8vw] flex w-screen flex-col",
+        "altura_px": 554,
+        "filhos": 4,
+        "conteudo": "H2 'OUR SERVICES', grid de 8 serviços (H3 cada): Brand Strategy, Brand Identity, UX Design, Visual Content, Web Development, eCommerce, Web & Mobile Apps, Embedded & Hardware",
+        "layout": "flex-col com items flexíveis, gap-2 entre título e descrição",
+        "padrao": "Serviços duplicados (desktop 8 + mobile 8 = 16 H3 no DOM) — responsive via hidden/md:grid"
+      },
+      {
+        "index": 2,
+        "nome_semantico": "Approach & Values — Filosofia da agência",
+        "classes": "mt-20 flex w-screen flex-col px-5 md:mt-[10vw] md:px-[5vw]",
+        "altura_px": 964,
+        "filhos": 3,
+        "conteudo": "H2 'OUR APPROACH AND VALUES', texto descritivo sobre metodologia",
+        "layout": "Seção w-full md:w-3/8 — texto alinhado à esquerda em ~37.5% da largura no desktop",
+        "media": "Imagem vertical portrait (be81029e, 110×225px) + 3 thumbnails landscape (86×64.5px cada)"
+      },
+      {
+        "index": 3,
+        "nome_semantico": "Portfolio Showcase — Últimos trabalhos",
+        "classes": "mt-20 px-5 md:px-[5vw] md:mt-[7vw]",
+        "altura_px": 938,
+        "filhos": 3,
+        "conteudo": "H2 'LATEST WORK', 3 case studies: Duo Nutrition (Rússia), Everyday (Austrália), Nymph (Tailândia)",
+        "layout_card": "flex w-full flex-col md:gap-[2vw] md:w-1/2 — card ocupa metade da tela em desktop",
+        "metadados_por_card": "H3 (nome), H4 Location, H4 Industry, H4 Services + tags (SPAN.tag)",
+        "media": "8 imagens de projetos (320×432px portrait) + duplicatas lazy-load (width:0 = offscreen)",
+        "tags_componente": "SPAN.tag rounded-lg px-4 py-2 text-xs text-white — pills de categorização"
+      },
+      {
+        "index": 4,
+        "nome_semantico": "Testimonials — Depoimentos de clientes",
+        "classes": "mt-20 md:mt-[10vw] w-screen px-5 md:px-[5vw]",
+        "altura_px": 1902,
+        "filhos": 1,
+        "conteudo": "H2 'TESTIMONIALS', H3 subtítulo descritivo, carousel vertical de depoimentos (Duo Nutrition, Miguel/Lunna, Neva Spa, Johnny Tran/Vora)",
+        "carousel": {
+          "tipo": "Vertical auto-scroll (carousel-track svelte-o03wub)",
+          "animacao": "scroll-up (32s linear infinite) — translateY(0) → translateY(-50%)",
+          "nota": "Duplicação de items para efeito de loop infinito sem gaps"
+        },
+        "media": "4 logos/avatares SVG (h:56px) + duplicatas para loop — total 12 imgs na seção"
+      },
+      {
+        "index": 5,
+        "nome_semantico": "Latest News / Blog + Footer-Grid de serviços",
+        "classes": "px-5 md:px-[5vw] mt-[10vw]",
+        "altura_px": 1094,
+        "filhos": 2,
+        "conteudo": "H2 'LATEST NEWS' com 2 artigos (Building Brands from Within, How to Choose a Brand Name). Footer-grid com categorias 'Visual and Marketing' e 'Technology' listando sub-serviços",
+        "layout_artigos": "flex w-full flex-col gap-[2vw] p-[1vw] leading-[2vw] md:h-full",
+        "footer_grid": {
+          "desktop": "grid-cols-5 gap-x-[2vw] md:grid — H3 como cabeçalho de coluna",
+          "mobile": "flex flex-col gap-10 md:hidden — empilhado verticalmente"
+        },
+        "media": "2 imagens de blog-post thumbnails (38×308px, 38×260px) — ultra-narrow portrait/crop"
+      }
+    ],
+    "total_secoes": 6,
+    "altura_total_estimada_px": 5691,
+    "nota_estrutural": "A Home é a página mais longa e complexa do site — 6 seções cobrindo hero, serviços, valores, portfolio, testemunhos e blog. Não há seção de footer dedicada; o grid de serviços na última seção funciona como footer semântico."
+  },
+  "hierarquia_de_conteudo": {
+    "total_headings": 42,
+    "headings_unicos": 26,
+    "duplicacoes_responsivas": "16 headings duplicados (8 pares desktop/mobile para serviços)",
+    "distribuicao": {
+      "H1": {
+        "quantidade": 1,
+        "posicao": "Hero (topo_px: -1 = invisível/SEO-only)",
+        "texto_semantico": "[título do estúdio + categoria]",
+        "classe_pai": "relative h-[80vh] w-screen overflow-hidden bg-black",
+        "nota_seo": "H1 existe mas está posicionado fora da viewport (topo_px: -1). Melhor que os demais pages que não têm H1, mas ainda assim é um padrão SEO fraco — deveria estar visível."
+      },
+      "H2": {
+        "quantidade": 6,
+        "funcoes": [
+          "Label de categoria no hero ('eCommerce')",
+          "Título de seção: OUR SERVICES",
+          "Título de seção: OUR APPROACH AND VALUES",
+          "Título de seção: LATEST WORK",
+          "Título de seção: TESTIMONIALS",
+          "Título de seção: LATEST NEWS"
+        ],
+        "estilo_tipico": "UPPERCASE, font-weight: 100 (thin), tracking-widest"
+      },
+      "H3": {
+        "quantidade": 27,
+        "funcoes": [
+          "Nomes de serviços (8 únicos × 2 versões responsivas = 16)",
+          "Nomes de projetos (3: Duo Nutrition, Everyday, Nymph)",
+          "Subtítulo de testimonials (1)",
+          "Títulos de artigos de blog (2)",
+          "Cabeçalhos do footer-grid (2 desktop + 2 mobile = 4)"
+        ]
+      },
+      "H4": {
+        "quantidade": 9,
+        "funcoes": "Metadados de case study: Location, Industry, Services (3 campos × 3 projetos)"
+      }
+    },
+    "padrao_de_nomeacao": "H2 em UPPERCASE para seções, H3 em Title Case para items",
+    "nota_critica": "A Home é a ÚNICA página do lessestudio.com que possui H1 — porém ele está invisível (topo_px: -1). As demais páginas omitem H1 completamente."
+  },
+  "padrao_de_catalogo": {
+    "servicos": {
+      "total_items": 8,
+      "estrutura_por_item": {
+        "heading": "H3",
+        "layout": "flex md:flex-row flex-col gap-2",
+        "conteudo": "Nome do serviço + texto descritivo"
+      },
+      "duplicacao_responsiva": true,
+      "versao_desktop": "grid/flex com H3 visível (topo_px: 427)",
+      "versao_mobile": "flex-col com H3 separado (topo_px: 0 = offscreen até scroll)"
+    },
+    "portfolio": {
+      "total_items": 3,
+      "estrutura_por_card": {
+        "heading": "H3 (nome do projeto)",
+        "metadados": [
+          "H4 Location",
+          "H4 Industry",
+          "H4 Services"
+        ],
+        "tags": "SPAN.tag rounded-lg px-4 py-2 text-xs text-white",
+        "imagem": "320×432px portrait WebP, object-cover",
+        "link": "A.group relative flex h-full md:h-[30vw] w-full flex-col gap-4 overflow-hidden"
+      },
+      "layout": "md:w-1/2 — grid de 2 colunas no desktop"
+    },
+    "testimonials": {
+      "tipo": "Carousel vertical infinito",
+      "items_visiveis": "~2-3 simultâneos",
+      "total_clientes": 4,
+      "media_por_item": "Logo/avatar SVG (h:56px)"
+    },
+    "blog": {
+      "total_artigos": 2,
+      "layout": "flex w-full flex-col gap-[2vw] p-[1vw] leading-[2vw] md:h-full",
+      "thumbnail": "Ultra-narrow portrait (38×260-308px)"
+    },
+    "footer_grid": {
+      "categorias": 2,
+      "nomes": [
+        "Visual and Marketing",
+        "Technology"
+      ],
+      "layout_desktop": "grid-cols-5 gap-x-[2vw]",
+      "layout_mobile": "flex-col gap-10"
+    }
+  },
+  "tokens_visuais": {
+    "cores_por_funcao": {
+      "css_custom_properties": {
+        "--bg-primary": "#000",
+        "--bg-secondary": "#1a1a1a",
+        "--text-primary": "#fff",
+        "--text-secondary": "#999",
+        "--color-black": "#000",
+        "--color-white": "#fff"
+      },
+      "cores_computadas": {
+        "texto_principal": "rgb(255, 255, 255) — branco puro",
+        "texto_secundario": "rgb(144, 144, 144) — cinza médio",
+        "texto_terciario": "rgb(162, 162, 162) — cinza claro",
+        "texto_sutil": "rgb(87, 87, 87) — cinza escuro",
+        "texto_muted": "rgb(115, 114, 114) — cinza médio-escuro",
+        "texto_overlay_60": "oklab(0.999994 ... / 0.6) — branco 60% opacidade",
+        "texto_overlay_70": "oklab(0.999994 ... / 0.7) — branco 70% opacidade",
+        "texto_overlay_50": "oklab(0.999994 ... / 0.5) — branco 50% opacidade",
+        "badge_text": "rgba(182, 182, 182, 0.8) — cinza claro 80%",
+        "fundo_principal": "rgb(0, 0, 0) — preto sólido",
+        "fundo_card": "rgba(36, 36, 36, 0.5) — cinza escuro 50% opacidade",
+        "fundo_overlay_escuro": "oklab(0 0 0 / 0.3) — preto 30%",
+        "fundo_overlay_claro": "oklab(0.999994 ... / 0.4) — branco 40%",
+        "fundo_pill": "rgba(223, 223, 223, 0.8) — cinza claro 80%",
+        "fundo_hover": "rgba(29, 29, 29, 0.055) — quase transparente",
+        "fundo_footer": "rgb(16, 16, 16) — near-black"
+      },
+      "palette_semantica": {
+        "accent_colors_do_sistema": {
+          "--color-red-300": "oklch(80.8% .114 19.571)",
+          "--color-red-400": "oklch(70.4% .191 22.216)",
+          "--color-red-500": "oklch(63.7% .237 25.331)",
+          "--color-green-500": "oklch(72.3% .219 149.579)",
+          "--color-blue-600": "oklch(54.6% .245 262.881)",
+          "--color-gray-500": "oklch(55.1% .027 264.364)"
+        },
+        "nota": "Cores accent estão definidas nos tokens Tailwind mas NÃO são usadas visualmente na Home — a paleta efetiva é monocromática (preto/branco/cinza)"
+      },
+      "modo": "dark-mode exclusivo (classe dark-mode no HTML, --tw-prose-invert-* ativo)"
+    },
+    "tipografia": {
+      "fontes_carregadas": [
+        {
+          "family": "HostGrotesk",
+          "var_css": "--font-hostgrotesk: \"HostGrotesk\", sans-serif",
+          "weight_range": "100–900 (variable font)",
+          "style": "normal",
+          "status": "loaded",
+          "uso": "Fonte primária — headings e corpo (font-weight: 100 e 400 confirmados)"
+        },
+        {
+          "family": "DMSans",
+          "var_css": "--font-dmsans: \"DMSans\", sans-serif",
+          "weight": "500",
+          "style": "normal",
+          "status": "loaded",
+          "uso": "Fonte secundária — botões, labels, UI elements"
+        },
+        {
+          "family": "LaCerchia",
+          "var_css": "--font-lacerchia: \"LaCerchia\", cursive",
+          "weight": "400",
+          "style": "normal",
+          "status": "unloaded",
+          "uso": "Declarada mas NÃO carregada na Home — possivelmente usada apenas em outras páginas (About?)"
+        }
+      ],
+      "font_sizes_computados": [
+        "1.2px",
+        "1.35px",
+        "1.5px",
+        "12px",
+        "14px",
+        "16px",
+        "18px",
+        "24px",
+        "36px"
+      ],
+      "escala_tipografica_tokens": {
+        "--text-xs": "0.75rem (12px)",
+        "--text-sm": "0.875rem (14px)",
+        "--text-lg": "1.125rem (18px)",
+        "--text-2xl": "1.5rem (24px)",
+        "--text-3xl": "1.875rem (30px)",
+        "--text-4xl": "2.25rem (36px)",
+        "--text-5xl": "3rem (48px)",
+        "--text-6xl": "3.75rem (60px)",
+        "--text-8xl": "6rem (96px)"
+      },
+      "font_weights": {
+        "computados": [
+          "100 (thin)",
+          "400 (regular)"
+        ],
+        "tokens": {
+          "--font-weight-thin": "100",
+          "--font-weight-medium": "500",
+          "--font-weight-semibold": "600"
+        }
+      },
+      "line_heights": {
+        "--tw-leading": "8vw (headings de hero — viewport-relative)",
+        "--leading-tight": "1.25",
+        "--leading-snug": "1.375",
+        "--mst-leading": "var(--mst-leading-desktop) — dinâmico por breakpoint"
+      },
+      "letter_spacing": {
+        "--tracking-normal": "0em",
+        "--tracking-widest": "0.1em"
+      },
+      "padrao_tipografico": "Headings em weight 100 (ultra-thin) com tracking 0.1em (widest) em HostGrotesk. Corpo em weight 400 regular. Contraste extremo thin/regular em vez de bold/light."
+    },
+    "espacamento": {
+      "token_base": "--spacing: 0.25rem (4px)",
+      "padding_lateral_mobile": "px-5 (20px)",
+      "padding_lateral_desktop": "px-[5vw]",
+      "gap_entre_secoes_mobile": "mt-20 (80px)",
+      "gap_entre_secoes_desktop": "mt-[7vw] a mt-[10vw] (viewport-relative)",
+      "paddings_computados": [
+        "0px 20px",
+        "16px",
+        "8px",
+        "0px 16px",
+        "0px 7.5px",
+        "20px",
+        "3px"
+      ],
+      "margins_computados": [
+        "80px 0px 0px",
+        "16px 0px 0px",
+        "20px 0px 0px",
+        "-1px",
+        "0px 0px 4px"
+      ],
+      "border_radius": {
+        "--radius-md": "0.375rem (6px)",
+        "--radius-lg": "0.5rem (8px)",
+        "--radius-xl": "0.75rem (12px)",
+        "--radius-2xl": "1rem (16px)"
+      },
+      "padrao": "Espaçamento fluid no desktop (vw units), fixo no mobile (px/rem). Gap entre seções é generoso (80px mobile / 7-10vw desktop)."
+    }
+  },
+  "media_inventario": {
+    "total_assets": 39,
+    "imagens_unicas": 16,
+    "duplicatas_lazy": 23,
+    "formatos": {
+      "webp": 30,
+      "svg": 8,
+      "png": 1
+    },
+    "cdn": "cnd.lessestudio.com (CDN customizado)",
+    "assets_estaticos": "_app/immutable/assets/ (SvelteKit)",
+    "categorias": {
+      "hero_slides": {
+        "quantidade": 2,
+        "dimensoes": "150×238px (capturado em mobile viewport) — fullscreen via absolute inset-0 object-cover",
+        "formato": "WebP",
+        "ids": [
+          "838ae005",
+          "fa82836e"
+        ]
+      },
+      "portfolio_cards": {
+        "quantidade": 8,
+        "dimensoes": "320×432px (portrait 3:4)",
+        "formato": "WebP",
+        "classe": "h-full w-full object-cover transition-opacity",
+        "nota": "Cada imagem aparece 2× no DOM (visível + pre-load offscreen com width:0)"
+      },
+      "approach_images": {
+        "quantidade": 4,
+        "tipos": [
+          "1× portrait principal (110×225px)",
+          "3× landscape thumbnails (86×64.5px cada)"
+        ],
+        "formato": "WebP",
+        "estilo": "rounded-lg"
+      },
+      "testimonial_logos": {
+        "quantidade": 4,
+        "dimensoes": "variável × 56px (height fixo)",
+        "formato": "SVG (3) + WebP (1)",
+        "nota": "Cada logo aparece 3× no DOM (para efeito de loop do carousel vertical)"
+      },
+      "blog_thumbnails": {
+        "quantidade": 2,
+        "dimensoes": "38×308px e 38×260px (ultra-narrow)",
+        "formato": "WebP",
+        "estilo": "rounded-lg"
+      },
+      "badges": {
+        "shopify_experts": {
+          "quantidade": 2,
+          "formatos": [
+            "PNG (103×28px navbar)",
+            "PNG (h-[1.7vw] desktop)"
+          ],
+          "src": "shopifyexperts.B7Ugdseq.png"
+        }
+      },
+      "logo_site": {
+        "quantidade": 1,
+        "src": "logo-white.D2PbM6gr.svg",
+        "dimensoes": "135×39px",
+        "classe": "invisible h-auto w-full",
+        "nota": "Logo SVG marcado como invisible — versão visual é inline ou animada"
+      }
+    },
+    "padrao_de_carregamento": "Lazy loading via duplicação DOM — imagens offscreen com width:0, height:0 são pre-carregadas e trocadas por transition-opacity",
+    "media": [
+      {
+        "index": 0,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/e113b372-aac0-4e83-8f28-de14751f6e96.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 1,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/041ae269-b7a7-40b0-bf96-363d0fe963d0.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 2,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/db339f03-79b7-4807-aa25-3a8e969eaa55.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 3,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/80c988d7-15e9-4dd0-8b32-d082b6073d4c.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 4,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/1e700789-d780-4007-9f4b-2256a9011bf8.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 5,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/8559622c-4408-4d25-b428-97b84234db83.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 6,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/ca2caace-1213-4e6b-bc78-e3f3727d2deb.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 7,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/d6db8f5b-c7d7-4a15-b448-451705aaa9a8.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 8,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/e113b372-aac0-4e83-8f28-de14751f6e96.webp",
+        "width": 334.078125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 9,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/041ae269-b7a7-40b0-bf96-363d0fe963d0.webp",
+        "width": 334.0859375,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 10,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/db339f03-79b7-4807-aa25-3a8e969eaa55.webp",
+        "width": 334.078125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 11,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/80c988d7-15e9-4dd0-8b32-d082b6073d4c.webp",
+        "width": 334.0859375,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 12,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/1e700789-d780-4007-9f4b-2256a9011bf8.webp",
+        "width": 334.078125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 13,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/8559622c-4408-4d25-b428-97b84234db83.webp",
+        "width": 334.0859375,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 14,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/ca2caace-1213-4e6b-bc78-e3f3727d2deb.webp",
+        "width": 334.078125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 15,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/d6db8f5b-c7d7-4a15-b448-451705aaa9a8.webp",
+        "width": 334.0859375,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 16,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/9f75a1bc-35f8-41ef-be3a-56ead44686f0.gif",
+        "width": 1382.3984375,
+        "height": 667.8359375,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 w-full h-full object-c"
+      },
+      {
+        "index": 17,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/96ab8861-72d3-4744-8c8a-ab109bcc99a7.webp",
+        "width": 645.125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 18,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/11122428-b78c-40cd-86fb-10b616a02af1.webp",
+        "width": 645.125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 19,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/1c8889ef-8920-4602-8a99-0b74da28ada8.webp",
+        "width": 645.125,
+        "height": 460.796875,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 20,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/b915dfc2-95a1-437f-b026-b7b9dc170c84.svg",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 21,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/6dc48285-0f58-4406-8064-0059ed94fc01.svg",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 22,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/02a83412-deca-40f0-b3fd-eed1d48c2213.svg",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 23,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/be1a44c9-a699-4a61-a8d1-5d1737e45962.webp",
+        "width": 0,
+        "height": 0,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 24,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/b915dfc2-95a1-437f-b026-b7b9dc170c84.svg",
+        "width": 53.7578125,
+        "height": 53.7578125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 25,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/6dc48285-0f58-4406-8064-0059ed94fc01.svg",
+        "width": 53.7578125,
+        "height": 53.7578125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 26,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/02a83412-deca-40f0-b3fd-eed1d48c2213.svg",
+        "width": 53.7578125,
+        "height": 53.7578125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 27,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/be1a44c9-a699-4a61-a8d1-5d1737e45962.webp",
+        "width": 53.7578125,
+        "height": 53.7578125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 28,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/b915dfc2-95a1-437f-b026-b7b9dc170c84.svg",
+        "width": 53.7578125,
+        "height": 53.7578125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 29,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/6dc48285-0f58-4406-8064-0059ed94fc01.svg",
+        "width": 53.7578125,
+        "height": 53.7578125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 30,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/02a83412-deca-40f0-b3fd-eed1d48c2213.svg",
+        "width": 53.7578125,
+        "height": 53.7578125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 31,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/be1a44c9-a699-4a61-a8d1-5d1737e45962.webp",
+        "width": 53.7578125,
+        "height": 53.7578125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100  svelte-1b2mvyb"
+      },
+      {
+        "index": 32,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/838ae005-fc2e-43d6-a92b-3b43fa9c7398.webp",
+        "width": 337.578125,
+        "height": 430.078125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 33,
+        "type": "IMG",
+        "src": "https://cnd.lessestudio.com/4b2d1f94-5d38-412b-b423-34f0018f9cbe.webp",
+        "width": 337.578125,
+        "height": 430.078125,
+        "classes": "h-full w-full object-cover transition-opacity opacity-100 h-full w-full rounded-"
+      },
+      {
+        "index": 34,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+        "width": 136.875,
+        "height": 26.109375,
+        "classes": "h-[1.7vw]"
+      },
+      {
+        "index": 35,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/shopifyexperts.B7Ugdseq.png",
+        "width": 0,
+        "height": 0,
+        "classes": "h-7"
+      },
+      {
+        "index": 36,
+        "type": "IMG",
+        "src": "https://lessestudio.com/_app/immutable/assets/logo-white.D2PbM6gr.svg",
+        "width": 1382.40625,
+        "height": 400.1640625,
+        "classes": "invisible h-auto w-full"
+      }
+    ]
+  },
+  "sistema_de_animacoes": {
+    "libs_confirmadas": [
+      "Lenis (smooth scroll)"
+    ],
+    "libs_ausentes": [
+      "GSAP",
+      "Framer Motion",
+      "Three.js",
+      "Lottie",
+      "Barba",
+      "Locomotive Scroll"
+    ],
+    "keyframes_identificados": [
+      {
+        "nome": "svelte-1ycgkir-slide-in",
+        "tipo": "slide",
+        "duracao_tipica": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Slide horizontal de entrada — imagem desliza de fora (100% × --dir) para posição zero. Usado no hero slider para a imagem que entra.",
+        "css_var": "--dir controla direção (1 ou -1)"
+      },
+      {
+        "nome": "svelte-1ycgkir-slide-out",
+        "tipo": "slide",
+        "duracao_tipica": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Slide horizontal de saída — imagem atual desliza 20% na direção oposta enquanto a nova entra. Parallax effect sutil (não sai 100%)."
+      },
+      {
+        "nome": "svelte-1ycgkir-darken",
+        "tipo": "fade",
+        "duracao_tipica": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Overlay escurecedor — opacidade de 0 → 0.6 sobre a imagem que sai, criando efeito de profundidade durante a transição do slider."
+      },
+      {
+        "nome": "svelte-1ycgkir-fill",
+        "tipo": "custom",
+        "duracao_tipica": "7s",
+        "easing": "linear",
+        "descricao": "Progress bar do hero slider — width cresce de --fill-start (0%) até 100%. Cada slide dura 7 segundos. Indica tempo restante visualmente."
+      },
+      {
+        "nome": "svelte-1ycgkir-bar-fade-out",
+        "tipo": "fade",
+        "duracao_tipica": "1s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "descricao": "Fade da progress bar ao completar — mantém width fixa (--bar-width) enquanto opacidade vai a 0. Transição suave entre slides."
+      },
+      {
+        "nome": "svelte-o03wub-scroll-up",
+        "tipo": "slide",
+        "duracao_tipica": "32s",
+        "easing": "linear",
+        "descricao": "Carousel vertical infinito de testimonials — translateY(0) → translateY(-50%). Duração longa (32s) para leitura confortável. Loop via duplicação de conteúdo."
+      },
+      {
+        "nome": "svelte-1b2mvyb-scan",
+        "tipo": "custom",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Efeito de scan/shimmer nas imagens — translate(-100%) skew(-20deg) → translate(250%) skew(-20deg). Brilho diagonal que varre a imagem durante carregamento."
+      },
+      {
+        "nome": "svelte-fjr74e-rowFadeIn",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade-in com deslocamento vertical — opacidade 0 + translateY(-6px) → opacidade 1 + translateY(0). Usado em rows/items que entram no viewport."
+      },
+      {
+        "nome": "svelte-1cr5s35-shake",
+        "tipo": "custom",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Shake de validação — oscilação horizontal decrescente (0→-5→4→-3→2→-1→0px). Feedback visual para erros de formulário."
+      },
+      {
+        "nome": "svelte-1cr5s35-fadeIn",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade in simples — opacidade → 1. Componente de notificação/toast."
+      },
+      {
+        "nome": "svelte-1cr5s35-fadeOut",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Fade out simples — opacidade → 0. Dismissal de notificação/toast."
+      },
+      {
+        "nome": "svelte-1yzrg6q-dot-shine",
+        "tipo": "fade",
+        "duracao_tipica": "variável",
+        "easing": "ease",
+        "descricao": "Pulsação de dot — opacidade 1→0.5→1. Indicador de loading/atividade (provavelmente dot no preloader ou nav)."
+      },
+      {
+        "nome": "spin",
+        "tipo": "custom",
+        "duracao_tipica": "1s (--animate-spin)",
+        "easing": "linear infinite",
+        "descricao": "Rotação 360° contínua — spinner genérico do Tailwind. Usado em estados de loading."
+      },
+      {
+        "nome": "bounce",
+        "tipo": "custom",
+        "duracao_tipica": "1s (--animate-bounce)",
+        "easing": "cubic-bezier(0.8, 0, 1, 1) / cubic-bezier(0, 0, 0.2, 1)",
+        "descricao": "Bounce vertical — translateY(-25%) com ease-in no topo e ease-out na base. Indicador de scroll-down ou CTA pulsante."
+      }
+    ],
+    "elementos_animados": [
+      {
+        "elemento": "DIV.slide-out (hero slider — imagem saindo)",
+        "animacao": "svelte-1ycgkir-slide-out",
+        "duracao": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "willChange": "transform",
+        "momento": "on-load (autoplay 7s interval)"
+      },
+      {
+        "elemento": "DIV.slide-out-overlay (overlay escurecedor)",
+        "animacao": "svelte-1ycgkir-darken",
+        "duracao": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "willChange": "auto",
+        "momento": "on-load (sincronizado com slide-out)"
+      },
+      {
+        "elemento": "DIV.slide-in (hero slider — imagem entrando)",
+        "animacao": "svelte-1ycgkir-slide-in",
+        "duracao": "1.5s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "willChange": "transform",
+        "momento": "on-load (autoplay 7s interval)"
+      },
+      {
+        "elemento": "DIV.progress-fill (barra de progresso do slide)",
+        "animacao": "svelte-1ycgkir-fill",
+        "duracao": "7s",
+        "easing": "linear",
+        "willChange": "auto",
+        "momento": "on-load (contínuo)"
+      },
+      {
+        "elemento": "DIV.bar-fade-out (fade da barra ao completar)",
+        "animacao": "svelte-1ycgkir-bar-fade-out",
+        "duracao": "1s",
+        "easing": "cubic-bezier(0.65, 0.05, 0.1, 1)",
+        "willChange": "auto",
+        "momento": "on-load (ao fim de cada ciclo de 7s)"
+      },
+      {
+        "elemento": "DIV.carousel-track (testimonials vertical scroll)",
+        "animacao": "svelte-o03wub-scroll-up",
+        "duracao": "32s",
+        "easing": "linear",
+        "willChange": "auto",
+        "momento": "on-scroll (quando seção entra no viewport)"
+      },
+      {
+        "elemento": "SPAN.mst__inner (texto animado linha-a-linha)",
+        "animacao": "CSS transform via JavaScript (willChange: transform)",
+        "duracao": "variável",
+        "easing": "custom (controlado pelo componente mst)",
+        "willChange": "transform",
+        "momento": "on-scroll (intersection observer)"
+      },
+      {
+        "elemento": "A.group (portfolio card link)",
+        "animacao": "transform transition",
+        "duracao": "1s",
+        "easing": "cubic-bezier(0.76, 0, 0.24, 1)",
+        "willChange": "transform",
+        "momento": "on-scroll (reveal)"
+      },
+      {
+        "elemento": "DIV.hidden-reveal (elementos com scroll-reveal)",
+        "animacao": "opacity + transform transition",
+        "duracao": "0.8s / 1s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "opacity, transform",
+        "momento": "on-scroll (translateY(20px/200px) → translateY(0))"
+      },
+      {
+        "elemento": "Imagens (transition-opacity)",
+        "animacao": "opacity transition",
+        "duracao": "0.4s–0.8s",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "willChange": "auto",
+        "momento": "on-load (lazy load reveal)"
+      },
+      {
+        "elemento": "SVG fill elements",
+        "animacao": "fill transition",
+        "duracao": "0.5s",
+        "easing": "ease",
+        "willChange": "auto",
+        "momento": "on-hover (mudança de cor de ícones SVG)"
+      },
+      {
+        "elemento": "Links e textos (color transition)",
+        "animacao": "color 1s / color 0.3s",
+        "duracao": "0.3s–1s",
+        "easing": "ease-in-out / linear",
+        "willChange": "auto",
+        "momento": "on-hover (texto) / on-scroll (mudança de tema)"
+      }
+    ],
+    "tokens_de_animacao": {
+      "--ease": "cubic-bezier(0.65, 0.05, 0.1, 1) — easing principal do site",
+      "--slide-duration": "1.5s — duração padrão de slides",
+      "--fade-duration": "1s — duração padrão de fades",
+      "--color-transition": "1s — transição de cor entre seções/modos",
+      "--default-transition-duration": "0.15s — transição padrão Tailwind",
+      "--default-transition-timing-function": "cubic-bezier(0.4, 0, 0.2, 1) — ease-out Tailwind",
+      "--tw-duration": "1s — override global",
+      "--tw-ease": "var(--ease-out)",
+      "--ease-in": "cubic-bezier(0.4, 0, 1, 1)",
+      "--ease-out": "cubic-bezier(0, 0, 0.2, 1)",
+      "--ease-in-out": "cubic-bezier(0.4, 0, 0.2, 1)"
+    },
+    "padroes_de_transicao": "O site opera em três camadas de tempo: (1) Rápida (0.15–0.3s) para micro-interações hover/focus, (2) Média (0.8–1.5s) para reveals on-scroll e transições de slide com cubic-bezier(0.65, 0.05, 0.1, 1) — um easing proprietário muito lento no início e explosivo no fim, e (3) Lenta (7s–32s) para autoplay do hero slider e scroll vertical do carousel de testimonials. O Lenis garante suavidade no scroll geral. Todas as animações CSS são performáticas (will-change: transform nas que se movem). O padrão geral é cinematográfico e deliberado — nada é brusco.",
+    "inferidos_visualmente": [
+      "Preloader com animação de contagem percentual (0%→100%) sincronizada com fill da progress bar",
+      "Parallax sutil nas imagens do hero (slide-out move apenas 20%, não 100%)",
+      "Hover nos cards de portfolio provavelmente inclui scale sutil (classes group + transform 2s cubic-bezier detectadas)",
+      "O componente mst anima texto palavra-por-palavra ou linha-por-linha no scroll, com efeito tipo split-text",
+      "Navegação pill flutuante (bottom nav) com animação de entrada on-scroll-down"
+    ]
+  },
+  "estrutura_de_conteudo": {
+    "posicao_h1": "Presente mas invisível (topo_px: -1, dentro do hero). SEO-friendly porém não visível ao usuário. É o único H1 encontrado em todo o site lessestudio.com.",
+    "padrao_ctas": {
+      "primario": {
+        "texto": "Start a project",
+        "tipo": "BUTTON",
+        "posicao": "Navbar (persistente em todas as páginas)",
+        "estilo": "navbar-bg, rounded-lg/rounded-[1vw], backdrop-blur implícito, h-12 mobile / h-[3.35vw] desktop"
+      },
+      "secundarios": {
+        "portfolio_cards": "Links implícitos (A.group) — sem texto CTA explícito, o card inteiro é clicável",
+        "blog_articles": "Links implícitos — card clicável",
+        "footer_services": "Links para sub-páginas de serviços"
+      },
+      "nota": "A Home NÃO tem CTAs explícitos além do 'Start a project' na navbar. Todo o engagement é via interação com cards (hover → click). Ausência de 'Learn more', 'See all projects', 'Read more' etc."
+    },
+    "tem_faq": false,
+    "footer": {
+      "tipo": "Grid de serviços integrado na última seção (não é footer dedicado)",
+      "colunas_desktop": 5,
+      "categorias": [
+        "Visual and Marketing",
+        "Technology"
+      ],
+      "tem_formulario": false,
+      "tem_social_links": false,
+      "tem_copyright": false,
+      "nota": "A Home usa a nav-pill flutuante como footer funcional. O grid de serviços no final é mais um sitemap visual do que um footer tradicional."
+    },
+    "nav_pill_flutuante": {
+      "descricao": "Barra de navegação fixa no bottom da viewport com links para seções do site",
+      "estilo": "backdrop-blur, rounded, posição fixa bottom",
+      "presente_em": "Todas as páginas do lessestudio.com"
+    }
+  },
+  "conclusao_para_o_projeto": {
+    "essa_pagina_serve_para": "Homepage institucional tipo 'showcase' — apresenta a agência em fluxo vertical contínuo cobrindo: credencial visual (hero slider), catálogo de serviços (8 áreas), filosofia (approach), prova social (portfolio + testimonials), autoridade (blog) e navegação cruzada (footer-grid). É uma landing page longa com zero CTAs de conversão além do 'Start a project' persistente na navbar.",
+    "padrao_recomendado_para": "Homepage da GMT: (1) Hero slider com projetos/cases — o padrão slide-in/slide-out com progress bar é sofisticado e replicável em React. (2) Grid de serviços com padrão desktop/mobile responsivo. (3) Carousel vertical de testimonials (CSS-only, sem lib). (4) Componente mst para animação de texto — altamente recomendado para headlines da GMT. (5) Easing proprietário cubic-bezier(0.65, 0.05, 0.1, 1) como padrão de movimento global. (6) Espaçamento fluid (vw desktop / px mobile) para manter proporcionalidade entre breakpoints.",
+    "limitacoes_identificadas": [
+      "H1 invisível (topo_px: -1) — apesar de existir, não está visível. A GMT deve ter H1 visível e semântico.",
+      "16 headings duplicados no DOM para responsividade — ineficiente, usar CSS display/hidden em vez de duplicar elementos.",
+      "Zero CTAs de conversão no corpo da página — a GMT deve incluir CTAs contextuais em cada seção (ver projetos, falar conosco, etc.).",
+      "Preloader de 7+ segundos bloqueia interação — a GMT deve evitar preloaders longos ou torná-los opcionais.",
+      "Ausência total de footer — sem copyright, sem links legais, sem social links na Home. A GMT precisa de footer completo.",
+      "Blog thumbnails ultra-narrow (38×260px) são difíceis de distinguir — a GMT deve usar thumbnails de proporção padrão.",
+      "LaCerchia (fonte cursiva) declarada mas não carregada — recurso desperdiçado no bundle.",
+      "931 elementos com transition: fill 0.5s — possível overhead de performance por regra CSS global excessivamente ampla.",
+      "Carousel de testimonials sem controles — o usuário não pode pausar ou navegar manualmente."
+    ],
+    "pontos_fortes_a_replicar": [
+      "Hero slider com progress bar visual — UX informativa sobre timing do autoplay",
+      "Easing cubic-bezier(0.65, 0.05, 0.1, 1) — personalidade de movimento única, lento→explosivo",
+      "Design tokens CSS reais (--bg-primary, --text-primary, --ease, --slide-duration) — sistema escalável",
+      "Componente mst para split-text animation — diferenciador visual",
+      "Espaçamento fluid (vw) no desktop — proporcionalidade elegante",
+      "Scan shimmer nas imagens (skew diagonal) — loading state sofisticado",
+      "Paleta monocromática rigorosa — sofisticação visual sem complexidade cromática"
+    ],
+    "combina_com_referencias": [
+      "design_map_lessestudio_about_v2.json — mesmo componente mst, mesmos keyframes base, mesma ausência de H1 (mas About não tem nenhum)",
+      "design_map_lessestudio_contact_v2.json — mesmos keyframes shake/fadeIn/fadeOut, mesma nav-pill, mesmo padrão de floating labels",
+      "design_map_lessestudio_services_geral.json — os 8 serviços da Home correspondem às 8 categorias expandidas na página /services",
+      "design_map_lessestudio_portfolio_geral.json — os 3 cases da Home são subset do catálogo completo de /portfolio"
+    ]
+  }
+}
