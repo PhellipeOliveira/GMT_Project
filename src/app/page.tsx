@@ -1,65 +1,185 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  PenTool,
+  Megaphone,
+  Palette,
+  Globe,
+  Bot,
+  BarChart3,
+  type LucideIcon,
+} from "lucide-react";
+import { HeroSlider } from "@/components/ui/HeroSlider";
+import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
+import { PortfolioCard } from "@/components/ui/PortfolioCard";
+import { RevealText } from "@/components/ui/RevealText";
+import { RevealItem } from "@/components/ui/RevealItem";
+import { avulsos } from "@/data/servicos";
+import { getCaseBySlug } from "@/data/portfolio";
 
-export default function Home() {
+const ICONES_AVULSOS: Record<string, LucideIcon> = {
+  "criacao-conteudo-avulso": PenTool,
+  "publicidade-digital": Megaphone,
+  "branding-estrategia": Palette,
+  websites: Globe,
+  "inteligencia-artificial": Bot,
+  "analytics-otimizacao": BarChart3,
+};
+
+const DIFERENCIAIS = [
+  {
+    titulo: "Experiência comprovada",
+    texto:
+      "Criámos todo o ecossistema digital do NARA — resultados reais, não teoria.",
+  },
+  {
+    titulo: "Técnica + criatividade",
+    texto:
+      "Competências técnicas (websites, IA, analytics) e criativas (design, vídeo, copywriting) num só local.",
+  },
+  {
+    titulo: "Tecnologia de ponta",
+    texto: "Uso de IA para entregar mais qualidade em menos tempo.",
+  },
+  {
+    titulo: "Acompanhamento próximo",
+    texto:
+      "Parceria focada no crescimento do negócio, não apenas mais um serviço.",
+  },
+  {
+    titulo: "Foco em pequenas empresas",
+    texto: "Soluções acessíveis e adaptadas à realidade local.",
+  },
+  {
+    titulo: "Resultados mensuráveis",
+    texto: "Tudo medido e reportado, com clareza sobre o retorno.",
+  },
+];
+
+export default function HomePage() {
+  const nara = getCaseBySlug("nara");
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <HeroSlider />
+
+      <section className="bg-gmt-bg-alt px-5 py-20 md:px-[5vw] md:py-[7vw]">
+        <p className="type-label text-gmt-muted">O que fazemos</p>
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+          {avulsos.map((servico, i) => {
+            const Icone = ICONES_AVULSOS[servico.slug] ?? Globe;
+            return (
+              <RevealItem key={servico.slug} easing="services" delay={i * 0.05}>
+                <Link
+                  href={`/servicos/${servico.slug}`}
+                  className="group flex items-start gap-5 rounded-lg border border-gmt-border bg-gmt-bg p-6 hover:border-gmt-accent"
+                >
+                  <span className="rounded-lg border border-gmt-border p-3 text-gmt-text">
+                    <Icone size={22} strokeWidth={1.5} />
+                  </span>
+                  <div>
+                    <h3 className="type-body text-gmt-text">{servico.nome}</h3>
+                    <p className="type-body mt-1 text-gmt-muted">
+                      {servico.funcionalidades[0]}
+                    </p>
+                  </div>
+                </Link>
+              </RevealItem>
+            );
+          })}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </section>
+
+      <section className="bg-gmt-bg px-5 py-20 md:px-[5vw] md:py-[7vw]">
+        <div className="flex flex-col gap-12 md:flex-row md:gap-[5vw]">
+          <div className="w-full md:w-3/8">
+            <p className="type-label text-gmt-muted">Porquê a GMT</p>
+            <RevealText as="h2" className="type-h3 mt-5 max-w-xl">
+              Cada negócio, por mais pequeno que seja, merece uma presença
+              digital profissional e eficaz.
+            </RevealText>
+            <ul className="mt-8 flex flex-col gap-5">
+              {DIFERENCIAIS.map((d, i) => (
+                <li key={d.titulo}>
+                  <RevealItem delay={i * 0.05}>
+                    <h3 className="type-body text-gmt-text">{d.titulo}</h3>
+                    <p className="type-body mt-1 text-gmt-muted">{d.texto}</p>
+                  </RevealItem>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="grid w-full grid-cols-2 gap-4 md:flex-1">
+            <PlaceholderMedia
+              id="HER-02"
+              descricao="destaque diferenciais · 7:5"
+              proporcao="7/5"
+              cor="#1E293B"
+              className="col-span-2 rounded-lg sm:col-span-1 sm:row-span-2"
+              sizes="(max-width: 768px) 100vw, 40vw"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <PlaceholderMedia
+              id="HER-03"
+              descricao="thumb diferencial A · 7:5"
+              proporcao="7/5"
+              cor="#1E293B"
+              className="rounded-lg"
+              sizes="(max-width: 768px) 50vw, 20vw"
+            />
+            <PlaceholderMedia
+              id="HER-04"
+              descricao="thumb diferencial B · 7:5"
+              proporcao="7/5"
+              cor="#1E293B"
+              className="rounded-lg"
+              sizes="(max-width: 768px) 50vw, 20vw"
+            />
+            <PlaceholderMedia
+              id="HER-05"
+              descricao="thumb diferencial C · 7:5"
+              proporcao="7/5"
+              cor="#1E293B"
+              className="col-span-2 rounded-lg sm:col-span-1"
+              sizes="(max-width: 768px) 100vw, 20vw"
+            />
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="bg-gmt-bg-alt px-5 py-20 md:px-[5vw] md:py-[7vw]">
+        <p className="type-label text-gmt-muted">Trabalho recente</p>
+        <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2">
+          {nara && (
+            <PortfolioCard
+              placeholderId="PF-01"
+              nome={nara.nome}
+              cor={nara.corPlaceholder}
+              slug={nara.slug}
+              local={nara.local}
+              industria={nara.industria}
+              servicos={nara.servicos}
+              tags={nara.tags}
+            />
+          )}
+          <PortfolioCard placeholderId="PF-02a" nome="Projeto" cor="#1E293B" emBreve delay={0.1} />
+          <PortfolioCard placeholderId="PF-02b" nome="Projeto" cor="#1E293B" emBreve delay={0.2} />
+        </div>
+      </section>
+
+      <section className="bg-gmt-bg px-5 py-24 text-center md:px-[5vw] md:py-[8vw]">
+        <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
+          Pronto para automatizar o seu negócio?
+        </RevealText>
+        <p className="type-body mt-4 text-gmt-muted">
+          Reunião gratuita e sem compromisso.
+        </p>
+        <Link
+          href="/contacto"
+          className="type-body type-medium mt-8 inline-block rounded-full bg-gmt-accent px-8 py-3 text-white"
+        >
+          Agendar agora
+        </Link>
+      </section>
+    </>
   );
 }

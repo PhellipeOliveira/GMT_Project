@@ -1,15 +1,318 @@
 @import "tailwindcss";
-@import "./tokens.css";
+@config "../../tailwind.config.ts";
+@plugin "@tailwindcss/typography";
+
+/* ===== Paleta GMT ===== */
+:root {
+  --gmt-bg: #0a0f1e;
+  --gmt-bg-alt: #0f1729;
+  --gmt-border: #1e293b;
+  --gmt-text: #ffffff;
+  --gmt-text-muted: #94a3b8;
+  --gmt-accent: #2563eb;
+  --gmt-accent-2: #7c3aed;
+
+  /* Motion design tokens */
+  --ease: cubic-bezier(0.65, 0.05, 0.1, 1);
+  --ease-services: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-portfolio: cubic-bezier(0.22, 1, 0.36, 1);
+  --slide-duration: 1.5s;
+  --fade-duration: 1s;
+  --color-transition: 1s;
+
+  /* Escala tipográfica (design_map_home_v2) */
+  --type-label: 12px;
+  --type-body: 16px;
+  --type-body-lg: 18px;
+  --type-h3: 30px;
+  --type-h2: 60px;
+  --type-hero: clamp(48px, 8vw, 96px);
+  --type-hero-leading: clamp(1, 8vw, 1.1);
+
+  /* Prose invert (design maps — dark mode exclusivo) */
+  --tw-prose-invert-headings: var(--gmt-text);
+  --tw-prose-invert-body: oklch(87.2% 0.01 258.338);
+  --tw-prose-invert-lead: oklch(70.7% 0.022 261.325);
+  --tw-prose-invert-bold: var(--gmt-text);
+  --tw-prose-invert-links: var(--gmt-accent);
+}
 
 @theme inline {
-  --color-background: var(--color-background);
-  --color-foreground: var(--color-foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --color-gmt-bg: var(--gmt-bg);
+  --color-gmt-bg-alt: var(--gmt-bg-alt);
+  --color-gmt-border: var(--gmt-border);
+  --color-gmt-text: var(--gmt-text);
+  --color-gmt-muted: var(--gmt-text-muted);
+  --color-gmt-accent: var(--gmt-accent);
+  --color-gmt-accent-2: var(--gmt-accent-2);
+
+  --font-display: var(--font-hostgrotesk), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-dmsans), ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+}
+
+html {
+  background: var(--gmt-bg);
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
+  background: var(--gmt-bg);
+  color: var(--gmt-text);
   font-family: var(--font-sans);
+  font-size: var(--type-body);
+  font-weight: 400;
+}
+
+/* ===== Utilitários tipográficos globais ===== */
+
+.type-label {
+  font-family: var(--font-sans);
+  font-size: var(--type-label);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.type-body {
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.type-body-lg {
+  font-family: var(--font-sans);
+  font-size: var(--type-body-lg);
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.type-h3 {
+  font-family: var(--font-display);
+  font-size: var(--type-h3);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--gmt-text);
+}
+
+.type-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 6vw, var(--type-h2));
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--gmt-text);
+}
+
+.type-hero {
+  font-family: var(--font-display);
+  font-size: var(--type-hero);
+  font-weight: 400;
+  color: var(--gmt-text);
+}
+
+/* Line-height viewport-relative — apenas H1 em heroes fullscreen */
+.type-hero--fullscreen {
+  line-height: var(--type-hero-leading);
+}
+
+.type-medium {
+  font-weight: 500;
+}
+
+/* Prose invert activo no site inteiro */
+.prose-gmt {
+  --tw-prose-invert-headings: var(--gmt-text);
+  --tw-prose-invert-body: oklch(87.2% 0.01 258.338);
+  --tw-prose-invert-lead: oklch(70.7% 0.022 261.325);
+}
+
+.prose-gmt :where(h1, h2, h3, h4, h5, h6):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  color: var(--gmt-text);
+}
+
+.prose-gmt :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  color: oklch(87.2% 0.01 258.338);
+}
+
+/* Lenis (smooth scroll) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* ===== Global hover transitions (PRIORIDADE 3) ===== */
+
+a,
+button,
+[role="button"] {
+  transition:
+    color 0.3s var(--ease),
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+
+.media-zoom {
+  overflow: hidden;
+}
+
+.media-zoom img,
+.media-zoom .object-cover {
+  transition: transform 0.4s var(--ease);
+}
+
+.group:hover .media-zoom img,
+.media-zoom:hover img {
+  transform: scale(1.03);
+}
+
+button[type="submit"] {
+  transition:
+    color 0.3s var(--ease),
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+button[type="submit"]:hover {
+  transform: scale(1.02);
+}
+
+svg {
+  transition: fill 0.5s var(--ease), stroke 0.5s var(--ease);
+}
+
+/* ===== Hero slider keyframes (PRIORIDADE 5) ===== */
+
+@keyframes slide-in {
+  from {
+    transform: translateX(calc(var(--dir, 1) * 100%));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--dir, 1) * -20%));
+  }
+}
+
+@keyframes darken {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+@keyframes fill {
+  from {
+    width: var(--fill-start, 0%);
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes bar-fade-out {
+  from {
+    opacity: 1;
+    width: var(--bar-width, 100%);
+  }
+  to {
+    opacity: 0;
+    width: var(--bar-width, 100%);
+  }
+}
+
+.hero-slide-in {
+  animation: slide-in var(--slide-duration) var(--ease) forwards;
+}
+
+.hero-slide-out {
+  animation: slide-out var(--slide-duration) var(--ease) forwards;
+}
+
+.hero-darken {
+  animation: darken var(--slide-duration) var(--ease) forwards;
+}
+
+.hero-fill {
+  animation: fill 7s linear forwards;
+}
+
+.hero-bar-fade-out {
+  animation: bar-fade-out var(--fade-duration) var(--ease) forwards;
+}
+
+/* ===== Cursor follower (PRIORIDADE 6) ===== */
+
+.cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 40px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--gmt-accent) 60%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: difference;
+  transition:
+    width 0.3s var(--ease),
+    height 0.3s var(--ease),
+    opacity 0.3s var(--ease);
+}
+
+.cursor-follower--visible {
+  opacity: 1;
+}
+
+.cursor-follower--expanded {
+  width: 80px;
+  height: 80px;
+}
+
+@media (pointer: coarse) {
+  .cursor-follower {
+    display: none;
+  }
+}
+
+/* ===== Reduced motion fallback ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hero-slide-in,
+  .hero-slide-out,
+  .hero-darken,
+  .hero-fill,
+  .hero-bar-fade-out {
+    animation: none !important;
+  }
 }
