@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
-import { RevealText } from "@/components/ui/RevealText";
-import { RevealItem } from "@/components/ui/RevealItem";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { portfolio } from "@/data/portfolio";
 
 export const metadata: Metadata = {
@@ -19,37 +18,47 @@ export default function PortfolioPage() {
       <section className="px-5 pt-28 md:px-[5vw] md:pt-[11vw]">
         <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
           <div className="md:w-1/2">
-            <p className="type-label text-gmt-muted">Trabalho recente</p>
-            <RevealText as="h1" className="type-h2 mt-4">
+            <RevealOnScroll as="p" className="type-label text-gmt-muted">
+              Trabalho recente
+            </RevealOnScroll>
+            <RevealOnScroll as="h1" className="type-h2 mt-4">
               Portfolio
-            </RevealText>
-            <RevealText as="p" className="type-body-lg mt-6 max-w-xl text-gmt-muted">
+            </RevealOnScroll>
+            <RevealOnScroll as="p" className="type-body-lg mt-6 max-w-xl text-gmt-muted" delay={0.08}>
               Criámos integralmente o NARA — uma plataforma tecnológica que
               atende profissionais em vários países. Do branding e website a
               chatbots inteligentes e campanhas publicitárias, todo o ecossistema
               digital foi desenvolvido pela agência.
-            </RevealText>
+            </RevealOnScroll>
           </div>
 
           <div className="grid grid-cols-2 gap-3 md:w-1/2 md:grid-cols-4">
-            {portfolio.map((c) => (
-              <PlaceholderMedia
-                key={c.slug}
-                id="PF-02"
-                descricao={`${c.nome} · 9:16`}
-                cor={c.corPlaceholder}
-                className="rounded-lg"
-                sizes="(max-width: 768px) 50vw, 12vw"
-              />
+            {portfolio.map((c, i) => (
+              <RevealOnScroll key={c.slug} variant="media" delay={i * 0.08}>
+                <PlaceholderMedia
+                  id="PF-02"
+                  descricao={`${c.nome} · 9:16`}
+                  cor={c.corPlaceholder}
+                  className="rounded-lg"
+                  sizes="(max-width: 768px) 50vw, 12vw"
+                  reveal={false}
+                />
+              </RevealOnScroll>
             ))}
-            {EM_BREVE.map((id) => (
-              <PlaceholderMedia
+            {EM_BREVE.map((id, i) => (
+              <RevealOnScroll
                 key={id}
-                id={id}
-                descricao="em breve · 9:16"
-                cor="#1E293B"
-                className="rounded-lg opacity-50"
-              />
+                variant="media"
+                delay={(portfolio.length + i) * 0.08}
+              >
+                <PlaceholderMedia
+                  id={id}
+                  descricao="em breve · 9:16"
+                  cor="#1E293B"
+                  className="rounded-lg opacity-50"
+                  reveal={false}
+                />
+              </RevealOnScroll>
             ))}
           </div>
         </div>
@@ -59,7 +68,7 @@ export default function PortfolioPage() {
         <ul className="border-t border-gmt-border">
           {portfolio.map((c, i) => (
             <li key={c.slug} className="border-b border-gmt-border">
-              <RevealItem easing="portfolio" delay={i * 0.05}>
+              <RevealOnScroll variant="media" delay={i * 0.08}>
                 <Link
                   href={`/portfolio/${c.slug}`}
                   className="group flex items-center gap-5 py-16 md:gap-[2vw] md:py-[8vw]"
@@ -73,6 +82,7 @@ export default function PortfolioPage() {
                   cor={c.corPlaceholder}
                   className="w-20 shrink-0 rounded-md md:w-28"
                   sizes="112px"
+                  reveal={false}
                 />
                   <div className="flex-1">
                     <h3 className="type-h3 group-hover:text-gmt-accent">
@@ -91,15 +101,15 @@ export default function PortfolioPage() {
                     →
                   </span>
                 </Link>
-              </RevealItem>
+              </RevealOnScroll>
             </li>
           ))}
 
           {EM_BREVE.map((id, i) => (
             <li key={id} className="border-b border-gmt-border">
-              <RevealItem
-                easing="portfolio"
-                delay={(portfolio.length + i) * 0.05}
+              <RevealOnScroll
+                variant="media"
+                delay={(portfolio.length + i) * 0.08}
               >
                 <div className="flex items-center gap-5 py-8 opacity-50 md:gap-[2vw]">
                 <span className="font-mono type-body text-gmt-muted">
@@ -110,6 +120,7 @@ export default function PortfolioPage() {
                   descricao="9:16"
                   cor="#1E293B"
                   className="w-20 shrink-0 rounded-md md:w-28"
+                  reveal={false}
                 />
                 <div className="flex-1">
                   <h3 className="type-h3">Em breve</h3>
@@ -118,22 +129,24 @@ export default function PortfolioPage() {
                   </p>
                 </div>
                 </div>
-              </RevealItem>
+              </RevealOnScroll>
             </li>
           ))}
         </ul>
       </section>
 
       <section className="section-cta mt-20 px-5 py-20 text-center md:mt-[8vw] md:px-[5vw] md:py-[8vw]">
-        <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
+        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
           Quer ser o nosso próximo case?
-        </RevealText>
-        <p className="type-body mt-4 text-gmt-muted">
+        </RevealOnScroll>
+        <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted" delay={0.08}>
           Agende uma reunião gratuita e sem compromisso.
-        </p>
-        <Link href="/contacto" className="btn-submit mt-8">
-          Agendar reunião
-        </Link>
+        </RevealOnScroll>
+        <RevealOnScroll variant="media" delay={0.16}>
+          <Link href="/contacto" className="btn-submit mt-8">
+            Agendar reunião
+          </Link>
+        </RevealOnScroll>
       </section>
     </>
   );

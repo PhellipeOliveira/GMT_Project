@@ -62,7 +62,7 @@
 | G-10 | **Sem footer na página Contacto** | Contact: single-section, sem footer visível | Footer global renderizado | Decisão | Baixa |
 | G-11 | **Host Grotesk weight 100** (thin) em títulos de secção | `--font-weight-thin: 100` | Weight 300 (mínimo disponível no Google Fonts) | Decisão | — |
 | G-12 | **LaCerchia** (cursive decorativa) | Token `--font-lacerchia` | Não carregada (raramente usada na referência) | Design | Muito baixa |
-| G-13 | **Paleta monocromática vs accent GMT** | Referência: preto/branco/cinza | GMT: navy `#0a0f1e` + accent azul/roxo | Decisão | — |
+| G-13 | **Paleta monocromática vs accent GMT** | Referência: preto/branco/cinza | GMT: tema **claro** (#fff / #0a0a0a) + CTA/footer escuros + accent azul/roxo | Decisão documentada em `PALETA_DE_CORES.md` | — |
 | G-14 | **Hover scale 2s nos cards** | Portfolio cards ~1s transform | Zoom 0.4s em `.media-zoom` | Design | Baixa |
 | G-15 | **Formulário com backend** | Submit real + estados erro/sucesso | `console.log` + UI de sucesso simulada | Design | Alta (quando houver API) |
 

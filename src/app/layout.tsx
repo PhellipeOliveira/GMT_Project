@@ -4,7 +4,6 @@ import "@/styles/globals.css";
 import { Navbar } from "@/components/ui/Navbar";
 import { Footer } from "@/components/ui/Footer";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
-import { CursorFollower } from "@/components/ui/CursorFollower";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -45,9 +44,8 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-gmt-bg text-gmt-text">
         <SmoothScroll />
-        <CursorFollower />
         <Navbar />
-        <main className="prose prose-invert prose-gmt max-w-none flex-1">
+        <main className="prose prose-gmt max-w-none flex-1">
           {children}
         </main>
         <Footer />

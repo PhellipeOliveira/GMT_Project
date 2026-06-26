@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { useScroll, useMotionValueEvent } from "framer-motion";
+import { GmtLogo } from "@/components/ui/GmtLogo";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -15,7 +15,14 @@ const NAV_LINKS = [
   { href: "/contacto", label: "Contacto" },
 ];
 
-const LIGHT_NAV_PREFIXES = ["/servicos", "/sobre"];
+function isLightNavRoute(pathname: string): boolean {
+  if (pathname === "/") return true;
+  if (pathname === "/contacto") return true;
+  if (pathname === "/servicos") return true;
+  if (pathname === "/sobre" || pathname.startsWith("/sobre/")) return true;
+  if (pathname === "/portfolio" || pathname.startsWith("/portfolio/")) return true;
+  return false;
+}
 
 export function Navbar() {
   const pathname = usePathname();
@@ -23,10 +30,8 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
 
-  const isLightRoute = LIGHT_NAV_PREFIXES.some(
-    (p) => pathname === p || pathname.startsWith(`${p}/`),
-  );
-  const onLightBg = isLightRoute && !scrolled;
+  const onLightBg = isLightNavRoute(pathname) && !scrolled;
+  const logoTone = onLightBg || scrolled ? "on-light" : "on-dark";
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 48);
@@ -49,18 +54,9 @@ export function Navbar() {
           href="/"
           className="flex items-center"
           onClick={() => setOpen(false)}
+          aria-label="GMT — início"
         >
-          <Image
-            src="/images/GL-01.webp"
-            alt="GMT — Growth Marketing Technology"
-            width={140}
-            height={40}
-            className={cn(
-              "h-7 w-auto transition-opacity duration-300",
-              onLightBg && !scrolled ? "brightness-0" : "",
-            )}
-            priority
-          />
+          <GmtLogo tone={logoTone} />
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
@@ -70,11 +66,9 @@ export function Navbar() {
                 href={link.href}
                 className={cn(
                   "type-body transition-colors duration-[1000ms]",
-                  scrolled
+                  scrolled || onLightBg
                     ? "text-gmt-muted hover:text-gmt-text"
-                    : onLightBg
-                      ? "text-[var(--gmt-muted-on-light)] hover:text-[var(--gmt-text-on-light)]"
-                      : "text-gmt-text/80 hover:text-gmt-text",
+                    : "text-white/80 hover:text-white",
                 )}
                 style={{ transitionTimingFunction: "var(--ease)" }}
               >
@@ -89,7 +83,7 @@ export function Navbar() {
             href="/contacto"
             className={cn(
               "btn-nav group",
-              onLightBg && !scrolled && "btn-nav--on-light",
+              (onLightBg || scrolled) && "btn-nav--on-light",
             )}
           >
             Agendar reunião
@@ -106,9 +100,9 @@ export function Navbar() {
           aria-expanded={open}
           className={cn(
             "flex h-12 w-12 flex-col items-center justify-center gap-1.25 rounded-lg backdrop-blur-xl transition-colors duration-300 md:hidden",
-            onLightBg && !scrolled
-              ? "text-[var(--gmt-text-on-light)]"
-              : "text-gmt-text",
+            onLightBg || scrolled
+              ? "text-gmt-text"
+              : "text-white",
           )}
           onClick={() => setOpen((v) => !v)}
         >
@@ -120,11 +114,9 @@ export function Navbar() {
         <div
           className={cn(
             "border-t px-5 py-6 md:hidden",
-            scrolled
+            scrolled || onLightBg
               ? "border-gmt-border bg-gmt-bg"
-              : onLightBg
-                ? "border-[var(--gmt-border-light)] bg-[var(--gmt-bg-light)]"
-                : "border-gmt-border bg-gmt-bg",
+              : "border-gmt-border bg-black/90",
           )}
         >
           <ul className="flex flex-col gap-5">
@@ -132,7 +124,12 @@ export function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="type-body text-gmt-muted hover:text-gmt-text"
+                  className={cn(
+                    "type-body transition-colors",
+                    scrolled || onLightBg
+                      ? "text-gmt-muted hover:text-gmt-text"
+                      : "text-white/70 hover:text-white",
+                  )}
                   onClick={() => setOpen(false)}
                 >
                   {link.label}
@@ -142,7 +139,10 @@ export function Navbar() {
             <li>
               <Link
                 href="/contacto"
-                className="btn-nav"
+                className={cn(
+                  "btn-nav",
+                  (onLightBg || scrolled) && "btn-nav--on-light",
+                )}
                 onClick={() => setOpen(false)}
               >
                 Agendar reunião

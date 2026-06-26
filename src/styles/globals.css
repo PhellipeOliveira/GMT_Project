@@ -4,13 +4,20 @@
 
 /* ===== Paleta GMT ===== */
 :root {
-  --gmt-bg: #0a0f1e;
-  --gmt-bg-alt: #0f1729;
-  --gmt-border: #1e293b;
-  --gmt-text: #ffffff;
-  --gmt-text-muted: #94a3b8;
+  --gmt-bg: #ffffff;
+  --gmt-bg-alt: #f5f5f5;
+  --gmt-border: #dcdcdc;
+  --gmt-text: #0a0a0a;
+  --gmt-text-muted: #575757;
   --gmt-accent: #2563eb;
   --gmt-accent-2: #7c3aed;
+
+  /* Paleta escura — secções CTA / footer */
+  --gmt-bg-dark: #0a0f1e;
+  --gmt-bg-dark-alt: #0f1729;
+  --gmt-border-dark: #1e293b;
+  --gmt-text-on-dark: #ffffff;
+  --gmt-muted-on-dark: #94a3b8;
 
   /* Motion design tokens */
   --ease: cubic-bezier(0.65, 0.05, 0.1, 1);
@@ -20,16 +27,16 @@
   --fade-duration: 1s;
   --color-transition: 1s;
 
-  /* Escala tipográfica (design_map_home_v2) */
-  --type-label: 12px;
-  --type-body: 16px;
-  --type-body-lg: 18px;
-  --type-h3: 30px;
-  --type-h2: 60px;
-  --type-hero: clamp(48px, 8vw, 96px);
+  /* Escala tipográfica (design_map_home_v2 — bump legibilidade 2026) */
+  --type-label: 14px;
+  --type-body: 18px;
+  --type-body-lg: 21px;
+  --type-h3: 36px;
+  --type-h2: 72px;
+  --type-hero: clamp(52px, 9vw, 108px);
   --type-hero-leading: clamp(1, 8vw, 1.1);
   --type-hero-brand: clamp(4.5rem, 14vw, 11rem);
-  --type-hero-subtitle: clamp(0.65rem, 1.8vw, 1.1rem);
+  --type-hero-subtitle: clamp(9rem, 24vw, 15rem);
 
   /* Secções dual-mode (design_map_services_item / about) */
   --gmt-bg-light: #ebebeb;
@@ -39,12 +46,12 @@
   --gmt-muted-on-light: #575757;
   --gmt-footer: #101010;
 
-  /* Prose invert (design maps — dark mode exclusivo) */
-  --tw-prose-invert-headings: var(--gmt-text);
-  --tw-prose-invert-body: oklch(87.2% 0.01 258.338);
-  --tw-prose-invert-lead: oklch(70.7% 0.022 261.325);
-  --tw-prose-invert-bold: var(--gmt-text);
-  --tw-prose-invert-links: var(--gmt-accent);
+  /* Prose (tema claro) */
+  --tw-prose-body: var(--gmt-text-muted);
+  --tw-prose-headings: var(--gmt-text);
+  --tw-prose-lead: var(--gmt-text-muted);
+  --tw-prose-bold: var(--gmt-text);
+  --tw-prose-links: var(--gmt-accent);
 }
 
 @theme inline {
@@ -115,7 +122,7 @@ body {
 
 .type-h2 {
   font-family: var(--font-display);
-  font-size: clamp(36px, 6vw, var(--type-h2));
+  font-size: clamp(42px, 6vw, var(--type-h2));
   font-weight: 400;
   line-height: 1.1;
   color: var(--gmt-text);
@@ -142,6 +149,25 @@ body {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gmt-text);
+}
+
+/* Logo GMT — mesma família/peso/tracking do hero, escala UI (navbar/footer) */
+.type-logo-gmt {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2.8vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color var(--color-transition) var(--ease);
+}
+
+.logo-gmt--on-light {
+  color: #0a0a0a;
+}
+
+.logo-gmt--on-dark {
+  color: #ffffff;
 }
 
 .type-hero-subtitle {
@@ -172,11 +198,11 @@ body {
 /* ===== Secções temáticas (light → dark → footer) ===== */
 
 .section-light {
-  --gmt-bg: var(--gmt-bg-light);
-  --gmt-bg-alt: var(--gmt-bg-light-alt);
-  --gmt-border: var(--gmt-border-light);
-  --gmt-text: var(--gmt-text-on-light);
-  --gmt-text-muted: var(--gmt-muted-on-light);
+  --gmt-bg: #ffffff;
+  --gmt-bg-alt: #f5f5f5;
+  --gmt-border: #dcdcdc;
+  --gmt-text: #0a0a0a;
+  --gmt-text-muted: #575757;
   background-color: var(--gmt-bg);
   color: var(--gmt-text);
   transition:
@@ -195,6 +221,15 @@ body {
   transition:
     background-color var(--color-transition) var(--ease),
     color var(--color-transition) var(--ease);
+}
+
+/* Último contentor de cada página — texto sempre claro sobre preto */
+.section-cta :where(.type-h2, .type-h3, .type-hero, .type-label) {
+  color: var(--gmt-text);
+}
+
+.section-cta :where(.type-body, .type-body-lg, p) {
+  color: var(--gmt-text-muted);
 }
 
 .section-footer {
@@ -283,7 +318,7 @@ body {
   background-color: rgb(255 255 255 / 0.8);
   padding: 0.4vw 1vw;
   font-family: var(--font-sans);
-  font-size: clamp(11px, 0.8vw, 13px);
+  font-size: clamp(13px, 0.9vw, 15px);
   font-weight: 400;
   line-height: 1.3;
   color: #000;
@@ -301,19 +336,7 @@ body {
 
 .accordion-item {
   border-bottom: 1px solid var(--gmt-border);
-  transition:
-    border-color 1s var(--ease),
-    filter 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.accordion-item--dimmed {
-  filter: blur(2px);
-  opacity: 0.45;
-}
-
-.accordion-item--active {
-  border-color: color-mix(in srgb, var(--gmt-accent) 40%, var(--gmt-border));
+  transition: border-color 1s var(--ease);
 }
 
 .accordion-panel {
@@ -381,11 +404,13 @@ body {
   pointer-events: none;
 }
 
-/* Prose invert activo no site inteiro */
+/* Prose activo no site inteiro (tema claro) */
 .prose-gmt {
-  --tw-prose-invert-headings: var(--gmt-text);
-  --tw-prose-invert-body: oklch(87.2% 0.01 258.338);
-  --tw-prose-invert-lead: oklch(70.7% 0.022 261.325);
+  --tw-prose-body: var(--gmt-text-muted);
+  --tw-prose-headings: var(--gmt-text);
+  --tw-prose-lead: var(--gmt-text-muted);
+  --tw-prose-bold: var(--gmt-text);
+  --tw-prose-links: var(--gmt-accent);
 }
 
 .prose-gmt :where(h1, h2, h3, h4, h5, h6):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
@@ -393,7 +418,7 @@ body {
 }
 
 .prose-gmt :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  color: oklch(87.2% 0.01 258.338);
+  color: var(--gmt-text-muted);
 }
 
 /* Lenis (smooth scroll) */
@@ -527,41 +552,6 @@ svg {
 
 .hero-bar-fade-out {
   animation: bar-fade-out var(--fade-duration) var(--ease) forwards;
-}
-
-/* ===== Cursor follower (PRIORIDADE 6) ===== */
-
-.cursor-follower {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  width: 40px;
-  height: 40px;
-  border: 1px solid color-mix(in srgb, var(--gmt-accent) 60%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  mix-blend-mode: difference;
-  transition:
-    width 0.3s var(--ease),
-    height 0.3s var(--ease),
-    opacity 0.3s var(--ease);
-}
-
-.cursor-follower--visible {
-  opacity: 1;
-}
-
-.cursor-follower--expanded {
-  width: 80px;
-  height: 80px;
-}
-
-@media (pointer: coarse) {
-  .cursor-follower {
-    display: none;
-  }
 }
 
 /* ===== Reduced motion fallback ===== */

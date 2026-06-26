@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import { RevealItem } from "./RevealItem";
+import { RevealOnScroll } from "./RevealOnScroll";
+import { cn } from "@/lib/utils";
 
 export interface AccordionItem {
   id: string;
@@ -20,63 +21,78 @@ interface AccordionProps {
 
 export function Accordion({ items }: AccordionProps) {
   const [openId, setOpenId] = useState<string | null>(null);
-  const [hoverId, setHoverId] = useState<string | null>(null);
-  const focusId = hoverId ?? openId;
 
   return (
-    <ul
-      className="accordion-list"
-      onMouseLeave={() => setHoverId(null)}
-    >
+    <ul className="accordion-list">
       {items.map((item, i) => {
         const isOpen = openId === item.id;
-        const isDimmed = Boolean(focusId && focusId !== item.id);
 
         return (
-          <li
-            key={item.id}
-            className={`accordion-item ${isOpen ? "accordion-item--active" : ""} ${isDimmed ? "accordion-item--dimmed" : ""}`}
-            onMouseEnter={() => setHoverId(item.id)}
-          >
-            <RevealItem easing="services" delay={i * 0.05}>
+          <li key={item.id} className="accordion-item">
+            <RevealOnScroll variant="media" delay={i * 0.08}>
               <button
                 type="button"
                 onClick={() => setOpenId(isOpen ? null : item.id)}
                 aria-expanded={isOpen}
-                className="group flex w-full items-center justify-between gap-4 py-5 text-left"
+                className={cn(
+                  "group flex w-full items-center justify-between gap-4 rounded-lg px-4 py-5 text-left transition-colors duration-300",
+                  isOpen ? "bg-black" : "hover:bg-black",
+                )}
+                style={{ transitionTimingFunction: "var(--ease)" }}
               >
-                <span className="flex items-center gap-4">
+                <span className="flex min-w-0 flex-1 items-center gap-4">
                   {item.cor && (
                     <span
                       aria-hidden
-                      className="size-2.5 shrink-0 rounded-full"
+                      className={cn(
+                        "size-2.5 shrink-0 rounded-full transition-opacity duration-300",
+                        isOpen ? "opacity-80" : "opacity-100 group-hover:opacity-80",
+                      )}
                       style={{ backgroundColor: item.cor }}
                     />
                   )}
-                  <span className="type-body-lg text-gmt-text transition-colors duration-300 group-hover:text-gmt-accent">
+                  <span
+                    className={cn(
+                      "type-body-lg transition-colors duration-300",
+                      isOpen
+                        ? "text-white"
+                        : "text-gmt-text group-hover:text-white",
+                    )}
+                  >
                     {item.titulo}
                   </span>
                   {item.subtitulo && (
-                    <span className="type-body hidden text-gmt-muted lg:inline">
+                    <span
+                      className={cn(
+                        "type-body hidden truncate transition-colors duration-300 lg:inline",
+                        isOpen
+                          ? "text-white/70"
+                          : "text-gmt-muted group-hover:text-white/70",
+                      )}
+                    >
                       {item.subtitulo}
                     </span>
                   )}
                 </span>
                 <ChevronDown
                   size={20}
-                  className={`shrink-0 text-gmt-muted transition-transform duration-300 ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
+                  className={cn(
+                    "shrink-0 transition-[color,transform] duration-300",
+                    isOpen
+                      ? "rotate-180 text-white"
+                      : "text-gmt-muted group-hover:text-white",
+                  )}
                 />
               </button>
 
               <div
-                className={`accordion-panel overflow-hidden ${
-                  isOpen ? "accordion-panel--open" : "accordion-panel--closed"
-                }`}
+                className={cn(
+                  "accordion-panel overflow-hidden",
+                  isOpen ? "accordion-panel--open" : "accordion-panel--closed",
+                )}
               >
-                <div className="min-h-0">
-                  <ul className="flex flex-col gap-2 pl-6">
+                <div className="min-h-0 px-4">
+                  <ul className="flex flex-col gap-2 border-t border-gmt-border pt-4">
                     {item.itens.map((s) => (
                       <li key={s} className="type-body text-gmt-muted">
                         {s}
@@ -86,14 +102,14 @@ export function Accordion({ items }: AccordionProps) {
                   {item.href && (
                     <Link
                       href={item.href}
-                      className="type-body mt-5 ml-6 inline-block text-gmt-accent transition-colors hover:text-gmt-accent-2"
+                      className="type-body mt-5 inline-block text-gmt-accent transition-colors hover:text-gmt-accent-2"
                     >
                       Ver serviço →
                     </Link>
                   )}
                 </div>
               </div>
-            </RevealItem>
+            </RevealOnScroll>
           </li>
         );
       })}

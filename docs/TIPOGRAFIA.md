@@ -89,14 +89,18 @@ As variáveis são injectadas no `<html>` via `className={dmSans.variable} ${hos
 
 ### Tokens (`:root` em `globals.css`)
 
+**Última actualização da escala:** Junho 2026 — aumento global ~12–20% para melhor legibilidade.
+
 | Token | Valor | Papel semântico |
 |-------|-------|-----------------|
-| `--type-label` | `12px` | Labels uppercase, metadados, captions de secção |
-| `--type-body` | `16px` | Texto corrido, inputs, botões |
-| `--type-body-lg` | `18px` | Lead / parágrafo introdutório |
-| `--type-h3` | `30px` | Títulos de cartão, nomes de projeto |
-| `--type-h2` | `60px` | Títulos de secção (com clamp responsivo na classe) |
-| `--type-hero` | `clamp(48px, 8vw, 96px)` | H1 de hero fullscreen |
+| `--type-label` | `14px` | Labels uppercase, metadados, captions de secção |
+| `--type-body` | `18px` | Texto corrido, inputs, botões (também no `body`) |
+| `--type-body-lg` | `21px` | Lead / parágrafo introdutório |
+| `--type-h3` | `36px` | Títulos de cartão, nomes de projeto, CTA final |
+| `--type-h2` | `72px` | Títulos de secção (com clamp responsivo na classe) |
+| `--type-hero` | `clamp(52px, 9vw, 108px)` | H1 de hero fullscreen (serviços) |
+| `--type-hero-brand` | `clamp(4.5rem, 14vw, 11rem)` | Marca «GMT» na Home |
+| `--type-hero-subtitle` | `clamp(9rem, 24vw, 15rem)` | Subtítulo «Growth Marketing Technology» (12× escala original) |
 | `--type-hero-leading` | `clamp(1, 8vw, 1.1)` | Line-height viewport-relative só em heroes |
 
 ### Classes utilitárias (preferidas)
@@ -105,14 +109,16 @@ Definidas em `src/styles/globals.css`:
 
 | Classe | Fonte | Tamanho | Peso | Detalhes |
 |--------|-------|---------|------|----------|
-| `.type-label` | DM Sans | 12px | 400 | `letter-spacing: 0.1em`, uppercase, line-height 1.25 |
-| `.type-body` | DM Sans | 16px | 400 | line-height 1.5 |
-| `.type-body-lg` | DM Sans | 18px | 400 | line-height 1.55 |
-| `.type-h3` | Host Grotesk | 30px | 400 | line-height 1.2, cor `gmt-text` |
-| `.type-h2` | Host Grotesk | clamp(36px, 6vw, 60px) | 400 | line-height 1.1 |
+| `.type-label` | DM Sans | 14px | 400 | `letter-spacing: 0.1em`, uppercase |
+| `.type-body` | DM Sans | 18px | 400 | line-height 1.5 — **tamanho base do site** |
+| `.type-body-lg` | DM Sans | 21px | 400 | line-height 1.55 |
+| `.type-h3` | Host Grotesk | 36px | 400 | line-height 1.2, cor `gmt-text` |
+| `.type-h2` | Host Grotesk | clamp(42px, 6vw, 72px) | 400 | line-height 1.1 |
 | `.type-hero` | Host Grotesk | clamp hero | 400 | cor `gmt-text` |
-| `.type-hero--fullscreen` | — | — | — | Adiciona line-height viewport-relative |
-| `.type-medium` | — | — | 500 | Modificador de peso (combinar com `.type-body`, etc.) |
+| `.type-hero-brand` | Host Grotesk | clamp brand | 500 | Home — uppercase, tracking 0.18em |
+| `.type-hero-subtitle` | DM Sans | clamp subtitle | 400 | Home — uppercase, tracking 0.22em |
+| `.type-hero--fullscreen` | — | — | — | Line-height viewport-relative |
+| `.type-medium` | — | — | 500 | Modificador de peso |
 
 ### Exemplos de uso real
 
@@ -172,13 +178,13 @@ Host Grotesk e DM Sans estão carregadas apenas com 400 e 500. Para usar 600 ou 
 O `<main>` em `layout.tsx` aplica:
 
 ```tsx
-<main className="prose prose-invert prose-gmt max-w-none flex-1">
+<main className="prose prose-gmt max-w-none flex-1">
 ```
 
-- `prose-invert` — plugin `@tailwindcss/typography`, optimizado para fundo escuro
-- `prose-gmt` — overrides em `globals.css` para cores de headings e parágrafos alinhadas à paleta GMT
+- `prose` — plugin `@tailwindcss/typography`, tema **claro** (fundo branco)
+- `prose-gmt` — overrides em `globals.css` para cores de headings e parágrafos (`--gmt-text`, `--gmt-text-muted`)
 
-Ao mudar tipografia de artigos/corpo longo, editar `.prose-gmt` e as variáveis `--tw-prose-invert-*` no `:root`.
+Ver também `docs/PALETA_DE_CORES.md` para o ritmo branco → CTA preto → footer.
 
 ---
 
@@ -187,12 +193,12 @@ Ao mudar tipografia de artigos/corpo longo, editar `.prose-gmt` e as variáveis 
 ```css
 body {
   font-family: var(--font-sans);   /* DM Sans */
-  font-size: var(--type-body);     /* 16px */
+  font-size: var(--type-body);     /* 18px */
   font-weight: 400;
 }
 ```
 
-Elementos sem classe `.type-*` herdam corpo 16px DM Sans.
+Elementos sem classe `.type-*` herdam corpo 18px DM Sans.
 
 ---
 
@@ -200,7 +206,7 @@ Elementos sem classe `.type-*` herdam corpo 16px DM Sans.
 
 ### Use
 
-- **Label** → `.type-label` (12px, uppercase, tracking largo)
+- **Label** → `.type-label` (14px, uppercase, tracking largo)
 - **Corpo** → `.type-body` ou `.type-body-lg`
 - **Título de secção** → `.type-h2`
 - **Título de cartão** → `.type-h3`
@@ -217,7 +223,7 @@ Elementos sem classe `.type-*` herdam corpo 16px DM Sans.
 
 ### Exemplo de pedido claro a um agente
 
-> Trocar display para **Instrument Serif** e corpo para **Inter**. Carregar via next/font em `layout.tsx`, actualizar `--font-display` e `--font-sans` no `@theme inline`, e rever todas as classes `.type-*` em `globals.css`. Manter a escala actual (label 12px, body 16px, h2 60px, hero clamp). Adicionar peso 600 para títulos se necessário.
+> Trocar display para **Instrument Serif** e corpo para **Inter**. Carregar via next/font em `layout.tsx`, actualizar `--font-display` e `--font-sans` no `@theme inline`, e rever todas as classes `.type-*` em `globals.css`. Manter a escala actual (label 14px, body 18px, h2 72px, hero clamp).
 
 ---
 

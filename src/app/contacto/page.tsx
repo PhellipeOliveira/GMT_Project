@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Mail, Phone, Link2, MapPin } from "lucide-react";
 import { ContactForm } from "@/components/ui/ContactForm";
-import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
-import { RevealText } from "@/components/ui/RevealText";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 export const metadata: Metadata = {
   title: "Contacto",
@@ -39,30 +38,24 @@ const CANAIS = [
 
 export default function ContactoPage() {
   return (
-    <section className="relative flex flex-col gap-12 overflow-hidden px-5 pb-16 pt-28 md:min-h-screen md:flex-row md:gap-[5vw] md:px-[5vw] md:pt-[6vw]">
-      <PlaceholderMedia
-        id="CON-01"
-        descricao="fundo decorativo · 16:9"
-        cor="#0a0f1e"
-        className="pointer-events-none absolute inset-0 opacity-30"
-        sizes="100vw"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-gmt-bg/70" />
-
-      <div className="relative z-10 flex flex-col justify-between md:w-2/5">
+    <>
+      <section className="flex flex-col gap-12 px-5 pb-16 pt-28 md:min-h-[70vh] md:flex-row md:gap-[5vw] md:px-[5vw] md:pt-[6vw]">
+      <div className="flex flex-col justify-between md:w-2/5">
         <div>
-          <p className="type-label text-gmt-muted">Contacto</p>
-          <RevealText as="h1" className="type-h2 mt-4 text-[#c7c7c7]">
+          <RevealOnScroll as="p" className="type-label text-gmt-muted">
+            Contacto
+          </RevealOnScroll>
+          <RevealOnScroll as="h1" className="type-h2 mt-4">
             Vamos conversar
-          </RevealText>
-          <RevealText as="p" className="type-body-lg mt-6 max-w-md text-gmt-muted">
+          </RevealOnScroll>
+          <RevealOnScroll as="p" className="type-body-lg mt-6 max-w-md text-gmt-muted" delay={0.08}>
             Agende uma reunião gratuita e sem compromisso. Conte-nos sobre o seu
             negócio e desenhamos o plano certo para si.
-          </RevealText>
+          </RevealOnScroll>
         </div>
 
         <ul className="mt-12 flex flex-col gap-6">
-          {CANAIS.map((canal) => {
+          {CANAIS.map((canal, i) => {
             const Icone = canal.icone;
             const conteudo = (
               <span className="flex items-start gap-4">
@@ -81,31 +74,50 @@ export default function ContactoPage() {
             );
             return (
               <li key={canal.label}>
-                {canal.href ? (
-                  <a
-                    href={canal.href}
-                    target={canal.href.startsWith("http") ? "_blank" : undefined}
-                    rel={
-                      canal.href.startsWith("http")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    className="hover:opacity-80"
-                  >
-                    {conteudo}
-                  </a>
-                ) : (
-                  conteudo
-                )}
+                <RevealOnScroll variant="media" delay={i * 0.08}>
+                  {canal.href ? (
+                    <a
+                      href={canal.href}
+                      target={canal.href.startsWith("http") ? "_blank" : undefined}
+                      rel={
+                        canal.href.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      className="hover:opacity-80"
+                    >
+                      {conteudo}
+                    </a>
+                  ) : (
+                    conteudo
+                  )}
+                </RevealOnScroll>
               </li>
             );
           })}
         </ul>
       </div>
 
-      <div className="relative z-10 md:w-3/5">
-        <ContactForm />
+      <div className="md:w-3/5">
+        <RevealOnScroll variant="media" delay={0.08}>
+          <ContactForm />
+        </RevealOnScroll>
       </div>
-    </section>
+      </section>
+
+      <section className="section-cta px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
+        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
+          Preferimos falar pessoalmente?
+        </RevealOnScroll>
+        <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted" delay={0.08}>
+          Agende uma reunião gratuita — respondemos em 24 horas.
+        </RevealOnScroll>
+        <RevealOnScroll variant="media" delay={0.16}>
+          <a href="tel:+351913628211" className="btn-submit mt-8">
+            Ligar agora
+          </a>
+        </RevealOnScroll>
+      </section>
+    </>
   );
 }

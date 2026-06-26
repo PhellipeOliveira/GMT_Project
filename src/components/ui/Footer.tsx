@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { agentes, pacotes } from "@/data/servicos";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
+import { GmtLogo } from "@/components/ui/GmtLogo";
 
 export function Footer() {
   return (
@@ -13,6 +14,7 @@ export function Footer() {
         sizes="100vw"
       />
       <div className="relative z-10 mx-auto px-5 py-16 md:px-[5vw]">
+        <GmtLogo tone="on-dark" asLink className="mb-12" />
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           <div>
             <h3 className="type-label mb-5 text-gmt-muted">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PlaceholderMedia } from "./PlaceholderMedia";
-import { RevealItem } from "./RevealItem";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 interface PortfolioCardProps {
   placeholderId: string;
@@ -34,6 +34,7 @@ export function PortfolioCard({
         descricao={`card ${nome}`}
         cor={cor}
         className="rounded-lg"
+        reveal={false}
       />
       <div className="mt-5">
         <h3 className="type-h3">{nome}</h3>
@@ -65,20 +66,20 @@ export function PortfolioCard({
 
   if (emBreve || !slug) {
     return (
-      <RevealItem easing="portfolio" delay={delay} className="overflow-visible">
+      <RevealOnScroll variant="media" delay={delay}>
         <div className="block opacity-60">
           {content}
           <p className="type-label mt-2 text-gmt-muted">Em breve</p>
         </div>
-      </RevealItem>
+      </RevealOnScroll>
     );
   }
 
   return (
-    <RevealItem easing="portfolio" delay={delay} className="overflow-visible">
+    <RevealOnScroll variant="media" delay={delay}>
       <Link href={`/portfolio/${slug}`} className="group block hover:opacity-90">
         {content}
       </Link>
-    </RevealItem>
+    </RevealOnScroll>
   );
 }

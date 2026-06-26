@@ -93,7 +93,7 @@ export function ContactForm() {
             />
             <label
               htmlFor={campo.id}
-              className="type-body pointer-events-none absolute left-4 top-4 text-gmt-muted transition-all duration-200 peer-focus:top-2 peer-focus:text-[12px] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px]"
+              className="type-body pointer-events-none absolute left-4 top-4 text-gmt-muted transition-all duration-200 peer-focus:top-2 peer-focus:text-[14px] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[14px]"
             >
               {campo.label}
               {campo.required && " *"}
@@ -148,7 +148,7 @@ export function ContactForm() {
         />
         <label
           htmlFor="mensagem"
-          className="type-body pointer-events-none absolute left-4 top-4 text-gmt-muted transition-all duration-200 peer-focus:top-2 peer-focus:text-[12px] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px]"
+          className="type-body pointer-events-none absolute left-4 top-4 text-gmt-muted transition-all duration-200 peer-focus:top-2 peer-focus:text-[14px] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[14px]"
         >
           Conte-nos sobre o seu projeto *
         </label>

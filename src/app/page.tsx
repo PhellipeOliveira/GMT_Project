@@ -11,8 +11,7 @@ import {
 import { HeroSection } from "@/components/hero/HeroSection";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { PortfolioCard } from "@/components/ui/PortfolioCard";
-import { RevealText } from "@/components/ui/RevealText";
-import { RevealItem } from "@/components/ui/RevealItem";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { avulsos } from "@/data/servicos";
 import { getCaseBySlug } from "@/data/portfolio";
 
@@ -63,12 +62,14 @@ export default function HomePage() {
       <HeroSection />
 
       <section className="bg-gmt-bg-alt px-5 py-20 md:px-[5vw] md:py-[7vw]">
-        <p className="type-label text-gmt-muted">O que fazemos</p>
+        <RevealOnScroll as="p" className="type-label text-gmt-muted">
+          O que fazemos
+        </RevealOnScroll>
         <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
           {avulsos.map((servico, i) => {
             const Icone = ICONES_AVULSOS[servico.slug] ?? Globe;
             return (
-              <RevealItem key={servico.slug} easing="services" delay={i * 0.05}>
+              <RevealOnScroll key={servico.slug} variant="media" delay={i * 0.08}>
                 <Link
                   href={`/servicos/${servico.slug}`}
                   className="group flex items-start gap-5 rounded-lg border border-gmt-border bg-gmt-bg p-6 hover:border-gmt-accent"
@@ -83,7 +84,7 @@ export default function HomePage() {
                     </p>
                   </div>
                 </Link>
-              </RevealItem>
+              </RevealOnScroll>
             );
           })}
         </div>
@@ -92,18 +93,20 @@ export default function HomePage() {
       <section className="bg-gmt-bg px-5 py-20 md:px-[5vw] md:py-[7vw]">
         <div className="flex flex-col gap-12 md:flex-row md:gap-[5vw]">
           <div className="w-full md:w-3/8">
-            <p className="type-label text-gmt-muted">Porquê a GMT</p>
-            <RevealText as="h2" className="type-h3 mt-5 max-w-xl">
+            <RevealOnScroll as="p" className="type-label text-gmt-muted">
+              Porquê a GMT
+            </RevealOnScroll>
+            <RevealOnScroll as="h2" className="type-h3 mt-5 max-w-xl">
               Cada negócio, por mais pequeno que seja, merece uma presença
               digital profissional e eficaz.
-            </RevealText>
+            </RevealOnScroll>
             <ul className="mt-8 flex flex-col gap-5">
               {DIFERENCIAIS.map((d, i) => (
                 <li key={d.titulo}>
-                  <RevealItem delay={i * 0.05}>
+                  <RevealOnScroll variant="media" delay={i * 0.08}>
                     <h3 className="type-body text-gmt-text">{d.titulo}</h3>
                     <p className="type-body mt-1 text-gmt-muted">{d.texto}</p>
-                  </RevealItem>
+                  </RevealOnScroll>
                 </li>
               ))}
             </ul>
@@ -143,7 +146,9 @@ export default function HomePage() {
       </section>
 
       <section className="bg-gmt-bg-alt px-5 py-20 md:px-[5vw] md:py-[7vw]">
-        <p className="type-label text-gmt-muted">Trabalho recente</p>
+        <RevealOnScroll as="p" className="type-label text-gmt-muted">
+          Trabalho recente
+        </RevealOnScroll>
         <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2">
           {nara && (
             <PortfolioCard
@@ -157,21 +162,23 @@ export default function HomePage() {
               tags={nara.tags}
             />
           )}
-          <PortfolioCard placeholderId="PF-02a" nome="Projeto" cor="#1E293B" emBreve delay={0.1} />
-          <PortfolioCard placeholderId="PF-02b" nome="Projeto" cor="#1E293B" emBreve delay={0.2} />
+          <PortfolioCard placeholderId="PF-02a" nome="Projeto" cor="#1E293B" emBreve delay={0.08} />
+          <PortfolioCard placeholderId="PF-02b" nome="Projeto" cor="#1E293B" emBreve delay={0.16} />
         </div>
       </section>
 
       <section className="section-cta px-5 py-24 text-center md:px-[5vw] md:py-[8vw]">
-        <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
+        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
           Pronto para automatizar o seu negócio?
-        </RevealText>
-        <p className="type-body mt-4 text-gmt-muted">
+        </RevealOnScroll>
+        <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted" delay={0.08}>
           Reunião gratuita e sem compromisso.
-        </p>
-        <Link href="/contacto" className="btn-submit mt-8">
-          Agendar agora
-        </Link>
+        </RevealOnScroll>
+        <RevealOnScroll variant="media" delay={0.16}>
+          <Link href="/contacto" className="btn-submit mt-8">
+            Agendar agora
+          </Link>
+        </RevealOnScroll>
       </section>
     </>
   );

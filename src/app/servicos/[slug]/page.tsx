@@ -4,8 +4,7 @@ import { notFound } from "next/navigation";
 import { Check } from "lucide-react";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { PortfolioCard } from "@/components/ui/PortfolioCard";
-import { RevealText } from "@/components/ui/RevealText";
-import { RevealItem } from "@/components/ui/RevealItem";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { servicos, getServicoBySlug } from "@/data/servicos";
 import { getCaseBySlug } from "@/data/portfolio";
 import { getFamiliaProcessBg, getServicoHeroId } from "@/lib/media";
@@ -83,22 +82,25 @@ export default async function ServicoItemPage({
           fill
           priority
           sizes="100vw"
+          reveal={false}
         />
         <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black via-black/40 to-transparent">
-          <div className="w-full px-5 pb-12 md:w-1/2 md:px-[5vw] md:pb-[5vw]">
-            <Link
-              href="/servicos"
-              className="type-label text-gmt-muted transition-colors hover:text-gmt-text"
-            >
-              ← Serviços
-            </Link>
-            <RevealText as="h1" className="type-hero type-hero--fullscreen mt-4 max-w-3xl">
+          <div className="w-full px-5 pb-12 text-white md:w-1/2 md:px-[5vw] md:pb-[5vw]">
+            <RevealOnScroll variant="media">
+              <Link
+                href="/servicos"
+                className="type-label text-white/70 transition-colors hover:text-white"
+              >
+                ← Serviços
+              </Link>
+            </RevealOnScroll>
+            <RevealOnScroll as="h1" className="type-hero type-hero--fullscreen mt-4 max-w-3xl !text-white">
               {servico.nome}
-            </RevealText>
+            </RevealOnScroll>
             {servico.headline && (
-              <RevealText as="p" className="type-body-lg mt-4 max-w-xl text-gmt-muted">
+              <RevealOnScroll as="p" className="type-body-lg mt-4 max-w-xl text-white/70" delay={0.08}>
                 {servico.headline}
-              </RevealText>
+              </RevealOnScroll>
             )}
           </div>
         </div>
@@ -111,18 +113,22 @@ export default async function ServicoItemPage({
           <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
             {servico.problema && (
               <div className="md:w-1/2">
-                <h2 className="type-label text-gmt-muted">O desafio</h2>
-                <RevealText as="p" className="type-h3 mt-5">
+                <RevealOnScroll as="h2" className="type-label text-gmt-muted">
+                  O desafio
+                </RevealOnScroll>
+                <RevealOnScroll as="p" className="type-h3 mt-5">
                   {servico.problema}
-                </RevealText>
+                </RevealOnScroll>
               </div>
             )}
             {servico.solucao && (
               <div className="md:w-1/2">
-                <h2 className="type-label text-gmt-muted">A solução</h2>
-                <RevealText as="p" className="type-body-lg mt-5 text-gmt-muted">
+                <RevealOnScroll as="h2" className="type-label text-gmt-muted">
+                  A solução
+                </RevealOnScroll>
+                <RevealOnScroll as="p" className="type-body-lg mt-5 text-gmt-muted" delay={0.08}>
                   {servico.solucao}
-                </RevealText>
+                </RevealOnScroll>
               </div>
             )}
           </div>
@@ -132,16 +138,18 @@ export default async function ServicoItemPage({
       {/* ===== Sec 1b — Benefícios ===== */}
       {servico.beneficios.length > 0 && (
         <section className="px-5 pt-16 md:px-[5vw] md:pt-[5vw]">
-          <h2 className="type-label text-gmt-muted">Benefícios</h2>
+          <RevealOnScroll as="h2" className="type-label text-gmt-muted">
+            Benefícios
+          </RevealOnScroll>
           <ul className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
             {servico.beneficios.map((b, i) => (
               <li key={b}>
-                <RevealItem easing="services" delay={i * 0.05}>
+                <RevealOnScroll variant="media" delay={i * 0.08}>
                   <div className="flex items-start gap-3 rounded-lg border border-gmt-border bg-gmt-bg-alt p-5">
                     <Check size={18} className="mt-0.5 shrink-0 text-gmt-accent" />
                     <span className="type-body text-gmt-text">{b}</span>
                   </div>
-                </RevealItem>
+                </RevealOnScroll>
               </li>
             ))}
           </ul>
@@ -152,16 +160,22 @@ export default async function ServicoItemPage({
       <section className="flex flex-col px-5 pt-16 md:px-[5vw] md:pt-[8vw]">
         <div className="flex flex-col gap-8 md:flex-row md:gap-[5vw]">
           <div className="md:w-1/3">
-            <h2 className="type-label text-gmt-muted">O que inclui</h2>
+            <RevealOnScroll as="h2" className="type-label text-gmt-muted">
+              O que inclui
+            </RevealOnScroll>
           </div>
           <div className="md:w-2/3">
             {servico.solucao && servico.tipo === "pacote" && (
-              <p className="type-body mb-6 text-gmt-muted">{servico.solucao}</p>
+              <RevealOnScroll as="p" className="type-body mb-6 text-gmt-muted">
+                {servico.solucao}
+              </RevealOnScroll>
             )}
             <ul className="flex flex-col divide-y divide-gmt-border border-t border-gmt-border">
-              {servico.funcionalidades.map((f) => (
-                <li key={f} className="type-body-lg py-4 text-gmt-text">
-                  {f}
+              {servico.funcionalidades.map((f, i) => (
+                <li key={f}>
+                  <RevealOnScroll variant="media" delay={i * 0.08}>
+                    <span className="type-body-lg block py-4 text-gmt-text">{f}</span>
+                  </RevealOnScroll>
                 </li>
               ))}
             </ul>
@@ -171,10 +185,12 @@ export default async function ServicoItemPage({
 
       {/* ===== Sec 3 — Como funciona (process cards) ===== */}
       <section className="px-5 pt-16 md:px-[5vw] md:pt-[8vw]">
-        <h2 className="type-label text-gmt-muted">Como funciona</h2>
+        <RevealOnScroll as="h2" className="type-label text-gmt-muted">
+          Como funciona
+        </RevealOnScroll>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {PROCESSO.map((p, i) => (
-            <RevealItem key={p.numero} easing="services" delay={i * 0.05}>
+            <RevealOnScroll key={p.numero} variant="media" delay={i * 0.08}>
               <div className="relative flex aspect-[3/4] flex-col overflow-hidden rounded-2xl border border-gmt-border bg-white/50 p-6 md:aspect-[2/3]">
               {processBgId && (
                 <PlaceholderMedia
@@ -184,6 +200,7 @@ export default async function ServicoItemPage({
                   className="opacity-20"
                   fill
                   sizes="240px"
+                  reveal={false}
                 />
               )}
               <div className="relative z-10">
@@ -194,7 +211,7 @@ export default async function ServicoItemPage({
                 <p className="type-body mt-2 text-gmt-muted">{p.resumo}</p>
               </div>
             </div>
-            </RevealItem>
+            </RevealOnScroll>
           ))}
         </div>
       </section>
@@ -202,12 +219,14 @@ export default async function ServicoItemPage({
       {/* ===== Sec 4 — Casos de uso ===== */}
       {servico.casosDeUso.length > 0 && (
         <section className="px-5 pt-16 md:px-[5vw] md:pt-[8vw]">
-          <h2 className="type-label text-gmt-muted">Para quem é</h2>
+          <RevealOnScroll as="h2" className="type-label text-gmt-muted">
+            Para quem é
+          </RevealOnScroll>
           <div className="mt-6 flex flex-wrap gap-3">
-            {servico.casosDeUso.map((c) => (
-              <span key={c} className="tag-pill">
-                {c}
-              </span>
+            {servico.casosDeUso.map((c, i) => (
+              <RevealOnScroll key={c} variant="media" delay={i * 0.08}>
+                <span className="tag-pill">{c}</span>
+              </RevealOnScroll>
             ))}
           </div>
         </section>
@@ -216,7 +235,9 @@ export default async function ServicoItemPage({
       {/* ===== Sec 5 — Portfolio em prática ===== */}
       {nara && (
         <section className="px-5 pt-16 md:px-[5vw] md:pt-[8vw]">
-          <h2 className="type-label text-gmt-muted">Em prática</h2>
+          <RevealOnScroll as="h2" className="type-label text-gmt-muted">
+            Em prática
+          </RevealOnScroll>
           <div className="mt-6 grid grid-cols-1 gap-10 md:grid-cols-2">
             <PortfolioCard
               placeholderId="PF-01"
@@ -236,15 +257,17 @@ export default async function ServicoItemPage({
 
       {/* ===== Sec 6 — CTA final ===== */}
       <section className="section-cta mt-20 px-5 py-20 text-center md:mt-[8vw] md:px-[5vw] md:py-[8vw]">
-        <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
+        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
           Quer este serviço no seu negócio?
-        </RevealText>
-        <p className="type-body mt-4 text-gmt-muted">
+        </RevealOnScroll>
+        <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted" delay={0.08}>
           Agende uma reunião gratuita e sem compromisso.
-        </p>
-        <Link href="/contacto" className="btn-submit mt-8">
-          Agendar reunião
-        </Link>
+        </RevealOnScroll>
+        <RevealOnScroll variant="media" delay={0.16}>
+          <Link href="/contacto" className="btn-submit mt-8">
+            Agendar reunião
+          </Link>
+        </RevealOnScroll>
       </section>
     </>
   );
