@@ -35,8 +35,8 @@
   --type-h2: 72px;
   --type-hero: clamp(52px, 9vw, 108px);
   --type-hero-leading: clamp(1, 8vw, 1.1);
-  --type-hero-brand: clamp(4.5rem, 14vw, 11rem);
-  --type-hero-subtitle: clamp(9rem, 24vw, 15rem);
+  --type-hero-brand: clamp(6rem, 15vw, 14rem);
+  --type-hero-subtitle: clamp(1rem, 2.5vw, 2rem);
 
   /* Secções dual-mode (design_map_services_item / about) */
   --gmt-bg-light: #ebebeb;
@@ -148,6 +148,7 @@ body {
   line-height: 1;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--gmt-text);
 }
 
@@ -177,6 +178,7 @@ body {
   letter-spacing: 0.22em;
   line-height: 1.55;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--gmt-text);
 }
 

@@ -106,11 +106,11 @@ export function HeroTitle() {
   if (reducedMotion) {
     return (
       <div
-        ref={inViewRef}
-        className="flex flex-col items-center gap-4"
-        aria-label="GMT – Growth Marketing Technology"
-      >
-        <h1 className="type-hero-brand select-none text-white">GMT</h1>
+      ref={inViewRef}
+      className="flex flex-col items-center gap-6"
+      aria-label="GMT – Growth Marketing Technology"
+    >
+        <h1 className="type-hero-brand select-none text-center text-white">GMT</h1>
         <p className="type-hero-subtitle w-[60%] select-none text-center text-white">
           Growth Marketing Technology
         </p>
@@ -122,21 +122,21 @@ export function HeroTitle() {
   return (
     <div
       ref={inViewRef}
-      className="flex flex-col items-center gap-4"
+      className="flex flex-col items-center gap-6"
       aria-label="GMT – Growth Marketing Technology"
     >
       <motion.div
         variants={blink}
         initial="stable"
         animate={blinkControls}
-        className="flex flex-col items-center gap-4"
+        className="flex flex-col items-center gap-6"
       >
         {/* Linha 1 — GMT */}
         <motion.h1
           variants={line1Container}
           initial="hidden"
           animate={revealControls}
-          className="type-hero-brand select-none text-white"
+          className="type-hero-brand select-none text-center text-white"
         >
           {line1Chars.map(({ char, key }) => (
             <motion.span

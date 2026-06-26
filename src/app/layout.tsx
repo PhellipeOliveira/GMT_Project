@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { Navbar } from "@/components/ui/Navbar";
 import { Footer } from "@/components/ui/Footer";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { FloatingCTA } from "@/components/ui/FloatingCTA";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -49,6 +50,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <FloatingCTA />
       </body>
     </html>
   );

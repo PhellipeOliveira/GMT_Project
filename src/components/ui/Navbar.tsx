@@ -38,6 +38,12 @@ export function Navbar() {
    */
   const pillDark = isHeroPageDark(pathname) && !scrolled;
 
+  /**
+   * Logo glass: visível sempre em páginas de fundo claro.
+   * Na Home (hero escuro), só aparece após scroll (comportamento original).
+   */
+  const logoGlassVisible = scrolled || !isHeroPageDark(pathname);
+
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <div className="relative flex h-16 items-center px-5 md:h-20 md:px-[3vw]">
@@ -46,11 +52,11 @@ export function Navbar() {
         <div className="pointer-events-auto z-10">
           <Link href="/" onClick={() => setOpen(false)} aria-label="GMT — início">
             <div className="relative">
-              {/* Container glass — aparece suavemente após scroll */}
+              {/* Container glass — sempre visível em páginas claras; aparece no scroll na Home */}
               <div
                 className={cn(
                   "absolute inset-0 rounded-lg bg-black/55 backdrop-blur-md transition-opacity duration-500",
-                  scrolled ? "opacity-100" : "opacity-0",
+                  logoGlassVisible ? "opacity-100" : "opacity-0",
                 )}
               />
               <div className="relative px-3 py-2">
