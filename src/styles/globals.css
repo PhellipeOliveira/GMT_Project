@@ -36,7 +36,7 @@
   --type-hero: clamp(52px, 9vw, 108px);
   --type-hero-leading: clamp(1, 8vw, 1.1);
   --type-hero-brand: clamp(6rem, 15vw, 14rem);
-  --type-hero-subtitle: clamp(1rem, 2.5vw, 2rem);
+  --type-hero-subtitle: clamp(3rem, 4.5vw, 4.5rem);
 
   /* Secções dual-mode (design_map_services_item / about) */
   --gmt-bg-light: #ebebeb;
@@ -175,8 +175,8 @@ body {
   font-family: var(--font-sans);
   font-size: var(--type-hero-subtitle);
   font-weight: 400;
-  letter-spacing: 0.22em;
-  line-height: 1.55;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--gmt-text);

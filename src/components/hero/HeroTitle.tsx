@@ -111,7 +111,7 @@ export function HeroTitle() {
       aria-label="GMT – Growth Marketing Technology"
     >
         <h1 className="type-hero-brand select-none text-center text-white">GMT</h1>
-        <p className="type-hero-subtitle w-[60%] select-none text-center text-white">
+        <p className="type-hero-subtitle select-none text-center text-white">
           Growth Marketing Technology
         </p>
       </div>
@@ -155,7 +155,7 @@ export function HeroTitle() {
           variants={line2Container}
           initial="hidden"
           animate={revealControls}
-          className="type-hero-subtitle w-[60%] select-none text-center text-white"
+          className="type-hero-subtitle select-none text-center text-white"
         >
           {line2Chars.map(({ char, key }) => (
             <motion.span
