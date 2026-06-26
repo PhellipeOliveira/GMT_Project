@@ -12,11 +12,12 @@ import { splitTextIntoLines } from "@/lib/split-text-lines";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 
-export const REVEAL_EASE_OUT = [0, 0, 0.2, 1] as const;
-export const REVEAL_DURATION = 0.7;
-export const REVEAL_STAGGER = 0.08;
-export const REVEAL_TEXT_Y = 40;
-export const REVEAL_MEDIA_Y = 30;
+// easeOutQuart — suave, premium, natural
+export const REVEAL_EASE_OUT = [0.16, 1, 0.3, 1] as const;
+export const REVEAL_DURATION = 1.75;
+export const REVEAL_STAGGER = 0.14;
+export const REVEAL_TEXT_Y = 50;
+export const REVEAL_MEDIA_Y = 36;
 
 const VIEWPORT = { once: true, margin: "-8% 0px" as const };
 
