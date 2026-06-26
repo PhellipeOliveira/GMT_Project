@@ -36,8 +36,7 @@ export default function PortfolioPage() {
               <PlaceholderMedia
                 key={c.slug}
                 id="PF-02"
-                descricao={`${c.nome} · 3:2`}
-                proporcao="3/2"
+                descricao={`${c.nome} · 9:16`}
                 cor={c.corPlaceholder}
                 className="rounded-lg"
                 sizes="(max-width: 768px) 50vw, 12vw"
@@ -47,8 +46,7 @@ export default function PortfolioPage() {
               <PlaceholderMedia
                 key={id}
                 id={id}
-                descricao="em breve · 3:2"
-                proporcao="3/2"
+                descricao="em breve · 9:16"
                 cor="#1E293B"
                 className="rounded-lg opacity-50"
               />
@@ -64,19 +62,18 @@ export default function PortfolioPage() {
               <RevealItem easing="portfolio" delay={i * 0.05}>
                 <Link
                   href={`/portfolio/${c.slug}`}
-                  className="group flex items-center gap-5 py-8 md:gap-[2vw]"
+                  className="group flex items-center gap-5 py-16 md:gap-[2vw] md:py-[8vw]"
                 >
                   <span className="font-mono type-body text-gmt-muted">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <PlaceholderMedia
-                    id="PF-02"
-                    descricao="3:2"
-                    proporcao="3/2"
-                    cor={c.corPlaceholder}
-                    className="w-20 shrink-0 rounded-md md:w-28"
-                    sizes="112px"
-                  />
+                <PlaceholderMedia
+                  id="PF-02"
+                  descricao="9:16"
+                  cor={c.corPlaceholder}
+                  className="w-20 shrink-0 rounded-md md:w-28"
+                  sizes="112px"
+                />
                   <div className="flex-1">
                     <h3 className="type-h3 group-hover:text-gmt-accent">
                       {c.nome}
@@ -84,10 +81,7 @@ export default function PortfolioPage() {
                     <p className="type-body mt-1 text-gmt-muted">{c.local}</p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {c.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="type-label rounded-full bg-white/10 px-3 py-1 text-gmt-text backdrop-blur-sm normal-case tracking-normal"
-                        >
+                        <span key={tag} className="tag-pill">
                           {tag}
                         </span>
                       ))}
@@ -113,8 +107,7 @@ export default function PortfolioPage() {
                 </span>
                 <PlaceholderMedia
                   id={id}
-                  descricao="3:2"
-                  proporcao="3/2"
+                  descricao="9:16"
                   cor="#1E293B"
                   className="w-20 shrink-0 rounded-md md:w-28"
                 />
@@ -131,17 +124,14 @@ export default function PortfolioPage() {
         </ul>
       </section>
 
-      <section className="mt-20 px-5 py-20 text-center md:mt-[8vw] md:px-[5vw] md:py-[8vw]">
+      <section className="section-cta mt-20 px-5 py-20 text-center md:mt-[8vw] md:px-[5vw] md:py-[8vw]">
         <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
           Quer ser o nosso próximo case?
         </RevealText>
         <p className="type-body mt-4 text-gmt-muted">
           Agende uma reunião gratuita e sem compromisso.
         </p>
-        <Link
-          href="/contacto"
-          className="type-body type-medium mt-8 inline-block rounded-full bg-gmt-accent px-8 py-3 text-white"
-        >
+        <Link href="/contacto" className="btn-submit mt-8">
           Agendar reunião
         </Link>
       </section>

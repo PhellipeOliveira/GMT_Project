@@ -75,16 +75,16 @@ export default async function ServicoItemPage({
   return (
     <>
       {/* ===== Sec 0 — Hero do serviço (full-bleed 70vh) ===== */}
-      <section className="relative h-[70vh] w-full overflow-hidden">
+      <section className="relative h-[80vh] w-full overflow-hidden md:h-[70vh]">
         <PlaceholderMedia
           id={heroId}
           descricao={`${servico.nome} · hero 3:1`}
           cor={servico.corPlaceholder}
-          altura="70vh"
+          fill
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-gmt-bg via-gmt-bg/40 to-transparent">
+        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black via-black/40 to-transparent">
           <div className="w-full px-5 pb-12 md:w-1/2 md:px-[5vw] md:pb-[5vw]">
             <Link
               href="/servicos"
@@ -104,6 +104,7 @@ export default async function ServicoItemPage({
         </div>
       </section>
 
+      <div className="section-light">
       {/* ===== Sec 1 — Proposta de valor (problema + solução) ===== */}
       {(servico.problema || servico.solucao) && (
         <section className="px-5 pt-16 md:px-[5vw] md:pt-[5vw]">
@@ -174,13 +175,14 @@ export default async function ServicoItemPage({
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {PROCESSO.map((p, i) => (
             <RevealItem key={p.numero} easing="services" delay={i * 0.05}>
-              <div className="relative flex flex-col overflow-hidden rounded-2xl border border-gmt-border bg-gmt-bg-alt p-6">
+              <div className="relative flex aspect-[3/4] flex-col overflow-hidden rounded-2xl border border-gmt-border bg-white/50 p-6 md:aspect-[2/3]">
               {processBgId && (
                 <PlaceholderMedia
                   id={processBgId}
-                  descricao="fundo do processo · 3:4"
+                  descricao="fundo do processo"
                   cor={servico.corPlaceholder}
-                  className="absolute inset-0 opacity-20"
+                  className="opacity-20"
+                  fill
                   sizes="240px"
                 />
               )}
@@ -203,10 +205,7 @@ export default async function ServicoItemPage({
           <h2 className="type-label text-gmt-muted">Para quem é</h2>
           <div className="mt-6 flex flex-wrap gap-3">
             {servico.casosDeUso.map((c) => (
-              <span
-                key={c}
-                className="type-body rounded-full border border-gmt-border px-4 py-2 text-gmt-text"
-              >
+              <span key={c} className="tag-pill">
                 {c}
               </span>
             ))}
@@ -233,18 +232,17 @@ export default async function ServicoItemPage({
         </section>
       )}
 
+      </div>
+
       {/* ===== Sec 6 — CTA final ===== */}
-      <section className="mt-20 px-5 py-20 text-center md:mt-[8vw] md:px-[5vw] md:py-[8vw]">
+      <section className="section-cta mt-20 px-5 py-20 text-center md:mt-[8vw] md:px-[5vw] md:py-[8vw]">
         <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
           Quer este serviço no seu negócio?
         </RevealText>
         <p className="type-body mt-4 text-gmt-muted">
           Agende uma reunião gratuita e sem compromisso.
         </p>
-        <Link
-          href="/contacto"
-          className="type-body type-medium mt-8 inline-block rounded-full bg-gmt-accent px-8 py-3 text-white transition-colors hover:bg-gmt-accent-2"
-        >
+        <Link href="/contacto" className="btn-submit mt-8">
           Agendar reunião
         </Link>
       </section>

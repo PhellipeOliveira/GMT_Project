@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 
 const SERVICOS_INTERESSE = [
   "Automação & IA",
@@ -21,8 +21,12 @@ const CAMPOS = [
   { id: "empresa", label: "Empresa", type: "text", required: false },
 ] as const;
 
+type FormStatus = "idle" | "submitting" | "success" | "error";
+
 export function ContactForm() {
   const [selecionados, setSelecionados] = useState<string[]>([]);
+  const [status, setStatus] = useState<FormStatus>("idle");
+  const [shake, setShake] = useState(false);
 
   function toggle(servico: string) {
     setSelecionados((prev) =>
@@ -32,14 +36,41 @@ export function ContactForm() {
     );
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    const form = e.currentTarget;
+
+    if (!form.checkValidity()) {
+      setShake(true);
+      window.setTimeout(() => setShake(false), 400);
+      form.reportValidity();
+      return;
+    }
+
+    setStatus("submitting");
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    await new Promise((r) => setTimeout(r, 800));
     console.log("Contacto (estático):", { ...data, servicos: selecionados });
+    setStatus("success");
+  }
+
+  if (status === "success") {
+    return (
+      <div className="form-success rounded-lg border border-gmt-border bg-gmt-bg-alt p-8">
+        <h3 className="type-h3">Mensagem enviada</h3>
+        <p className="type-body mt-3 text-gmt-muted">
+          Obrigado pelo contacto. Responderemos em breve.
+        </p>
+      </div>
+    );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form
+      onSubmit={handleSubmit}
+      className={`flex flex-col gap-5 ${shake ? "form-shake" : ""} ${status === "submitting" ? "form-fade-out form-fade-out--hidden" : ""}`}
+    >
       <input
         type="text"
         name="_hp_website"
@@ -58,11 +89,11 @@ export function ContactForm() {
               type={campo.type}
               required={campo.required}
               placeholder=" "
-              className="type-body peer w-full rounded-lg border border-gmt-border bg-gmt-bg-alt px-4 pb-2 pt-6 text-gmt-text outline-none transition-colors focus:border-gmt-accent"
+              className="input-gmt type-body peer w-full rounded-lg border border-gmt-border bg-gmt-bg-alt px-4 pb-2 pt-6 text-gmt-text outline-none focus:border-gmt-accent"
             />
             <label
               htmlFor={campo.id}
-              className="type-body pointer-events-none absolute left-4 top-4 text-gmt-muted transition-all peer-focus:top-2 peer-focus:text-[12px] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px]"
+              className="type-body pointer-events-none absolute left-4 top-4 text-gmt-muted transition-all duration-200 peer-focus:top-2 peer-focus:text-[12px] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px]"
             >
               {campo.label}
               {campo.required && " *"}
@@ -82,10 +113,10 @@ export function ContactForm() {
                 type="button"
                 onClick={() => toggle(servico)}
                 aria-pressed={ativo}
-                className="flex items-center gap-3 text-left"
+                className="flex items-center gap-3 text-left opacity-80 transition-opacity duration-300 hover:opacity-100"
               >
                 <span
-                  className={`flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors duration-300 ${
+                  className={`flex size-6 shrink-0 items-center justify-center rounded-full border transition-colors duration-300 ${
                     ativo
                       ? "border-gmt-accent bg-gmt-accent text-white"
                       : "border-gmt-border"
@@ -113,11 +144,11 @@ export function ContactForm() {
           required
           rows={4}
           placeholder=" "
-          className="type-body peer w-full resize-none rounded-lg border border-gmt-border bg-gmt-bg-alt px-4 pb-2 pt-6 text-gmt-text outline-none transition-colors focus:border-gmt-accent"
+          className="input-gmt type-body peer w-full resize-none rounded-lg border border-gmt-border bg-gmt-bg-alt px-4 pb-2 pt-6 text-gmt-text outline-none focus:border-gmt-accent"
         />
         <label
           htmlFor="mensagem"
-          className="type-body pointer-events-none absolute left-4 top-4 text-gmt-muted transition-all peer-focus:top-2 peer-focus:text-[12px] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px]"
+          className="type-body pointer-events-none absolute left-4 top-4 text-gmt-muted transition-all duration-200 peer-focus:top-2 peer-focus:text-[12px] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px]"
         >
           Conte-nos sobre o seu projeto *
         </label>
@@ -125,10 +156,22 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="type-body type-medium group mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-gmt-accent px-8 py-3 text-white transition-all duration-200 hover:scale-[1.02] hover:bg-gmt-accent-2"
+        disabled={status === "submitting"}
+        className="btn-submit group mt-2"
       >
-        Enviar mensagem
-        <span className="transition-transform group-hover:translate-x-1">→</span>
+        {status === "submitting" ? (
+          <>
+            <Loader2 size={18} className="animate-spin" />
+            A enviar…
+          </>
+        ) : (
+          <>
+            Enviar mensagem
+            <span className="transition-transform duration-200 group-hover:translate-x-1">
+              →
+            </span>
+          </>
+        )}
       </button>
     </form>
   );

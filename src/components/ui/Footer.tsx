@@ -4,11 +4,11 @@ import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-gmt-border bg-gmt-bg">
+    <footer className="section-footer relative my-[10vw] w-full overflow-hidden border-t border-gmt-border">
       <PlaceholderMedia
         id="GL-03"
         descricao="textura de secção · 16:9"
-        cor="#0a0f1e"
+        cor="#101010"
         className="pointer-events-none absolute inset-0 opacity-15"
         sizes="100vw"
       />

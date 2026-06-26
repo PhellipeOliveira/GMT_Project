@@ -15,7 +15,7 @@ const dmSans = DM_Sans({
 
 const hostGrotesk = Host_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["300", "400", "500"],
   variable: "--font-hostgrotesk",
   display: "swap",
 });

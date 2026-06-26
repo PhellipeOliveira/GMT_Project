@@ -52,7 +52,7 @@ export default function ContactoPage() {
       <div className="relative z-10 flex flex-col justify-between md:w-2/5">
         <div>
           <p className="type-label text-gmt-muted">Contacto</p>
-          <RevealText as="h1" className="type-h2 mt-4">
+          <RevealText as="h1" className="type-h2 mt-4 text-[#c7c7c7]">
             Vamos conversar
           </RevealText>
           <RevealText as="p" className="type-body-lg mt-6 max-w-md text-gmt-muted">

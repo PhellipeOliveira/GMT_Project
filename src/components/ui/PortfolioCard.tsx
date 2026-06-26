@@ -31,8 +31,7 @@ export function PortfolioCard({
     <>
       <PlaceholderMedia
         id={placeholderId}
-        descricao={`card ${nome} · 3:4`}
-        proporcao="3/4"
+        descricao={`card ${nome}`}
         cor={cor}
         className="rounded-lg"
       />
@@ -54,10 +53,7 @@ export function PortfolioCard({
         {tags && tags.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <span
-                key={tag}
-                className="type-label rounded-full border border-gmt-border px-3 py-1 text-gmt-muted normal-case tracking-normal"
-              >
+              <span key={tag} className="tag-pill">
                 {tag}
               </span>
             ))}

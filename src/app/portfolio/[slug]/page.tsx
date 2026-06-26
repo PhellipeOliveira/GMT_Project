@@ -89,7 +89,6 @@ export default async function PortfolioItemPage({
               <PlaceholderMedia
                 id={img.id}
                 descricao={`${img.legenda ?? "galeria"} · ${img.proporcao.replace("/", ":")}`}
-                proporcao={img.proporcao}
                 cor={caso.corPlaceholder}
                 className="rounded-lg md:rounded-[1vw]"
                 sizes="(max-width: 768px) 100vw, 60vw"
@@ -106,11 +105,11 @@ export default async function PortfolioItemPage({
             <li key={i} className="border-b border-gmt-border">
               <div className="flex items-center gap-5 py-8 opacity-50 md:gap-[2vw]">
                 <PlaceholderMedia
-                  id={`PF-NX${i + 1}`}
-                  descricao="3:2"
-                  proporcao="3/2"
+                  id="PF-02"
+                  descricao="9:16"
                   cor="#1E293B"
                   className="w-20 shrink-0 rounded-md md:w-28"
+                  sizes="112px"
                 />
                 <div className="flex-1">
                   <h3 className="type-h3">Em breve</h3>

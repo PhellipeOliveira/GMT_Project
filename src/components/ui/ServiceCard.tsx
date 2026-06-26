@@ -16,12 +16,11 @@ export function ServiceCard({ servico, placeholderId, delay = 0 }: ServiceCardPr
         href={`/servicos/${servico.slug}`}
         className="group block overflow-hidden rounded-lg border border-gmt-border bg-gmt-bg hover:border-gmt-accent"
       >
-        <PlaceholderMedia
-          id={placeholderId}
-          descricao={`${servico.nome} · 3:2`}
-          proporcao="3/2"
-          cor={servico.corPlaceholder}
-        />
+      <PlaceholderMedia
+        id={placeholderId}
+        descricao={servico.nome}
+        cor={servico.corPlaceholder}
+      />
         <div className="p-5">
           <h3 className="type-body text-gmt-text">{servico.nome}</h3>
           {servico.headline && (

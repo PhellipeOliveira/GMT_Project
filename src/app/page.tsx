@@ -8,7 +8,7 @@ import {
   BarChart3,
   type LucideIcon,
 } from "lucide-react";
-import { HeroSlider } from "@/components/ui/HeroSlider";
+import { HeroSection } from "@/components/hero/HeroSection";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { PortfolioCard } from "@/components/ui/PortfolioCard";
 import { RevealText } from "@/components/ui/RevealText";
@@ -60,7 +60,7 @@ export default function HomePage() {
 
   return (
     <>
-      <HeroSlider />
+      <HeroSection />
 
       <section className="bg-gmt-bg-alt px-5 py-20 md:px-[5vw] md:py-[7vw]">
         <p className="type-label text-gmt-muted">O que fazemos</p>
@@ -112,32 +112,28 @@ export default function HomePage() {
           <div className="grid w-full grid-cols-2 gap-4 md:flex-1">
             <PlaceholderMedia
               id="HER-02"
-              descricao="destaque diferenciais · 7:5"
-              proporcao="7/5"
+              descricao="approach portrait"
               cor="#1E293B"
               className="col-span-2 rounded-lg sm:col-span-1 sm:row-span-2"
               sizes="(max-width: 768px) 100vw, 40vw"
             />
             <PlaceholderMedia
               id="HER-03"
-              descricao="thumb diferencial A · 7:5"
-              proporcao="7/5"
+              descricao="approach thumb A"
               cor="#1E293B"
               className="rounded-lg"
               sizes="(max-width: 768px) 50vw, 20vw"
             />
             <PlaceholderMedia
               id="HER-04"
-              descricao="thumb diferencial B · 7:5"
-              proporcao="7/5"
+              descricao="approach thumb B"
               cor="#1E293B"
               className="rounded-lg"
               sizes="(max-width: 768px) 50vw, 20vw"
             />
             <PlaceholderMedia
               id="HER-05"
-              descricao="thumb diferencial C · 7:5"
-              proporcao="7/5"
+              descricao="approach thumb C"
               cor="#1E293B"
               className="col-span-2 rounded-lg sm:col-span-1"
               sizes="(max-width: 768px) 100vw, 20vw"
@@ -166,17 +162,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-gmt-bg px-5 py-24 text-center md:px-[5vw] md:py-[8vw]">
+      <section className="section-cta px-5 py-24 text-center md:px-[5vw] md:py-[8vw]">
         <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
           Pronto para automatizar o seu negócio?
         </RevealText>
         <p className="type-body mt-4 text-gmt-muted">
           Reunião gratuita e sem compromisso.
         </p>
-        <Link
-          href="/contacto"
-          className="type-body type-medium mt-8 inline-block rounded-full bg-gmt-accent px-8 py-3 text-white"
-        >
+        <Link href="/contacto" className="btn-submit mt-8">
           Agendar agora
         </Link>
       </section>

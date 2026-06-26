@@ -49,6 +49,7 @@ const VALORES = [
 export default function SobrePage() {
   return (
     <>
+      <div className="section-light">
       <section className="flex flex-col gap-12 px-5 pt-28 md:flex-row md:gap-[5vw] md:px-[5vw] md:pt-[11vw]">
         <div className="md:w-1/2">
           <p className="type-label text-gmt-muted">Sobre a GMT</p>
@@ -71,7 +72,7 @@ export default function SobrePage() {
                   c.largo ? "col-span-2" : ""
                 }`}
               >
-                <span className="font-mono text-5xl leading-none text-gmt-text md:text-[6vw]">
+                <span className="font-mono text-5xl leading-none text-gmt-text md:text-[10vw]">
                   {c.valor}
                 </span>
                 <span className="type-label mt-3 text-gmt-muted">{c.label}</span>
@@ -85,12 +86,12 @@ export default function SobrePage() {
         <PlaceholderMedia
           id="ABT-01"
           descricao="média institucional · 2:1"
-          proporcao="2/1"
           cor="#1E293B"
           className="rounded-lg md:rounded-[1vw]"
           sizes="(max-width: 768px) 100vw, 90vw"
         />
       </section>
+      </div>
 
       <section className="mt-20 md:mt-[8vw]">
         <div className="relative">
@@ -98,7 +99,6 @@ export default function SobrePage() {
             id="ABT-02"
             descricao="fullscreen manifesto · 16:9"
             cor="#1E293B"
-            altura="60vh"
             sizes="100vw"
           />
           <div className="absolute inset-0 flex items-center justify-center px-5 text-center md:px-[5vw]">
@@ -110,7 +110,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <section className="my-20 bg-[#101010] py-20 md:my-[8vw] md:py-[8vw]">
+      <section className="section-footer-zone bg-[#101010] py-20 md:py-[8vw]">
         <div className="flex flex-col gap-12 px-5 md:flex-row md:gap-[5vw] md:px-[5vw]">
           <div className="md:w-1/2">
             <RevealText as="h2" className="type-label text-gmt-muted">
@@ -130,17 +130,14 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <section className="px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
+      <section className="section-cta px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
         <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
           Pronto para começar?
         </RevealText>
         <p className="type-body mt-4 text-gmt-muted">
           Agende uma reunião gratuita e sem compromisso.
         </p>
-        <Link
-          href="/contacto"
-          className="type-body type-medium mt-8 inline-block rounded-full bg-gmt-accent px-8 py-3 text-white"
-        >
+        <Link href="/contacto" className="btn-submit mt-8">
           Agendar reunião
         </Link>
       </section>

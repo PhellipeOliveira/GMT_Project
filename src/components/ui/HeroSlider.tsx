@@ -16,9 +16,11 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 const SLIDE_INTERVAL = 7000;
 const TRANSITION_MS = 1500;
 
+/** Fundo visual único (HER-01) até existirem slides HER-SLD-02..05 em 16:9. */
+const HERO_MEDIA_ID = "HER-01";
+
 const SLIDES = [
   {
-    id: "HER-01",
     label: "Automações · IA · Marketing Digital",
     title: "O seu negócio a trabalhar mesmo quando você não está.",
     description:
@@ -26,7 +28,6 @@ const SLIDES = [
     cta: { href: "/servicos", label: "Conhecer os agentes" },
   },
   {
-    id: "HER-02",
     label: "Ecossistema NARA",
     title: "Tecnologia que escala com o seu negócio.",
     description:
@@ -34,7 +35,6 @@ const SLIDES = [
     cta: { href: "/portfolio/nara", label: "Ver o case NARA" },
   },
   {
-    id: "HER-03",
     label: "15 Agentes de IA",
     title: "Agentes inteligentes que trabalham 24h por dia.",
     description:
@@ -42,7 +42,6 @@ const SLIDES = [
     cta: { href: "/servicos", label: "Explorar agentes" },
   },
   {
-    id: "HER-04",
     label: "Marketing Digital",
     title: "Presença digital profissional e eficaz.",
     description:
@@ -50,7 +49,6 @@ const SLIDES = [
     cta: { href: "/servicos", label: "Ver serviços" },
   },
   {
-    id: "HER-05",
     label: "Lisboa, Portugal",
     title: "Parceria próxima para pequenas empresas.",
     description:
@@ -110,10 +108,10 @@ export function HeroSlider() {
     return (
       <section className="relative h-[80vh] w-full overflow-hidden">
         <PlaceholderMedia
-          id={slide.id}
+          id={HERO_MEDIA_ID}
           descricao="hero slide · 16:9"
           cor="#1E293B"
-          altura="80vh"
+          fill
           priority
           sizes="100vw"
         />
@@ -132,10 +130,10 @@ export function HeroSlider() {
           <>
             <div className="hero-slide-out absolute inset-0 z-10 will-change-transform">
               <PlaceholderMedia
-                id={prevSlide.id}
+                id={HERO_MEDIA_ID}
                 descricao="hero slide · 16:9"
                 cor="#1E293B"
-                altura="80vh"
+                fill
                 sizes="100vw"
               />
             </div>
@@ -154,10 +152,10 @@ export function HeroSlider() {
             className={`h-full ${prevSlide ? "hero-slide-in will-change-transform" : ""}`}
           >
             <PlaceholderMedia
-              id={slide.id}
+              id={HERO_MEDIA_ID}
               descricao="hero slide · 16:9"
               cor="#1E293B"
-              altura="80vh"
+              fill
               priority={index === 0}
               sizes="100vw"
             />
@@ -191,7 +189,7 @@ function HeroContent({ slide }: { slide: (typeof SLIDES)[number] }) {
         </RevealText>
         <Link
           href={slide.cta.href}
-          className="type-body type-medium mt-8 inline-block rounded-full bg-gmt-accent px-7 py-3 text-white"
+          className="btn-nav mt-8"
         >
           {slide.cta.label}
         </Link>

@@ -1,77 +1,14 @@
 import type { Familia, Servico } from "@/data/servicos";
+import { MEDIA_SLOTS } from "@/data/media-spec";
 
-/** Slots do plano que vivem em `public/videos/` (WebP por agora, MP4/WebM depois). */
-export const VIDEO_SLOT_IDS = new Set([
-  "HER-01",
-  "ABT-01",
-  "ABT-02",
-  "AGH-F1",
-  "AGH-F2",
-  "AGH-F3",
-  "AGH-F4",
-  "MKT-04",
-]);
+/** Slots em `public/videos/` (WebP por agora; MP4/WebM no futuro). */
+export const VIDEO_SLOT_IDS = new Set(
+  Object.values(MEDIA_SLOTS)
+    .filter((s) => s.folder === "videos")
+    .map((s) => s.id),
+);
 
-/** Inventário de assets disponíveis nas pastas `public/images` e `public/videos`. */
-export const MEDIA_ASSET_IDS = new Set([
-  "HER-01",
-  "HER-02",
-  "HER-03",
-  "HER-04",
-  "HER-05",
-  "ABT-01",
-  "ABT-02",
-  "AG-01",
-  "AG-02",
-  "AG-03",
-  "AG-04",
-  "AG-05",
-  "AG-06",
-  "AG-07",
-  "AG-08",
-  "AG-09",
-  "AG-10",
-  "AG-11",
-  "AG-12",
-  "AG-13",
-  "AG-14",
-  "AG-15",
-  "AGH-F1",
-  "AGH-F2",
-  "AGH-F3",
-  "AGH-F4",
-  "AGP-F1",
-  "AGP-F2",
-  "AGP-F3",
-  "AGP-F4",
-  "MKT-01",
-  "MKT-02",
-  "MKT-03",
-  "MKT-04",
-  "AV-01",
-  "AV-02",
-  "AV-03",
-  "AV-04",
-  "AV-05",
-  "AV-06",
-  "PF-01",
-  "PF-02",
-  "PF-03",
-  "PF-04",
-  "PF-05",
-  "PF-06",
-  "PF-07",
-  "PF-08",
-  "PF-09",
-  "PF-10",
-  "PF-11",
-  "PF-12",
-  "CON-01",
-  "GL-01",
-  "GL-02",
-  "GL-03",
-  "GL-04",
-]);
+export const MEDIA_ASSET_IDS = new Set(Object.keys(MEDIA_SLOTS));
 
 const AGENTE_THUMB_BY_SLUG: Record<string, string> = {
   "reservas-whatsapp": "AG-01",
@@ -122,7 +59,6 @@ const FAMILIA_PROCESS_BG: Partial<Record<Familia, string>> = {
   AV: "AGP-F3",
 };
 
-/** Thumbnails do hero da listagem de serviços (3 áreas). */
 export const SERVICOS_HERO_THUMBS = ["AG-01", "MKT-02", "AV-05"] as const;
 
 export function hasMediaAsset(id: string): boolean {
@@ -130,7 +66,8 @@ export function hasMediaAsset(id: string): boolean {
 }
 
 export function getMediaSrc(id: string): string {
-  const folder = VIDEO_SLOT_IDS.has(id) ? "videos" : "images";
+  const slot = MEDIA_SLOTS[id];
+  const folder = slot?.folder ?? (VIDEO_SLOT_IDS.has(id) ? "videos" : "images");
   return `/${folder}/${id}.webp`;
 }
 

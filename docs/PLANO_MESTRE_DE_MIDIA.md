@@ -9,9 +9,41 @@
 - Copy: `docs/referencias/copy_site/Produto_Conteudo_Publico_do_Site.md` e `Institucional_Conteudo_Publico_do_Site.md`
 - **Não utilizado:** `Preco_Referencia_Interna_Confidencial.md` (confidencial).
 
-**Notas sobre dimensões (pós-auditoria Script 3):**
-- As capturas originais estavam em viewport comprimido. As proporções abaixo derivam dos valores **corrigidos e consolidados** nos design maps.
-- Proporções de referência reais: cards Home ≈ **3:4** (334×461), thumbnails de serviços/portfólio ≈ **3:2** (≈679–691×461), galeria de case = **16:9** (1ª) + **4:3** (demais), hero de serviço ≈ **3:1** (1536×532), mídia institucional (GIF) ≈ **2:1** (1382×668), avatares de testimonial = **1:1** (≈54×54), logo ≈ **7:2** (1382×400).
+---
+
+## HIERARQUIA DA VERDADE (dimensões e proporções)
+
+Ao criar ou substituir mídia, siga **esta ordem** — o nível superior prevalece:
+
+| Prioridade | Fonte | Função |
+|---|---|---|
+| **1** | `docs/referencias/site_json/design_map_*_v2.json` | Layout de referência (lessestudio.com): slots, `aspect-*`, `h-[*vh]`, tipografia |
+| **2** | `src/data/media-spec.ts` | **Verdade no código** — ratio, px de exportação, container (`aspect` vs `full-bleed`), pasta (`images`/`videos`) |
+| **3** | **Este documento** (`PLANO_MESTRE_DE_MIDIA.md`) | Guia de produção para designers — espelha `media-spec.ts` |
+| **4** | Ficheiros em `public/images/` e `public/videos/` | Artefactos entregues — devem conformar-se aos níveis 1–3 |
+
+**Regras de implementação:**
+- O site aplica proporções via `PlaceholderMedia` + `getMediaContainerStyle(id)` — não definir `proporcao`/`altura` manualmente salvo exceção documentada.
+- **Hero slider (Home):** apenas **HER-01** é mídia de fundo (16:9, `80vh`). Slides 2–5 são **só texto** sobre o mesmo fundo até existirem assets `HER-SLD-02..05` (futuro, 16:9).
+- **Full-bleed heroes** (`HER-01`, `ABT-02`, `AGH-F*`, `MKT-04`): ratio de exportação ≠ viewport; usar `object-cover` e compor no **centro 55–60%** (safe zone).
+- **Cards de processo (serviço):** container `aspect-[3/4] md:aspect-[2/3]`; fundo **AGP-F*** em **2:3** (não 3:4).
+
+### Migração — assets já exportados com proporções antigas
+
+| ID | Exportado (plano antigo) | Proporção correta (design map) | Ação |
+|---|---|---|---|
+| HER-02 | 7:5 (1400×1000) | **110:225** portrait (~880×1800) | Re-exportar |
+| HER-03, HER-04, HER-05 | 7:5 | **4:3** (1200×900) | Re-exportar |
+| PF-02 | 3:2 (1200×800) | **9:16** (1080×1920) | Re-exportar |
+| AGP-F1..F4 | 3:4 (1200×1600) | **2:3** (1200×1800) | Re-exportar |
+| HER-01, AGH-F*, MKT-04, ABT-* | Ratio OK | — | Ajustar composição ao centro (crop por `object-cover`) |
+
+---
+
+### Notas sobre dimensões (pós-auditoria Script 3)
+
+- As capturas originais estavam em viewport comprimido. As proporções abaixo derivam dos valores **corrigidos e consolidados** nos design maps e em `src/data/media-spec.ts`.
+- Proporções de referência reais: cards Home ≈ **3:4** (334×461), thumbnails de serviços ≈ **3:2** (≈679–691×461), grid portfólio ≈ **9:16** (135×240), galeria de case = **16:9** (1ª) + **4:3** (demais), hero de serviço ≈ **3:1** (1536×532), approach portrait ≈ **110:225**, approach thumbs ≈ **4:3**, mídia institucional (GIF) ≈ **2:1** (1382×668), avatares de testimonial = **1:1** (≈54×54), logo ≈ **7:2** (1382×400).
 - Formatos finais: imagens em **WebP/AVIF**; vídeos em **MP4 + WebM**, loop, **sem áudio**, 5–10s.
 
 ---
@@ -129,8 +161,8 @@ Tipos de mídia: **Vídeo** (loop/hero/hover) · **Imagem** (banner/card/thumb/b
 ### Portfolio (Geral + Item)
 | Seção | Deve comunicar | Emoção | Mídia recomendada |
 |---|---|---|---|
-| Grid hero | Volume/variedade de trabalho | Impacto visual | **Imagem** (thumbs 3:2) |
-| Lista de projetos | Escaneabilidade | Confiança | **Imagem** (thumbs) + **Animação** (reveal) |
+| Grid hero | Volume/variedade de trabalho | Impacto visual | **Imagem** (thumbs **9:16**) |
+| Lista de projetos | Escaneabilidade | Confiança | **Imagem** (thumbs **9:16**) + **Animação** (reveal) |
 | Case study (galeria) | Profundidade da entrega NARA | Imersão, prova | **Imagem** (16:9 + 4:3) + sidebar **Animação** |
 | Next project | Continuidade de exploração | Curiosidade | **Imagem** (thumbs) |
 
@@ -186,10 +218,10 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | HER-01 | Hero principal do site | Home | Sec0 slider | background | OPCIONAL (vídeo→imagem) | 16:9 | 2560×1440 | Institucional/IA | Posicionar GMT como automação+IA que gera crescimento | 5–10s loop | Alta |
-| HER-02 | Imagem de apoio "diferenciais" | Home | Sec2 destaque | background | imagem | 7:5 | 1400×1000 | Institucional | Humanizar a proximidade/competência | — | Média |
-| HER-03 | Thumb diferencial A | Home | Sec2 thumb | thumbnail | imagem | 7:5 | 1000×715 | Institucional | Ilustrar área de especialização | — | Baixa |
-| HER-04 | Thumb diferencial B | Home | Sec2 thumb | thumbnail | imagem | 7:5 | 1000×715 | Institucional | Ilustrar área de especialização | — | Baixa |
-| HER-05 | Thumb diferencial C | Home | Sec2 thumb | thumbnail | imagem | 7:5 | 1000×715 | Institucional | Ilustrar área de especialização | — | Baixa |
+| HER-02 | Imagem de apoio "diferenciais" | Home | Sec2 destaque portrait | background | imagem | **110:225** | 880×1800 | Institucional | Humanizar a proximidade/competência | — | Média |
+| HER-03 | Thumb diferencial A | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
+| HER-04 | Thumb diferencial B | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
+| HER-05 | Thumb diferencial C | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
 | ABT-01 | Mídia do hero institucional | Sobre | Sec1 slot mídia | background | OPCIONAL (vídeo→imagem) | 2:1 | 1920×960 | Institucional | Traduzir o ecossistema digital da GMT/NARA | 5–10s loop | Média |
 | ABT-02 | Frame-manifesto fullscreen | Sobre | Sec2 fullscreen | background | OPCIONAL (vídeo→imagem) | 16:9 | 2560×1440 | Institucional | Momento contemplativo da marca | 5–10s loop | Média |
 | CON-01 | Fundo decorativo (grade/gradiente) | Contacto | bg da seção | background decorativo | OPCIONAL (imagem) | 16:9 | 2560×1440 | Institucional | Dar caráter sem distrair do formulário | — | Baixa |
@@ -226,10 +258,10 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | AGH-F2 | Hero família Operação Eficiente | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F2 | Contexto de agenda/operação | 5–10s loop | Alta |
 | AGH-F3 | Hero família Growth & Dados | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F3 | Contexto de dados/crescimento | 5–10s loop | Alta |
 | AGH-F4 | Hero família Inovação Sob Medida | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F4 | Contexto premium/custom | 5–10s loop | Média |
-| AGP-F1 | Imagem de processo — F1 | Serviço Item | Sec3 process cards | background card | imagem | 3:4 | 1200×1600 | F1 | Fundo das etapas (01–06) | — | Baixa |
-| AGP-F2 | Imagem de processo — F2 | Serviço Item | Sec3 process cards | background card | imagem | 3:4 | 1200×1600 | F2 | Fundo das etapas | — | Baixa |
-| AGP-F3 | Imagem de processo — F3 | Serviço Item | Sec3 process cards | background card | imagem | 3:4 | 1200×1600 | F3 | Fundo das etapas | — | Baixa |
-| AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 process cards | background card | imagem | 3:4 | 1200×1600 | F4 | Fundo das etapas | — | Baixa |
+| AGP-F1 | Imagem de processo — F1 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F1 | Fundo das etapas (01–06) | — | Baixa |
+| AGP-F2 | Imagem de processo — F2 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F2 | Fundo das etapas | — | Baixa |
+| AGP-F3 | Imagem de processo — F3 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F3 | Fundo das etapas | — | Baixa |
+| AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F4 | Fundo das etapas | — | Baixa |
 
 ### Tabela 4.3 — Marketing Digital (3 pacotes)
 
@@ -256,12 +288,12 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | PF-01 | Card NARA (showcase) | Home | Sec3 card | card | imagem | 3:4 | 1200×1600 | Institucional | Prova real de entrega | — | Alta |
-| PF-02 | Thumb NARA (catálogo) | Portfolio Geral | grid/lista | thumbnail | imagem | 3:2 | 1200×800 | Institucional | Entrada do case no catálogo | — | Alta |
+| PF-02 | Thumb NARA (catálogo) | Portfolio Geral | grid/lista | thumbnail | imagem | **9:16** | 1080×1920 | Institucional | Entrada do case no catálogo | — | Alta |
 | PF-03 | Galeria NARA — capa | Portfolio Item | Sec0 galeria (1ª) | background | imagem | 16:9 | 2560×1440 | Institucional | Abrir o case com impacto | — | Alta |
 | PF-04..12 | Galeria NARA — telas (×9) | Portfolio Item | Sec0 galeria | imagem | imagem | 4:3 | 1600×1200 | Institucional | Branding/website/chatbots/campanhas do NARA | — | Média |
 | PF-SLOT-H | Slots de portfólio Home (2 vazios) | Home | Sec3 cards | card | imagem | 3:4 | 1200×1600 | — | **Lacuna**: aguardam novos cases | — | Baixa |
-| PF-SLOT-G | Slots de catálogo (≈12 vazios) | Portfolio Geral | grid/lista | thumbnail | imagem | 3:2 | 1200×800 | — | **Lacuna**: aguardam novos cases | — | Baixa |
-| PF-SLOT-N | Next project (2) | Portfolio Item | Sec1 | thumbnail | imagem | 3:2 | 1200×800 | — | **Lacuna**: navegação entre cases | — | Baixa |
+| PF-SLOT-G | Slots de catálogo (≈12 vazios) | Portfolio Geral | grid/lista | thumbnail | imagem | **9:16** | 1080×1920 | — | **Lacuna**: aguardam novos cases | — | Baixa |
+| PF-SLOT-N | Next project (2) | Portfolio Item | Sec1 | thumbnail | imagem | **9:16** | 1080×1920 | — | **Lacuna**: navegação entre cases | — | Baixa |
 
 ### Tabela 4.6 — Elementos Globais
 
