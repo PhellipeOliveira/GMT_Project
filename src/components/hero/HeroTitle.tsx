@@ -4,146 +4,165 @@ import { useEffect, useRef } from "react";
 import { motion, useAnimation, useInView, type Variants } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const line1ContainerVariants: Variants = {
+// ── Variantes de animação ────────────────────────────────────────────────────
+
+const line1Container: Variants = {
   hidden: {},
   visible: {
-    transition: {
-      delayChildren: 0.15,
-      staggerChildren: 0.1,
-    },
+    transition: { delayChildren: 0.1, staggerChildren: 0.1 },
   },
 };
 
-const line2ContainerVariants: Variants = {
+const line2Container: Variants = {
   hidden: {},
   visible: {
-    transition: {
-      delayChildren: 0.65,
-      staggerChildren: 0.065,
-    },
+    transition: { delayChildren: 0.55, staggerChildren: 0.055 },
   },
 };
 
 const charVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 8,
-    filter: "blur(3px)",
-  },
+  hidden: { opacity: 0, y: 10, filter: "blur(4px)" },
   visible: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: {
-      duration: 0.25,
-      ease: [0.2, 0.65, 0.3, 0.9],
-    },
+    transition: { duration: 0.28, ease: [0.2, 0.65, 0.3, 0.9] },
   },
 };
 
-const blinkVariants: Variants = {
+const blink: Variants = {
   stable: { opacity: 1 },
   blink: {
-    opacity: [1, 0.08, 1, 0.08, 1, 0.08, 1],
+    opacity: [1, 0.06, 1, 0.06, 1, 0.06, 1],
     transition: {
-      duration: 0.75,
+      duration: 0.8,
       times: [0, 0.15, 0.3, 0.5, 0.65, 0.82, 1],
       ease: "easeInOut",
     },
   },
 };
 
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
 function splitToChars(text: string) {
-  return text.split("").map((char, i) => ({
-    char: char === " " ? "\u00A0" : char,
-    key: `${char}-${i}`,
+  return text.split("").map((ch, i) => ({
+    char: ch === " " ? "\u00A0" : ch,
+    key: `${ch}-${i}`,
   }));
 }
 
 const LINE_1 = "GMT";
 const LINE_2 = "Growth Marketing Technology";
+const line1Chars = splitToChars(LINE_1);
+const line2Chars = splitToChars(LINE_2);
+
+// ── Componente ───────────────────────────────────────────────────────────────
 
 export function HeroTitle() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: false, amount: 0.5 });
+  const reducedMotion = useReducedMotion();
   const revealControls = useAnimation();
   const blinkControls = useAnimation();
-  const hasAnimated = useRef(false);
-  const reducedMotion = useReducedMotion();
 
+  /**
+   * inViewRef: usado apenas para detectar retorno ao hero (blink).
+   * amount: 0.1 — tolera elementos muito altos (subtítulo enorme em mobile).
+   */
+  const inViewRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(inViewRef, { once: false, amount: 0.1 });
+
+  /** Marca se a revelação inicial já aconteceu */
+  const hasRevealed = useRef(false);
+  /** Marca se já detectámos a primeira vez em view (para não piscar logo) */
+  const firstInView = useRef(false);
+
+  // ── Revelação na montagem (independente do IntersectionObserver) ──────────
   useEffect(() => {
-    if (!isInView || reducedMotion) return;
-
-    if (!hasAnimated.current) {
+    if (reducedMotion || hasRevealed.current) return;
+    // Pequeno delay para garantir que o Framer Motion está hidratado
+    const t = setTimeout(() => {
       revealControls.start("visible");
-      hasAnimated.current = true;
-    } else {
-      blinkControls.start("blink").then(() => {
-        blinkControls.start("stable");
-      });
+      hasRevealed.current = true;
+    }, 80);
+    return () => clearTimeout(t);
+  }, [reducedMotion, revealControls]);
+
+  // ── Blink ao regressar ao hero ─────────────────────────────────────────────
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    if (!isInView) return;
+
+    if (!firstInView.current) {
+      // Primeira vez em view — apenas registar, não piscar
+      firstInView.current = true;
+      return;
     }
-  }, [isInView, revealControls, blinkControls, reducedMotion]);
 
-  const line1Chars = splitToChars(LINE_1);
-  const line2Chars = splitToChars(LINE_2);
+    // Regressou ao hero após ter saído
+    blinkControls.start("blink").then(() => blinkControls.start("stable"));
+  }, [isInView, reducedMotion, blinkControls]);
 
+  // ── Renderização sem animação (prefers-reduced-motion) ────────────────────
   if (reducedMotion) {
     return (
       <div
-        ref={sectionRef}
+        ref={inViewRef}
         className="flex flex-col items-center gap-4"
         aria-label="GMT – Growth Marketing Technology"
       >
-        <h1 className="type-hero-brand select-none">GMT</h1>
-        <p className="type-hero-subtitle w-[60%] text-center select-none">
+        <h1 className="type-hero-brand select-none text-white">GMT</h1>
+        <p className="type-hero-subtitle w-[60%] select-none text-center text-white">
           Growth Marketing Technology
         </p>
       </div>
     );
   }
 
+  // ── Renderização animada ──────────────────────────────────────────────────
   return (
     <div
-      ref={sectionRef}
+      ref={inViewRef}
       className="flex flex-col items-center gap-4"
       aria-label="GMT – Growth Marketing Technology"
     >
       <motion.div
-        variants={blinkVariants}
+        variants={blink}
         initial="stable"
         animate={blinkControls}
         className="flex flex-col items-center gap-4"
       >
+        {/* Linha 1 — GMT */}
         <motion.h1
-          variants={line1ContainerVariants}
+          variants={line1Container}
           initial="hidden"
           animate={revealControls}
-          className="type-hero-brand select-none"
+          className="type-hero-brand select-none text-white"
         >
           {line1Chars.map(({ char, key }) => (
             <motion.span
               key={key}
               variants={charVariants}
               className="inline-block"
-              style={{ willChange: "transform" }}
+              style={{ willChange: "transform, opacity, filter" }}
             >
               {char}
             </motion.span>
           ))}
         </motion.h1>
 
+        {/* Linha 2 — Growth Marketing Technology */}
         <motion.p
-          variants={line2ContainerVariants}
+          variants={line2Container}
           initial="hidden"
           animate={revealControls}
-          className="type-hero-subtitle w-[60%] text-center select-none"
+          className="type-hero-subtitle w-[60%] select-none text-center text-white"
         >
           {line2Chars.map(({ char, key }) => (
             <motion.span
               key={key}
               variants={charVariants}
               className="inline-block"
-              style={{ willChange: "transform" }}
+              style={{ willChange: "transform, opacity, filter" }}
             >
               {char}
             </motion.span>
