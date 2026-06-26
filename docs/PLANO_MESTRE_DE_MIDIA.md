@@ -281,7 +281,45 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | AV-03 | Thumb · Branding & Estratégia | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | Institucional | Identidade visual e posicionamento | — | Baixa |
 | AV-04 | Thumb · Websites | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Landing/institucional/SEO | — | Média |
 | AV-05 | Thumb · Inteligência Artificial | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Chatbots e automação de atendimento | — | Alta |
+
+### Tabela 4.4-B — Cards de Serviços na Home (O que fazemos)
+
+> Cards 7:5 exclusivos para a grade da Home. Distintos dos thumbs 3:2 usados na listagem de Serviços.
+
+| ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Prioridade |
+|---|---|---|---|---|---|---|---|---|---|---|
+| SERV-AV-01 | Card Home · Criação de Conteúdo | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F3 | Mostrar criação visual/conteúdo (câmara, edição, design) | Alta |
+| SERV-AV-02 | Card Home · Publicidade Digital | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F3 | Meta/Google Ads, anúncios em acção | Alta |
+| SERV-AV-03 | Card Home · Branding & Estratégia | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | Institucional | Identidade de marca, moodboard | Média |
+| SERV-AV-04 | Card Home · Websites | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F4 | Ecrã de website, código, design UI | Média |
+| SERV-AV-05 | Card Home · Inteligência Artificial | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F4 | Chatbot, interface de IA, automação | Alta |
+| SERV-AV-06 | Card Home · Analytics & Otimização | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F3 | Dashboard, gráficos de performance | Alta |
+
+**Notas de produção (SERV-AV):**
+- Proporção 7:5 = 1.4:1 (ligeiramente horizontal, mais larga que 4:3).
+- A composição deve colocar o assunto principal no **centro superior** — o rodapé inferior é coberto pelo overlay de texto no card.
+- Exportar em WebP/AVIF, qualidade ≥ 85%, max 400 KB por imagem.
+- Paleta alinhada à família visual respectiva (F3 = azul/dados; F4 = azul-noite/premium; Institucional = neutro/claro).
 | AV-06 | Thumb · Analytics & Otimização | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | GA4/GTM/Pixel e auditorias | — | Baixa |
+
+### Tabela 4.4-C — Frame Expansivo (secção de transição Home)
+
+> Imagens HER-02 a HER-05 reutilizadas dentro do frame animado que expande no scroll e transiciona o fundo de branco para preto.
+
+| ID | Slot | Comportamento |
+|---|---|---|
+| HER-02 | Frame — slide 1 (portrait) | Cicla a 750 ms; `object-cover` dentro do frame |
+| HER-03 | Frame — slide 2 | Cicla a 750 ms; `object-cover` |
+| HER-04 | Frame — slide 3 | Cicla a 750 ms; `object-cover` |
+| HER-05 | Frame — slide 4 | Cicla a 750 ms; `object-cover` |
+
+**Comportamento:** Frame entra com 36% de largura e 50vh de altura, centrado. Expande até 100vw × 100vh durante o scroll. A sobreposição branca desvanece (opacity 1→0). Todas as secções a seguir ficam com fundo preto.
+
+### Tabela 4.4-D — Secção Testemunhas / CTA (temporária)
+
+| ID | Nome | Página | Secção | Proporção | Nota |
+|---|---|---|---|---|---|
+| TEST-BANNER | Banner CTA horizontal (futuro) | Home | Sec5 Testemunhas | 3:1 | **Lacuna temporária** — exibe "Em breve" até existirem depoimentos reais |
 
 ### Tabela 4.5 — Portfolio / Cases
 
