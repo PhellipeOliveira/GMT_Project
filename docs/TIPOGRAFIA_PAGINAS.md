@@ -2,7 +2,7 @@
 
 Mapeamento completo de cada secção e elemento textual: família, tamanho, peso e notas de implementação.
 
-**Última actualização:** Junho 2026  
+**Última actualização:** 26 Jun 2026  
 **Fonte de verdade:** `src/styles/globals.css` + `src/app/layout.tsx`
 
 ---
@@ -19,17 +19,17 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 ## Escala de tamanhos (tokens)
 
-| Token | Valor | Classe utilitária |
-|-------|-------|------------------|
-| `--type-label` | 14px | `.type-label` |
-| `--type-body` | 18px | `.type-body` |
-| `--type-body-lg` | 21px | `.type-body-lg` |
-| `--type-h3` | 36px | `.type-h3` |
-| `--type-h2` | `clamp(42px, 6vw, 72px)` | `.type-h2` |
-| `--type-hero` | `clamp(52px, 9vw, 108px)` | `.type-hero` |
-| `--type-hero-brand` | `clamp(72px, 14vw, 176px)` | `.type-hero-brand` |
-| `--type-hero-subtitle` | `clamp(144px, 24vw, 240px)` | `.type-hero-subtitle` |
-| *(ad hoc)* | `clamp(36px, 5vw, 48px)` | `.type-category` |
+| Token | Valor actual | Referência em px (1440px) | Classe utilitária |
+|-------|-------------|--------------------------|------------------|
+| `--type-label` | `14px` | 14px | `.type-label` |
+| `--type-body` | `18px` | 18px | `.type-body` |
+| `--type-body-lg` | `21px` | 21px | `.type-body-lg` |
+| `--type-h3` | `36px` | 36px | `.type-h3` |
+| `--type-h2` | `clamp(42px, 6vw, 72px)` | 72px | `.type-h2` |
+| `--type-hero` | `clamp(52px, 9vw, 108px)` | 108px | `.type-hero` |
+| `--type-hero-brand` | `clamp(6rem, 15vw, 14rem)` ≡ `clamp(96px, 15vw, 224px)` | ~216px | `.type-hero-brand` |
+| `--type-hero-subtitle` | `clamp(3rem, 4.5vw, 4.5rem)` ≡ `clamp(48px, 4.5vw, 72px)` | ~65px | `.type-hero-subtitle` |
+| *(ad hoc)* | `clamp(36px, 5vw, 48px)` | 48px | `.type-category` |
 
 ---
 
@@ -37,12 +37,13 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 ### Secção: Hero
 
-> Fundo preto (`bg-black`). Texto branco (`--gmt-text: #ffffff` local).
+> Fundo preto (`bg-black`). Texto branco (`--gmt-text: #ffffff` local).  
+> Componente: `HeroTitle.tsx` — animação letra-a-letra com `framer-motion` + blink ao regressar.
 
-| Elemento | Texto | Classe | Família | Tamanho | Peso | Notas |
-|----------|-------|--------|---------|---------|------|-------|
-| `<h1>` | "GMT" | `.type-hero-brand` | Host Grotesk | clamp(72px → 176px) | 500 | uppercase, tracking 0.18em, animação letra-a-letra |
-| `<p>` | "Growth Marketing Technology" | `.type-hero-subtitle` | DM Sans | clamp(144px → 240px) | 400 | uppercase, tracking 0.22em, `w-[60%]`, animação letra-a-letra |
+| Elemento | Texto | Classe | Família | Tamanho actual | Peso | Notas |
+|----------|-------|--------|---------|----------------|------|-------|
+| `<h1>` | "GMT" | `.type-hero-brand` | Host Grotesk | `clamp(96px, 15vw, 224px)` | 500 | uppercase, `letter-spacing: 0.18em`, `white-space: nowrap`, animação letra-a-letra |
+| `<p>` | "Growth Marketing Technology" | `.type-hero-subtitle` | DM Sans | `clamp(48px, 4.5vw, 72px)` | 400 | uppercase, `letter-spacing: 0.05em` *(reduzido de 0.22em)*, `white-space: nowrap`, sem `w-[60%]`, animação letra-a-letra |
 
 ---
 
@@ -324,11 +325,27 @@ Padrão: `type-h3` + `type-body` + botão.
 
 ### Navbar
 
-| Elemento | Texto | Classe | Família | Tamanho | Peso |
-|----------|-------|--------|---------|---------|------|
-| Logo "GMT" | "GMT" | `.type-logo-gmt` | Host Grotesk | clamp(18px, 2.8vw, 28px) | 500 |
-| Links de navegação | "Serviços", "Portfolio"… | `.type-label` | DM Sans | 14px | 400 |
-| Botão CTA | "Agendar reunião" | `.type-label .type-medium` | DM Sans | 14px | **500** |
+> Componente: `Navbar.tsx` — `fixed inset-x-0 top-0 z-50`.  
+> Logo com container glass (`bg-black/55 backdrop-blur-md`): sempre visível em páginas claras; aparece no scroll na Home.  
+> Pill de navegação adapta cores conforme hero escuro / scroll.
+
+| Elemento | Texto | Classe | Família | Tamanho | Peso | Notas |
+|----------|-------|--------|---------|---------|------|-------|
+| Logo "GMT" | "GMT" | `.type-logo-gmt` | Host Grotesk | `clamp(18px, 2.8vw, 28px)` | 500 | sempre `tone="on-dark"` (texto branco); glass transparente na Home até scroll |
+| Links de navegação | "Serviços", "Portfolio"… | `.type-label` | DM Sans | 14px | 400 | pill dark ou light conforme contexto |
+| ~~Botão CTA~~ | ~~"Agendar reunião"~~ | — | — | — | — | **removido** — substituído pelo `FloatingCTA` global |
+
+---
+
+### FloatingCTA (botão flutuante global)
+
+> Componente: `FloatingCTA.tsx` — `fixed bottom-8 left-1/2 z-60`.  
+> Aparece quando `scrollY > 80% do viewport`; desaparece perto do footer (< 220px do fim da página).  
+> Animação: `framer-motion AnimatePresence` — fade + slide-up suave.
+
+| Elemento | Texto | Classe | Família | Tamanho | Peso | Notas |
+|----------|-------|--------|---------|---------|------|-------|
+| Botão | "Agendar reunião" | `text-sm tracking-wide` | DM Sans | 14px (0.875rem) | 500 | `bg-black/80 backdrop-blur-md`, texto branco, `rounded-full` |
 
 ---
 
@@ -358,19 +375,21 @@ btn → .btn-submit → base .type-body · DM Sans · 18px · weight 500
 ## Hierarquia visual resumida
 
 ```
-HERO BRAND     → Host Grotesk 500  · clamp(72px → 176px)   ← só Home
-HERO SUBTITLE  → DM Sans 400       · clamp(144px → 240px)  ← só Home
-HERO SERVICE   → Host Grotesk 400  · clamp(52px → 108px)   ← heroes de serviço
-─────────────────────────────────────────────────────────────
-H2 de secção   → Host Grotesk 400  · clamp(42px → 72px)
-Category       → Host Grotesk 300  · clamp(36px → 48px)
+HERO BRAND     → Host Grotesk 500  · clamp(96px, 15vw, 224px)   ← só Home · tracking 0.18em
+HERO SUBTITLE  → DM Sans 400       · clamp(48px, 4.5vw, 72px)   ← só Home · tracking 0.05em
+HERO SERVICE   → Host Grotesk 400  · clamp(52px, 9vw, 108px)    ← heroes de serviço
+─────────────────────────────────────────────────────────────────────────────
+H2 de secção   → Host Grotesk 400  · clamp(42px, 6vw, 72px)
+Category       → Host Grotesk 300  · clamp(36px, 5vw, 48px)
 H3 / CTA       → Host Grotesk 400  · 36px
-─────────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────────────────────
 Body large     → DM Sans 400       · 21px
 Body           → DM Sans 400       · 18px  ← tamanho base
 Label          → DM Sans 400       · 14px  (uppercase, tracking)
-─────────────────────────────────────────────────────────────
+FloatingCTA    → DM Sans 500       · 14px  (fixed global, z-60)
+─────────────────────────────────────────────────────────────────────────────
 Mono           → Sistema           · variável  ← números/índices
+Logo GMT       → Host Grotesk 500  · clamp(18px, 2.8vw, 28px)  (navbar + footer)
 ```
 
 ---
@@ -383,3 +402,6 @@ Mono           → Sistema           · variável  ← números/índices
 4. **Peso 600/700 ainda não carregado** — se precisar, adicionar ao array `weight` em `layout.tsx`.
 5. **Host Grotesk 300 só é usado em `.type-category`** — se remover essa classe, pode remover o peso 300 do import.
 6. **LaCerchia** — referenciada nos design maps como fonte serif decorativa; não está activa. Para activar, usar `next/font/local` com ficheiro em `public/fonts/`.
+7. **`letter-spacing` do subtítulo Hero** — reduzido de `0.22em` para `0.05em` (26 Jun 2026) para permitir tamanho maior sem overflow. Reverter requer reduzir o `font-size`.
+8. **FloatingCTA** — botão "Agendar reunião" foi movido da Navbar para componente global `FloatingCTA.tsx` (26 Jun 2026). Threshold de aparecimento: `scrollY > 80vh`. Threshold de ocultação: `< 220px` do fim da página.
+9. **`white-space: nowrap` no Hero** — aplicado em `.type-hero-brand` e `.type-hero-subtitle` para garantir linha única. Em viewports muito estreitos (< 320px) pode haver overflow.

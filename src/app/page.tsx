@@ -19,6 +19,7 @@ import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { PortfolioCard } from "@/components/ui/PortfolioCard";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
+import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { avulsos } from "@/data/servicos";
 import { getCaseBySlug } from "@/data/portfolio";
 
@@ -253,6 +254,9 @@ export default function HomePage() {
           </Link>
         </RevealOnScroll>
       </section>
+
+      {/* ══ 7 ── LANTERNA GMT (decorativo, transição para o footer) ══ */}
+      <GMTLightFooter />
     </>
   );
 }
