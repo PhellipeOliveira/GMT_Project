@@ -110,7 +110,7 @@ export function HeroTitle() {
       className="flex flex-col items-center gap-6"
       aria-label="GMT – Growth Marketing Technology"
     >
-        <h1 className="type-hero-brand select-none text-center text-white">GMT</h1>
+        <h1 className="gmt-brand gmt-brand--hero text-center text-white">GMT</h1>
         <p className="type-hero-subtitle select-none text-center text-white">
           Growth Marketing Technology
         </p>
@@ -136,7 +136,7 @@ export function HeroTitle() {
           variants={line1Container}
           initial="hidden"
           animate={revealControls}
-          className="type-hero-brand select-none text-center text-white"
+          className="gmt-brand gmt-brand--hero text-center text-white"
         >
           {line1Chars.map(({ char, key }) => (
             <motion.span

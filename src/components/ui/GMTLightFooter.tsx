@@ -70,18 +70,7 @@ export function GMTLightFooter() {
     };
   }, []);
 
-  // Partilhado pelas duas camadas de texto — mesmo tamanho e família
-  const textStyle: React.CSSProperties = {
-    fontFamily: "var(--font-display)",
-    fontSize: "clamp(8rem, 33vw, 36rem)",
-    fontWeight: 500,
-    lineHeight: 0.85,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    margin: 0,
-    padding: 0,
-    userSelect: "none",
-  };
+  const textClass = "gmt-brand gmt-brand--footer m-0 p-0 text-center";
 
   return (
     <section
@@ -92,8 +81,8 @@ export function GMTLightFooter() {
       {/* ── Camada base: texto quase invisível ──────────────────────── */}
       <p
         aria-hidden
-        className="text-center"
-        style={{ ...textStyle, color: "#111111" }}
+        className={textClass}
+        style={{ color: "#111111" }}
       >
         GMT
       </p>
@@ -138,8 +127,8 @@ export function GMTLightFooter() {
         }
       >
         <p
-          className="text-center"
-          style={{ ...textStyle, color: "#d4d4d4" }}
+          className={textClass}
+          style={{ color: "#d4d4d4" }}
         >
           GMT
         </p>

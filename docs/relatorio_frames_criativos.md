@@ -18,8 +18,7 @@ Premissas:
 | Home | Portfolio cards | Card | Imagem | 3:4 | Institucional - Prova de capacidade (NARA) | Frames do case NARA (branding/website/produto) | - |
 | Home | Testimonials logos | Thumbnail/Logo | Imagem | Altura fixa do logo (variavel em largura) | Sem bloco de depoimentos na copy publica | Placeholder de logos ate aprovacao de marcas/clientes | - |
 | Home | Latest news thumbnails | Thumbnail | Imagem | Layout mapeado de thumbnail vertical estreito | Sem artigos definidos na copy publica | Placeholder editorial ate definicao de artigos | - |
-| About | Hero media slot | Background | OPCIONAL (Imagem/Video) | 4:3 ou 16:9 (cover) | Institucional - Prova de capacidade (NARA) | Visual contemplativo de ecossistema digital | Video: 5-10s loop |
-| About | Fullscreen media section | Background | OPCIONAL (Imagem/Video) | 16:9 (fullscreen) | Institucional - Posicionamento da agencia | Frame manifesto de marca com ritmo lento | Video: 5-10s loop |
+| About | Slideshow expansivo (5 frames) | Background | Imagem | 2:1 (ABT-01…05) | Institucional - Ecossistema / marca | Sequencia visual no `ExpandingFrame`; fundo branco→preto no scroll | Video loop opcional futuro |
 | Services Geral | Hero thumbnails (3) | Thumbnail | Imagem | 3:2 | Institucional - Areas de especializacao | Credenciais visuais por area (estrategia, visual, tech) | - |
 | Services Geral | Accordion categorias | N/A (texto) | N/A | N/A | Produto - blocos de agentes e servicos avulsos | Sem criativo dedicado; foco tipografico | - |
 | Services Item | Hero do servico | Background | OPCIONAL (Imagem/Video) | 16:9 (cover) | Produto - headline do servico/agente | Criativo representando problema e solucao do servico | Video: 5-10s loop |

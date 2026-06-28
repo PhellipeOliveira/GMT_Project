@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
+import { Target } from "lucide-react";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
+import { SectionLabel } from "@/components/ui/SectionLabel";
+import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
+import { AboutCounterGrid } from "@/components/about/AboutCounterGrid";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -9,141 +12,85 @@ export const metadata: Metadata = {
     "Agência especialista em automações, inteligência artificial e marketing digital, dedicada a ajudar pequenas empresas a crescer no mundo digital.",
 };
 
-const COUNTERS = [
-  { valor: "15", label: "agentes de IA prontos a trabalhar", largo: true },
-  { valor: "24", label: "serviços disponíveis", largo: false },
-  { valor: "70/30", label: "automação · marketing", largo: false },
-];
-
-const VALORES = [
-  {
-    titulo: "Experiência comprovada",
-    texto:
-      "Criámos todo o ecossistema digital do NARA — resultados reais, não teoria.",
-  },
-  {
-    titulo: "Técnica + criatividade",
-    texto:
-      "Competências técnicas (websites, IA, analytics) e criativas (design, vídeo, copywriting) num só local.",
-  },
-  {
-    titulo: "Tecnologia de ponta",
-    texto: "Uso de IA para entregar mais qualidade em menos tempo.",
-  },
-  {
-    titulo: "Acompanhamento próximo",
-    texto:
-      "Parceria focada no crescimento do negócio, não apenas mais um serviço.",
-  },
-  {
-    titulo: "Foco em pequenas empresas",
-    texto: "Soluções acessíveis e adaptadas à realidade local.",
-  },
-  {
-    titulo: "Resultados mensuráveis",
-    texto: "Tudo medido e reportado, com clareza sobre o retorno.",
-  },
+const ABOUT_SLIDESHOW = [
+  { id: "ABT-01", descricao: "slideshow institucional 1", cor: "#1E293B" },
+  { id: "ABT-02", descricao: "slideshow institucional 2", cor: "#134E4A" },
+  { id: "ABT-03", descricao: "slideshow institucional 3", cor: "#1A3A5F" },
+  { id: "ABT-04", descricao: "slideshow institucional 4", cor: "#3B0764" },
+  { id: "ABT-05", descricao: "slideshow institucional 5", cor: "#0F172A" },
 ];
 
 export default function SobrePage() {
   return (
     <>
+      {/* ══ 1 — Introdução + contadores ═════════════════════════════ */}
       <div className="section-light">
-      <section className="flex flex-col gap-12 px-5 pt-28 md:flex-row md:gap-[5vw] md:px-[5vw] md:pt-[11vw]">
-        <div className="md:w-1/2">
-          <RevealOnScroll as="p" className="type-label text-gmt-muted">
-            Sobre a GMT
-          </RevealOnScroll>
-          <RevealOnScroll as="h1" className="type-h2 mt-6 max-w-3xl">
-            Agência especialista em automações, inteligência artificial e
-            marketing digital, dedicada a ajudar pequenas empresas a crescer e a
-            destacar-se no mundo digital.
-          </RevealOnScroll>
-          <RevealOnScroll as="p" className="type-body-lg mt-8 max-w-lg text-gmt-muted" delay={0.08}>
-            Objetivo claro: gerar resultados reais. Cada negócio, por mais
-            pequeno que seja, merece uma presença digital profissional e eficaz.
-          </RevealOnScroll>
-        </div>
-
-        <div className="grid aspect-square w-full grid-cols-2 grid-rows-2 gap-2 md:w-2/5">
-          {COUNTERS.map((c, i) => (
-            <RevealOnScroll key={c.label} variant="media" delay={i * 0.08}>
-              <div
-                className={`flex flex-col justify-end rounded-[1vw] border border-gmt-border bg-gmt-bg-alt p-5 ${
-                  c.largo ? "col-span-2" : ""
-                }`}
-              >
-                <span className="font-mono text-5xl leading-none text-gmt-text md:text-[10vw]">
-                  {c.valor}
-                </span>
-                <span className="type-label mt-3 text-gmt-muted">{c.label}</span>
-              </div>
+        <section className="flex flex-col gap-12 px-5 pt-28 md:flex-row md:items-start md:justify-between md:gap-[5vw] md:px-[5vw] md:pt-[11vw]">
+          <div className="md:max-w-[55%]">
+            <RevealOnScroll as="p" className="type-label text-gmt-muted">
+              Sobre a GMT
             </RevealOnScroll>
-          ))}
-        </div>
-      </section>
+            <RevealOnScroll as="h1" className="type-h2 mt-6 max-w-3xl">
+              Agência especialista em automações, inteligência artificial e
+              marketing digital, dedicada a ajudar pequenas empresas a crescer e a
+              destacar-se no mundo digital.
+            </RevealOnScroll>
+            <RevealOnScroll
+              as="p"
+              className="type-body-lg mt-8 max-w-lg text-gmt-muted"
+              delay={0.08}
+            >
+              Objetivo claro: gerar resultados reais. Cada negócio, por mais
+              pequeno que seja, merece uma presença digital profissional e eficaz.
+            </RevealOnScroll>
+          </div>
 
-      <section className="mt-20 px-5 md:mt-[8vw] md:px-[5vw]">
-        <PlaceholderMedia
-          id="ABT-01"
-          descricao="média institucional · 2:1"
-          cor="#1E293B"
-          className="rounded-lg md:rounded-[1vw]"
-          sizes="(max-width: 768px) 100vw, 90vw"
-        />
-      </section>
+          <AboutCounterGrid />
+        </section>
       </div>
 
-      <section className="mt-20 md:mt-[8vw]">
-        <div className="relative">
-          <PlaceholderMedia
-            id="ABT-02"
-            descricao="fullscreen manifesto · 16:9"
-            cor="#1E293B"
-            sizes="100vw"
-            reveal={false}
-          />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/25 px-5 text-center md:px-[5vw]">
-            <RevealOnScroll as="p" className="type-h3 max-w-3xl italic text-white">
-              “O nosso compromisso é simples: ajudar o seu negócio a crescer
-              online com soluções profissionais, eficazes e acessíveis.”
-            </RevealOnScroll>
-          </div>
-        </div>
+      {/* ══ 2 — Slideshow expansivo (branco → preto) ═════════════════ */}
+      <ExpandingFrame
+        images={ABOUT_SLIDESHOW}
+        fallbackColor="#1E293B"
+      />
+
+      {/* ══ 3 — Manifesto (fundo preto, sem imagem) ═══════════════════ */}
+      <section className="bg-black px-5 py-16 text-center md:px-[5vw] md:py-20">
+        <RevealOnScroll as="p" className="type-h3 mx-auto max-w-3xl text-white">
+          O nosso compromisso é simples. Ajudar o seu negócio a crescer online com
+          soluções profissionais eficazes e acessíveis.
+        </RevealOnScroll>
       </section>
 
-      <section className="bg-gmt-bg py-20 md:py-[8vw]">
-        <div className="flex flex-col gap-12 px-5 md:flex-row md:gap-[5vw] md:px-[5vw]">
+      {/* ══ 4 — Nossos valores (fundo preto) ══════════════════════════ */}
+      <section className="section-cta px-5 py-24 md:px-[5vw] md:py-[10vw]">
+        <div className="flex flex-col gap-16 md:flex-row md:gap-[5vw]">
+          <div className="hidden md:block md:w-1/2" aria-hidden />
+
           <div className="md:w-1/2">
-            <RevealOnScroll as="h2" className="type-label text-gmt-muted">
-              Porquê escolher-nos
-            </RevealOnScroll>
-          </div>
-          <div className="flex flex-col gap-8 md:w-1/2 md:gap-[3vw]">
-            {VALORES.map((v, i) => (
-              <RevealOnScroll key={v.titulo} variant="media" delay={i * 0.08}>
-                <div>
-                  <h3 className="type-h3">{v.titulo}</h3>
-                  <p className="type-body mt-2 text-gmt-muted">{v.texto}</p>
-                </div>
-              </RevealOnScroll>
-            ))}
+            <SectionLabel tone="on-dark">Nossos valores</SectionLabel>
+
+            <div className="mt-12 flex flex-col gap-10 md:gap-12">
+              {DIFERENCIAIS.map((titulo, i) => {
+                const Icone = ICONES_DIFERENCIAIS[i] ?? Target;
+                return (
+                  <RevealOnScroll key={titulo} variant="media" delay={i * 0.06}>
+                    <div className="flex items-start gap-5">
+                      <Icone
+                        size={22}
+                        strokeWidth={1.5}
+                        className="mt-0.5 shrink-0 text-white"
+                        aria-hidden
+                      />
+                      <p className="type-body-lg text-white">{titulo}</p>
+                    </div>
+                  </RevealOnScroll>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </section>
-
-      <section className="section-cta px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
-          Pronto para começar?
-        </RevealOnScroll>
-        <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted" delay={0.08}>
-          Agende uma reunião gratuita e sem compromisso.
-        </RevealOnScroll>
-        <RevealOnScroll variant="media" delay={0.16}>
-          <Link href="/contacto" className="btn-submit mt-8">
-            Agendar reunião
-          </Link>
-        </RevealOnScroll>
       </section>
     </>
   );

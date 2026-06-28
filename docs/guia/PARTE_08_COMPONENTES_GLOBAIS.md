@@ -19,10 +19,11 @@ Em `src/app/layout.tsx`, dentro de `<body className="flex min-h-full flex-col bg
 <Navbar />              → cabeçalho fixo
 <main class="prose prose-gmt max-w-none flex-1">{children}</main>
 <Footer />              → rodapé com grid de links
+<HomeLanternSection />  → Lanterna GMT (só na Home, após o Footer)
 <FloatingCTA />         → botão flutuante "Agendar reunião"
 ```
 
-Fontes globais (`layout.tsx`): **DM Sans** (`--font-dmsans`, pesos 400/500) e **Host Grotesk** (`--font-hostgrotesk`, pesos 300/400/500), aplicadas via `--font-sans`/`--font-display`. Favicon/apple-icon = `/images/GL-02.webp`.
+Fontes globais (`layout.tsx`): **DM Sans** (`--font-dmsans`, pesos 400/500) e **Host Grotesk** (`--font-hostgrotesk`, pesos 300/400/500/600/700/800), aplicadas via `--font-sans`/`--font-display`. Favicon/apple-icon = `/images/GL-02.webp`.
 
 ---
 
@@ -37,12 +38,12 @@ Cabeçalho fixo global: logo (esquerda), pill de navegação central (desktop), 
 |---|---|---|---|
 | Conteúdo | `GMT` (via `GmtLogo`) | `Sobre` · `Serviços` · `Portfolio` · `Contacto` (array `NAV_LINKS`) | `Agendar reunião →` |
 | Elemento HTML | `span` (em `Link`) | `a` (Link) | `a` (Link) |
-| Classe | `.type-logo-gmt` | `.type-label` | `.type-label` |
+| Classe | `.gmt-brand` + `.gmt-brand--navbar` | `.type-label` | `.type-label` |
 | Família | Host Grotesk | DM Sans | DM Sans |
 | Tamanho | `clamp(18px,2.8vw,28px)` | 14px | 14px |
-| Peso | 500 | 400 | 400 |
+| Peso | **800** (`--font-weight-brand`) | 400 | 400 |
 | Cor da fonte | `#ffffff` (`logo-gmt--on-dark`, sempre `tone="on-dark"`) | pill escuro `text-white/70 → #fff`; pill claro `#575757 (text-gmt-muted) → #0a0a0a` | `rgba(255,255,255,0.8)` (`text-white/80`) → `#fff` |
-| `letter-spacing` | 0.18em | 0.1em | 0.1em |
+| `letter-spacing` | **0.02em** (via `.gmt-brand`) | 0.1em | 0.1em |
 | `text-transform` | uppercase | uppercase | uppercase |
 
 ### 3. Imagens / mídia
@@ -80,7 +81,7 @@ Lógica de tema:
 - **Mobile (`<md`):** pill oculto; hamburger visível (`md:hidden`); menu dropdown `bg-black/90 backdrop-blur-xl`; altura `h-16`, `px-5`.
 
 ### 7. Arquivos relacionados
-`src/components/ui/Navbar.tsx`, `src/components/ui/GmtLogo.tsx`, `src/lib/utils.ts` (`cn`), classes `.type-logo-gmt`/`.type-label` em `src/styles/globals.css`.
+`src/components/ui/Navbar.tsx`, `src/components/ui/GmtLogo.tsx`, `src/lib/utils.ts` (`cn`), classes `.gmt-brand`/`.gmt-brand--navbar`/`.logo-gmt--on-dark` em `src/styles/globals.css`.
 
 ---
 
@@ -138,12 +139,12 @@ Rodapé global: logo, grid de 3 colunas de navegação (gerado a partir dos dado
 |---|---|---|---|---|
 | Conteúdo | `GMT` (via `GmtLogo asLink`) | `Automação & IA` · `Marketing Digital` · `Empresa` | nomes dos serviços/páginas | `© 2026 Growth Marketing Technology · Lisboa, Portugal` |
 | Elemento HTML | `span` (em Link) | `h3` | `a` (Link) | `p` |
-| Classe | `.type-logo-gmt` | `.type-label` | `.type-body` | `.type-label normal-case tracking-normal` |
+| Classe | `.gmt-brand` + `.gmt-brand--navbar` | `.type-label` | `.type-body` | `.type-label normal-case tracking-normal` |
 | Família | Host Grotesk | DM Sans | DM Sans | DM Sans |
 | Tamanho | `clamp(18px,2.8vw,28px)` | 14px | 18px | 14px |
-| Peso | 500 | 400 | 400 | 400 |
+| Peso | **800** | 400 | 400 | 400 |
 | Cor da fonte | `#ffffff` (`logo-gmt--on-dark`) | `rgba(182,182,182,0.8)` (`text-gmt-muted` na `.section-footer`) | `text-gmt-muted` → hover `#ffffff` (`text-gmt-text`) | `rgba(182,182,182,0.8)` (`text-gmt-muted`) |
-| `letter-spacing` | 0.18em | 0.1em | — | normal (`tracking-normal`) |
+| `letter-spacing` | **0.02em** | 0.1em | — | normal (`tracking-normal`) |
 | `text-transform` | uppercase | uppercase | none | `normal-case` |
 
 Conteúdo das colunas:
@@ -179,10 +180,24 @@ Sem reveal on-scroll neste componente.
 
 ---
 
+# Componente: HomeLanternSection (`src/components/home/HomeLanternSection.tsx`)
+
+### 1. Objetivo
+Wrapper client-side que renderiza a Lanterna GMT **apenas na Home** (`pathname === "/"`), posicionada no layout global **após** o `Footer`.
+
+### 2. Montagem
+- Importado em `src/app/layout.tsx`, imediatamente após `<Footer />`.
+- Delega para `GMTLightFooter`.
+
+### 7. Arquivos relacionados
+`src/app/layout.tsx`, `src/components/home/HomeLanternSection.tsx`, `src/components/ui/GMTLightFooter.tsx`.
+
+---
+
 # Componente: GMTLightFooter (`src/components/ui/GMTLightFooter.tsx`)
 
 ### 1. Objetivo
-Secção decorativa de transição para o footer (usada na Home): "GMT" gigante revelado por um foco de luz que segue o cursor. **Não está no layout global** — é importado pela Home (`src/app/page.tsx`).
+Secção decorativa de branding na Home: "GMT" gigante revelado por um foco de luz que segue o cursor. **Última secção visual da Home**, após o Footer Navigation. Sem links nem CTAs.
 
 ### 2. Copy / Textos
 
@@ -190,15 +205,16 @@ Secção decorativa de transição para o footer (usada na Home): "GMT" gigante 
 |---|---|
 | Conteúdo | `GMT` |
 | Elemento HTML | `p` |
-| Classe | inline `style` (sem classe utilitária) |
-| Família | `var(--font-display)` (Host Grotesk) |
+| Classe | `.gmt-brand` + `.gmt-brand--footer` |
+| Família | Host Grotesk (`--font-display`) |
 | Tamanho | `clamp(8rem, 33vw, 36rem)` |
-| Peso | 500 |
+| Peso | **800** (`--font-weight-brand`) |
 | Cor da fonte | camada base `#111111`; camada reveal `#d4d4d4` |
-| `letter-spacing` | 0.08em |
+| `letter-spacing` | **0.02em** |
 | `text-transform` | uppercase |
+| `transform` | `scaleX(1.03)`, `transform-origin: center` |
 
-> `line-height: 0.85`. Fundo da secção `#000000` (`bg-black`).
+> `line-height: 0.85` (variante `--footer`). Fundo da secção `#000000` (`bg-black`).
 
 ### 3. Imagens / mídia
 Nenhuma. **Não identificado no projeto**.
@@ -219,7 +235,31 @@ Touch (`hover: none, pointer: coarse`): iluminação estática centrada (`opacit
 - **Mobile/touch:** fallback estático centrado; `py-12`. Texto fluido por `clamp()`/`vw`.
 
 ### 7. Arquivos relacionados
-`src/components/ui/GMTLightFooter.tsx` (importado por `src/app/page.tsx`).
+`src/components/home/HomeLanternSection.tsx`, `src/components/ui/GMTLightFooter.tsx`, `src/app/layout.tsx`.
+
+---
+
+# Componente: SectionLabel (`src/components/ui/SectionLabel.tsx`)
+
+### 1. Objetivo
+Rótulo discreto de secção (topo esquerdo), usado na Home para "O que fazemos", "Por que a GMT" e "Trabalhos recentes".
+
+### 2. Copy / Textos
+| Campo | Valor |
+|---|---|
+| Classe | `.section-label` + `.section-label--on-light` ou `--on-dark` |
+| Família | DM Sans |
+| Tamanho | **12px** (`--type-section-label`) |
+| Peso | 500 |
+| `letter-spacing` | 0.14em |
+| `text-transform` | uppercase |
+| Cor (`on-light`) | `#575757` (`--gmt-text-muted`) |
+| Cor (`on-dark`) | `rgba(255,255,255,0.55)` |
+
+Envolve `RevealOnScroll` para animação on-scroll.
+
+### 7. Arquivos relacionados
+`src/components/ui/SectionLabel.tsx`, classes `.section-label*` em `src/styles/globals.css`.
 
 ---
 
@@ -234,12 +274,13 @@ Render do logo textual "GMT" reutilizável (navbar e footer), com variação de 
 |---|---|
 | Conteúdo | `GMT` |
 | Elemento HTML | `span` (ou dentro de `Link` se `asLink`) |
-| Classe | `.type-logo-gmt` + `logo-gmt--on-light` / `logo-gmt--on-dark` |
+| Classe | `.gmt-brand` + `.gmt-brand--navbar` + `logo-gmt--on-light` / `logo-gmt--on-dark` |
 | Família | Host Grotesk (`--font-display`) |
-| Tamanho | `clamp(18px,2.8vw,28px)` (`clamp(1.125rem,2.8vw,1.75rem)`) |
-| Peso | 500 |
+| Tamanho | `clamp(18px,2.8vw,28px)` |
+| Peso | **800** (`--font-weight-brand`) |
 | Cor da fonte | `on-light` → `#0a0a0a`; `on-dark` → `#ffffff` |
-| `letter-spacing` | 0.18em |
+| `letter-spacing` | **0.02em** |
+| `transform` | `scaleX(1.03)`, `transform-origin: center` |
 | `text-transform` | uppercase |
 
 ### Props
@@ -256,13 +297,13 @@ Nenhuma (logo textual). `GL-01`/`GL-02` não são usados por este componente.
 Quando `asLink`, é um `Link` para `/`. Sem estilo de botão.
 
 ### 5. Animações
-`.type-logo-gmt` tem `transition: color var(--color-transition) var(--ease)` (cor transiciona em ~1s ao mudar de tom).
+`.gmt-brand--navbar` herda transição de cor via contexto; `logo-gmt--*` define a cor.
 
 ### 6. Responsividade
 Tamanho fluido por `clamp()`. Sem breakpoints discretos.
 
 ### 7. Arquivos relacionados
-`src/components/ui/GmtLogo.tsx`, `src/lib/utils.ts` (`cn`), classes `.type-logo-gmt`/`.logo-gmt--on-light`/`.logo-gmt--on-dark` em `src/styles/globals.css`.
+`src/components/ui/GmtLogo.tsx`, `src/lib/utils.ts` (`cn`), classes `.gmt-brand`/`.gmt-brand--navbar`/`.logo-gmt--on-light`/`.logo-gmt--on-dark` em `src/styles/globals.css`.
 
 ---
 
@@ -290,12 +331,14 @@ Nenhuma própria.
 Nenhum.
 
 ### 5. Animações
-Constantes: `REVEAL_DURATION = 1.75s`, ease `REVEAL_EASE_OUT = [0.16,1,0.3,1]` (easeOutQuart), `REVEAL_STAGGER = 0.14`, `REVEAL_TEXT_Y = 50`, `REVEAL_MEDIA_Y = 36`. Viewport `{ once: true, margin: "-8% 0px" }`.
+Constantes: `REVEAL_DURATION = 2.1s`, ease `REVEAL_EASE_OUT = [0.22,1,0.36,1]`, `REVEAL_LINE_GAP = 0.06s`, `REVEAL_TEXT_Y = 32`, `REVEAL_MEDIA_Y = 24`. Viewport `{ once: true, margin: "-8% 0px" }`.
 
 | Variante | Gatilho | Efeito |
 |---|---|---|
-| `text` (string) | on-scroll (entra no viewport) | divide em linhas visuais (`splitTextIntoLines`) e revela linha-a-linha com máscara `overflow-hidden`, `y 50→0` + `opacity 0→1`, stagger por linha (`i * 0.14`) |
-| `media` | on-scroll | bloco único `y 36→0` + `opacity 0→1` |
+| `text` (string) | on-scroll (entra no viewport) | divide em linhas visuais (`splitTextIntoLines`) e revela **sequencialmente** linha-a-linha: cada linha só inicia após a anterior terminar (`delay + i * (REVEAL_DURATION + REVEAL_LINE_GAP)`), máscara `overflow-hidden`, `y 32→0` + `opacity 0→1` |
+| `media` | on-scroll | bloco único `y 24→0` + `opacity 0→1` |
+
+**Excepção:** `HeroTitle` (Home) usa animação própria letra-a-letra — não passa por este componente.
 
 Respeita `prefers-reduced-motion` (render estático via `useReducedMotion`).
 
@@ -318,12 +361,12 @@ Título animado da Home — marca "GMT" + subtítulo, revelados letra-a-letra, c
 |---|---|---|
 | Conteúdo | `GMT` | `Growth Marketing Technology` |
 | Elemento HTML | `h1` (`motion.h1`) | `p` (`motion.p`) |
-| Classe | `.type-hero-brand` | `.type-hero-subtitle` |
+| Classe | `.gmt-brand` + `.gmt-brand--hero` | `.type-hero-subtitle` |
 | Família | Host Grotesk | DM Sans |
 | Tamanho | `clamp(6rem,15vw,14rem)` ≡ `clamp(96px,15vw,224px)` | `clamp(3rem,4.5vw,4.5rem)` ≡ `clamp(48px,4.5vw,72px)` |
-| Peso | 500 | 400 |
+| Peso | **800** | 400 |
 | Cor da fonte | `#ffffff` (`text-white`) | `#ffffff` (`text-white`) |
-| `letter-spacing` | 0.18em | 0.05em |
+| `letter-spacing` | **0.02em** | 0.05em |
 | `text-transform` | uppercase | uppercase |
 
 > `line-height` 1 (h1) / 1.2 (p); `white-space: nowrap` em ambos.
@@ -349,7 +392,7 @@ Nenhum.
 Tamanhos por `clamp()`/`vw`. Em `<320px` pode haver overflow (`white-space: nowrap`).
 
 ### 7. Arquivos relacionados
-`src/components/hero/HeroTitle.tsx`, `src/components/hero/HeroSection.tsx`, `src/hooks/useReducedMotion.ts`, classes `.type-hero-brand`/`.type-hero-subtitle` em `src/styles/globals.css`.
+`src/components/hero/HeroTitle.tsx`, `src/components/hero/HeroSection.tsx`, `src/hooks/useReducedMotion.ts`, classes `.gmt-brand`/`.gmt-brand--hero`/`.type-hero-subtitle` em `src/styles/globals.css`.
 
 ---
 
@@ -389,7 +432,7 @@ Global, sem variação por breakpoint.
 | Componente | Arquivo | Propósito (no código) | Observação |
 |---|---|---|---|
 | `HeroSlider` | `src/components/ui/HeroSlider.tsx` | Slider de hero com 5 slides (texto + fundo `HER-01`), arrasto (`drag`), barra de progresso e keyframes `.hero-*`. Usa `RevealText` e `PlaceholderMedia`. | **Órfão** — a Home usa `HeroSection`/`HeroTitle`. As keyframes `.hero-slide-*`/`.hero-fill`/`.hero-darken`/`.hero-bar-fade-out` em `globals.css` só serviriam este componente. `HER-01` (vídeo 16:9, 2560×1440) está **Produzido** em `public/videos/HER-01.webp` mas não é renderizado. |
-| `ServiceCard` | `src/components/ui/ServiceCard.tsx` | Card de serviço (imagem + nome + headline) com `RevealOnScroll`. | **Órfão** — a Home (Seção "O que fazemos") usa markup inline em vez deste componente. |
+| `ServiceCard` | `src/components/ui/ServiceCard.tsx` | Card de serviço (imagem + nome + headline) com `RevealOnScroll`. | **Órfão** — a Home usa `ServiceOverlayCard` (`src/components/home/ServiceOverlayCard.tsx`). |
 | `RevealItem` | `src/components/ui/RevealItem.tsx` | Reveal genérico (`opacity 0→1`, `y 30→0`, `0.6s`) com easings `default`/`services`/`portfolio`. | **Órfão** — nenhuma página o importa. |
 | `RevealText` | `src/components/ui/RevealText.tsx` | Reveal letra-a-letra (`staggerChildren 0.02`, `y 40→0`, `0.6s`, ease `[0.65,0.05,0.1,1]`). | Importado **apenas** por `HeroSlider` (que é órfão) → sem efeito visível no site atual. |
 
@@ -405,8 +448,12 @@ Global, sem variação por breakpoint.
 
 | Token / Classe | Valor | Usado por |
 |---|---|---|
-| `.type-logo-gmt` | Host Grotesk, `clamp(18px,2.8vw,28px)`, 500, `ls 0.18em`, uppercase | Navbar, Footer, GmtLogo |
-| `.logo-gmt--on-light` / `--on-dark` | `#0a0a0a` / `#ffffff` | GmtLogo |
+| `.gmt-brand` (base) | Host Grotesk **800**, `ls 0.02em`, `scaleX(1.03)`, uppercase | Hero, Navbar, Footer logo, Lanterna |
+| `.gmt-brand--hero` | `clamp(96px,15vw,224px)` | `HeroTitle` |
+| `.gmt-brand--navbar` | `clamp(18px,2.8vw,28px)` | `GmtLogo` (Navbar + Footer) |
+| `.gmt-brand--footer` | `clamp(8rem,33vw,36rem)`, `lh 0.85` | `GMTLightFooter` |
+| `.section-label` | DM Sans **12px**, 500, `ls 0.14em`, uppercase | `SectionLabel` (Home) |
+| `.logo-gmt--on-light` / `--on-dark` | `#0a0a0a` / `#ffffff` | `GmtLogo` |
 | `.type-label` | DM Sans 14px, 400, `ls 0.1em`, uppercase | Navbar (links), Footer (títulos/copyright) |
 | `.type-body` | DM Sans 18px, 400, `lh 1.5` | Footer (links) |
 | `.section-footer` | bg `#101010`, text `#ffffff`, muted `rgba(182,182,182,0.8)`, border `#242424` | Footer |

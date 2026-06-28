@@ -103,7 +103,7 @@ Nenhuma imagem renderizada. A página é puramente tipográfica.
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Cabeçalho, canais, form | Framer Motion (`RevealOnScroll`) | on-scroll | `1.75s`, ease `[0.16,1,0.3,1]`; canais com stagger `delay = i*0.08`; form `delay 0.08` |
+| Cabeçalho, canais, form | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; canais com stagger `delay = i*0.08`; form `delay 0.08` |
 | Labels flutuantes | CSS (peer-selector) | on-focus / preenchido | `transition-all 200ms` (sobe + `14px`) |
 | Checkbox (círculo) | CSS | on-click | `transition-colors 300ms` |
 | Validação falhada | CSS keyframe `.form-shake` | on-submit inválido | `0.4s` (translateX ±4px) |

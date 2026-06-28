@@ -29,6 +29,7 @@
 
   /* Escala tipográfica (design_map_home_v2 — bump legibilidade 2026) */
   --type-label: 14px;
+  --type-section-label: 12px;
   --type-body: 18px;
   --type-body-lg: 21px;
   --type-h3: 36px;
@@ -69,7 +70,7 @@
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
-  --font-weight-brand: 700;
+  --font-weight-brand: 800;
 }
 
 html {
@@ -97,6 +98,24 @@ body {
   letter-spacing: 0.1em;
   line-height: 1.25;
   text-transform: uppercase;
+}
+
+/* Rótulo de secção — topo esquerdo, discreto (Home e futuras secções) */
+.section-label {
+  font-family: var(--font-sans);
+  font-size: var(--type-section-label);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.section-label--on-light {
+  color: var(--gmt-text-muted);
+}
+
+.section-label--on-dark {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .type-body {
@@ -141,44 +160,32 @@ body {
   line-height: var(--type-hero-leading);
 }
 
-/* Hero institucional — marca GMT (Home) */
-.type-hero-brand {
+/* Marca GMT — identidade tipográfica unificada */
+.gmt-brand {
   font-family: var(--font-display);
-  font-size: var(--type-hero-brand);
   font-weight: var(--font-weight-brand);
-  line-height: 1;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--gmt-text);
-  display: inline-block;
-  transform: scaleX(1.04);
-  transform-origin: center;
-}
-
-/* Logo GMT — navbar / header (marca premium, escala UI) */
-.type-brand-logo {
-  font-family: var(--font-display);
-  font-size: clamp(1.125rem, 2.8vw, 1.75rem);
-  font-weight: var(--font-weight-brand);
   line-height: 1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   display: inline-block;
   transform: scaleX(1.03);
-  transform-origin: left center;
+  transform-origin: center;
+  user-select: none;
+}
+
+.gmt-brand--hero {
+  font-size: var(--type-hero-brand);
+  white-space: nowrap;
+}
+
+.gmt-brand--navbar {
+  font-size: clamp(1.125rem, 2.8vw, 1.75rem);
   transition: color var(--color-transition) var(--ease);
 }
 
-/* Logo GMT — footer e usos legados (inalterado) */
-.type-logo-gmt {
-  font-family: var(--font-display);
-  font-size: clamp(1.125rem, 2.8vw, 1.75rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  transition: color var(--color-transition) var(--ease);
+.gmt-brand--footer {
+  font-size: clamp(8rem, 33vw, 36rem);
+  line-height: 0.85;
 }
 
 .logo-gmt--on-light {

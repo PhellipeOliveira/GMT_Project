@@ -1,39 +1,24 @@
+/**
+ * HOME — estrutura de secções (pós-refactor 2026)
+ *
+ * DOC_TODO (não actualizar agora — segunda etapa):
+ * - docs/guia/PARTE_01_HOME.md
+ * - docs/GUIA_EDICAO_SITE.md (secção Home)
+ * - docs/TIPOGRAFIA_PAGINAS.md (rótulos `.section-label`)
+ * - src/data/media-spec.ts (cards overlay SERV-AV-*)
+ */
 import Link from "next/link";
-import {
-  PenTool,
-  Megaphone,
-  Palette,
-  Globe,
-  Bot,
-  BarChart3,
-  Trophy,
-  Layers,
-  Zap,
-  Users,
-  Target,
-  TrendingUp,
-  type LucideIcon,
-} from "lucide-react";
+import { Target } from "lucide-react";
 import { HeroSection } from "@/components/hero/HeroSection";
-import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
-import { PortfolioCard } from "@/components/ui/PortfolioCard";
+import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
+import { ServiceOverlayCard } from "@/components/home/ServiceOverlayCard";
+import { HomePortfolioRow } from "@/components/home/HomePortfolioRow";
 import { avulsos } from "@/data/servicos";
 import { getCaseBySlug } from "@/data/portfolio";
 
-/* Mapeamento slug → ícone para os cards de serviço */
-const ICONES_AVULSOS: Record<string, LucideIcon> = {
-  "criacao-conteudo-avulso": PenTool,
-  "publicidade-digital": Megaphone,
-  "branding-estrategia": Palette,
-  websites: Globe,
-  "inteligencia-artificial": Bot,
-  "analytics-otimizacao": BarChart3,
-};
-
-/* ID de imagem 7:5 por posição no array avulsos */
 const SERV_IMAGE_IDS = [
   "SERV-AV-01",
   "SERV-AV-02",
@@ -43,88 +28,29 @@ const SERV_IMAGE_IDS = [
   "SERV-AV-06",
 ];
 
-/* Ícones dos diferenciais — ordem alinhada com DIFERENCIAIS */
-const ICONES_DIFERENCIAIS: LucideIcon[] = [
-  Trophy,
-  Layers,
-  Zap,
-  Users,
-  Target,
-  TrendingUp,
-];
-
-const DIFERENCIAIS = [
-  {
-    titulo: "Experiência comprovada",
-    texto: "Criámos todo o ecossistema digital do NARA — resultados reais, não teoria.",
-  },
-  {
-    titulo: "Técnica + criatividade",
-    texto:
-      "Competências técnicas (websites, IA, analytics) e criativas (design, vídeo, copywriting) num só local.",
-  },
-  {
-    titulo: "Tecnologia de ponta",
-    texto: "Uso de IA para entregar mais qualidade em menos tempo.",
-  },
-  {
-    titulo: "Acompanhamento próximo",
-    texto: "Parceria focada no crescimento do negócio, não apenas mais um serviço.",
-  },
-  {
-    titulo: "Foco em pequenas empresas",
-    texto: "Soluções acessíveis e adaptadas à realidade local.",
-  },
-  {
-    titulo: "Resultados mensuráveis",
-    texto: "Tudo medido e reportado, com clareza sobre o retorno.",
-  },
-];
-
 export default function HomePage() {
   const nara = getCaseBySlug("nara");
 
   return (
     <>
-      {/* ══ 0 ── HERO ════════════════════════════════════════════════ */}
+      {/* ══ 1 ── HERO ════════════════════════════════════════════════ */}
       <HeroSection />
 
-      {/* ══ 1 ── O QUE FAZEMOS ══════════════════════════════════════ */}
+      {/* ══ 2 ── O QUE FAZEMOS ══════════════════════════════════════ */}
       <section className="bg-white px-5 py-20 md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="p" className="type-label text-gmt-text">
-          O que fazemos
-        </RevealOnScroll>
+        <SectionLabel>O que fazemos</SectionLabel>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {avulsos.map((servico, i) => (
             <RevealOnScroll key={servico.slug} variant="media" delay={i * 0.08}>
-              <Link
-                href={`/servicos/${servico.slug}`}
-                className="group block overflow-hidden rounded-2xl border border-gmt-border bg-gmt-bg transition-colors duration-300 hover:border-gmt-accent"
-              >
-                {/* Imagem 7:5 */}
-                <PlaceholderMedia
-                  id={SERV_IMAGE_IDS[i] ?? "SERV-AV-01"}
-                  descricao={servico.nome}
-                  cor={servico.corPlaceholder}
-                  sizes="(max-width: 640px) 100vw, 45vw"
-                  reveal={false}
-                />
-                {/* Info */}
-                <div className="p-5">
-                  <h3 className="type-body font-medium text-gmt-text">
-                    {servico.nome}
-                  </h3>
-                  <p className="type-body mt-1 text-gmt-muted">
-                    {servico.funcionalidades[0]}
-                  </p>
-                </div>
-              </Link>
+              <ServiceOverlayCard
+                servico={servico}
+                imageId={SERV_IMAGE_IDS[i] ?? "SERV-AV-01"}
+              />
             </RevealOnScroll>
           ))}
         </div>
 
-        {/* Botão "Ver todos os serviços" */}
         <RevealOnScroll variant="media" delay={0.16}>
           <div className="mt-12 flex justify-center">
             <Link
@@ -137,31 +63,23 @@ export default function HomePage() {
         </RevealOnScroll>
       </section>
 
-      {/* ══ 2 ── PORQUÊ A GMT ════════════════════════════════════════ */}
+      {/* ══ 3 ── POR QUE A GMT ═══════════════════════════════════════ */}
       <section className="bg-gmt-bg-alt px-5 py-20 md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="p" className="type-label text-gmt-text">
-          Porquê a GMT
-        </RevealOnScroll>
-        <RevealOnScroll as="h2" className="type-h3 mt-5 max-w-2xl" delay={0.08}>
-          Cada negócio, por mais pequeno que seja, merece uma presença digital
-          profissional e eficaz.
-        </RevealOnScroll>
+        <SectionLabel>Por que a GMT</SectionLabel>
 
-        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {DIFERENCIAIS.map((d, i) => {
+        <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+          {DIFERENCIAIS.map((titulo, i) => {
             const Icone = ICONES_DIFERENCIAIS[i] ?? Target;
             return (
-              <RevealOnScroll key={d.titulo} variant="media" delay={i * 0.08}>
-                <div className="group cursor-default rounded-2xl border border-gmt-border bg-gmt-bg p-6 transition-colors duration-300 hover:bg-gmt-bg-alt">
-                  <span className="block w-fit rounded-xl border border-gmt-border bg-gmt-bg-alt p-3 text-gmt-text transition-colors duration-300 group-hover:border-gmt-accent group-hover:text-gmt-accent">
-                    <Icone size={22} strokeWidth={1.5} />
-                  </span>
-                  <h3 className="type-body mt-5 font-medium text-gmt-text">
-                    {d.titulo}
-                  </h3>
-                  <p className="type-body mt-2 text-gmt-muted opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    {d.texto}
-                  </p>
+              <RevealOnScroll key={titulo} variant="media" delay={i * 0.06}>
+                <div className="flex items-start gap-4">
+                  <Icone
+                    size={20}
+                    strokeWidth={1.5}
+                    className="mt-0.5 shrink-0 text-gmt-text"
+                    aria-hidden
+                  />
+                  <p className="type-body text-gmt-text">{titulo}</p>
                 </div>
               </RevealOnScroll>
             );
@@ -169,35 +87,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══ 3 ── FRAME EXPANSIVO (transição branco → preto) ═════════ */}
+      {/* ══ 4 ── TRANSIÇÃO EXPANSIVA (branco → preto) ═══════════════ */}
       <ExpandingFrame />
 
-      {/* ══ 4 ── TRABALHOS RECENTES (fundo preto) ═══════════════════ */}
+      {/* ══ 5 ── TRABALHOS RECENTES ══════════════════════════════════ */}
       <section className="section-cta px-5 py-20 md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="p" className="type-label">
-          Trabalhos recentes
-        </RevealOnScroll>
-        <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2">
+        <SectionLabel tone="on-dark">Trabalhos recentes</SectionLabel>
+
+        <div className="mt-12 flex flex-col gap-16 md:gap-20">
           {nara && (
-            <PortfolioCard
+            <HomePortfolioRow
               placeholderId="PF-01"
               nome={nara.nome}
               cor={nara.corPlaceholder}
               slug={nara.slug}
-              local={nara.local}
-              industria={nara.industria}
-              servicos={nara.servicos}
-              tags={nara.tags}
+              resumo={nara.resumo}
             />
           )}
-          <PortfolioCard
+          <HomePortfolioRow
             placeholderId="PF-02a"
             nome="Projeto"
             cor="#1E293B"
             emBreve
             delay={0.08}
           />
-          <PortfolioCard
+          <HomePortfolioRow
             placeholderId="PF-02b"
             nome="Projeto"
             cor="#1E293B"
@@ -205,58 +119,18 @@ export default function HomePage() {
             delay={0.16}
           />
         </div>
+
         <RevealOnScroll variant="media" delay={0.16}>
-          <div className="mt-12 flex justify-center">
+          <div className="mt-16 flex justify-center">
             <Link
               href="/portfolio"
               className="type-label inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-3.5 text-white transition-all duration-300 hover:border-white/60 hover:bg-white/10"
             >
-              Ver portfolio completo →
+              Ver portfólio completo →
             </Link>
           </div>
         </RevealOnScroll>
       </section>
-
-      {/* ══ 5 ── TESTEMUNHAS (temporário — faixa preta) ═════════════ */}
-      <section className="section-cta border-t border-white/10 px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="p" className="type-label text-white/40">
-          Testemunhas
-        </RevealOnScroll>
-        <RevealOnScroll
-          as="h2"
-          className="type-h3 mx-auto mt-5 max-w-xl"
-          delay={0.08}
-        >
-          Em breve — depoimentos dos nossos primeiros clientes.
-        </RevealOnScroll>
-        <RevealOnScroll variant="media" delay={0.16}>
-          <Link href="/contacto" className="btn-submit mt-8">
-            Agendar agora
-          </Link>
-        </RevealOnScroll>
-      </section>
-
-      {/* ══ 6 ── CTA FINAL ══════════════════════════════════════════ */}
-      <section className="section-cta border-t border-white/10 px-5 py-24 text-center md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
-          Pronto para automatizar o seu negócio?
-        </RevealOnScroll>
-        <RevealOnScroll
-          as="p"
-          className="type-body mt-4 text-gmt-muted"
-          delay={0.08}
-        >
-          Reunião gratuita e sem compromisso.
-        </RevealOnScroll>
-        <RevealOnScroll variant="media" delay={0.16}>
-          <Link href="/contacto" className="btn-submit mt-8">
-            Agendar agora
-          </Link>
-        </RevealOnScroll>
-      </section>
-
-      {/* ══ 7 ── LANTERNA GMT (decorativo, transição para o footer) ══ */}
-      <GMTLightFooter />
     </>
   );
 }

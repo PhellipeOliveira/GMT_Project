@@ -12,12 +12,13 @@ import { splitTextIntoLines } from "@/lib/split-text-lines";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 
-// easeOutQuart — suave, premium, natural
-export const REVEAL_EASE_OUT = [0.16, 1, 0.3, 1] as const;
-export const REVEAL_DURATION = 1.75;
-export const REVEAL_STAGGER = 0.14;
-export const REVEAL_TEXT_Y = 50;
-export const REVEAL_MEDIA_Y = 36;
+// easeOutQuart suavizado — entrada mais leve e fluida
+export const REVEAL_EASE_OUT = [0.22, 1, 0.36, 1] as const;
+export const REVEAL_DURATION = 2.1;
+/** Intervalo entre o fim de uma linha e o início da seguinte (cascata sequencial). */
+export const REVEAL_LINE_GAP = 0.06;
+export const REVEAL_TEXT_Y = 32;
+export const REVEAL_MEDIA_Y = 24;
 
 const VIEWPORT = { once: true, margin: "-8% 0px" as const };
 
@@ -124,7 +125,7 @@ function RevealTextLines({
               transition={{
                 duration: REVEAL_DURATION,
                 ease: REVEAL_EASE_OUT,
-                delay: delay + i * REVEAL_STAGGER,
+                delay: delay + i * (REVEAL_DURATION + REVEAL_LINE_GAP),
               }}
               aria-hidden={lines.length > 1 ? true : undefined}
             >

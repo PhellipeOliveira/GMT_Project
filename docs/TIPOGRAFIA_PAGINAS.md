@@ -2,7 +2,7 @@
 
 Mapeamento completo de cada secção e elemento textual: família, tamanho, peso e notas de implementação.
 
-**Última actualização:** 26 Jun 2026  
+**Última actualização:** 28 Jun 2026 (pós-refactor Home)  
 **Fonte de verdade:** `src/styles/globals.css` + `src/app/layout.tsx`
 
 ---
@@ -11,7 +11,7 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 | Papel | Família | Pesos carregados | Token CSS |
 |-------|---------|-----------------|-----------|
-| **Display / títulos** | Host Grotesk | 300, 400, 500 | `var(--font-display)` |
+| **Display / títulos** | Host Grotesk | 300, 400, 500, 600, 700, **800** | `var(--font-display)` |
 | **Corpo / labels** | DM Sans | 400, 500 | `var(--font-sans)` |
 | **Mono** | Sistema (SFMono / Menlo) | — | `var(--font-mono)` |
 
@@ -22,12 +22,13 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 | Token | Valor actual | Referência em px (1440px) | Classe utilitária |
 |-------|-------------|--------------------------|------------------|
 | `--type-label` | `14px` | 14px | `.type-label` |
+| `--type-section-label` | `12px` | 12px | `.section-label` |
 | `--type-body` | `18px` | 18px | `.type-body` |
 | `--type-body-lg` | `21px` | 21px | `.type-body-lg` |
 | `--type-h3` | `36px` | 36px | `.type-h3` |
 | `--type-h2` | `clamp(42px, 6vw, 72px)` | 72px | `.type-h2` |
 | `--type-hero` | `clamp(52px, 9vw, 108px)` | 108px | `.type-hero` |
-| `--type-hero-brand` | `clamp(6rem, 15vw, 14rem)` ≡ `clamp(96px, 15vw, 224px)` | ~216px | `.type-hero-brand` |
+| `--type-hero-brand` | `clamp(6rem, 15vw, 14rem)` ≡ `clamp(96px, 15vw, 224px)` | ~216px | `.gmt-brand--hero` |
 | `--type-hero-subtitle` | `clamp(3rem, 4.5vw, 4.5rem)` ≡ `clamp(48px, 4.5vw, 72px)` | ~65px | `.type-hero-subtitle` |
 | *(ad hoc)* | `clamp(36px, 5vw, 48px)` | 48px | `.type-category` |
 
@@ -42,8 +43,8 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 | Elemento | Texto | Classe | Família | Tamanho actual | Peso | Notas |
 |----------|-------|--------|---------|----------------|------|-------|
-| `<h1>` | "GMT" | `.type-hero-brand` | Host Grotesk | `clamp(96px, 15vw, 224px)` | 500 | uppercase, `letter-spacing: 0.18em`, `white-space: nowrap`, animação letra-a-letra |
-| `<p>` | "Growth Marketing Technology" | `.type-hero-subtitle` | DM Sans | `clamp(48px, 4.5vw, 72px)` | 400 | uppercase, `letter-spacing: 0.05em` *(reduzido de 0.22em)*, `white-space: nowrap`, sem `w-[60%]`, animação letra-a-letra |
+| `<h1>` | "GMT" | `.gmt-brand` + `.gmt-brand--hero` | Host Grotesk | `clamp(96px, 15vw, 224px)` | **800** | uppercase, `letter-spacing: 0.02em`, `scaleX(1.03)`, `white-space: nowrap`, animação letra-a-letra |
+| `<p>` | "Growth Marketing Technology" | `.type-hero-subtitle` | DM Sans | `clamp(48px, 4.5vw, 72px)` | 400 | uppercase, `letter-spacing: 0.05em`, `white-space: nowrap`, animação letra-a-letra |
 
 ---
 
@@ -51,40 +52,56 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 | Elemento | Texto exemplo | Classe | Família | Tamanho | Peso |
 |----------|--------------|--------|---------|---------|------|
-| Label | "O que fazemos" | `.type-label` | DM Sans | 14px | 400 |
-| Card `<h3>` | Nome do serviço | `.type-body` | DM Sans | 18px | 400 |
-| Card `<p>` | 1.ª funcionalidade | `.type-body` | DM Sans | 18px | 400 |
+| Label | "O que fazemos" | `.section-label` + `--on-light` | DM Sans | **12px** | 500 |
+| Overlay `<h3>` | Nome do serviço | `.type-body` + `font-medium` | DM Sans | 18px | 500 |
+| Overlay `<p>` (hover) | 1.ª funcionalidade | `.type-body` | DM Sans | 18px | 400 |
+
+> Cards: `ServiceOverlayCard` — texto sobre imagem, gradiente escuro, hover com blur/saturate.
 
 ---
 
-### Secção: Porquê a GMT
+### Secção: Por que a GMT
 
 | Elemento | Texto exemplo | Classe | Família | Tamanho | Peso |
 |----------|--------------|--------|---------|---------|------|
-| Label | "Porquê a GMT" | `.type-label` | DM Sans | 14px | 400 |
-| `<h2>` | "Cada negócio, por mais pequeno…" | `.type-h3` | Host Grotesk | 36px | 400 |
-| `<h3>` diferencial | "Experiência comprovada" | `.type-body` | DM Sans | 18px | 400 |
-| `<p>` diferencial | Texto descritivo | `.type-body` | DM Sans | 18px | 400 |
+| Label | "Por que a GMT" | `.section-label` + `--on-light` | DM Sans | **12px** | 500 |
+| Item | "Experiência comprovada" (etc.) | `.type-body` | DM Sans | 18px | 400 |
+
+> Layout minimalista: ícone + texto curto, sem cards com caixa.
 
 ---
 
-### Secção: Trabalho recente
+### Secção: Trabalhos recentes
 
 | Elemento | Texto exemplo | Classe | Família | Tamanho | Peso |
 |----------|--------------|--------|---------|---------|------|
-| Label | "Trabalho recente" | `.type-label` | DM Sans | 14px | 400 |
-| Card `<h3>` | Nome do projecto | `.type-h3` | Host Grotesk | 36px | 400 |
-| Card `<h4>` | Local / Indústria | `.type-body` | DM Sans | 18px | 400 |
+| Label | "Trabalhos recentes" | `.section-label` + `--on-dark` | DM Sans | **12px** | 500 |
+| Projecto `<h3>` | "NARA" | `.type-h3` | Host Grotesk | 36px | 400 |
+| Descrição | `resumo` do case | `.type-body` | DM Sans | 18px | 400 |
+| Botão | "Ver Produto →" | `.type-label` | DM Sans | 14px | 400 |
+
+> Layout: `HomePortfolioRow` — 2 colunas (imagem | descrição + botão). Sem tags nem metadados secundários.
 
 ---
 
-### Secção: CTA final
+### Lanterna GMT (após Footer)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` | "Pronto para automatizar o seu negócio?" | `.type-h3` | Host Grotesk | 36px | 400 |
-| `<p>` | "Reunião gratuita e sem compromisso." | `.type-body` | DM Sans | 18px | 400 |
-| Botão | "Agendar agora" | `.btn-submit` → base `.type-body` | DM Sans | 18px | 500 |
+| `<p>` ×2 | "GMT" | `.gmt-brand` + `.gmt-brand--footer` | Host Grotesk | `clamp(8rem, 33vw, 36rem)` | **800** |
+
+> Renderizada via `HomeLanternSection` em `layout.tsx`, não em `page.tsx`.
+
+---
+
+### Marca GMT — identidade unificada (`.gmt-brand`)
+
+| Variante | Onde | Tamanho | Peso | Tracking | Transform |
+|----------|------|---------|------|----------|-----------|
+| `.gmt-brand` (base) | partilhada | — | **800** | `0.02em` | `scaleX(1.03)`, `origin: center` |
+| `.gmt-brand--hero` | Hero | `clamp(96px, 15vw, 224px)` | 800 | 0.02em | scaleX(1.03) |
+| `.gmt-brand--navbar` | Navbar, Footer logo | `clamp(18px, 2.8vw, 28px)` | 800 | 0.02em | scaleX(1.03) |
+| `.gmt-brand--footer` | Lanterna GMT | `clamp(8rem, 33vw, 36rem)` | 800 | 0.02em | scaleX(1.03) |
 
 ---
 
@@ -100,36 +117,45 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 ---
 
-### Secção: Contadores
+### Secção: Contadores (`AboutCounterGrid`)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Valor numérico | "15", "24", "70/30" | `font-mono text-5xl md:text-[10vw]` | Mono sistema | 48px → ~144px | 400 |
-| Legenda | "agentes de IA prontos a trabalhar" | `.type-label` | DM Sans | 14px | 400 |
+| Valor numérico | "24+", "15+", "3+" (contagem animada de 0) | `font-mono text-5xl md:text-[8vw] lg:text-6xl` | Mono sistema | 48px → fluido → 60px (`lg`) | 400 |
+| Legenda | "serviços disponíveis" / "agentes de IA prontos para trabalhar" / "pacotes de marketing" | `.type-label` | DM Sans | 14px | 400 |
+
+Layout: card largo superior (`col-span-2`) + dois cards inferiores lado a lado.
 
 ---
 
-### Secção: Manifesto (imagem fullscreen)
+### Secção: Slideshow expansivo (Sec. 02)
 
-| Elemento | Texto | Classe | Família | Tamanho | Peso |
-|----------|-------|--------|---------|---------|------|
-| `<p>` cita | "O nosso compromisso é simples…" | `.type-h3 italic` | Host Grotesk | 36px | 400 |
+Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `docs/guia/PARTE_02_SOBRE.md`.
 
 ---
 
-### Secção: Valores / Porquê escolher-nos
+### Secção: Manifesto (Sec. 03 — fundo preto, sem imagem)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` label | "Porquê escolher-nos" | `.type-label` | DM Sans | 14px | 400 |
-| Valor `<h3>` | "Experiência comprovada" | `.type-h3` | Host Grotesk | 36px | 400 |
-| Valor `<p>` | Texto descritivo | `.type-body` | DM Sans | 18px | 400 |
+| `<p>` citação | "O nosso compromisso é simples…" | `.type-h3` + `text-white` | Host Grotesk | 36px | 400 |
+
+---
+
+### Secção: Nossos valores (Sec. 04 — `.section-cta`)
+
+| Elemento | Texto | Classe | Família | Tamanho | Peso |
+|----------|-------|--------|---------|---------|------|
+| Label | "Nossos valores" | `.section-label` + `.section-label--on-dark` | DM Sans | 14px | 400 |
+| Item | Título do diferencial (6 itens de `DIFERENCIAIS`) | `.type-body-lg` + `text-white` | DM Sans | 21px | 400 |
+
+Ícones `lucide-react` (`size={22}`, brancos) na segunda coluna; primeira coluna vazia em desktop.
 
 ---
 
 ### Secção: CTA final
 
-Igual ao padrão CTA — `type-h3` + `type-body` + botão `btn-submit`.
+**Removida.** Conversão via `FloatingCTA` global (`layout.tsx`).
 
 ---
 
@@ -331,7 +357,7 @@ Padrão: `type-h3` + `type-body` + botão.
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso | Notas |
 |----------|-------|--------|---------|---------|------|-------|
-| Logo "GMT" | "GMT" | `.type-logo-gmt` | Host Grotesk | `clamp(18px, 2.8vw, 28px)` | 500 | sempre `tone="on-dark"` (texto branco); glass transparente na Home até scroll |
+| Logo "GMT" | "GMT" | `.gmt-brand` + `.gmt-brand--navbar` | Host Grotesk | `clamp(18px, 2.8vw, 28px)` | **800** | sempre `tone="on-dark"`; `ls 0.02em`, `scaleX(1.03)`; glass transparente na Home até scroll |
 | Links de navegação | "Serviços", "Portfolio"… | `.type-label` | DM Sans | 14px | 400 | pill dark ou light conforme contexto |
 | ~~Botão CTA~~ | ~~"Agendar reunião"~~ | — | — | — | — | **removido** — substituído pelo `FloatingCTA` global |
 
@@ -353,7 +379,7 @@ Padrão: `type-h3` + `type-body` + botão.
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Logo "GMT" | "GMT" | `.type-logo-gmt` | Host Grotesk | clamp(18px, 2.8vw, 28px) | 500 |
+| Logo "GMT" | "GMT" | `.gmt-brand` + `.gmt-brand--navbar` | Host Grotesk | clamp(18px, 2.8vw, 28px) | **800** |
 | Links | Navegação secundária | `.type-label` | DM Sans | 14px | 400 |
 | Copyright / legal | Texto legal | `.type-label` | DM Sans | 14px | 400 |
 
@@ -375,8 +401,9 @@ btn → .btn-submit → base .type-body · DM Sans · 18px · weight 500
 ## Hierarquia visual resumida
 
 ```
-HERO BRAND     → Host Grotesk 500  · clamp(96px, 15vw, 224px)   ← só Home · tracking 0.18em
+HERO BRAND     → Host Grotesk 800  · clamp(96px, 15vw, 224px)   ← Home Hero · ls 0.02em · scaleX(1.03)
 HERO SUBTITLE  → DM Sans 400       · clamp(48px, 4.5vw, 72px)   ← só Home · tracking 0.05em
+SECTION LABEL  → DM Sans 500       · 12px                        ← rótulos de secção Home
 HERO SERVICE   → Host Grotesk 400  · clamp(52px, 9vw, 108px)    ← heroes de serviço
 ─────────────────────────────────────────────────────────────────────────────
 H2 de secção   → Host Grotesk 400  · clamp(42px, 6vw, 72px)
@@ -389,7 +416,8 @@ Label          → DM Sans 400       · 14px  (uppercase, tracking)
 FloatingCTA    → DM Sans 500       · 14px  (fixed global, z-60)
 ─────────────────────────────────────────────────────────────────────────────
 Mono           → Sistema           · variável  ← números/índices
-Logo GMT       → Host Grotesk 500  · clamp(18px, 2.8vw, 28px)  (navbar + footer)
+Logo GMT       → Host Grotesk 800  · clamp(18px, 2.8vw, 28px)  (navbar + footer)
+Lanterna GMT   → Host Grotesk 800  · clamp(8rem, 33vw, 36rem)  (após footer, só Home)
 ```
 
 ---
@@ -399,9 +427,10 @@ Logo GMT       → Host Grotesk 500  · clamp(18px, 2.8vw, 28px)  (navbar + foot
 1. **Para aumentar todo o corpo** — alterar `--type-body` em `:root` no `globals.css`.
 2. **Para trocar a fonte display** — alterar `--font-display` em `@theme inline` + importar nova fonte em `layout.tsx`.
 3. **Para trocar a fonte de corpo** — alterar `--font-sans` + importar em `layout.tsx`.
-4. **Peso 600/700 ainda não carregado** — se precisar, adicionar ao array `weight` em `layout.tsx`.
+4. **Peso 800** — usado pela marca GMT (`.gmt-brand`); pesos 600/700 também carregados mas sem uso activo fora da marca.
 5. **Host Grotesk 300 só é usado em `.type-category`** — se remover essa classe, pode remover o peso 300 do import.
 6. **LaCerchia** — referenciada nos design maps como fonte serif decorativa; não está activa. Para activar, usar `next/font/local` com ficheiro em `public/fonts/`.
-7. **`letter-spacing` do subtítulo Hero** — reduzido de `0.22em` para `0.05em` (26 Jun 2026) para permitir tamanho maior sem overflow. Reverter requer reduzir o `font-size`.
-8. **FloatingCTA** — botão "Agendar reunião" foi movido da Navbar para componente global `FloatingCTA.tsx` (26 Jun 2026). Threshold de aparecimento: `scrollY > 80vh`. Threshold de ocultação: `< 220px` do fim da página.
-9. **`white-space: nowrap` no Hero** — aplicado em `.type-hero-brand` e `.type-hero-subtitle` para garantir linha única. Em viewports muito estreitos (< 320px) pode haver overflow.
+7. **`letter-spacing` do subtítulo Hero** — `0.05em` (26 Jun 2026).
+8. **FloatingCTA** — botão global; threshold: `scrollY > 80vh`; ocultação: `< 220px` do fim da página.
+9. **`white-space: nowrap` no Hero** — aplicado em `.gmt-brand--hero` e `.type-hero-subtitle`.
+10. **Section labels** — usar `.section-label` (12px) via `SectionLabel`, não confundir com `.type-label` (14px).

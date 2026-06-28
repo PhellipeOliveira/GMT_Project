@@ -94,7 +94,7 @@ Link "← Serviços" (texto, não botão): `.type-label`, `text-white/70`, hover
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Link, h1, headline | Framer Motion (`RevealOnScroll`) | on-scroll | `1.75s`, ease `[0.16,1,0.3,1]`; headline `delay 0.08` |
+| Link, h1, headline | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; headline `delay 0.08` |
 | Mídia de fundo | — | — | `reveal={false}` (sem reveal); zoom CSS no hover quando há asset |
 
 ### 6. Responsividade
@@ -136,7 +136,7 @@ Nenhum.
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Rótulos e textos | Framer Motion (`RevealOnScroll`) | on-scroll | `1.75s`; solução `delay 0.08` |
+| Rótulos e textos | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`; solução `delay 0.08` |
 
 ### 6. Responsividade
 - **Desktop:** `flex-row` (cada coluna `md:w-1/2`), `gap-[5vw]`, `px-[5vw]`, `pt-[5vw]`.
@@ -342,7 +342,7 @@ Mostrar prova real de entrega (case NARA) ligada ao serviço.
 | Cor da fonte | `#575757` (`text-gmt-muted`) | conforme `PortfolioCard` |
 | `text-transform` | uppercase | — |
 
-> O conteúdo do card (h3 `.type-h3`, metadados `.type-body`, tags `.tag-pill`) é renderizado por `PortfolioCard` — documentado em detalhe na PARTE da Home / Portfolio.
+> Na Home, o showcase NARA usa `HomePortfolioRow` (sem tags). Em `/servicos/[slug]`, o conteúdo do card (h3 `.type-h3`, metadados `.type-body`, tags `.tag-pill`) é renderizado por `PortfolioCard`.
 
 ### 3. Imagens / mídia
 `PF-01` (card NARA 3:4). Cruzado com PLANO Tabela 4.5.
@@ -359,7 +359,7 @@ Card NARA é um `Link` para `/portfolio/nara` (hover `opacity-90` + zoom da míd
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Rótulo + card | Framer Motion (`RevealOnScroll`, embutido no `PortfolioCard`) | on-scroll | `1.75s` |
+| Rótulo + card | Framer Motion (`RevealOnScroll`, embutido no `PortfolioCard`) | on-scroll | `2.1s` |
 
 ### 6. Responsividade
 - **Desktop:** grid `md:grid-cols-2`, `px-[5vw]`, `pt-[8vw]`.

@@ -3,6 +3,7 @@ import { DM_Sans, Host_Grotesk } from "next/font/google";
 import "@/styles/globals.css";
 import { Navbar } from "@/components/ui/Navbar";
 import { Footer } from "@/components/ui/Footer";
+import { HomeLanternSection } from "@/components/home/HomeLanternSection";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { FloatingCTA } from "@/components/ui/FloatingCTA";
 
@@ -50,6 +51,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <HomeLanternSection />
         <FloatingCTA />
       </body>
     </html>

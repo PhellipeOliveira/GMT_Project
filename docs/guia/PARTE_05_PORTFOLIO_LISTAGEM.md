@@ -70,7 +70,7 @@ Nenhum (thumbnails desta seção não são clicáveis).
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Label, h1, tagline | Framer Motion (`RevealOnScroll`) | on-scroll | `1.75s`, ease `[0.16,1,0.3,1]`; tagline `delay 0.08` |
+| Label, h1, tagline | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; tagline `delay 0.08` |
 | Cada thumbnail (real + "em breve") | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger crescente (`delay = i*0.08`, "em breve" continuam o índice: `(portfolio.length + i) * 0.08`) |
 | Imagem (quando há asset) | CSS (`.media-zoom`) | on-hover | `scale(1.03)`, 400ms |
 

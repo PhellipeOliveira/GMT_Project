@@ -25,7 +25,7 @@ Ao criar ou substituir mídia, siga **esta ordem** — o nível superior prevale
 **Regras de implementação:**
 - O site aplica proporções via `PlaceholderMedia` + `getMediaContainerStyle(id)` — não definir `proporcao`/`altura` manualmente salvo exceção documentada.
 - **Hero slider (Home):** apenas **HER-01** é mídia de fundo (16:9, `80vh`). Slides 2–5 são **só texto** sobre o mesmo fundo até existirem assets `HER-SLD-02..05` (futuro, 16:9).
-- **Full-bleed heroes** (`HER-01`, `ABT-02`, `AGH-F*`, `MKT-04`): ratio de exportação ≠ viewport; usar `object-cover` e compor no **centro 55–60%** (safe zone).
+- **Full-bleed heroes** (`HER-01`, `AGH-F*`, `MKT-04`): ratio de exportação ≠ viewport; usar `object-cover` e compor no **centro 55–60%** (safe zone).
 - **Cards de processo (serviço):** container `aspect-[3/4] md:aspect-[2/3]`; fundo **AGP-F*** em **2:3** (não 3:4).
 
 ### Migração — assets já exportados com proporções antigas
@@ -63,17 +63,17 @@ Ao criar ou substituir mídia, siga **esta ordem** — o nível superior prevale
 
 **Lacunas Home:** depoimentos (Sec 4), blog (Sec 5), 2 dos 3 slots de portfólio (Sec 3).
 
-### 2. Sobre (`design_map_about_v2`)
+### 2. Sobre (`design_map_about_v2`) — implementação actual
 
-| Seção do layout | Conteúdo GMT | Substitui / Observação |
+| Seção GMT (código) | Conteúdo | Observação |
 |---|---|---|
-| Sec 1 — Hero-split (manifesto + grid 2×2 counters) | "Quem somos" como manifesto à esquerda; counters à direita | Manifesto = texto institucional; **números dos counters = lacuna** (copy diz "vários países", sem métricas) |
-| Sec 1 — slot de mídia (GIF) | Visual institucional (ecossistema NARA / agência) | Slot de mídia OPCIONAL |
-| Sec 2 — Fullscreen media | Frame-manifesto da marca | Slot contemplativo OPCIONAL |
-| Sec 3 — Valores-dark (4 valores) | 6 **Diferenciais** | Layout tem 4 slots; copy tem 6 — exibir 4 em destaque ou expandir o grid |
-| Sec 4 — CTA-form + footer | CTA "Como Funciona" + formulário de contacto | Form reutilizado do site |
+| Sec 1 — Introdução + contadores | Texto institucional à esquerda; grid contadores à direita | **24+** serviços · **15+** agentes IA · **3+** pacotes; contagem animada de 0 |
+| Sec 2 — Slideshow expansivo | `ExpandingFrame` com ABT-01…05 | Mesmo comportamento que Home Sec. 4; fundo branco→preto no scroll |
+| Sec 3 — Manifesto | Citação em fundo preto, sem imagem | Secção compacta (`py-16 md:py-20`) |
+| Sec 4 — Nossos valores | 6 diferenciais + ícones (coluna 2) | `.section-cta`; lista partilhada com Home (`src/data/diferenciais.ts`) |
+| CTA final | — | **Removida** — `FloatingCTA` global |
 
-**Lacunas Sobre:** métricas/counters numéricos; fotos de equipa (a referência também não tem).
+**Lacunas Sobre:** fotos de equipa (a referência também não tem).
 
 ### 3. Serviços — Listagem Geral (`design_map_services_geral_v2`)
 
@@ -143,10 +143,10 @@ Tipos de mídia: **Vídeo** (loop/hero/hover) · **Imagem** (banner/card/thumb/b
 ### Sobre
 | Seção | Deve comunicar | Emoção | Mídia recomendada |
 |---|---|---|---|
-| Hero manifesto + counters | Quem é a GMT + escala (NARA) | Seriedade, ambição | **Animação** (counters/texto) + **Vídeo/Imagem** OPCIONAL |
-| Fullscreen media | Identidade da marca | Contemplação, sofisticação | **Vídeo** loop (OPCIONAL imagem) |
-| Valores-dark | Princípios da agência | Profundidade, confiança | **Tipografia** + **Animação** |
-| CTA-form | Conversão institucional | Convite, baixa fricção | **Tipografia** + **Animação** |
+| Introdução + counters | Quem é a GMT + escala da oferta | Seriedade, ambição | **Animação** (counters/texto) |
+| Slideshow expansivo | Identidade da marca em movimento | Contemplação, momentum | **Imagem** (ABT-01…05, 2:1) + **Animação** scroll |
+| Manifesto | Compromisso institucional | Confiança, clareza | **Tipografia** |
+| Valores | Princípios da agência | Profundidade, confiança | **Tipografia** + ícones + **Animação** |
 
 ### Serviços (Geral + Item)
 | Seção | Deve comunicar | Emoção | Mídia recomendada |
@@ -222,8 +222,11 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | HER-03 | Thumb diferencial A | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
 | HER-04 | Thumb diferencial B | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
 | HER-05 | Thumb diferencial C | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
-| ABT-01 | Mídia do hero institucional | Sobre | Sec1 slot mídia | background | OPCIONAL (vídeo→imagem) | 2:1 | 1920×960 | Institucional | Traduzir o ecossistema digital da GMT/NARA | 5–10s loop | Média |
-| ABT-02 | Frame-manifesto fullscreen | Sobre | Sec2 fullscreen | background | OPCIONAL (vídeo→imagem) | 16:9 | 2560×1440 | Institucional | Momento contemplativo da marca | 5–10s loop | Média |
+| ABT-01 | Slideshow institucional frame 1 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Ecossistema digital GMT/NARA | — | Média |
+| ABT-02 | Slideshow institucional frame 2 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Momento contemplativo da marca | — | Média |
+| ABT-03 | Slideshow institucional frame 3 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Variação visual do slideshow | — | Média |
+| ABT-04 | Slideshow institucional frame 4 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Variação visual do slideshow | — | Média |
+| ABT-05 | Slideshow institucional frame 5 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Variação visual do slideshow | — | Média |
 | CON-01 | Fundo decorativo (grade/gradiente) | Contacto | bg da seção | background decorativo | OPCIONAL (imagem) | 16:9 | 2560×1440 | Institucional | Dar caráter sem distrair do formulário | — | Baixa |
 
 > Counters do Sobre e Services Grid da Home = **tipografia/animação** (sem criativo de produção).
@@ -288,12 +291,12 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|
-| SERV-AV-01 | Card Home · Criação de Conteúdo | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F3 | Mostrar criação visual/conteúdo (câmara, edição, design) | Alta |
-| SERV-AV-02 | Card Home · Publicidade Digital | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F3 | Meta/Google Ads, anúncios em acção | Alta |
-| SERV-AV-03 | Card Home · Branding & Estratégia | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | Institucional | Identidade de marca, moodboard | Média |
-| SERV-AV-04 | Card Home · Websites | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F4 | Ecrã de website, código, design UI | Média |
-| SERV-AV-05 | Card Home · Inteligência Artificial | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F4 | Chatbot, interface de IA, automação | Alta |
-| SERV-AV-06 | Card Home · Analytics & Otimização | Home | Sec1 — O que fazemos | card | imagem | **7:5** | 1400×1000 | F3 | Dashboard, gráficos de performance | Alta |
+| SERV-AV-01 | Card Home · Criação de Conteúdo | Home | Sec2 — O que fazemos | card overlay | imagem | **7:5** | 1400×1000 | F3 | Mostrar criação visual/conteúdo (câmara, edição, design) | Alta |
+| SERV-AV-02 | Card Home · Publicidade Digital | Home | Sec2 — O que fazemos | card overlay | imagem | **7:5** | 1400×1000 | F3 | Meta/Google Ads, anúncios em acção | Alta |
+| SERV-AV-03 | Card Home · Branding & Estratégia | Home | Sec2 — O que fazemos | card overlay | imagem | **7:5** | 1400×1000 | Institucional | Identidade de marca, moodboard | Média |
+| SERV-AV-04 | Card Home · Websites | Home | Sec2 — O que fazemos | card overlay | imagem | **7:5** | 1400×1000 | F4 | Ecrã de website, código, design UI | Média |
+| SERV-AV-05 | Card Home · Inteligência Artificial | Home | Sec2 — O que fazemos | card overlay | imagem | **7:5** | 1400×1000 | F4 | Chatbot, interface de IA, automação | Alta |
+| SERV-AV-06 | Card Home · Analytics & Otimização | Home | Sec2 — O que fazemos | card overlay | imagem | **7:5** | 1400×1000 | F3 | Dashboard, gráficos de performance | Alta |
 
 **Notas de produção (SERV-AV):**
 - Proporção 7:5 = 1.4:1 (ligeiramente horizontal, mais larga que 4:3).
@@ -313,19 +316,19 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | HER-04 | Frame — slide 3 | Cicla a 750 ms; `object-cover` |
 | HER-05 | Frame — slide 4 | Cicla a 750 ms; `object-cover` |
 
-**Comportamento:** Frame entra com 36% de largura e 50vh de altura, centrado. Expande até 100vw × 100vh durante o scroll. A sobreposição branca desvanece (opacity 1→0). Todas as secções a seguir ficam com fundo preto.
+**Comportamento:** Frame entra com 35% de largura e 45vh de altura, centrado. Quando atinge o centro e inicia expansão (`SCALE_START ≈ 0.4`), o fundo passa rapidamente de branco a preto. Expande até 100vw × 100vh durante o scroll. Secção 05 (Trabalhos recentes) e seguintes ficam com fundo preto.
 
-### Tabela 4.4-D — Secção Testemunhas / CTA (temporária)
+### Tabela 4.4-D — Testemunhos (secção removida)
 
 | ID | Nome | Página | Secção | Proporção | Nota |
 |---|---|---|---|---|---|
-| TEST-BANNER | Banner CTA horizontal (futuro) | Home | Sec5 Testemunhas | 3:1 | **Lacuna temporária** — exibe "Em breve" até existirem depoimentos reais |
+| TEST-BANNER | Banner CTA horizontal (futuro) | Home | *(removida)* | 3:1 | **Sem uso activo** — secção Testemunhos foi removida da Home |
 
 ### Tabela 4.5 — Portfolio / Cases
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| PF-01 | Card NARA (showcase) | Home | Sec3 card | card | imagem | 3:4 | 1200×1600 | Institucional | Prova real de entrega | — | Alta |
+| PF-01 | Card NARA (showcase) | Home | Sec5 — Trabalhos recentes | linha 2 colunas | imagem | 3:4 | 1200×1600 | Institucional | Prova real de entrega | — | Alta |
 | PF-02 | Thumb NARA (catálogo) | Portfolio Geral | grid/lista | thumbnail | imagem | **9:16** | 1080×1920 | Institucional | Entrada do case no catálogo | — | Alta |
 | PF-03 | Galeria NARA — capa | Portfolio Item | Sec0 galeria (1ª) | background | imagem | 16:9 | 2560×1440 | Institucional | Abrir o case com impacto | — | Alta |
 | PF-04..12 | Galeria NARA — telas (×9) | Portfolio Item | Sec0 galeria | imagem | imagem | 4:3 | 1600×1200 | Institucional | Branding/website/chatbots/campanhas do NARA | — | Média |
@@ -380,7 +383,7 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 ### Geráveis com IA generativa (Flux / GPT Image)
 - Heros de família (AGH-F1..F4, MKT-04) — cenas conceituais/abstratas.
 - Imagens de processo (AGP-F1..F4) — fundos texturizados.
-- Backgrounds globais e fundo do Contacto (GL-03, CON-01, ABT-02).
+- Backgrounds globais e fundo do Contacto (GL-03, CON-01).
 - Thumbs conceituais de agentes/avulsos (AG-*, AV-*, MKT-*) — quando representam conceito, não produto real.
 - Imagem de apoio dos diferenciais (HER-02..05).
 
@@ -395,10 +398,10 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 | Lacuna | Onde impacta | Impacto na credibilidade | Placeholder temporário sugerido |
 |---|---|---|---|
-| **Depoimentos de clientes** | Home Sec4 (testimonials) | Alto | Ocultar a seção até haver depoimentos reais, ou usar bloco de "diferenciais" no lugar (não inventar citações) |
-| **Cases além do NARA** | Home Sec3, Portfolio Geral (≈12 slots), Next project | Alto | Reduzir o grid a 1 case (NARA) e exibir CTA "em breve novos cases"; não criar cases fictícios |
+| **Depoimentos de clientes** | Home *(secção removida)* | Alto | Secção Testemunhos removida; agendamento via `FloatingCTA` global |
+| **Cases além do NARA** | Home Sec5 Trabalhos recentes, Portfolio Geral (≈12 slots) | Alto | 1 case NARA + 2 slots "Em breve"; botão "Ver portfólio completo" |
 | **Artigos de blog** | Home Sec5, Serviço Item Sec6 | Médio | Ocultar "Latest News" ou substituir por bloco de FAQ/Como Funciona (conteúdo institucional existente) |
-| **Métricas / prova social numérica** | Sobre (counters 2×2) | Médio | Usar rótulos qualitativos da copy ("vários países", "PT·EN·ES") em vez de números; não inventar estatísticas |
+| **Métricas / prova social numérica** | Sobre (counters) | — | Implementado: 24 serviços · 15 agentes · 3 pacotes (derivados do catálogo) |
 | **Logos de clientes parceiros** | Home Sec4, faixas de credencial | Médio | Omitir a faixa de logos; manter foco no NARA como prova única |
 | **Credencial tipo "Shopify Experts"** | Navbar/Footer da referência | Baixo | Remover o badge; GMT não possui credencial equivalente na copy |
 | **Fotos de equipa** | Sobre | Baixo | Manter Sobre impessoal (a referência também é) ou usar visual de marca |

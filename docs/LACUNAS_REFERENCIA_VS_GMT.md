@@ -101,17 +101,17 @@
 | **Sec 4 — Testimonials** | Secção ausente | **Conteúdo** — sem depoimentos na copy; carousel `scroll-up` 32s |
 | **Sec 5 — Latest News + footer-grid** | CTA + Footer separado | **Conteúdo** — sem blog; footer-grid 5 col vs Footer GMT 3 col |
 | **Pills de categoria** | `border` rounded-full | Referência: `SPAN.tag rounded-lg px-4 py-2 bg-opaco` | Design |
-| **CTAs explícitos** | CTA final “Agendar” | Referência Home: engagement via cards, não CTAs — GMT adiciona CTA (**Decisão**) |
+| **CTAs explícitos** | CTA final Home removido | Referência Home: engagement via cards — GMT usa `FloatingCTA` global (**Decisão**) |
 
-### 2.2 Sobre (`design_map_about_v2.json`)
+### 2.2 Sobre (`design_map_about_v2.json`) — implementação actual
 
-| Secção referência | Estado GMT | Lacunas |
+| Secção GMT (código) | Estado | Observação |
 |---|---|---|
-| **Sec 1 — Hero + counters 2×2** | Implementado com `section-light` | Counters usam números inventados (15, 24, 70/30) — validar com produto (**Conteúdo**) |
-| **Sec 1 — Slot mídia GIF** | ABT-01 estático WebP | Vídeo/GIF loop ABT-01 opcional; scan effect no load (**G-05**) |
-| **Sec 2 — Fullscreen manifesto** | ABT-02 + quote overlay | Vídeo ABT-02; manifesto em serif (**T-04**) |
-| **Sec 3 — Valores dark `#101010`** | Implementado (6 valores vs 4 slots ref.) | Referência: 4 valores; GMT: 6 — layout expandido (**Decisão**) |
-| **Sec 4 — CTA-form inline desktop** | CTA link para `/contacto` | Formulário inline `hidden md:block` no rodapé da página — não replicado |
+| **Sec 1 — Introdução + contadores** | Implementado | 24+ serviços · 15+ agentes · 3+ pacotes; contagem animada; `AboutCounterGrid` |
+| **Sec 2 — Slideshow expansivo** | Implementado | `ExpandingFrame` + ABT-01…05 em `public/images/`; branco→preto no scroll |
+| **Sec 3 — Manifesto** | Implementado | Texto em `bg-black`, sem imagem; secção compacta |
+| **Sec 4 — Nossos valores** | Implementado | `.section-cta`; 6 diferenciais + ícones (coluna 2); `src/data/diferenciais.ts` |
+| **CTA final inline** | Removida | Conversão via `FloatingCTA` global |
 | **Footer ticker + social** | Footer global | Ticker marquee Instagram/LinkedIn/Dribbble/Mail — ausente |
 
 ### 2.3 Serviços — Listagem (`design_map_services_geral_v2.json`)
@@ -174,10 +174,10 @@ Consolidado de `PLANO_MESTRE_DE_MIDIA.md` Parte 6 e mapas de distribuição.
 
 | Lacuna | Páginas afectadas | Impacto | Acção recomendada |
 |---|---|---|---|
-| **Depoimentos de clientes** | Home Sec4 | Alto | Ocultar até haver citações reais |
+| **Depoimentos de clientes** | Home *(secção removida)* | Alto | Secção Testemunhos removida da Home |
 | **Blog / Latest News** | Home Sec5, Serviço Item Sec6 | Médio | Ocultar ou substituir por FAQ / Como Funciona |
 | **Cases além do NARA** | Home Sec3, Portfolio geral (≈12), Serviço Item Sec4, Next project | Alto | Manter “Em breve”; não criar cases fictícios |
-| **Métricas numéricas nos counters** | Sobre | Médio | Usar rótulos qualitativos ou validar números com produto |
+| **Métricas numéricas nos counters** | Sobre | — | Implementado: 24 · 15 · 3 (catálogo de serviços) |
 | **Logos de clientes parceiros** | Home Sec4 | Médio | Omitir; foco no NARA |
 | **Credencial tipo Shopify Experts** | Navbar/footer | Baixo | Manter omitido |
 | **Fotos de equipa** | Sobre | Baixo | Manter impessoal |
@@ -203,7 +203,7 @@ Ver tabela completa em `PLANO_MESTRE_DE_MIDIA.md` § Hierarquia da Verdade → M
 | ID | Página | Formato final |
 |---|---|---|
 | HER-01 | Home hero | MP4/WebM loop 5–10s, sem áudio |
-| ABT-01, ABT-02 | Sobre | Idem |
+| ABT-01…ABT-05 | Sobre slideshow | WebP em `public/images/` (2:1); futuro: vídeo loop opcional |
 | AGH-F1..F4 | Serviço item hero | Idem |
 | MKT-04 | Pacotes marketing hero | Idem |
 

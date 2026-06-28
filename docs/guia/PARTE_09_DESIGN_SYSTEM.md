@@ -18,14 +18,15 @@ Carregadas em `src/app/layout.tsx` via `next/font/google`:
 
 | Papel | Família | Pesos carregados | Variável CSS | Token de uso (`@theme inline`) |
 |---|---|---|---|---|
-| Display / títulos | **Host Grotesk** | 300, 400, 500 | `--font-hostgrotesk` | `--font-display` (`var(--font-hostgrotesk), ui-sans-serif, sans-serif`) |
+| Display / títulos | **Host Grotesk** | 300, 400, 500, 600, 700, **800** | `--font-hostgrotesk` | `--font-display` (`var(--font-hostgrotesk), ui-sans-serif, sans-serif`) |
 | Corpo / labels | **DM Sans** | 400, 500 | `--font-dmsans` | `--font-sans` (`var(--font-dmsans), ui-sans-serif, sans-serif`) |
 | Mono (números/índices) | **Sistema** | — | — | `--font-mono` (`ui-monospace, "SFMono-Regular", Menlo, monospace`) |
 
 Outros pesos definidos em `@theme inline`: `--font-weight-normal: 400`, `--font-weight-medium: 500`. `display: "swap"` em ambas as fontes Google.
 
 **Notas:**
-- Peso **600/700 não carregado**. Host Grotesk **300** é usado só em `.type-category`.
+- Peso **800** (`--font-weight-brand`) é usado exclusivamente pela marca GMT (`.gmt-brand`).
+- Host Grotesk **300** é usado só em `.type-category`.
 - `LaCerchia` (serif decorativa citada nos design maps) **não está ativa** no projeto.
 - Favicon / apple-icon: `/images/GL-02.webp` (definido em `metadata.icons`).
 
@@ -38,16 +39,19 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Token | Valor (código) | px em 1440px | Classe | Família · peso · extras |
 |---|---|---|---|---|
 | `--type-label` | `14px` | 14 | `.type-label` | DM Sans · 400 · uppercase · `ls 0.1em` · `lh 1.25` |
+| `--type-section-label` | `12px` | 12 | `.section-label` | DM Sans · 500 · uppercase · `ls 0.14em` · `lh 1` |
 | `--type-body` | `18px` | 18 | `.type-body` | DM Sans · 400 · `lh 1.5` |
 | `--type-body-lg` | `21px` | 21 | `.type-body-lg` | DM Sans · 400 · `lh 1.55` |
 | `--type-h3` | `36px` | 36 | `.type-h3` | Host Grotesk · 400 · `lh 1.2` · cor `--gmt-text` |
 | `--type-h2` | `72px` (classe usa `clamp(42px,6vw,72px)`) | 72 (6vw=86 → cap 72) | `.type-h2` | Host Grotesk · 400 · `lh 1.1` · cor `--gmt-text` |
 | `--type-hero` | `clamp(52px,9vw,108px)` | 108 (9vw=130 → cap 108) | `.type-hero` | Host Grotesk · 400 · cor `--gmt-text` |
 | `--type-hero-leading` | `clamp(1, 8vw, 1.1)` | 1.1 (cap) | `.type-hero--fullscreen` (line-height) | aplica `line-height` ao `.type-hero` |
-| `--type-hero-brand` | `clamp(6rem,15vw,14rem)` ≡ `clamp(96px,15vw,224px)` | ~216 (15vw=216 < 224) | `.type-hero-brand` | Host Grotesk · 500 · uppercase · `ls 0.18em` · `lh 1` · `nowrap` |
+| `--type-hero-brand` | `clamp(6rem,15vw,14rem)` ≡ `clamp(96px,15vw,224px)` | ~216 (15vw=216 < 224) | `.gmt-brand--hero` (com `.gmt-brand`) | Host Grotesk · **800** · uppercase · `ls 0.02em` · `scaleX(1.03)` · `lh 1` · `nowrap` |
 | `--type-hero-subtitle` | `clamp(3rem,4.5vw,4.5rem)` ≡ `clamp(48px,4.5vw,72px)` | ~65 (4.5vw=64.8) | `.type-hero-subtitle` | DM Sans · 400 · uppercase · `ls 0.05em` · `lh 1.2` · `nowrap` |
 | *(ad hoc)* | `clamp(36px,5vw,48px)` | 48 (5vw=72 → cap 48) | `.type-category` | Host Grotesk · **300** · uppercase · `ls 0.1em` · `lh 1.1` · cor `--gmt-text` |
-| *(ad hoc)* | `clamp(1.125rem,2.8vw,1.75rem)` ≡ `clamp(18px,2.8vw,28px)` | 28 (2.8vw=40 → cap 28) | `.type-logo-gmt` | Host Grotesk · 500 · uppercase · `ls 0.18em` · `lh 1` |
+| *(ad hoc)* | `clamp(1.125rem,2.8vw,1.75rem)` ≡ `clamp(18px,2.8vw,28px)` | 28 (2.8vw=40 → cap 28) | `.gmt-brand--navbar` | Host Grotesk · **800** · uppercase · `ls 0.02em` · `scaleX(1.03)` · `lh 1` |
+| *(ad hoc)* | `clamp(8rem,33vw,36rem)` | ~475 (33vw=475) | `.gmt-brand--footer` | Host Grotesk · **800** · uppercase · `ls 0.02em` · `scaleX(1.03)` · `lh 0.85` |
+| — | `font-weight: 800` | — | `.gmt-brand` (base) | identidade GMT partilhada (navbar, hero, lanterna) |
 | — | `font-weight: 500` | — | `.type-medium` | modificador de peso |
 
 **Classes de cor do logo:** `.logo-gmt--on-light` = `#0a0a0a`; `.logo-gmt--on-dark` = `#ffffff`.
@@ -113,7 +117,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Efeito | Valor | Onde |
 |---|---|---|
 | Overlay hero serviço | `bg-gradient-to-t from-black via-black/40 to-transparent` | `/servicos/[slug]` Sec0 |
-| Overlay manifesto | `bg-black/25` | `/sobre` Sec3 |
+| Manifesto Sobre (Sec. 03) | `bg-black` + `text-white` |
 | Gradiente hero slider (órfão) | `from-gmt-bg/80 to-transparent` | `HeroSlider` |
 | Glass navbar (logo) | `bg-black/55 backdrop-blur-md` | `Navbar` |
 | Glass pill (escuro/claro) | `bg-black/30` / `bg-white/88` | `Navbar` |
@@ -135,7 +139,8 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | `.btn-nav--on-light` | `color-mix(#000 8%)` | `--gmt-text-on-light` | igual | igual | igual | bg `#000 14%` |
 | `.tag-pill` | `rgb(255 255 255 / 0.8)` | `#000` | `0.5vw` | `0.4vw 1vw` | DM Sans `clamp(13px,0.9vw,15px)` / 400 | — (sem hover) |
 | "Ver todos os serviços" (Home, inline) | `#000000` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | `bg-black/80` |
-| "Ver portfolio completo" (Home, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
+| "Ver Produto →" (Home NARA, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-6 py-3` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
+| "Ver portfólio completo" (Home, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
 | "Falar sobre um projeto" (case, inline) | `--gmt-accent` `#2563eb` | `#ffffff` | `0.5rem` (`rounded-lg`) | `px-6 py-3` | `.type-body`+`.type-medium` 18px / 500 | `--gmt-accent-2` `#7c3aed` |
 | FloatingCTA (inline) | `rgba(0,0,0,0.8)` | `#ffffff` | `9999px` | `px-6 py-3.5` | DM Sans 14px / 500 | `#000` + ícone `translate-x-0.5` |
 | Accordion header (`<button>`) | transparente → `bg-black` (aberto/hover) | `#0a0a0a` → `#ffffff` | `0.5rem` (`rounded-lg`) | `px-4 py-5` | `.type-body-lg` 21px / 400 | `hover:bg-black` |
@@ -149,12 +154,13 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 | Animação | Biblioteca | Contexto / Gatilho | Duração / efeito |
 |---|---|---|---|
-| Reveal de conteúdo (texto/mídia) | Framer Motion (`RevealOnScroll`) | quase todas as seções; on-scroll | `1.75s`, ease `[0.16,1,0.3,1]`, stagger `0.14` (linhas) / `0.08` (itens); `y 50→0` (texto) / `36→0` (mídia) |
+| Reveal de conteúdo (texto/mídia) | Framer Motion (`RevealOnScroll`) | quase todas as seções; on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; textos **linha-a-linha sequencial** (`REVEAL_LINE_GAP 0.06s` entre linhas); itens media com stagger por `delay` do caller; `y 32→0` (texto) / `24→0` (mídia). **Hero Home (`HeroTitle`) excluída** |
 | Hero brand letra-a-letra + blink | Framer Motion (`HeroTitle`) | Home Hero; on-load + on-view | char `0.28s` ease `[0.2,0.65,0.3,0.9]`; blink `0.8s` |
-| Frame expansivo | Framer Motion `useScroll`/`useTransform` | Home transição; on-scroll | scale `35%→100%`/`45vh→100vh`; bg `#fff→#000`; radius `16→0`; slideshow 700ms |
+| Frame expansivo | Framer Motion `useScroll`/`useTransform` | Home transição; on-scroll | scale `35%→100%`/`45vh→100vh` a partir de `SCALE_START≈0.4`; bg `#fff→#000` em janela curta (`0.4→0.52`); radius `16→0`; slideshow 700ms |
+| Service overlay hover | CSS (`group-hover`) | Home "O que fazemos"; on-hover | `blur(4px)` + `saturate(0.35)` na imagem; descrição `opacity 0→1` |
+| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | Home — após Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s` |
 | FloatingCTA | Framer Motion `AnimatePresence` | global; scroll threshold | `0.35s`, `opacity`+`y 14` |
 | Navbar (tema) | Framer Motion `useScroll` | global; scroll > 60px | transição CSS 300–500ms |
-| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | Home footer decorativo; on-hover cursor | foco `circle 20vw`; `opacity 0.5s` |
 | Accordion | CSS `grid-template-rows` | `/servicos`; on-click | `0.3s cubic-bezier(0.4,0,0.2,1)`; chevron rotação 180° |
 | Hover global (links/botões) | CSS | global; on-hover | `0.3s var(--ease)` cor/bg/borda |
 | Media zoom | CSS (`.media-zoom`) | cards/thumbs com imagem; on-hover | `scale(1.03)`, 400ms; fade-in da imagem (`data-loaded`) |
@@ -176,12 +182,12 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 | ID | Slot (PARTE 4) | Proporção | Export | Status |
 |---|---|---|---|---|
-| SERV-AV-01 | Home Sec1 — Card Criação de Conteúdo (Tabela 4.4-B) | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-02 | Home Sec1 — Card Publicidade Digital | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-03 | Home Sec1 — Card Branding & Estratégia | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-04 | Home Sec1 — Card Websites | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-05 | Home Sec1 — Card Inteligência Artificial | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-06 | Home Sec1 — Card Analytics & Otimização | 7:5 | 1400×1000 | **Lacuna** |
+| SERV-AV-01 | Home Sec2 — Card overlay Criação de Conteúdo (Tabela 4.4-B) | 7:5 | 1400×1000 | **Lacuna** |
+| SERV-AV-02 | Home Sec2 — Card overlay Publicidade Digital | 7:5 | 1400×1000 | **Lacuna** |
+| SERV-AV-03 | Home Sec2 — Card overlay Branding & Estratégia | 7:5 | 1400×1000 | **Lacuna** |
+| SERV-AV-04 | Home Sec2 — Card overlay Websites | 7:5 | 1400×1000 | **Lacuna** |
+| SERV-AV-05 | Home Sec2 — Card overlay Inteligência Artificial | 7:5 | 1400×1000 | **Lacuna** |
+| SERV-AV-06 | Home Sec2 — Card overlay Analytics & Otimização | 7:5 | 1400×1000 | **Lacuna** |
 | PF-EB1 | Portfolio Geral — slot vazio (Tabela 4.5 / PF-SLOT-G) | 9:16 | 1080×1920 | **Lacuna** (intencional) |
 | PF-EB2 | Portfolio Geral — slot vazio | 9:16 | 1080×1920 | **Lacuna** (intencional) |
 | PF-EB3 | Portfolio Geral — slot vazio | 9:16 | 1080×1920 | **Lacuna** (intencional) |
@@ -198,8 +204,8 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 | ID / Item | Onde (PARTE 4) | Observação |
 |---|---|---|
-| TEST-BANNER | Home Sec5 Testemunhas (Tabela 4.4-D) | **Lacuna** — secção mostra só "Em breve"; sem asset |
-| GL-04 | Home Sec4 avatar testimonial (Tabela 4.6) | Asset **existe** (`public/images/GL-04.webp`) mas **não é renderizado** (lacuna de conteúdo: sem depoimentos) |
+| TEST-BANNER | Tabela 4.4-D (planeado para testemunhos) | **Secção removida da Home** — ID sem uso activo |
+| GL-04 | Avatar testimonial (Tabela 4.6) | Asset **existe** (`public/images/GL-04.webp`) mas **não é renderizado** |
 | HER-SLD-02..05 | Home hero slider (slides 2–5) | **Lacuna** — futuros 16:9; o `HeroSlider` é órfão (não usado) |
 | PF-SLOT-N | Portfolio Item — "Próximo projeto" | **Lacuna** — renderizado como `PF-02` cinza; depende de novos cases |
 | GL-05 | Ícones de UI (Tabela 4.6) | Sem produção externa — `lucide-react` (vetor) |
@@ -212,16 +218,16 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 |---|---|---|
 | GL-01 | `public/images/GL-01.webp` | logo 7:2 — o site usa logo **textual** (`GmtLogo`) |
 | HER-01 | `public/videos/HER-01.webp` | hero 16:9 — usado só pelo `HeroSlider` (órfão) |
-| GL-04 | `public/images/GL-04.webp` | avatar 1:1 — secção de testemunhas não renderiza avatares |
+| GL-04 | `public/images/GL-04.webp` | avatar 1:1 — sem secção de testemunhos na Home |
 | CON-01 | `public/images/CON-01.webp` | fundo 16:9 — não referenciado em `/contacto` |
 
 ### 6.5 Inventário de assets presentes em `public/`
 
-- **`public/images/`:** HER-02, HER-03, HER-04, HER-05, ABT (não), CON-01, AGP-F1..F4, AG-01..AG-15, MKT-01, MKT-02, MKT-03, AV-01..AV-06, PF-01..PF-12, GL-01, GL-02, GL-03, GL-04.
-- **`public/videos/`:** HER-01, ABT-01, ABT-02, AGH-F1, AGH-F2, AGH-F3, AGH-F4, MKT-04.
+- **`public/images/`:** HER-02..HER-05, ABT-01..ABT-05, CON-01, AGP-F1..F4, AG-01..AG-15, MKT-01..MKT-03, AV-01..AV-06, PF-01..PF-12, GL-01..GL-04.
+- **`public/videos/`:** HER-01, AGH-F1..AGH-F4, MKT-04. *(Cópias legadas de ABT-01/02 podem existir em `videos/`; o código aponta para `images/`.)*
 - Todos em `.webp` (vídeos ainda como `.webp`; MP4/WebM previstos no futuro pelo PLANO).
 
-> Resumo: as únicas **lacunas reais de produção** atualmente ativas no site são os **6 cards `SERV-AV-01..06`** (Home "O que fazemos"). As demais lacunas (`PF-EB*`, `PF-02a/b`, `PF-SLOT-N`, `TEST-BANNER`) são **intencionais** ("Em breve") por falta de novos cases/depoimentos.
+> Resumo: as únicas **lacunas reais de produção** actualmente activas no site são os **6 cards overlay `SERV-AV-01..06`** (Home "O que fazemos"). As demais lacunas (`PF-EB*`, `PF-02a/b`, `PF-SLOT-N`) são **intencionais** ("Em breve") por falta de novos cases.
 
 ---
 

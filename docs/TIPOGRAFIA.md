@@ -11,7 +11,7 @@ Este documento descreve como o repositório define fontes, escalas e estilos de 
 | Onde vive a tipografia? | `src/styles/globals.css` (tokens + classes), `src/app/layout.tsx` (carregamento de fontes), `tailwind.config.ts` (espelho para utilitários Tailwind) |
 | Fontes activas | **DM Sans** (corpo, labels) e **Host Grotesk** (títulos display) via `next/font/google` |
 | Escala de tamanhos | Tokens `--type-*` em px / clamp; classes utilitárias `.type-*` |
-| Pesos usados | 400 (normal) e 500 (medium) |
+| Pesos usados | 400, 500 (corpo); 300–800 (display, marca GMT em **800**) |
 | Onde mudar para trocar fontes? | `layout.tsx` (import) + `globals.css` (`@theme inline` e classes `.type-*`) + `tailwind.config.ts` |
 
 ---
@@ -62,7 +62,7 @@ const dmSans = DM_Sans({
 
 const hostGrotesk = Host_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-hostgrotesk",
   display: "swap",
 });
@@ -93,14 +93,15 @@ As variáveis são injectadas no `<html>` via `className={dmSans.variable} ${hos
 
 | Token | Valor | Papel semântico |
 |-------|-------|-----------------|
-| `--type-label` | `14px` | Labels uppercase, metadados, captions de secção |
+| `--type-label` | `14px` | Labels uppercase, metadados, botões CTA |
+| `--type-section-label` | `12px` | Rótulos de secção (topo esquerdo, Home) |
 | `--type-body` | `18px` | Texto corrido, inputs, botões (também no `body`) |
 | `--type-body-lg` | `21px` | Lead / parágrafo introdutório |
-| `--type-h3` | `36px` | Títulos de cartão, nomes de projeto, CTA final |
+| `--type-h3` | `36px` | Títulos de cartão, nomes de projeto |
 | `--type-h2` | `72px` | Títulos de secção (com clamp responsivo na classe) |
 | `--type-hero` | `clamp(52px, 9vw, 108px)` | H1 de hero fullscreen (serviços) |
-| `--type-hero-brand` | `clamp(4.5rem, 14vw, 11rem)` | Marca «GMT» na Home |
-| `--type-hero-subtitle` | `clamp(9rem, 24vw, 15rem)` | Subtítulo «Growth Marketing Technology» (12× escala original) |
+| `--type-hero-brand` | `clamp(6rem, 15vw, 14rem)` | Tamanho da variante `.gmt-brand--hero` |
+| `--type-hero-subtitle` | `clamp(3rem, 4.5vw, 4.5rem)` | Subtítulo «Growth Marketing Technology» |
 | `--type-hero-leading` | `clamp(1, 8vw, 1.1)` | Line-height viewport-relative só em heroes |
 
 ### Classes utilitárias (preferidas)
@@ -110,21 +111,28 @@ Definidas em `src/styles/globals.css`:
 | Classe | Fonte | Tamanho | Peso | Detalhes |
 |--------|-------|---------|------|----------|
 | `.type-label` | DM Sans | 14px | 400 | `letter-spacing: 0.1em`, uppercase |
+| `.section-label` | DM Sans | 12px | 500 | `letter-spacing: 0.14em`, uppercase — rótulos de secção |
 | `.type-body` | DM Sans | 18px | 400 | line-height 1.5 — **tamanho base do site** |
 | `.type-body-lg` | DM Sans | 21px | 400 | line-height 1.55 |
 | `.type-h3` | Host Grotesk | 36px | 400 | line-height 1.2, cor `gmt-text` |
 | `.type-h2` | Host Grotesk | clamp(42px, 6vw, 72px) | 400 | line-height 1.1 |
 | `.type-hero` | Host Grotesk | clamp hero | 400 | cor `gmt-text` |
-| `.type-hero-brand` | Host Grotesk | clamp brand | 500 | Home — uppercase, tracking 0.18em |
-| `.type-hero-subtitle` | DM Sans | clamp subtitle | 400 | Home — uppercase, tracking 0.22em |
+| `.gmt-brand` | Host Grotesk | — | **800** | base da marca GMT: `ls 0.02em`, `scaleX(1.03)` |
+| `.gmt-brand--hero` | Host Grotesk | clamp brand | 800 | Home Hero |
+| `.gmt-brand--navbar` | Host Grotesk | clamp(18px, 2.8vw, 28px) | 800 | Navbar + Footer logo |
+| `.gmt-brand--footer` | Host Grotesk | clamp(8rem, 33vw, 36rem) | 800 | Lanterna GMT |
+| `.type-hero-subtitle` | DM Sans | clamp subtitle | 400 | Home — uppercase, tracking 0.05em |
 | `.type-hero--fullscreen` | — | — | — | Line-height viewport-relative |
 | `.type-medium` | — | — | 500 | Modificador de peso |
 
 ### Exemplos de uso real
 
 ```tsx
-{/* Label de secção */}
-<p className="type-label text-gmt-muted">Trabalho recente</p>
+{/* Rótulo de secção (Home) */}
+<SectionLabel tone="on-dark">Trabalhos recentes</SectionLabel>
+
+{/* Marca GMT */}
+<h1 className="gmt-brand gmt-brand--hero text-white">GMT</h1>
 
 {/* Título de página */}
 <RevealText as="h1" className="type-h2 mt-4">...</RevealText>
@@ -155,7 +163,7 @@ Na prática, **quase todos os componentes usam `.type-*`**, não `text-label`. A
 
 Alguns componentes usam valores viewport-relative herdados do design de referência:
 
-- `md:text-[6vw]` — números na página Sobre
+- `md:text-[8vw] lg:text-6xl` — números dos contadores na página Sobre (`AboutCounterGrid`)
 - `text-5xl`, `text-xs` — excepções pontuais
 
 Ao reconstruir a escala, considere absorver estes valores em novos tokens (ex.: `--type-stat`) em vez de deixá-los espalhados.
@@ -167,9 +175,10 @@ Ao reconstruir a escala, considere absorver estes valores em novos tokens (ex.: 
 | Peso | Token / config | Uso |
 |------|----------------|-----|
 | 400 | `--font-weight-normal`, `.type-*` default | Quase todo o texto |
-| 500 | `--font-weight-medium`, `.type-medium`, `font-medium` | Botões, navbar CTA, ênfase |
+| 500 | `--font-weight-medium`, `.type-medium`, `font-medium` | Botões, ênfase, `.section-label` |
+| 800 | `--font-weight-brand`, `.gmt-brand` | Marca GMT exclusivamente |
 
-Host Grotesk e DM Sans estão carregadas apenas com 400 e 500. Para usar 600 ou 700, adicionar o peso no `layout.tsx` **e** garantir que o Google Fonts o disponibiliza.
+Host Grotesk está carregada com 300, 400, 500, 600, 700 e 800. DM Sans com 400 e 500.
 
 ---
 
@@ -207,6 +216,8 @@ Elementos sem classe `.type-*` herdam corpo 18px DM Sans.
 ### Use
 
 - **Label** → `.type-label` (14px, uppercase, tracking largo)
+- **Rótulo de secção** → `.section-label` (12px, via `SectionLabel`)
+- **Marca GMT** → `.gmt-brand` + variante (`--hero`, `--navbar`, `--footer`)
 - **Corpo** → `.type-body` ou `.type-body-lg`
 - **Título de secção** → `.type-h2`
 - **Título de cartão** → `.type-h3`

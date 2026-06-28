@@ -125,7 +125,7 @@ Usados por classes que redefinem o contexto local:
 | Classe | Fundo | Texto | Uso |
 |--------|-------|-------|-----|
 | *(padrão / `:root`)* | `#ffffff` | `#0a0a0a` | Maioria das secções |
-| `.section-light` | `#ffffff` | `#0a0a0a` | Wrapper explícito (Serviços, Sobre) — equivalente ao padrão |
+| `.section-light` | `#ffffff` | `#0a0a0a` | Wrapper explícito (Serviços, Sobre Sec. 01) — equivalente ao padrão |
 | `.section-cta` | `#000000` | `#ffffff` | **Último contentor de cada página** |
 | `.section-footer` | `#101010` | `#ffffff` | Footer global em `Footer.tsx` |
 
@@ -134,7 +134,8 @@ Usados por classes que redefinem o contexto local:
 | Contexto | Tratamento |
 |----------|------------|
 | Hero de serviço (`/servicos/[slug]`) | Imagem + gradiente `from-black`; texto com `text-white` / `!text-white` |
-| Citação sobre imagem (Sobre, `ABT-02`) | Overlay `bg-black/25` + `text-white` |
+| Manifesto Sobre (Sec. 03) | `bg-black` sólido + `text-white` |
+| Secção valores Sobre (Sec. 04) | `.section-cta` — fundo `#000000`, texto branco |
 | Footer | `.section-footer` — sempre escuro |
 
 ---
