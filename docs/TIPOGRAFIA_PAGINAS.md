@@ -186,7 +186,7 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 ### Secção: CTA final
 
-Padrão: `type-h3` + `type-body` + botão.
+**Removida.** A página termina após as três categorias do Accordion. Conversão via `FloatingCTA` global (`layout.tsx`).
 
 ---
 
@@ -196,9 +196,9 @@ Padrão: `type-h3` + `type-body` + botão.
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Link | "← Serviços" | `.type-label` | DM Sans | 14px | 400 |
-| `<h1>` | Nome do serviço | `.type-hero .type-hero--fullscreen` | Host Grotesk | clamp(52px → 108px) | 400 |
-| `<p>` | Headline do serviço | `.type-body-lg` | DM Sans | 21px | 400 |
+| Link | "← Ver todos os serviços" | `.type-label` + `bg-white/75 backdrop-blur-md text-gmt-text` | DM Sans | 14px | 400 |
+| `<h1>` | Nome do serviço (centrado) | `.type-hero .type-hero--fullscreen` | Host Grotesk | clamp(52px → 108px) | 400 |
+| `<p>` | Headline do serviço (centrado) | `text-[clamp(1.125rem,2.5vw,1.75rem)]` | DM Sans | clamp(18px → 28px) | 400 |
 
 ---
 
@@ -230,24 +230,25 @@ Padrão: `type-h3` + `type-body` + botão.
 
 ---
 
-### Secção: Como funciona (processo)
+### Secção: Como funciona (5 slots CF-01…CF-05)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
 | `<h2>` | "Como funciona" | `.type-label` | DM Sans | 14px | 400 |
-| Número passo | "01", "02"… | `font-mono .type-body` | Mono sistema | 18px | 400 |
-| Título passo | "Reunião inicial" | `.type-body-lg` | DM Sans | 21px | 400 |
-| Resumo passo | Texto descritivo | `.type-body` | DM Sans | 18px | 400 |
+| Slots mídia | CF-01…CF-05 (sem copy textual) | `PlaceholderMedia` em card `aspect-[3/4] md:aspect-[2/3]` | — | — | — |
+
+> Sem números, títulos ou resumos de passos. Apenas rótulo de secção + grid de 5 cards visuais. Ver `docs/guia/PARTE_04_SERVICO_DETALHE.md` § D.
 
 ---
 
-### Secção: Para quem é / Em prática / CTA
+### Secção: Para quem é *(condicional)*
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` | "Para quem é" / "Em prática" | `.type-label` | DM Sans | 14px | 400 |
+| `<h2>` | "Para quem é" | `.type-label` | DM Sans | 14px | 400 |
 | Tag pill | Caso de uso | `.tag-pill` → `.type-body` | DM Sans | 18px | 400 |
-| CTA `<h2>` | "Quer este serviço no seu negócio?" | `.type-h3` | Host Grotesk | 36px | 400 |
+
+> **Removido desta página:** secção "Em prática" (NARA), CTA final "Quer este serviço no seu negócio?". Footer global vem do `layout.tsx`.
 
 ---
 

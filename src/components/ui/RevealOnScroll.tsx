@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useId,
   useRef,
   useState,
   type ElementType,
@@ -11,16 +12,19 @@ import { motion } from "framer-motion";
 import { splitTextIntoLines } from "@/lib/split-text-lines";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
+import { useRevealSequence } from "@/components/ui/reveal-sequence";
 
-// easeOutQuart suavizado — entrada mais leve e fluida
-export const REVEAL_EASE_OUT = [0.22, 1, 0.36, 1] as const;
-export const REVEAL_DURATION = 2.1;
-/** Intervalo entre o fim de uma linha e o início da seguinte (cascata sequencial). */
-export const REVEAL_LINE_GAP = 0.06;
-export const REVEAL_TEXT_Y = 32;
-export const REVEAL_MEDIA_Y = 24;
+// Entrada suave — desaceleração longa no fim (sensação de “nascer”)
+export const REVEAL_EASE_OUT = [0.25, 1, 0.35, 1] as const;
+export const REVEAL_DURATION = 2.75;
+/** Pausa entre o fim de uma linha e o início da seguinte. */
+export const REVEAL_LINE_GAP = 0.12;
+/** Pausa entre blocos encadeados (label → título → parágrafo). */
+export const REVEAL_BLOCK_GAP = 0.18;
+export const REVEAL_TEXT_Y = 28;
+export const REVEAL_MEDIA_Y = 20;
 
-const VIEWPORT = { once: true, margin: "-8% 0px" as const };
+const VIEWPORT = { once: true, margin: "-4% 0px" as const };
 
 type RevealVariant = "text" | "media";
 
@@ -32,17 +36,43 @@ interface RevealOnScrollProps {
   as?: ElementType;
 }
 
+function useChainedDelay(extraDelay: number, lineCount: number | null) {
+  const sequence = useRevealSequence();
+  const id = useId();
+  const indexRef = useRef<number | null>(null);
+
+  if (sequence && indexRef.current === null) {
+    indexRef.current = sequence.register(id);
+  }
+
+  const index = indexRef.current;
+
+  useEffect(() => {
+    if (!sequence || index === null || lineCount === null) return;
+    sequence.reportLines(index, lineCount);
+  }, [sequence, index, lineCount]);
+
+  const chainDelay =
+    sequence && index !== null ? sequence.getDelay(index) : 0;
+
+  return chainDelay + extraDelay;
+}
+
 function RevealMask({
   children,
   y,
   delay = 0,
   className,
+  lineCount = 1,
 }: {
   children: ReactNode;
   y: number;
   delay?: number;
   className?: string;
+  lineCount?: number;
 }) {
+  const resolvedDelay = useChainedDelay(delay, lineCount);
+
   return (
     <div className={cn("overflow-hidden", className)}>
       <motion.div
@@ -52,7 +82,7 @@ function RevealMask({
         transition={{
           duration: REVEAL_DURATION,
           ease: REVEAL_EASE_OUT,
-          delay,
+          delay: resolvedDelay,
         }}
       >
         {children}
@@ -76,6 +106,7 @@ function RevealTextLines({
   const measureRef = useRef<HTMLDivElement>(null);
   const [lines, setLines] = useState<string[] | null>(null);
   const reducedMotion = useReducedMotion();
+  const resolvedDelay = useChainedDelay(delay, lines?.length ?? null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -119,13 +150,14 @@ function RevealTextLines({
         {lines.map((line, i) => (
           <div key={`${i}-${line}`} className="overflow-hidden">
             <motion.div
-              initial={{ y: REVEAL_TEXT_Y, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              initial={{ y: REVEAL_TEXT_Y }}
+              whileInView={{ y: 0 }}
               viewport={VIEWPORT}
               transition={{
                 duration: REVEAL_DURATION,
                 ease: REVEAL_EASE_OUT,
-                delay: delay + i * (REVEAL_DURATION + REVEAL_LINE_GAP),
+                delay:
+                  resolvedDelay + i * (REVEAL_DURATION + REVEAL_LINE_GAP),
               }}
               aria-hidden={lines.length > 1 ? true : undefined}
             >
@@ -171,7 +203,7 @@ export function RevealOnScroll({
   const y = resolvedVariant === "media" ? REVEAL_MEDIA_Y : REVEAL_TEXT_Y;
 
   return (
-    <RevealMask y={y} delay={delay} className={className}>
+    <RevealMask y={y} delay={delay} className={className} lineCount={1}>
       {children}
     </RevealMask>
   );

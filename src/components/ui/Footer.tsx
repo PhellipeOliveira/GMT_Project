@@ -5,7 +5,7 @@ import { GmtLogo } from "@/components/ui/GmtLogo";
 
 export function Footer() {
   return (
-    <footer className="section-footer relative my-[10vw] w-full overflow-hidden border-t border-gmt-border">
+    <footer className="section-footer relative w-full overflow-hidden pt-[10vw]">
       <PlaceholderMedia
         id="GL-03"
         descricao="textura de secção · 16:9"

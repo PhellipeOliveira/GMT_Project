@@ -26,7 +26,7 @@ Ao criar ou substituir mídia, siga **esta ordem** — o nível superior prevale
 - O site aplica proporções via `PlaceholderMedia` + `getMediaContainerStyle(id)` — não definir `proporcao`/`altura` manualmente salvo exceção documentada.
 - **Hero slider (Home):** apenas **HER-01** é mídia de fundo (16:9, `80vh`). Slides 2–5 são **só texto** sobre o mesmo fundo até existirem assets `HER-SLD-02..05` (futuro, 16:9).
 - **Full-bleed heroes** (`HER-01`, `AGH-F*`, `MKT-04`): ratio de exportação ≠ viewport; usar `object-cover` e compor no **centro 55–60%** (safe zone).
-- **Cards de processo (serviço):** container `aspect-[3/4] md:aspect-[2/3]`; fundo **AGP-F*** em **2:3** (não 3:4).
+- **Cards de processo (serviço):** container `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`; slots **CF-01…CF-05** em **2:3** (1200×1800). Legado **AGP-F*** substituído na Sec3 activa.
 
 ### Migração — assets já exportados com proporções antigas
 
@@ -84,6 +84,7 @@ Ao criar ou substituir mídia, siga **esta ordem** — o nível superior prevale
 | Accordion nível 2 (8 serviços) | 15 agentes (em IA) · 3 pacotes (em Marketing) · 6 avulsos | Substitui os 8 serviços-botão |
 | Accordion nível 3 (sub-serviços) | Funcionalidades de cada agente/pacote/avulso | Substitui os 45 sub-serviços |
 | Badge Shopify Experts | — | **Lacuna**: GMT não tem credencial equivalente na copy |
+| CTA final inline | — | **Removida** — conversão via `FloatingCTA` global |
 | CTA-form + footer-grid | Formulário + navegação de categorias | — |
 
 ### 4. Serviço — Página Individual (`design_map_services_item_v2`) — template para 15 agentes + 3 pacotes + 6 avulsos
@@ -264,7 +265,21 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | AGP-F1 | Imagem de processo — F1 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F1 | Fundo das etapas (01–06) | — | Baixa |
 | AGP-F2 | Imagem de processo — F2 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F2 | Fundo das etapas | — | Baixa |
 | AGP-F3 | Imagem de processo — F3 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F3 | Fundo das etapas | — | Baixa |
-| AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F4 | Fundo das etapas | — | Baixa |
+| AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 process cards (legado) | background card | imagem | **2:3** | 1200×1800 | F4 | Fundo das etapas (legado) | — | Baixa |
+
+**4.2-C · Cards de mídia — Como funciona (5 slots por página de serviço)**
+
+Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um conjunto **CF-01…CF-05** partilhado por todas as rotas `/servicos/[slug]` — substitui os cards de processo genéricos.
+
+| ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| CF-01 | Card mídia — posição 1 | Serviço Item | Sec3 grid col 1 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 1) | — | Média |
+| CF-02 | Card mídia — posição 2 | Serviço Item | Sec3 grid col 2 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 2) | — | Média |
+| CF-03 | Card mídia — posição 3 | Serviço Item | Sec3 grid col 3 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 3) | — | Média |
+| CF-04 | Card mídia — posição 4 | Serviço Item | Sec3 grid col 4 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 4) | — | Média |
+| CF-05 | Card mídia — posição 5 | Serviço Item | Sec3 grid col 5 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 5) | — | Média |
+
+> **Nota:** até existirem assets em `public/images/CF-*.webp`, o componente `PlaceholderMedia` exibe fallback de cor. Os IDs **AGP-F*** permanecem no inventário como legado; a Sec3 activa usa **CF-01…05**.
 
 ### Tabela 4.3 — Marketing Digital (3 pacotes)
 
@@ -400,7 +415,7 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 |---|---|---|---|
 | **Depoimentos de clientes** | Home *(secção removida)* | Alto | Secção Testemunhos removida; agendamento via `FloatingCTA` global |
 | **Cases além do NARA** | Home Sec5 Trabalhos recentes, Portfolio Geral (≈12 slots) | Alto | 1 case NARA + 2 slots "Em breve"; botão "Ver portfólio completo" |
-| **Artigos de blog** | Home Sec5, Serviço Item Sec6 | Médio | Ocultar "Latest News" ou substituir por bloco de FAQ/Como Funciona (conteúdo institucional existente) |
+| **Artigos de blog** | Home Sec5 | Médio | Secção "Latest News" não existe no GMT; detalhe de serviço usa slots CF-01…05 em "Como funciona" |
 | **Métricas / prova social numérica** | Sobre (counters) | — | Implementado: 24 serviços · 15 agentes · 3 pacotes (derivados do catálogo) |
 | **Logos de clientes parceiros** | Home Sec4, faixas de credencial | Médio | Omitir a faixa de logos; manter foco no NARA como prova única |
 | **Credencial tipo "Shopify Experts"** | Navbar/Footer da referência | Baixo | Remover o badge; GMT não possui credencial equivalente na copy |

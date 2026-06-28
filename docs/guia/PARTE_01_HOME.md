@@ -294,7 +294,7 @@ Componente: `HomePortfolioRow` (`src/components/home/HomePortfolioRow.tsx`). Cru
 ### 7. Arquivos relacionados
 `src/app/page.tsx`, `src/components/home/HomePortfolioRow.tsx`, `src/components/ui/SectionLabel.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`.
 
-> `PortfolioCard` **não** é usado na Home (mantém-se em `/servicos/[slug]`).
+> `PortfolioCard` **não** é usado na Home nem em `/servicos/[slug]` (componente existe no repo, sem consumidores activos).
 
 ---
 

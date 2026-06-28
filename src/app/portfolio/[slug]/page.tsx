@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { portfolio, getCaseBySlug } from "@/data/portfolio";
 
 export function generateStaticParams() {
@@ -137,17 +138,19 @@ export default async function PortfolioItemPage({
       </section>
 
       <section className="section-cta px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
-          Pronto para automatizar o seu negócio?
-        </RevealOnScroll>
-        <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted" delay={0.08}>
-          Reunião gratuita e sem compromisso.
-        </RevealOnScroll>
-        <RevealOnScroll variant="media" delay={0.16}>
-          <Link href="/contacto" className="btn-submit mt-8">
-            Agendar agora
-          </Link>
-        </RevealOnScroll>
+        <RevealSequence>
+          <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
+            Pronto para automatizar o seu negócio?
+          </RevealOnScroll>
+          <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted">
+            Reunião gratuita e sem compromisso.
+          </RevealOnScroll>
+          <RevealOnScroll variant="media">
+            <Link href="/contacto" className="btn-submit mt-8">
+              Agendar agora
+            </Link>
+          </RevealOnScroll>
+        </RevealSequence>
       </section>
     </>
   );

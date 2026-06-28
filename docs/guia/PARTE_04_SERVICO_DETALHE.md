@@ -1,431 +1,249 @@
 # GUIA DE EDIÇÃO — PARTE 04 · SERVIÇO · DETALHE (`/servicos/[slug]`)
 
-> Documentação completa do **template dinâmico** de página individual de serviço.
+> Documentação do **template único** de página individual de serviço.
 >
 > **Arquivo principal:** `src/app/servicos/[slug]/page.tsx`
 >
-> **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/styles/globals.css`, `src/styles/tokens.css`, `src/data/media-spec.ts`, `src/lib/media.ts`, `src/data/servicos.ts`, `src/data/portfolio.ts` + componentes em `src/components/`.
+> **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (§ 4.2-C), `src/styles/globals.css`, `src/data/media-spec.ts`, `src/lib/media.ts`, `src/data/servicos.ts` + componentes em `src/components/`.
 >
-> **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores de fonte extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
+> **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`.
 >
-> **Extração:** 28 Jun 2026.
+> **Actualização:** 28 Jun 2026 — alinhado ao refactor do template (hero centralizada, slots CF-01…05, remoção de CTA final e secção “Em prática”).
 
 ---
 
-## Estrutura geral da página
+## A. Visão geral
+
+As rotas `/servicos/[slug]` são páginas de detalhe de cada serviço da GMT (agentes, pacotes de marketing e avulsos). Existe **um único template** em `src/app/servicos/[slug]/page.tsx` partilhado por **todos** os slugs.
 
 | Campo | Detalhe |
 |---|---|
-| Rota | `/servicos/[slug]` (rota dinâmica) |
+| Rota | `/servicos/[slug]` (dinâmica) |
 | Arquivo | `src/app/servicos/[slug]/page.tsx` |
-| Componentes | `RevealOnScroll`, `PlaceholderMedia`, `PortfolioCard`, ícone `Check` (`lucide-react`) |
-| Dados | `servicos`, `getServicoBySlug` (`src/data/servicos.ts`); `getCaseBySlug("nara")` (`src/data/portfolio.ts`); `getServicoHeroId`, `getFamiliaProcessBg` (`src/lib/media.ts`); array `PROCESSO` no próprio arquivo |
-| Geração estática | `generateStaticParams()` → 1 página por serviço (**24 páginas**: 15 agentes + 3 pacotes + 6 avulsos); `generateMetadata()` (title = `servico.nome`, description = `headline`/`solucao`/`nome`) |
+| Componentes | `RevealOnScroll`, `PlaceholderMedia`, ícone `Check` (`lucide-react`), `Link` (`next/link`) |
+| Dados | `servicos`, `getServicoBySlug` (`src/data/servicos.ts`); `getServicoHeroId` (`src/lib/media.ts`); constante `COMO_FUNCIONA_SLOTS` no próprio arquivo |
+| Geração estática | `generateStaticParams()` → **24 páginas** (15 agentes + 3 pacotes + 6 avulsos); `generateMetadata()` (title = `servico.nome`, description = `headline` / `solucao` / `nome`) |
 | 404 | `notFound()` quando o slug não existe |
 | Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
 
-**Ordem das seções:**
+**Ordem actual das secções:**
 
-1. Seção 00 — Hero do serviço
-2. Seção 01 — Proposta de valor (desafio + solução)
-3. Seção 01b — Benefícios
-4. Seção 02 — O que inclui (funcionalidades)
-5. Seção 03 — Como funciona (process cards)
-6. Seção 04 — Casos de uso (Para quem é)
-7. Seção 05 — Em prática (NARA)
-8. Seção 06 — CTA final
+1. Hero
+2. Desafio / Solução *(condicional)*
+3. Benefícios *(condicional)*
+4. O que inclui *(sempre)*
+5. Como funciona — slots CF-01…CF-05 *(sempre)*
+6. Para quem é *(condicional)*
+7. Footer global *(via `layout.tsx`)*
 
-> As Seções 01–05 estão envolvidas por `<div className="section-light">` (tokens claros). A Seção 00 (hero) e a Seção 06 (CTA) ficam fora desse wrapper.
+> As secções 2–6 estão dentro de `<div className="section-light">`. A Hero fica fora desse wrapper. **Não existe** CTA final nem secção “Em prática” nesta página.
 
----
+**Removido do template (não documentar como activo):**
 
-## Dados vs. estrutura do template
-
-> **Distinção pedida** — o que muda por serviço (vem de `src/data/servicos.ts`) e o que é fixo no template (`page.tsx`):
-
-| Origem | Conteúdo |
-|---|---|
-| **Dados — `servicos.ts` (por serviço)** | `nome` (h1), `headline` (subtítulo do hero), `problema`, `solucao`, `beneficios[]`, `funcionalidades[]`, `casosDeUso[]`, `familia`, `corPlaceholder` |
-| **Dados — `lib/media.ts` (derivado da família/slug)** | ID do hero (`getServicoHeroId`), ID do fundo de processo (`getFamiliaProcessBg`) |
-| **Dados — `portfolio.ts`** | Case NARA da Seção 05 (`getCaseBySlug("nara")`) |
-| **Estrutural — fixo no template** | Rótulos de seção (`O desafio`, `A solução`, `Benefícios`, `O que inclui`, `Como funciona`, `Para quem é`, `Em prática`), o array `PROCESSO` (5 passos, institucional, igual para todos), copy do CTA final, link `← Serviços` |
-| **Renderização condicional** | Seção 01 só aparece se `problema`/`solucao` existir; 01b só se `beneficios.length > 0`; 04 só se `casosDeUso.length > 0`; 05 só se o case NARA existir; bloco "solução" da Seção 02 só se `tipo === "pacote"` |
+- CTA final “Quer este serviço no seu negócio?” + botão “Agendar reunião”
+- Secção “Em prática” com case NARA e `PortfolioCard`
+- Array `PROCESSO` (5 passos textuais)
+- `RevealSequence` na hero
+- Imports: `PortfolioCard`, `getCaseBySlug`, `getFamiliaProcessBg`, `RevealSequence`
 
 ---
 
-# Seção 00 — Hero do serviço
+## B. Hero
 
-### 1. Objetivo
-Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/vídeo da família visual.
+### Objetivo
+Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/vídeo da família visual. Headline **centralizada**; botão de voltar no **canto inferior esquerdo**.
 
-### 2. Copy / Textos
+### Layout
+- Container: `h-[80vh] md:h-[70vh]`, overlay `bg-gradient-to-t from-black via-black/40 to-transparent`
+- Conteúdo textual: `flex h-full flex-col items-center justify-center text-center`
+- Botão voltar: `absolute bottom-0 left-0` com `px-5 pb-12 md:px-[5vw] md:pb-[5vw]`
 
-| Campo | Link voltar | `<h1>` | `<p>` headline |
+### Copy / tipografia
+
+| Campo | Botão voltar | `<h1>` | `<p>` headline |
 |---|---|---|---|
-| Conteúdo | `← Serviços` | `servico.nome` (dados) | `servico.headline` (dados; condicional) |
-| Elemento HTML | `a` (Link) | `h1` | `p` |
-| Classe | `.type-label` | `.type-hero` + `.type-hero--fullscreen` | `.type-body-lg` |
-| Família | DM Sans | Host Grotesk | DM Sans |
-| Tamanho | 14px | `clamp(52px,9vw,108px)` | 21px |
+| Conteúdo | `← Ver todos os serviços` | `servico.nome` (dados) | `servico.headline` (dados; condicional) |
+| Elemento HTML | `a` (`Link`) | `h1` | `p` |
+| Classe | `.type-label` + utilitários inline | `.type-hero` + `.type-hero--fullscreen` | `text-[clamp(1.125rem,2.5vw,1.75rem)]` |
+| Família | DM Sans | Host Grotesk | DM Sans (tamanho fluido via `clamp`) |
+| Tamanho | 14px (label) | `clamp(52px,9vw,108px)` via `--type-hero` | `clamp(1.125rem, 2.5vw, 1.75rem)` — **menor que o h1** |
 | Peso | 400 | 400 | 400 |
-| Cor da fonte | `rgba(255,255,255,0.7)` (`text-white/70`, hover `#ffffff`) | `#ffffff` (`!text-white`) | `rgba(255,255,255,0.7)` (`text-white/70`) |
-| `letter-spacing` | 0.1em | — | — |
-| `text-transform` | uppercase | none | none |
+| Cor | `text-gmt-text` (`#0a0a0a`) sobre fundo branco translúcido | `#ffffff` (`!text-white`) | `text-white/80` |
 
-> `line-height` do h1 = `var(--type-hero-leading)` = `clamp(1, 8vw, 1.1)` (via `.type-hero--fullscreen`).
+> `line-height` do h1 = `var(--type-hero-leading)` = `clamp(1, 8vw, 1.1)` (via `.type-hero--fullscreen`).  
+> O subtítulo **não** usa `.type-body-lg` nem tamanho fixo em px.
 
-### 3. Imagens / mídia
-Hero resolvido por `getServicoHeroId(servico)` (`src/lib/media.ts`): agente → hero da família; pacote → `MKT-04`; avulso → o próprio thumb 3:2. Render `fill`, `priority`, `sizes="100vw"`, `reveal={false}`. Overlay gradiente `from-black via-black/40 to-transparent`. Cor de fallback = `servico.corPlaceholder`. Cruzado com PLANO Tabelas 4.2-B / 4.3 / 4.4.
+### Botão “← Ver todos os serviços”
+- Destino: `/servicos`
+- Estilo vidro: `rounded-lg bg-white/75 px-5 py-3 backdrop-blur-md text-gmt-text`
+- Hover: `hover:bg-white/90`
+- Seta para trás mantida no copy (`←`)
+- **Não existe** botão dinâmico com o nome do serviço nem link antigo `← Serviços`
+- **Um único** botão na hero (sem duplicados)
 
-| ID | Quando | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|---|
-| AGH-F1 | Agente família F1 | Hero família Hospitalidade | 3:1 | 2560×860 | `public/videos/AGH-F1.webp` | **Produzido** |
-| AGH-F2 | Agente família F2 | Hero família Operação Eficiente | 3:1 | 2560×860 | `public/videos/AGH-F2.webp` | **Produzido** |
-| AGH-F3 | Agente família F3 | Hero família Growth & Dados | 3:1 | 2560×860 | `public/videos/AGH-F3.webp` | **Produzido** |
-| AGH-F4 | Agente família F4 | Hero família Inovação Sob Medida | 3:1 | 2560×860 | `public/videos/AGH-F4.webp` | **Produzido** |
-| MKT-04 | Pacotes (MKT) | Hero pacotes marketing | 3:1 | 2560×860 | `public/videos/MKT-04.webp` | **Produzido** |
-| AV-01..06 | Avulsos | Reutiliza o thumb do avulso | 3:2 | 1200×800 | `public/images/AV-0X.webp` | **Produzido** |
+### Mídia de fundo
+Hero resolvido por `getServicoHeroId(servico)` (`src/lib/media.ts`): agente → hero da família; pacote → `MKT-04`; avulso → thumb 3:2. Render `fill`, `priority`, `sizes="100vw"`, `reveal={false}`. Cor de fallback = `servico.corPlaceholder`. Cruzado com PLANO § 4.2-B / 4.3 / 4.4.
 
-> Container `h-[80vh] md:h-[70vh]`. Para agentes, `getServicoHeroId` mapeia `familia` → `AGH-F{1..4}`; para avulsos devolve o thumb (`getServicoThumbId`).
+| ID | Quando | Proporção | Export | Status |
+|---|---|---|---|---|
+| AGH-F1…F4 | Agentes por família | 3:1 | 2560×860 | **Produzido** |
+| MKT-04 | Pacotes | 3:1 | 2560×860 | **Produzido** |
+| AV-01…06 | Avulsos | 3:2 | 1200×800 | **Produzido** |
 
-### 4. Botões / CTAs
-Link "← Serviços" (texto, não botão): `.type-label`, `text-white/70`, hover `#ffffff`.
-
-### 5. Animações
+### Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Link, h1, headline | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; headline `delay 0.08` |
-| Mídia de fundo | — | — | `reveal={false}` (sem reveal); zoom CSS no hover quando há asset |
+| h1, headline | `RevealOnScroll` (texto) | on-scroll | `REVEAL_DURATION` 2.75s; headline `delay={0.08}` |
+| Botão voltar | `RevealOnScroll variant="media"` | on-scroll | translateY + opacity, 2.75s |
+| Mídia de fundo | — | — | `reveal={false}` |
 
-### 6. Responsividade
-- **Desktop:** `h-[70vh]`; conteúdo `md:w-1/2`, `px-[5vw]`, `pb-[5vw]`.
-- **Tablet/Mobile:** `h-[80vh]`; conteúdo largura total, `px-5`, `pb-12`.
+> A hero **não** usa `RevealSequence`. Cada bloco anima de forma independente ao entrar no viewport.
 
-### 7. Arquivos relacionados
+### Responsividade
+- **Desktop:** `h-[70vh]`; conteúdo centrado, `px-[5vw]`; botão `md:pb-[5vw]`
+- **Mobile:** `h-[80vh]`; conteúdo centrado, `px-5`; botão `pb-12`
+
+### Arquivos relacionados
 `src/app/servicos/[slug]/page.tsx`, `src/lib/media.ts`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`, classes `.type-hero`/`.type-hero--fullscreen` em `src/styles/globals.css`.
 
 ---
 
-# Seção 01 — Proposta de valor (desafio + solução)
+## C. Secções da página
+
+### Dados vs. estrutura do template
+
+| Origem | Conteúdo |
+|---|---|
+| **Dados — `servicos.ts` (por serviço)** | `nome`, `headline`, `problema`, `solucao`, `beneficios[]`, `funcionalidades[]`, `casosDeUso[]`, `familia`, `corPlaceholder`, `tipo` |
+| **Dados — `lib/media.ts`** | ID do hero (`getServicoHeroId`) |
+| **Estrutural — fixo no template** | Rótulos (`O desafio`, `A solução`, `Benefícios`, `O que inclui`, `Como funciona`, `Para quem é`); constante `COMO_FUNCIONA_SLOTS` (CF-01…05); copy do botão hero |
+| **Condicional** | Sec. Desafio/Solução se `problema \|\| solucao`; Benefícios se `beneficios.length > 0`; intro “O que inclui” (solução repetida) só se `tipo === "pacote"`; Para quem é se `casosDeUso.length > 0` |
+
+### Secção 01 — Proposta de valor (desafio + solução)
 
 > Condicional: só renderiza se `servico.problema` ou `servico.solucao` existir.
 
-### 1. Objetivo
-Contrastar o problema do cliente (`O desafio`) com a transformação prometida (`A solução`).
+| Campo | `<h2>` | `<p>` |
+|---|---|---|
+| Desafio | `O desafio` · `.type-label` | `servico.problema` · `.type-h3` |
+| Solução | `A solução` · `.type-label` | `servico.solucao` · `.type-body-lg` |
 
-### 2. Copy / Textos
+Layout: `flex-col md:flex-row`, cada coluna `md:w-1/2`, `gap-10 md:gap-[5vw]`, `pt-16 md:pt-[5vw]`.
 
-| Campo | `<h2>` "O desafio" | `<p>` problema | `<h2>` "A solução" | `<p>` solução |
-|---|---|---|---|---|
-| Conteúdo | `O desafio` (estrutural) | `servico.problema` (dados) | `A solução` (estrutural) | `servico.solucao` (dados) |
-| Elemento HTML | `h2` | `p` | `h2` | `p` |
-| Classe | `.type-label` | `.type-h3` | `.type-label` | `.type-body-lg` |
-| Família | DM Sans | Host Grotesk | DM Sans | DM Sans |
-| Tamanho | 14px | 36px | 14px | 21px |
-| Peso | 400 | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` | `#575757` (`text-gmt-muted`) | `#575757` (`text-gmt-muted`) |
-| `letter-spacing` | 0.1em | — | 0.1em | — |
-| `text-transform` | uppercase | none | uppercase | none |
-
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Rótulos e textos | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`; solução `delay 0.08` |
-
-### 6. Responsividade
-- **Desktop:** `flex-row` (cada coluna `md:w-1/2`), `gap-[5vw]`, `px-[5vw]`, `pt-[5vw]`.
-- **Mobile:** `flex-col`, `gap-10`, `px-5`, `pt-16`.
-
-### 7. Arquivos relacionados
-`src/app/servicos/[slug]/page.tsx`, `src/data/servicos.ts`, `src/components/ui/RevealOnScroll.tsx`.
-
----
-
-# Seção 01b — Benefícios
+### Secção 01b — Benefícios
 
 > Condicional: só renderiza se `servico.beneficios.length > 0`.
 
-### 1. Objetivo
-Listar os benefícios concretos do serviço em cartões.
+Grid `grid-cols-1 md:grid-cols-3` de cartões com ícone `Check` (`lucide-react`, `text-gmt-accent`). Cada item: `.type-body` dentro de `border-gmt-border bg-gmt-bg-alt rounded-lg p-5`.
 
-### 2. Copy / Textos
+### Secção 02 — O que inclui
 
-| Campo | `<h2>` | Item de benefício |
+> **Sempre** renderizada (todos os serviços têm `funcionalidades[]`).
+
+Lista `divide-y divide-gmt-border` com cada funcionalidade em `.type-body-lg`. Para pacotes (`tipo === "pacote"`), repete `servico.solucao` como parágrafo introdutório (`.type-body`).
+
+### Secção 04 — Para quem é
+
+> Condicional: só renderiza se `servico.casosDeUso.length > 0` (**9 de 24** serviços não têm casos de uso).
+
+Tags `.tag-pill` com `servico.casosDeUso[]`. Padding inferior próprio: `pb-16 md:pb-[8vw]`.
+
+### Padding inferior (evitar buracos visuais)
+
+- Quando **não** há “Para quem é”, a Sec. 03 (“Como funciona”) recebe `pb-16 md:pb-[8vw]`.
+- Quando “Para quem é” existe, o padding inferior fica na Sec. 04.
+
+---
+
+## D. Como funciona (Sec. 03)
+
+### Objetivo
+Grid de **5 slots de mídia** institucionais, partilhados por todas as rotas `/servicos/[slug]`. Substituem os antigos cards de processo com texto (`PROCESSO`) e fundos por família (`AGP-F*`).
+
+### Estrutura no código
+
+Constante `COMO_FUNCIONA_SLOTS` em `page.tsx`:
+
+| ID | Descrição (placeholder) | Cor fallback |
 |---|---|---|
-| Conteúdo | `Benefícios` (estrutural) | `servico.beneficios[]` (dados) |
-| Elemento HTML | `h2` | `span` (dentro de `li`) |
-| Classe | `.type-label` | `.type-body` |
-| Família | DM Sans | DM Sans |
-| Tamanho | 14px | 18px |
-| Peso | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` (`text-gmt-text`) |
-| `letter-spacing` | 0.1em | — |
-| `text-transform` | uppercase | none |
+| CF-01 | card mídia posição 1 | `#1E293B` |
+| CF-02 | card mídia posição 2 | `#134E4A` |
+| CF-03 | card mídia posição 3 | `#1A3A5F` |
+| CF-04 | card mídia posição 4 | `#3B0764` |
+| CF-05 | card mídia posição 5 | `#0F172A` |
 
-### 3. Imagens / mídia
-Nenhuma imagem. Cada benefício exibe o ícone **`Check`** (`lucide-react`, `size 18`, cor `text-gmt-accent` = `#2563eb`). Vetor (= `GL-05` na PARTE 4) → **Produzido**.
+### Layout
+- Rótulo: `<h2>` “Como funciona” · `.type-label`
+- Grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4`
+- Card: `aspect-[3/4] md:aspect-[2/3] rounded-2xl border border-gmt-border overflow-hidden`
+- Cada slot: `PlaceholderMedia` com `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
 
-### 4. Botões / CTAs
-Nenhum. Cada benefício é um cartão `border-gmt-border bg-gmt-bg-alt rounded-lg p-5`.
+### Copy
+**Não há** texto de passos (números 01–05, títulos ou resumos). Apenas o rótulo de secção e os 5 cards visuais.
 
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Cada cartão de benefício | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger `delay = i*0.08` |
+### Estado actual dos assets
+Até existirem ficheiros em `public/images/CF-*.webp`, o `PlaceholderMedia` exibe fallback de cor. A estrutura está pronta para receber mídias reais — basta produzir e colocar os assets com os IDs correctos.
 
-### 6. Responsividade
-- **Desktop:** grid `md:grid-cols-3`, `px-[5vw]`, `pt-[5vw]`.
-- **Mobile:** `grid-cols-1`, `px-5`, `pt-16`.
-
-### 7. Arquivos relacionados
-`src/app/servicos/[slug]/page.tsx`, `src/data/servicos.ts`.
+### Animações
+Cada card: `RevealOnScroll variant="media"` com stagger `delay={i * 0.08}`.
 
 ---
 
-# Seção 02 — O que inclui (funcionalidades)
+## E. Relação com mídia e specs
 
-### 1. Objetivo
-Listar as funcionalidades concretas do serviço (e, para pacotes, repetir a solução como introdução).
+### `src/data/media-spec.ts`
+Entradas **CF-01…CF-05**:
 
-### 2. Copy / Textos
+| Campo | Valor |
+|---|---|
+| `ratio` | `[2, 3]` |
+| `exportPx` | `{ w: 1200, h: 1800 }` |
+| `container` | `aspect` |
+| `objectFit` | `cover` |
+| `folder` | `images` |
+| `page` | `Serviço Item` |
+| `slot` | `Sec3 — card mídia posição 1…5` |
 
-| Campo | `<h2>` | `<p>` intro (só pacotes) | Funcionalidade |
+### `docs/PLANO_MESTRE_DE_MIDIA.md` — Tabela **4.2-C**
+Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições no grid (col 1–5) e nota de que **AGP-F*** permanece no inventário como **legado** — a Sec3 activa usa **CF-01…05**.
+
+### Correspondência código ↔ documentação
+
+| Posição grid | ID código | ID media-spec | ID PLANO 4.2-C |
 |---|---|---|---|
-| Conteúdo | `O que inclui` (estrutural) | `servico.solucao` (dados; só `tipo === "pacote"`) | `servico.funcionalidades[]` (dados) |
-| Elemento HTML | `h2` | `p` | `span` (dentro de `li`) |
-| Classe | `.type-label` | `.type-body` | `.type-body-lg` |
-| Família | DM Sans | DM Sans | DM Sans |
-| Tamanho | 14px | 18px | 21px |
-| Peso | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` (`text-gmt-text`) |
-| `letter-spacing` | 0.1em | — | — |
-| `text-transform` | uppercase | none | none |
-
-> Lista com separadores `divide-y divide-gmt-border` + borda superior `border-t border-gmt-border`.
-
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Cada funcionalidade | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger `delay = i*0.08` |
-
-### 6. Responsividade
-- **Desktop:** `flex-row` (rótulo `md:w-1/3`, lista `md:w-2/3`), `gap-[5vw]`, `px-[5vw]`, `pt-[8vw]`.
-- **Mobile:** `flex-col`, `gap-8`, `px-5`, `pt-16`.
-
-### 7. Arquivos relacionados
-`src/app/servicos/[slug]/page.tsx`, `src/data/servicos.ts`.
+| Col 1 | CF-01 | CF-01 | CF-01 |
+| Col 2 | CF-02 | CF-02 | CF-02 |
+| Col 3 | CF-03 | CF-03 | CF-03 |
+| Col 4 | CF-04 | CF-04 | CF-04 |
+| Col 5 | CF-05 | CF-05 | CF-05 |
 
 ---
 
-# Seção 03 — Como funciona (process cards)
+## F. Observações finais
 
-### 1. Objetivo
-Mostrar o processo GMT em 5 cards (01–05). O array `PROCESSO` é **estrutural/fixo** (institucional, igual para todos os serviços).
-
-### 2. Copy / Textos
-
-| Campo | `<h2>` | Número | Título do passo | Resumo |
-|---|---|---|---|---|
-| Conteúdo | `Como funciona` (estrutural) | `01`–`05` (estrutural) | Reunião inicial · Proposta personalizada · Planeamento estratégico · Execução & implementação · Acompanhamento & otimização | Texto descritivo de cada passo (estrutural) |
-| Elemento HTML | `h2` | `span` | `h3` | `p` |
-| Classe | `.type-label` | `font-mono` + `.type-body` | `.type-body-lg` | `.type-body` |
-| Família | DM Sans | Mono sistema (`--font-mono`) | DM Sans | DM Sans |
-| Tamanho | 14px | 18px | 21px | 18px |
-| Peso | 400 | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-accent)` = `#2563eb` (`text-gmt-accent`) | `var(--gmt-text)` = `#0a0a0a` (`text-gmt-text`) | `#575757` (`text-gmt-muted`) |
-| `letter-spacing` | 0.1em | — | — | — |
-| `text-transform` | uppercase | none | none | none |
-
-> Conteúdo dos 5 passos (array `PROCESSO`):
-> 01 Reunião inicial · 02 Proposta personalizada · 03 Planeamento estratégico · 04 Execução & implementação · 05 Acompanhamento & otimização.
-
-### 3. Imagens / mídia
-Fundo do card resolvido por `getFamiliaProcessBg(servico.familia)` (`src/lib/media.ts`). Render `fill`, `opacity-20`, atrás do texto (`z-10`), `reveal={false}`. Cruzado com PLANO Tabela 4.2-B.
-
-| ID | Quando (família) | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|---|
-| AGP-F1 | F1 | Fundo card processo | 2:3 | 1200×1800 | `public/images/AGP-F1.webp` | **Produzido** |
-| AGP-F2 | F2 | Fundo card processo | 2:3 | 1200×1800 | `public/images/AGP-F2.webp` | **Produzido** |
-| AGP-F3 | F3 / MKT / AV | Fundo card processo | 2:3 | 1200×1800 | `public/images/AGP-F3.webp` | **Produzido** |
-| AGP-F4 | F4 | Fundo card processo | 2:3 | 1200×1800 | `public/images/AGP-F4.webp` | **Produzido** |
-
-> Card: `aspect-[3/4] md:aspect-[2/3]`, `rounded-2xl border border-gmt-border bg-white/50`.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Rótulo + cada card | Framer Motion (`RevealOnScroll`) | on-scroll | stagger `delay = i*0.08` |
-
-### 6. Responsividade
-- **Desktop:** grid `lg:grid-cols-5`; card `md:aspect-[2/3]`; `px-[5vw]`, `pt-[8vw]`.
-- **Tablet:** grid `sm:grid-cols-2`.
-- **Mobile:** `grid-cols-1`; card `aspect-[3/4]`; `px-5`, `pt-16`.
-
-### 7. Arquivos relacionados
-`src/app/servicos/[slug]/page.tsx`, `src/lib/media.ts`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`.
+- **Página enxuta:** sem CTA final de conversão; sem showcase de portfolio (NARA); conversão global via `FloatingCTA` do layout.
+- **Template único:** qualquer alteração em `page.tsx` afecta os 24 slugs.
+- **Hero actualizada:** headline centrada, subtítulo fluido, botão vidro “← Ver todos os serviços”.
+- **Sec. Como funciona:** 5 slots CF prontos para mídia; placeholders de cor até produção dos assets.
+- **Footer global:** renderizado em `src/app/layout.tsx`, fora do `page.tsx` do serviço.
+- **Documentação alinhada** com o código em `src/app/servicos/[slug]/page.tsx`, `src/data/media-spec.ts` e `docs/PLANO_MESTRE_DE_MIDIA.md` § 4.2-C.
 
 ---
 
-# Seção 04 — Casos de uso (Para quem é)
-
-> Condicional: só renderiza se `servico.casosDeUso.length > 0`.
-
-### 1. Objetivo
-Indicar os perfis/segmentos para quem o serviço é indicado (tags).
-
-### 2. Copy / Textos
-
-| Campo | `<h2>` | Tag (caso de uso) |
-|---|---|---|
-| Conteúdo | `Para quem é` (estrutural) | `servico.casosDeUso[]` (dados) |
-| Elemento HTML | `h2` | `span` |
-| Classe | `.type-label` | `.tag-pill` |
-| Família | DM Sans | DM Sans |
-| Tamanho | 14px | `clamp(13px,0.9vw,15px)` |
-| Peso | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `#000` (definido em `.tag-pill`) |
-| `letter-spacing` | 0.1em | normal (`.tag-pill` reseta) |
-| `text-transform` | uppercase | none (`.tag-pill` reseta) |
-
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 4. Botões / CTAs
-Tags pill (não-clicáveis): `.tag-pill` → fundo `rgb(255 255 255 / 0.8)`, texto `#000`, `border-radius 0.5vw`, `padding 0.4vw 1vw`, `backdrop-filter blur(8px)`. Sem hover definido.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Cada tag | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger `delay = i*0.08` |
-
-### 6. Responsividade
-- **Desktop:** `flex-wrap gap-3`, `px-[5vw]`, `pt-[8vw]`.
-- **Mobile:** `flex-wrap`, `px-5`, `pt-16`.
-
-### 7. Arquivos relacionados
-`src/app/servicos/[slug]/page.tsx`, `src/data/servicos.ts`, classe `.tag-pill` em `src/styles/globals.css`.
-
----
-
-# Seção 05 — Em prática (NARA)
-
-> Condicional: só renderiza se o case NARA existir (`getCaseBySlug("nara")`).
-
-### 1. Objetivo
-Mostrar prova real de entrega (case NARA) ligada ao serviço.
-
-### 2. Copy / Textos
-
-| Campo | `<h2>` | Card NARA |
-|---|---|---|
-| Conteúdo | `Em prática` (estrutural) | nome/local/indústria/serviços/tags do NARA (via `PortfolioCard`) |
-| Elemento HTML | `h2` | (ver PARTE 05/Home — `PortfolioCard`) |
-| Classe | `.type-label` | — |
-| Família | DM Sans | — |
-| Tamanho | 14px | — |
-| Peso | 400 | — |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | conforme `PortfolioCard` |
-| `text-transform` | uppercase | — |
-
-> Na Home, o showcase NARA usa `HomePortfolioRow` (sem tags). Em `/servicos/[slug]`, o conteúdo do card (h3 `.type-h3`, metadados `.type-body`, tags `.tag-pill`) é renderizado por `PortfolioCard`.
-
-### 3. Imagens / mídia
-`PF-01` (card NARA 3:4). Cruzado com PLANO Tabela 4.5.
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| PF-01 | Card showcase NARA | 3:4 | 1200×1600 | `public/images/PF-01.webp` | **Produzido** |
-
-> Cor de fallback = `nara.corPlaceholder` = `#134E4A` (`COR_PORTFOLIO`).
-
-### 4. Botões / CTAs
-Card NARA é um `Link` para `/portfolio/nara` (hover `opacity-90` + zoom da mídia).
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Rótulo + card | Framer Motion (`RevealOnScroll`, embutido no `PortfolioCard`) | on-scroll | `2.1s` |
-
-### 6. Responsividade
-- **Desktop:** grid `md:grid-cols-2`, `px-[5vw]`, `pt-[8vw]`.
-- **Mobile:** `grid-cols-1`, `px-5`, `pt-16`.
-
-### 7. Arquivos relacionados
-`src/app/servicos/[slug]/page.tsx`, `src/components/ui/PortfolioCard.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`.
-
----
-
-# Seção 06 — CTA final
-
-### 1. Objetivo
-Conversão (faixa preta `.section-cta`, centrada).
-
-### 2. Copy / Textos
-
-| Campo | `<h2>` | `<p>` |
-|---|---|---|
-| Conteúdo | `Quer este serviço no seu negócio?` (estrutural) | `Agende uma reunião gratuita e sem compromisso.` (estrutural) |
-| Elemento HTML | `h2` | `p` |
-| Classe | `.type-h3` | `.type-body` |
-| Família | Host Grotesk | DM Sans |
-| Tamanho | 36px | 18px |
-| Peso | 400 | 400 |
-| Cor da fonte | `#ffffff` (em `.section-cta`, regra `:where(.type-h3) → var(--gmt-text)` = `#ffffff`) | `#94a3b8` (`text-gmt-muted` redefinido na `.section-cta`) |
-| `text-transform` | none | none |
-
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 4. Botões / CTAs
-"Agendar reunião" — classe `.btn-submit` (link para `/contacto`).
-- Fundo `rgb(255 255 255 / 0.7)` · Texto `#000` · `border-radius 9999px` · `padding 0.75rem 2rem` · DM Sans 18px peso 500.
-- Hover: `bg rgb(255 255 255 / 0.85)` + `scale(1.02)`.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| h2, p e botão | Framer Motion (`RevealOnScroll`) | on-scroll | stagger (`delay 0.08`/`0.16`) |
-
-### 6. Responsividade
-- **Todos:** centrado, h2 `max-w-2xl`.
-- **Desktop:** `mt-[8vw] px-[5vw] py-[8vw]`. **Mobile:** `mt-20 px-5 py-20`.
-
-### 7. Arquivos relacionados
-`src/app/servicos/[slug]/page.tsx`, classes `.btn-submit` e `.section-cta` em `src/styles/globals.css`.
-
----
-
-## Apêndice — tokens e cores usados no Detalhe de Serviço (de `globals.css`)
+## Apêndice — tokens e cores (de `globals.css`)
 
 | Token / Contexto | Valor | Onde aparece |
 |---|---|---|
-| Hero (overlay) | gradiente `from-black via-black/40 to-transparent`; textos `#ffffff` / `text-white/70` | Seção 00 |
-| `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper Seções 01–05 |
-| `--gmt-text` | `#0a0a0a` | problema (h3), funcionalidades, títulos de passo, benefícios |
-| `--gmt-text-muted` | `#575757` | rótulos de seção, solução, resumos |
-| `--gmt-accent` | `#2563eb` | ícone `Check` (benefícios), número do passo |
-| `--gmt-bg-alt` | `#f5f5f5` | cartões de benefício (`bg-gmt-bg-alt`) |
-| `--gmt-border` | `#dcdcdc` | bordas de cartões/listas |
-| `.tag-pill` | fundo `rgb(255 255 255 / 0.8)`, texto `#000` | Seção 04 (casos de uso) |
-| Cores de família (fallback hero/processo) | F1 `#92400E` · F2 `#1E3A5F` · F3 `#3B0764` · F4 `#0F172A` · MKT/AV `#1A3A2A` | Seções 00 e 03 |
-| `COR_PORTFOLIO` | `#134E4A` | card NARA (Seção 05) |
-| `.section-cta` | bg `#000000`, text `#ffffff`, muted `#94a3b8` | Seção 06 |
+| Hero overlay | gradiente `from-black via-black/40 to-transparent`; h1 `#ffffff`; headline `text-white/80` | Sec. Hero |
+| Botão hero | `bg-white/75`, `backdrop-blur-md`, `text-gmt-text` | Sec. Hero |
+| `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper Sec. 01–04 |
+| `--gmt-text` | `#0a0a0a` | problema (h3), funcionalidades, benefícios |
+| `--gmt-text-muted` | `#575757` | rótulos de secção, solução |
+| `--gmt-accent` | `#2563eb` | ícone `Check` (benefícios) |
+| `--gmt-bg-alt` | `#f5f5f5` | cartões de benefício |
+| `--gmt-border` | `#dcdcdc` | bordas de cartões/listas/slots CF |
+| `.tag-pill` | fundo `rgb(255 255 255 / 0.8)`, texto `#000` | Sec. Para quem é |
+| Cores fallback CF-01…05 | ver tabela Sec. D | slots Como funciona |
+| Cores fallback hero | `servico.corPlaceholder` por serviço | Sec. Hero |
 
-> `src/styles/tokens.css` existe mas define tokens legados (`--color-*`, `--font-geist-*`) **não usados** por esta página — a fonte de verdade é `globals.css`.
-
-*Documento gerado a partir do código do repositório e das fontes de verdade indicadas. Nenhuma informação foi inventada.*
+*Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*

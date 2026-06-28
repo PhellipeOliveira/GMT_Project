@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Target } from "lucide-react";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
@@ -27,22 +28,23 @@ export default function SobrePage() {
       <div className="section-light">
         <section className="flex flex-col gap-12 px-5 pt-28 md:flex-row md:items-start md:justify-between md:gap-[5vw] md:px-[5vw] md:pt-[11vw]">
           <div className="md:max-w-[55%]">
-            <RevealOnScroll as="p" className="type-label text-gmt-muted">
-              Sobre a GMT
-            </RevealOnScroll>
-            <RevealOnScroll as="h1" className="type-h2 mt-6 max-w-3xl">
-              Agência especialista em automações, inteligência artificial e
-              marketing digital, dedicada a ajudar pequenas empresas a crescer e a
-              destacar-se no mundo digital.
-            </RevealOnScroll>
-            <RevealOnScroll
-              as="p"
-              className="type-body-lg mt-8 max-w-lg text-gmt-muted"
-              delay={0.08}
-            >
-              Objetivo claro: gerar resultados reais. Cada negócio, por mais
-              pequeno que seja, merece uma presença digital profissional e eficaz.
-            </RevealOnScroll>
+            <RevealSequence>
+              <RevealOnScroll as="p" className="type-label text-gmt-muted">
+                Sobre a GMT
+              </RevealOnScroll>
+              <RevealOnScroll as="h1" className="type-h2 mt-6 max-w-3xl">
+                Agência especialista em automações, inteligência artificial e
+                marketing digital, dedicada a ajudar pequenas empresas a crescer e a
+                destacar-se no mundo digital.
+              </RevealOnScroll>
+              <RevealOnScroll
+                as="p"
+                className="type-body-lg mt-8 max-w-lg text-gmt-muted"
+              >
+                Objetivo claro: gerar resultados reais. Cada negócio, por mais
+                pequeno que seja, merece uma presença digital profissional e eficaz.
+              </RevealOnScroll>
+            </RevealSequence>
           </div>
 
           <AboutCounterGrid />

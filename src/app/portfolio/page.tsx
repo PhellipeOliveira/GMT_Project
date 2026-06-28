@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { portfolio } from "@/data/portfolio";
 
 export const metadata: Metadata = {
@@ -18,18 +19,20 @@ export default function PortfolioPage() {
       <section className="px-5 pt-28 md:px-[5vw] md:pt-[11vw]">
         <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
           <div className="md:w-1/2">
-            <RevealOnScroll as="p" className="type-label text-gmt-muted">
-              Trabalho recente
-            </RevealOnScroll>
-            <RevealOnScroll as="h1" className="type-h2 mt-4">
-              Portfolio
-            </RevealOnScroll>
-            <RevealOnScroll as="p" className="type-body-lg mt-6 max-w-xl text-gmt-muted" delay={0.08}>
-              Criámos integralmente o NARA — uma plataforma tecnológica que
-              atende profissionais em vários países. Do branding e website a
-              chatbots inteligentes e campanhas publicitárias, todo o ecossistema
-              digital foi desenvolvido pela agência.
-            </RevealOnScroll>
+            <RevealSequence>
+              <RevealOnScroll as="p" className="type-label text-gmt-muted">
+                Trabalho recente
+              </RevealOnScroll>
+              <RevealOnScroll as="h1" className="type-h2 mt-4">
+                Portfolio
+              </RevealOnScroll>
+              <RevealOnScroll as="p" className="type-body-lg mt-6 max-w-xl text-gmt-muted">
+                Criámos integralmente o NARA — uma plataforma tecnológica que
+                atende profissionais em vários países. Do branding e website a
+                chatbots inteligentes e campanhas publicitárias, todo o ecossistema
+                digital foi desenvolvido pela agência.
+              </RevealOnScroll>
+            </RevealSequence>
           </div>
 
           <div className="grid grid-cols-2 gap-3 md:w-1/2 md:grid-cols-4">
@@ -136,17 +139,19 @@ export default function PortfolioPage() {
       </section>
 
       <section className="section-cta mt-20 px-5 py-20 text-center md:mt-[8vw] md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
-          Quer ser o nosso próximo case?
-        </RevealOnScroll>
-        <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted" delay={0.08}>
-          Agende uma reunião gratuita e sem compromisso.
-        </RevealOnScroll>
-        <RevealOnScroll variant="media" delay={0.16}>
-          <Link href="/contacto" className="btn-submit mt-8">
-            Agendar reunião
-          </Link>
-        </RevealOnScroll>
+        <RevealSequence>
+          <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
+            Quer ser o nosso próximo case?
+          </RevealOnScroll>
+          <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted">
+            Agende uma reunião gratuita e sem compromisso.
+          </RevealOnScroll>
+          <RevealOnScroll variant="media">
+            <Link href="/contacto" className="btn-submit mt-8">
+              Agendar reunião
+            </Link>
+          </RevealOnScroll>
+        </RevealSequence>
       </section>
     </>
   );

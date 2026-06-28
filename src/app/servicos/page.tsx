@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { Accordion, type AccordionItem } from "@/components/ui/Accordion";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { agentes, pacotes, avulsos, type Servico } from "@/data/servicos";
 import { SERVICOS_HERO_THUMBS } from "@/lib/media";
 
@@ -49,22 +49,24 @@ export default function ServicosPage() {
     <>
       <div className="section-light">
         <section className="flex flex-col px-5 pt-28 md:px-[5vw] md:pt-[11vw]">
-          <div className="flex flex-col gap-6 md:flex-row md:gap-[5vw]">
-            <div className="md:w-1/3">
-              <RevealOnScroll as="p" className="type-label text-gmt-muted">
-                Os nossos serviços
-              </RevealOnScroll>
-              <RevealOnScroll as="h1" className="type-h2 mt-4">
-                Serviços
-              </RevealOnScroll>
+          <RevealSequence>
+            <div className="flex flex-col gap-6 md:flex-row md:gap-[5vw]">
+              <div className="md:w-1/3">
+                <RevealOnScroll as="p" className="type-label text-gmt-muted">
+                  Os nossos serviços
+                </RevealOnScroll>
+                <RevealOnScroll as="h1" className="type-h2 mt-4">
+                  Serviços
+                </RevealOnScroll>
+              </div>
+              <div className="md:w-2/3">
+                <RevealOnScroll as="p" className="type-h3 max-w-3xl">
+                  Agência especialista em automações, inteligência artificial e
+                  marketing digital para pequenas empresas — tudo num só parceiro.
+                </RevealOnScroll>
+              </div>
             </div>
-            <div className="md:w-2/3">
-              <RevealOnScroll as="p" className="type-h3 max-w-3xl">
-                Agência especialista em automações, inteligência artificial e
-                marketing digital para pequenas empresas — tudo num só parceiro.
-              </RevealOnScroll>
-            </div>
-          </div>
+          </RevealSequence>
 
           <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3 md:mt-[5vw]">
             {SERVICOS_HERO_THUMBS.map((id, i) => (
@@ -101,20 +103,6 @@ export default function ServicosPage() {
           </section>
         ))}
       </div>
-
-      <section className="section-cta mt-20 px-5 py-20 text-center md:mt-[8vw] md:px-[5vw] md:py-[8vw]">
-        <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
-          Não sabe por onde começar?
-        </RevealOnScroll>
-        <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted" delay={0.08}>
-          Agende uma reunião gratuita e desenhamos o plano certo para si.
-        </RevealOnScroll>
-        <RevealOnScroll variant="media" delay={0.16}>
-          <Link href="/contacto" className="btn-submit mt-8">
-            Agendar reunião
-          </Link>
-        </RevealOnScroll>
-      </section>
     </>
   );
 }
