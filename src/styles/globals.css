@@ -69,6 +69,7 @@
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
+  --font-weight-brand: 700;
 }
 
 html {
@@ -144,15 +145,32 @@ body {
 .type-hero-brand {
   font-family: var(--font-display);
   font-size: var(--type-hero-brand);
-  font-weight: 500;
+  font-weight: var(--font-weight-brand);
   line-height: 1;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--gmt-text);
+  display: inline-block;
+  transform: scaleX(1.04);
+  transform-origin: center;
 }
 
-/* Logo GMT — mesma família/peso/tracking do hero, escala UI (navbar/footer) */
+/* Logo GMT — navbar / header (marca premium, escala UI) */
+.type-brand-logo {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2.8vw, 1.75rem);
+  font-weight: var(--font-weight-brand);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: inline-block;
+  transform: scaleX(1.03);
+  transform-origin: left center;
+  transition: color var(--color-transition) var(--ease);
+}
+
+/* Logo GMT — footer e usos legados (inalterado) */
 .type-logo-gmt {
   font-family: var(--font-display);
   font-size: clamp(1.125rem, 2.8vw, 1.75rem);
