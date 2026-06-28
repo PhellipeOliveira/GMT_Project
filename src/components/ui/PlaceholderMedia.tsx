@@ -77,7 +77,7 @@ export function PlaceholderMedia({
         src={getMediaSrc(id)}
         alt={`${id}: ${descricao}`}
         fill
-        className={`${objectFit === "cover" ? "object-cover" : "object-contain"} transition-transform duration-[400ms]`}
+        className={`${objectFit === "cover" ? "object-cover object-center" : "object-contain"} transition-transform duration-[400ms]${fill ? " min-h-full min-w-full" : ""}`}
         style={{ transitionTimingFunction: "var(--ease)" }}
         sizes={sizes}
         priority={priority}

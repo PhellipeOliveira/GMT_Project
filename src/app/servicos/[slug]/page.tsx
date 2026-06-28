@@ -9,11 +9,11 @@ import { getServicoHeroId } from "@/lib/media";
 
 /** Slots de mídia da Sec3 — Como funciona (ver `docs/PLANO_MESTRE_DE_MIDIA.md` § CF-01…05). */
 const COMO_FUNCIONA_SLOTS = [
-  { id: "CF-01", descricao: "card mídia posição 1", cor: "#1E293B" },
-  { id: "CF-02", descricao: "card mídia posição 2", cor: "#134E4A" },
-  { id: "CF-03", descricao: "card mídia posição 3", cor: "#1A3A5F" },
-  { id: "CF-04", descricao: "card mídia posição 4", cor: "#3B0764" },
-  { id: "CF-05", descricao: "card mídia posição 5", cor: "#0F172A" },
+  { id: "CF-01", titulo: "Reunião inicial", descricao: "card mídia posição 1", cor: "#1E293B" },
+  { id: "CF-02", titulo: "Proposta personalizada", descricao: "card mídia posição 2", cor: "#134E4A" },
+  { id: "CF-03", titulo: "Planeamento estratégico", descricao: "card mídia posição 3", cor: "#1A3A5F" },
+  { id: "CF-04", titulo: "Execução & implementação", descricao: "card mídia posição 4", cor: "#3B0764" },
+  { id: "CF-05", titulo: "Acompanhamento & otimização", descricao: "card mídia posição 5", cor: "#0F172A" },
 ] as const;
 
 export function generateStaticParams() {
@@ -48,37 +48,46 @@ export default async function ServicoItemPage({
   return (
     <>
       {/* ===== Sec 0 — Hero do serviço (full-bleed 70–80vh) ===== */}
-      <section className="relative h-[80vh] w-full overflow-hidden md:h-[70vh]">
+      <section
+        className="not-prose relative h-[80vh] w-full overflow-hidden md:h-[70vh]"
+        style={{ backgroundColor: servico.corPlaceholder }}
+      >
         <PlaceholderMedia
           id={heroId}
-          descricao={`${servico.nome} · hero 3:1`}
+          descricao={`${servico.nome} · hero`}
           cor={servico.corPlaceholder}
           fill
           priority
           sizes="100vw"
           reveal={false}
+          className="size-full [&_img]:min-h-full [&_img]:min-w-full [&_img]:scale-[1.02] [&_img]:object-cover [&_img]:object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent">
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10">
           <div className="flex h-full flex-col items-center justify-center px-5 text-center text-white md:px-[5vw]">
-            <RevealOnScroll as="h1" className="type-hero type-hero--fullscreen mx-auto max-w-4xl !text-white">
-              {servico.nome}
-            </RevealOnScroll>
-            {servico.headline && (
+            <div className="flex flex-col items-center gap-2">
               <RevealOnScroll
-                as="p"
-                className="mx-auto mt-4 max-w-2xl text-[clamp(1.125rem,2.5vw,1.75rem)] leading-snug text-white/80"
-                delay={0.08}
+                as="h1"
+                className="type-hero type-hero--fullscreen mx-auto max-w-4xl !text-white !leading-[1.05] [&>div]:!leading-[1.05]"
               >
-                {servico.headline}
+                {servico.nome}
               </RevealOnScroll>
-            )}
+              {servico.headline && (
+                <RevealOnScroll
+                  as="p"
+                  className="mx-auto max-w-2xl text-[clamp(1.125rem,2.5vw,1.75rem)] leading-snug text-white"
+                  delay={0.08}
+                >
+                  {servico.headline}
+                </RevealOnScroll>
+              )}
+            </div>
           </div>
 
           <div className="absolute bottom-0 left-0 px-5 pb-12 md:px-[5vw] md:pb-[5vw]">
             <RevealOnScroll variant="media">
               <Link
                 href="/servicos"
-                className="type-label inline-flex items-center gap-2 rounded-lg bg-white/75 px-5 py-3 text-gmt-text backdrop-blur-md transition-colors hover:bg-white/90"
+                className="type-label inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md transition-colors hover:bg-white/30"
               >
                 ← Ver todos os serviços
               </Link>
@@ -185,6 +194,11 @@ export default async function ServicoItemPage({
                     sizes="(max-width: 1024px) 50vw, 20vw"
                     reveal={false}
                   />
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-4">
+                    <span className="rounded-lg bg-white/75 px-4 py-2.5 text-center text-gmt-text backdrop-blur-md type-body-lg">
+                      {slot.titulo}
+                    </span>
+                  </div>
                 </div>
               </RevealOnScroll>
             ))}

@@ -21,7 +21,7 @@ Premissas:
 | About | Slideshow expansivo (5 frames) | Background | Imagem | 2:1 (ABT-01…05) | Institucional - Ecossistema / marca | Sequencia visual no `ExpandingFrame`; fundo branco→preto no scroll | Video loop opcional futuro |
 | Services Geral | Hero thumbnails (3) | Thumbnail | Imagem | 3:2 | Institucional - Areas de especializacao | Credenciais visuais por area (estrategia, visual, tech) | - |
 | Services Geral | Accordion categorias | N/A (texto) | N/A | N/A | Produto - blocos de agentes e servicos avulsos | Sem criativo dedicado; foco tipografico | - |
-| Services Item | Hero do servico | Background | OPCIONAL (Imagem/Video) | 16:9 (cover) | Produto - headline do servico/agente | Criativo representando problema e solucao do servico | Video: 5-10s loop |
+| Services Item | Hero do servico | Background | Imagem | **3:1** (export 2560×860; cover em container 70–80vh) | Produto - headline do servico/agente | Criativo representando problema e solucao do servico | — |
 | Services Item | Process cards (01-06) | Card | Imagem (opcional por card) | 3:4 | Institucional - Como funciona | Cada card representa uma etapa metodologica | - |
 | Services Item | Portfolio mini (2 cases) | Card/Thumbnail | Imagem | Portrait (9:16 aproximado no mapeamento) | Institucional - NARA | Cases relacionados ao servico exibido | - |
 | Services Item | Latest news cards | Card/Thumbnail | Imagem | Thumbnail vertical estreito no layout de referencia | Sem artigos definidos na copy publica | Placeholder editorial ate definicao de pauta | - |

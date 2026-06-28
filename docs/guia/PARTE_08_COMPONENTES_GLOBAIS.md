@@ -6,7 +6,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
 >
-> **Extração:** 28 Jun 2026.
+> **Extração:** 28 Jun 2026 · **Actualização Lantern:** global acima do Footer; container −20% altura (`py-[2.4rem] md:py-16`).
 
 ---
 
@@ -18,10 +18,12 @@ Em `src/app/layout.tsx`, dentro de `<body className="flex min-h-full flex-col bg
 <SmoothScroll />        → inicializa Lenis (sem UI)
 <Navbar />              → cabeçalho fixo
 <main class="prose prose-gmt max-w-none flex-1">{children}</main>
-<Footer />              → rodapé com grid de links
-<HomeLanternSection />  → Lanterna GMT (só na Home, após o Footer)
+<GMTLightFooter />      → Lanterna GMT (global — transição visual)
+<Footer />              → rodapé com grid de links (Footer Navigation)
 <FloatingCTA />         → botão flutuante "Agendar reunião"
 ```
+
+> **Ordem visual:** conteúdo da página → **GMT Lantern** (faixa slim preta) → **Footer Navigation** (links + copyright). A lanterna cria respiração entre o `<main>` e a navegação do rodapé.
 
 Fontes globais (`layout.tsx`): **DM Sans** (`--font-dmsans`, pesos 400/500) e **Host Grotesk** (`--font-hostgrotesk`, pesos 300/400/500/600/700/800), aplicadas via `--font-sans`/`--font-display`. Favicon/apple-icon = `/images/GL-02.webp`.
 
@@ -180,26 +182,29 @@ Sem reveal on-scroll neste componente.
 
 ---
 
-# Componente: HomeLanternSection (`src/components/home/HomeLanternSection.tsx`)
+# Componente: GMTLightFooter — GMT Lantern (`src/components/ui/GMTLightFooter.tsx`)
 
 ### 1. Objetivo
-Wrapper client-side que renderiza a Lanterna GMT **apenas na Home** (`pathname === "/"`), posicionada no layout global **após** o `Footer`.
+Faixa decorativa de branding **global**: "GMT" gigante revelado por foco de luz que segue o cursor. Posicionada **acima** do Footer Navigation em **todas** as páginas. Sem links nem CTAs — apenas transição visual entre o conteúdo e a navegação do rodapé.
 
 ### 2. Montagem
-- Importado em `src/app/layout.tsx`, imediatamente após `<Footer />`.
-- Delega para `GMTLightFooter`.
+| Campo | Detalhe |
+|---|---|
+| Componente | `GMTLightFooter` (`src/components/ui/GMTLightFooter.tsx`) |
+| Onde renderiza | `src/app/layout.tsx` — **antes** de `<Footer />` |
+| Escopo | **Global** (todas as rotas com Footer Navigation) |
+| Papel | Transição visual / branding — independente do `<main>` |
 
-### 7. Arquivos relacionados
-`src/app/layout.tsx`, `src/components/home/HomeLanternSection.tsx`, `src/components/ui/GMTLightFooter.tsx`.
+### 3. Layout e espaçamento
+| Propriedade | Valor no código | Notas |
+|---|---|---|
+| Padding vertical | `py-[2.4rem]` mobile · `md:py-16` desktop | **−20%** vs. anterior (`py-[2.4rem]` / `md:py-16`) — faixa mais slim |
+| Fundo | `bg-black` (`#000000`) | Contínuo com Footer Navigation |
+| Overflow | `overflow-hidden` | Texto gigante cortado nas bordas |
+| Alinhamento texto | `flex items-center justify-center` | Base e reveal partilham o mesmo contentor centrado |
+| Respiração | Entre `<main>` e `<Footer />` | Separa conteúdo da grelha de links |
 
----
-
-# Componente: GMTLightFooter (`src/components/ui/GMTLightFooter.tsx`)
-
-### 1. Objetivo
-Secção decorativa de branding na Home: "GMT" gigante revelado por um foco de luz que segue o cursor. **Última secção visual da Home**, após o Footer Navigation. Sem links nem CTAs.
-
-### 2. Copy / Textos
+### 4. Copy / tipografia
 
 | Campo | Texto (2 camadas sobrepostas, `aria-hidden`) |
 |---|---|
@@ -207,35 +212,58 @@ Secção decorativa de branding na Home: "GMT" gigante revelado por um foco de l
 | Elemento HTML | `p` |
 | Classe | `.gmt-brand` + `.gmt-brand--footer` |
 | Família | Host Grotesk (`--font-display`) |
-| Tamanho | `clamp(8rem, 33vw, 36rem)` |
+| Tamanho | `clamp(8rem, 33vw, 36rem)` — **inalterado** (legibilidade preservada) |
 | Peso | **800** (`--font-weight-brand`) |
-| Cor da fonte | camada base `#111111`; camada reveal `#d4d4d4` |
-| `letter-spacing` | **0.02em** |
-| `text-transform` | uppercase |
-| `transform` | `scaleX(1.03)`, `transform-origin: center` |
+| `line-height` | **0.85** (`.gmt-brand--footer`) |
+| Cor | base `#111111` · reveal `#d4d4d4` |
+| `letter-spacing` | **0.02em** · uppercase · `scaleX(1.03)` |
 
-> `line-height: 0.85` (variante `--footer`). Fundo da secção `#000000` (`bg-black`).
+> **Hierarquia:** elemento **decorativo de marca** — não é título de secção, card nem thumbnail. Sem relação com `.type-hero` ou `.section-label`.
 
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
+### 5. Imagens / mídia
+Nenhuma asset de ficheiro. Efeito puro CSS/JS (ID conceptual **GL-06** no Plano Mestre).
 
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
+### 6. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Foco de luz (reveal do texto) | CSS `mask-image` (radial) + JS `requestAnimationFrame` | on-hover (movimento do cursor) | `radial-gradient circle 20vw` em `var(--mx)/var(--my)`; atualização sem re-render React |
-| Opacidade do reveal | CSS transition | on-enter / on-leave | `0.5s ease` |
+| Foco de luz (reveal) | CSS `mask-image` radial + JS `rAF` | hover + movimento cursor | `circle 20vw` em `var(--mx)/var(--my)` (% do contentor) |
+| Opacidade reveal | CSS transition | mouseenter / mouseleave | `0.5s ease`; ao sair, máscara repõe-se a `50%/50%` |
+| Simetria | JS `resetMaskCenter()` | mouseleave | evita deslocamento lateral entre estados |
 
-Touch (`hover: none, pointer: coarse`): iluminação estática centrada (`opacity 0.55`). **Não** usa Framer Motion.
+Touch (`hover: none`): iluminação estática centrada (`opacity 0.55`). **Não** usa Framer Motion.
 
-### 6. Responsividade
-- **Desktop:** cursor-follow ativo; `md:py-20`.
-- **Mobile/touch:** fallback estático centrado; `py-12`. Texto fluido por `clamp()`/`vw`.
+### 7. Responsividade
+- **Desktop:** cursor-follow; padding `md:py-16` (64px total vertical ≈ 128px com texto).
+- **Mobile/touch:** fallback estático; padding `py-[2.4rem]` (38.4px × 2).
 
-### 7. Arquivos relacionados
-`src/components/home/HomeLanternSection.tsx`, `src/components/ui/GMTLightFooter.tsx`, `src/app/layout.tsx`.
+### 8. Arquivos relacionados
+`src/components/ui/GMTLightFooter.tsx`, `src/app/layout.tsx`, classes `.gmt-brand`/`.gmt-brand--footer` em `src/styles/globals.css`.
+
+---
+
+## Apêndice — tipos de mídia e hierarquia (referência rápida)
+
+Fonte canónica: `src/data/media-spec.ts` + `PlaceholderMedia`. Usar esta tabela ao produzir assets ou documentar secções.
+
+| Tipo | `container` na spec | Comportamento no código | Exemplos de ID |
+|---|---|---|---|
+| **Thumbnail** | `aspect` · ratio **3:2** · 1200×800 | Card/listagem com ratio fixo; `object-fit: cover` | `AG-01…15`, `MKT-01…03`, `AV-01…06` |
+| **Card overlay** | `aspect` · ratio **7:5** · 1400×1000 | Home `ServiceOverlayCard`; texto no overlay | `SERV-AV-01…06` |
+| **Frame / hero full-bleed** | `full-bleed` · ratio **3:1** · 2560×860 | `fill` no pai; altura `70–80vh`; cover | `AGH-F1…4` (`public/images/`), `MKT-04` |
+| **Frame expansivo** | `aspect` variável (slideshow) | `ExpandingFrame`; slides com `fill` + cover | `HER-02…05`, `ABT-01…05` |
+| **Card vertical (processo)** | `aspect` · **2:3** · 1200×1800 | Grid com `aspect-[3/4] md:aspect-[2/3]` | `CF-01…05` |
+| **Portfolio / case** | `aspect` · 3:4 ou 9:16 | Cards ou galeria com ratio da spec | `PF-01`, `PF-02` |
+| **Textura de secção** | `full-bleed` · 16:9 | Fundo decorativo com opacidade reduzida | `GL-03` (Footer) |
+| **Vídeo (futuro)** | `folder: "videos"` | Mesmas regras de ratio; ficheiro `.webp` por agora | `HER-01`, `MKT-04` |
+
+### Espaçamentos tipográficos frequentes (não-tokens — valores do código)
+
+| Relação | Padrão típico | Onde |
+|---|---|---|
+| Label → conteúdo | `mt-10` (40px) | Secções Home com `SectionLabel` |
+| Título hero → subtítulo | `gap-2` (8px) | Hero serviço; Home `HeroTitle` usa `gap-6` |
+| Rótulo secção → grid | `mt-10` / `mt-12` | Home sec. 2–5 |
+| Lantern → Footer nav | 0 (contacto directo) | `GMTLightFooter` imediatamente acima de `<Footer />` |
 
 ---
 

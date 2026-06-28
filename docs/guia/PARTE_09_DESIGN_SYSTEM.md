@@ -116,7 +116,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 | Efeito | Valor | Onde |
 |---|---|---|
-| Overlay hero serviço | `bg-gradient-to-t from-black via-black/40 to-transparent` | `/servicos/[slug]` Sec0 |
+| Overlay hero serviço | `bg-gradient-to-t from-black via-black/40 to-black/10`; secção com `corPlaceholder` de fallback | `/servicos/[slug]` Sec0 |
 | Manifesto Sobre (Sec. 03) | `bg-black` + `text-white` |
 | Gradiente hero slider (órfão) | `from-gmt-bg/80 to-transparent` | `HeroSlider` |
 | Glass navbar (logo) | `bg-black/55 backdrop-blur-md` | `Navbar` |
@@ -139,7 +139,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | `.btn-nav--on-light` | `color-mix(#000 8%)` | `--gmt-text-on-light` | igual | igual | igual | bg `#000 14%` |
 | `.tag-pill` | `rgb(255 255 255 / 0.8)` | `#000` | `0.5vw` | `0.4vw 1vw` | DM Sans `clamp(13px,0.9vw,15px)` / 400 | — (sem hover) |
 | "Ver todos os serviços" (Home, inline) | `#000000` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | `bg-black/80` |
-| "← Ver todos os serviços" (detalhe serviço, hero) | `rgb(255 255 255 / 0.75)` | `#0a0a0a` (`text-gmt-text`) | `0.5rem` (`rounded-lg`) | `px-5 py-3` | `.type-label` 14px / 400 | `bg-white/90` |
+| "← Ver todos os serviços" (detalhe serviço, hero) | `rgb(255 255 255 / 0.2)` + borda `white/25` | `#ffffff` | `0.5rem` (`rounded-lg`) | `px-5 py-3` | `.type-label` + `font-medium` 14px / **500** | `bg-white/30` |
 | "Ver Produto →" (Home NARA, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-6 py-3` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
 | "Ver portfólio completo" (Home, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
 | "Falar sobre um projeto" (case, inline) | `--gmt-accent` `#2563eb` | `#ffffff` | `0.5rem` (`rounded-lg`) | `px-6 py-3` | `.type-body`+`.type-medium` 18px / 500 | `--gmt-accent-2` `#7c3aed` |
@@ -159,7 +159,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Hero brand letra-a-letra + blink | Framer Motion (`HeroTitle`) | Home Hero; on-load + on-view | char `0.28s` ease `[0.2,0.65,0.3,0.9]`; blink `0.8s` |
 | Frame expansivo | Framer Motion `useScroll`/`useTransform` | Home transição; on-scroll | scale `35%→100%`/`45vh→100vh` a partir de `SCALE_START≈0.4`; bg `#fff→#000` em janela curta (`0.4→0.52`); radius `16→0`; slideshow 700ms |
 | Service overlay hover | CSS (`group-hover`) | Home "O que fazemos"; on-hover | `blur(4px)` + `saturate(0.35)` na imagem; descrição `opacity 0→1` |
-| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | Home — após Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s` |
+| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | global — acima do Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s`; padding `py-[2.4rem] md:py-16` |
 | FloatingCTA | Framer Motion `AnimatePresence` | global; scroll threshold | `0.35s`, `opacity`+`y 14` |
 | Navbar (tema) | Framer Motion `useScroll` | global; scroll > 60px | transição CSS 300–500ms |
 | Accordion | CSS `grid-template-rows` | `/servicos`; on-click | `0.3s cubic-bezier(0.4,0,0.2,1)`; chevron rotação 180° |
@@ -224,8 +224,8 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 ### 6.5 Inventário de assets presentes em `public/`
 
-- **`public/images/`:** HER-02..HER-05, ABT-01..ABT-05, CON-01, AGP-F1..F4, AG-01..AG-15, MKT-01..MKT-03, AV-01..AV-06, PF-01..PF-12, GL-01..GL-04.
-- **`public/videos/`:** HER-01, AGH-F1..AGH-F4, MKT-04. *(Cópias legadas de ABT-01/02 podem existir em `videos/`; o código aponta para `images/`.)*
+- **`public/images/`:** HER-02..HER-05, ABT-01..ABT-05, CON-01, AGP-F1..F4, AG-01..AG-15, MKT-01..MKT-03, AV-01..AV-06, PF-01..PF-12, GL-01..GL-04, **AGH-F1..AGH-F4**.
+- **`public/videos/`:** HER-01, MKT-04. *(Cópias legadas de ABT-01/02 ou AGH-F* podem existir em `videos/`; o código aponta para `images/`.)*
 - Todos em `.webp` (vídeos ainda como `.webp`; MP4/WebM previstos no futuro pelo PLANO).
 
 > Resumo: as únicas **lacunas reais de produção** actualmente activas no site são os **6 cards overlay `SERV-AV-01..06`** (Home "O que fazemos"). As demais lacunas (`PF-EB*`, `PF-02a/b`, `PF-SLOT-N`) são **intencionais** ("Em breve") por falta de novos cases.

@@ -133,7 +133,7 @@ Usados por classes que redefinem o contexto local:
 
 | Contexto | Tratamento |
 |----------|------------|
-| Hero de serviço (`/servicos/[slug]`) | Imagem + gradiente `from-black`; h1/headline centrados com `text-white` / `text-white/80`; botão voltar `bg-white/75 backdrop-blur-md text-gmt-text` no canto inferior esquerdo |
+| Hero de serviço (`/servicos/[slug]`) | Imagem + gradiente `from-black`; h1/headline centrados com `text-white`; botão voltar `bg-white/20 border-white/25 font-medium text-white backdrop-blur-md` no canto inferior esquerdo |
 | Manifesto Sobre (Sec. 03) | `bg-black` sólido + `text-white` |
 | Secção valores Sobre (Sec. 04) | `.section-cta` — fundo `#000000`, texto branco |
 | Footer | `.section-footer` — sempre escuro |

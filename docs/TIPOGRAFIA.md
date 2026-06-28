@@ -120,7 +120,7 @@ Definidas em `src/styles/globals.css`:
 | `.gmt-brand` | Host Grotesk | — | **800** | base da marca GMT: `ls 0.02em`, `scaleX(1.03)` |
 | `.gmt-brand--hero` | Host Grotesk | clamp brand | 800 | Home Hero |
 | `.gmt-brand--navbar` | Host Grotesk | clamp(18px, 2.8vw, 28px) | 800 | Navbar + Footer logo |
-| `.gmt-brand--footer` | Host Grotesk | clamp(8rem, 33vw, 36rem) | 800 | Lanterna GMT |
+| `.gmt-brand--footer` | Host Grotesk | clamp(8rem, 33vw, 36rem) | 800 | GMT Lantern global (acima do Footer) |
 | `.type-hero-subtitle` | DM Sans | clamp subtitle | 400 | Home — uppercase, tracking 0.05em |
 | `.type-hero--fullscreen` | — | — | — | Line-height viewport-relative |
 | `.type-medium` | — | — | 500 | Modificador de peso |

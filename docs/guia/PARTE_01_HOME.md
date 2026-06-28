@@ -20,7 +20,7 @@
 | Arquivo | `src/app/page.tsx` |
 | Componentes (Home) | `HeroSection` (→ `HeroTitle`), `SectionLabel`, `RevealOnScroll`, `ServiceOverlayCard`, `ExpandingFrame`, `HomePortfolioRow`, ícones `lucide-react` |
 | Dados | `avulsos` (`src/data/servicos.ts`), `getCaseBySlug("nara")` (`src/data/portfolio.ts`); arrays `DIFERENCIAIS` e `SERV_IMAGE_IDS` no próprio arquivo |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `HomeLanternSection` (→ `GMTLightFooter`), `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `layout.tsx`) | `Navbar`, `GMTLightFooter`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
 
 **Ordem das secções (conteúdo + layout global):**
 
@@ -29,12 +29,11 @@
 3. Seção 03 — Por que a GMT
 4. Seção 04 — Transição expansiva (`ExpandingFrame`)
 5. Seção 05 — Trabalhos recentes (fundo preto)
-6. Footer Navigation (`Footer` — global em `layout.tsx`)
-7. Lanterna GMT (`HomeLanternSection` → `GMTLightFooter` — global, só na Home, após o Footer)
+6. GMT Lantern + Footer Navigation *(via `layout.tsx` — ver PARTE 08)*
 
 > **Nota:** o Hero usa `HeroSection`/`HeroTitle` (marca "GMT" animada, fundo preto). O componente `src/components/ui/HeroSlider.tsx` (que usaria `HER-01`) **existe mas está órfão** — não é importado em `page.tsx`.
 >
-> **Nota:** a Lanterna GMT **não** está em `page.tsx`; é renderizada por `HomeLanternSection` em `src/app/layout.tsx`, condicionada a `pathname === "/"`.
+> **GMT Lantern:** renderizada por `GMTLightFooter` em `layout.tsx`, **acima** de `<Footer />`, em **todas** as páginas. Ver `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md`.
 
 ---
 
@@ -311,55 +310,7 @@ As seguintes secções foram **removidas** da Home e não devem ser documentadas
 
 ---
 
-# Lanterna GMT (última secção visual da Home)
-
-### 1. Objetivo
-Efeito decorativo de branding: "GMT" gigante revelado por um foco de luz que segue o cursor. **Não é funcional** (sem links nem CTAs). Última secção visual da Home, posicionada **após** o Footer Navigation.
-
-### 2. Montagem
-| Campo | Detalhe |
-|---|---|
-| Componente | `GMTLightFooter` (`src/components/ui/GMTLightFooter.tsx`) |
-| Wrapper | `HomeLanternSection` (`src/components/home/HomeLanternSection.tsx`) |
-| Onde renderiza | `src/app/layout.tsx` — após `<Footer />`, condicionado a `pathname === "/"` |
-| Papel | Visual / branding — independente do `<main>` |
-
-### 3. Copy / Textos
-Duas camadas de texto `GMT` (`aria-hidden`).
-
-| Campo | Texto (2 camadas sobrepostas) |
-|---|---|
-| Conteúdo | `GMT` |
-| Elemento HTML | `p` |
-| Classe | `.gmt-brand` + `.gmt-brand--footer` |
-| Família | Host Grotesk (`--font-display`) |
-| Tamanho | `clamp(8rem, 33vw, 36rem)` |
-| Peso | **800** (`--font-weight-brand`) |
-| Cor da fonte | camada base `#111111`; camada reveal `#d4d4d4` |
-| `letter-spacing` | **0.02em** |
-| `text-transform` | uppercase |
-| `transform` | `scaleX(1.03)`, `transform-origin: center` |
-
-> Outros: `line-height: 0.85` (variante `--footer`). Fundo da secção `#000000`.
-
-### 4. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Foco de luz (reveal do texto) | CSS `mask-image` (radial) + JS `requestAnimationFrame` | on-hover (movimento do cursor) | `radial-gradient circle 20vw` centrado em `var(--mx)/var(--my)`; atualizado sem re-render React |
-| Opacidade do reveal | CSS transition | on-enter/on-leave | `0.5s ease` |
-
-Touch: iluminação estática centrada (`opacity 0.55`). **Não** usa Framer Motion.
-
-### 6. Responsividade
-- **Desktop:** cursor-follow ativo; `md:py-20`.
-- **Mobile/touch:** fallback estático centrado; `py-12`.
-- Texto fluido por `clamp()`/`vw`.
-
-### 7. Arquivos relacionados
-`src/app/layout.tsx`, `src/components/home/HomeLanternSection.tsx`, `src/components/ui/GMTLightFooter.tsx`.
+> **GMT Lantern:** documentação completa em `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md` § GMTLightFooter. Posição global: **acima** do Footer Navigation; padding `py-[2.4rem] md:py-16`.
 
 ---
 
@@ -386,6 +337,12 @@ Touch: iluminação estática centrada (`opacity 0.55`). **Não** usa Framer Mot
 | `.gmt-brand` (base) | partilhada | peso 800, `ls 0.02em`, `scaleX(1.03)`, `origin center` |
 | `.gmt-brand--hero` | Hero `HeroTitle` | `clamp(96px, 15vw, 224px)` |
 | `.gmt-brand--navbar` | Navbar + Footer logo (`GmtLogo`) | `clamp(18px, 2.8vw, 28px)` |
-| `.gmt-brand--footer` | Lanterna GMT | `clamp(8rem, 33vw, 36rem)` |
+### GMT Lantern (global — acima do Footer Navigation)
+
+| Variante | Onde | Tamanho |
+|---|---|---|
+| `.gmt-brand--footer` | `GMTLightFooter` — todas as páginas | `clamp(8rem, 33vw, 36rem)` |
+
+> Detalhes: `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md`. Padding da faixa: `py-[2.4rem] md:py-16`.
 
 *Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*

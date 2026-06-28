@@ -29,7 +29,7 @@
 | Arquivo | `src/app/page.tsx` |
 | Componentes (Home) | `HeroSection` (→ `HeroTitle`), `SectionLabel`, `RevealOnScroll`, `ServiceOverlayCard`, `ExpandingFrame`, `HomePortfolioRow`, ícones `lucide-react` |
 | Dados | `avulsos` (`src/data/servicos.ts`), `getCaseBySlug("nara")` (`src/data/portfolio.ts`); arrays `DIFERENCIAIS` e `SERV_IMAGE_IDS` no próprio arquivo |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `HomeLanternSection` (→ `GMTLightFooter`), `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `layout.tsx`) | `Navbar`, `GMTLightFooter`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
 
 **Ordem das secções (conteúdo + layout global):**
 
@@ -38,12 +38,11 @@
 3. Seção 03 — Por que a GMT
 4. Seção 04 — Transição expansiva (`ExpandingFrame`)
 5. Seção 05 — Trabalhos recentes (fundo preto)
-6. Footer Navigation (`Footer` — global em `layout.tsx`)
-7. Lanterna GMT (`HomeLanternSection` → `GMTLightFooter` — global, só na Home, após o Footer)
+6. GMT Lantern + Footer Navigation *(via `layout.tsx` — ver PARTE 08)*
 
 > **Nota:** o Hero usa `HeroSection`/`HeroTitle` (marca "GMT" animada, fundo preto). O componente `src/components/ui/HeroSlider.tsx` (que usaria `HER-01`) **existe mas está órfão** — não é importado em `page.tsx`.
 >
-> **Nota:** a Lanterna GMT **não** está em `page.tsx`; é renderizada por `HomeLanternSection` em `src/app/layout.tsx`, condicionada a `pathname === "/"`.
+> **GMT Lantern:** renderizada por `GMTLightFooter` em `layout.tsx`, **acima** de `<Footer />`, em **todas** as páginas. Ver `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md`.
 
 ---
 
@@ -320,55 +319,7 @@ As seguintes secções foram **removidas** da Home e não devem ser documentadas
 
 ---
 
-# Lanterna GMT (última secção visual da Home)
-
-### 1. Objetivo
-Efeito decorativo de branding: "GMT" gigante revelado por um foco de luz que segue o cursor. **Não é funcional** (sem links nem CTAs). Última secção visual da Home, posicionada **após** o Footer Navigation.
-
-### 2. Montagem
-| Campo | Detalhe |
-|---|---|
-| Componente | `GMTLightFooter` (`src/components/ui/GMTLightFooter.tsx`) |
-| Wrapper | `HomeLanternSection` (`src/components/home/HomeLanternSection.tsx`) |
-| Onde renderiza | `src/app/layout.tsx` — após `<Footer />`, condicionado a `pathname === "/"` |
-| Papel | Visual / branding — independente do `<main>` |
-
-### 3. Copy / Textos
-Duas camadas de texto `GMT` (`aria-hidden`).
-
-| Campo | Texto (2 camadas sobrepostas) |
-|---|---|
-| Conteúdo | `GMT` |
-| Elemento HTML | `p` |
-| Classe | `.gmt-brand` + `.gmt-brand--footer` |
-| Família | Host Grotesk (`--font-display`) |
-| Tamanho | `clamp(8rem, 33vw, 36rem)` |
-| Peso | **800** (`--font-weight-brand`) |
-| Cor da fonte | camada base `#111111`; camada reveal `#d4d4d4` |
-| `letter-spacing` | **0.02em** |
-| `text-transform` | uppercase |
-| `transform` | `scaleX(1.03)`, `transform-origin: center` |
-
-> Outros: `line-height: 0.85` (variante `--footer`). Fundo da secção `#000000`.
-
-### 4. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Foco de luz (reveal do texto) | CSS `mask-image` (radial) + JS `requestAnimationFrame` | on-hover (movimento do cursor) | `radial-gradient circle 20vw` centrado em `var(--mx)/var(--my)`; atualizado sem re-render React |
-| Opacidade do reveal | CSS transition | on-enter/on-leave | `0.5s ease` |
-
-Touch: iluminação estática centrada (`opacity 0.55`). **Não** usa Framer Motion.
-
-### 6. Responsividade
-- **Desktop:** cursor-follow ativo; `md:py-20`.
-- **Mobile/touch:** fallback estático centrado; `py-12`.
-- Texto fluido por `clamp()`/`vw`.
-
-### 7. Arquivos relacionados
-`src/app/layout.tsx`, `src/components/home/HomeLanternSection.tsx`, `src/components/ui/GMTLightFooter.tsx`.
+> **GMT Lantern:** documentação completa em `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md` § GMTLightFooter. Posição global: **acima** do Footer Navigation; padding `py-[2.4rem] md:py-16`.
 
 ---
 
@@ -395,249 +346,15 @@ Touch: iluminação estática centrada (`opacity 0.55`). **Não** usa Framer Mot
 | `.gmt-brand` (base) | partilhada | peso 800, `ls 0.02em`, `scaleX(1.03)`, `origin center` |
 | `.gmt-brand--hero` | Hero `HeroTitle` | `clamp(96px, 15vw, 224px)` |
 | `.gmt-brand--navbar` | Navbar + Footer logo (`GmtLogo`) | `clamp(18px, 2.8vw, 28px)` |
-| `.gmt-brand--footer` | Lanterna GMT | `clamp(8rem, 33vw, 36rem)` |
+### GMT Lantern (global — acima do Footer Navigation)
+
+| Variante | Onde | Tamanho |
+|---|---|---|
+| `.gmt-brand--footer` | `GMTLightFooter` — todas as páginas | `clamp(8rem, 33vw, 36rem)` |
+
+> Detalhes: `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md`. Padding da faixa: `py-[2.4rem] md:py-16`.
 
 *Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*
-
----
-## SOBRE (/sobre)
----
-
-# GUIA DE EDIÇÃO — PARTE 02 · SOBRE (`/sobre`)
-
-> Ver também: `docs/guia/PARTE_02_SOBRE.md` (cópia canónica desta secção).
-
-## Estrutura geral da página
-
-| Campo | Detalhe |
-|---|---|
-| Rota | `/sobre` |
-| Arquivo | `src/app/sobre/page.tsx` |
-| Componentes | `RevealOnScroll`, `ExpandingFrame`, `AboutCounterGrid`, `SectionLabel`, `PlaceholderMedia` (dentro de `ExpandingFrame`) |
-| Dados | `ABOUT_SLIDESHOW` em `page.tsx`; contadores em `AboutCounterGrid.tsx`; `DIFERENCIAIS` + `ICONES_DIFERENCIAIS` em `src/data/diferenciais.ts` (partilhado com a Home) |
-| Metadata | `title: "Sobre"`; `description` institucional |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
-
-**Ordem das seções:**
-
-1. Seção 01 — Introdução + Contadores
-2. Seção 02 — Slideshow expansivo no scroll (branco → preto)
-3. Seção 03 — Manifesto (texto isolado, fundo preto)
-4. Seção 04 — Nossos valores (fundo preto)
-
-> **Removido:** Seção CTA final ("Pronto para começar?") — conversão coberta pelo `FloatingCTA` global.
->
-> Apenas a **Seção 01** está dentro de `<div className="section-light">`. As Seções 02–04 ficam fora desse wrapper. A **Seção 04** usa `.section-cta` (último contentor da página, fundo `#000000`).
-
----
-
-## Animações globais (aplicáveis à Sobre)
-
-O sistema de entrada global vive em `src/components/ui/RevealOnScroll.tsx`:
-
-| Constante | Valor | Uso |
-|---|---|---|
-| `REVEAL_DURATION` | `2.1s` | Duração de cada linha ou bloco |
-| `REVEAL_EASE_OUT` | `[0.22, 1, 0.36, 1]` | Easing suavizado |
-| `REVEAL_LINE_GAP` | `0.06s` | Pausa entre o fim de uma linha e o início da seguinte |
-| `REVEAL_TEXT_Y` | `32px` | Deslocamento vertical de textos |
-| `REVEAL_MEDIA_Y` | `24px` | Deslocamento vertical de cards/mídia |
-
-- **Textos** (`children` string): entrada **linha por linha** via `splitTextIntoLines`; cada linha só começa após a anterior terminar (`delay + i * (REVEAL_DURATION + REVEAL_LINE_GAP)`).
-- **Cards e imagens** (`variant="media"`): reveal de bloco único, mais suave (`y 24→0` + `opacity 0→1`).
-- **Hero da Home** (`HeroTitle`): efeito próprio letra-a-letra — **não** usa `RevealOnScroll`.
-- **`prefers-reduced-motion`:** render estático via `useReducedMotion`.
-
----
-
-# Seção 01 — Introdução + Contadores
-
-### 1. Objetivo
-Manifesto institucional (coluna esquerda) + grid de contadores animados (coluna direita).
-
-### 2. Copy / Textos
-
-| Campo | Label | `<h1>` | `<p>` | Contador valor | Contador legenda |
-|---|---|---|---|---|---|
-| Conteúdo | `Sobre a GMT` | `Agência especialista em automações, inteligência artificial e marketing digital, dedicada a ajudar pequenas empresas a crescer e a destacar-se no mundo digital.` | `Objetivo claro: gerar resultados reais. Cada negócio, por mais pequeno que seja, merece uma presença digital profissional e eficaz.` | `24` · `15` · `3` (com sufixo `+`) | `serviços disponíveis` · `agentes de IA prontos para trabalhar` · `pacotes de marketing` |
-| Elemento HTML | `p` | `h1` | `p` | `span` | `span` |
-| Classe | `.type-label` | `.type-h2` | `.type-body-lg` | `font-mono text-5xl md:text-[8vw] lg:text-6xl` | `.type-label` |
-| Família | DM Sans | Host Grotesk | DM Sans | Mono sistema (`--font-mono`) | DM Sans |
-| Tamanho | 14px | `clamp(42px,6vw,72px)` | 21px | 48px → fluido `8vw` → `text-6xl` (60px) em `lg` | 14px |
-| Peso | 400 | 400 | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` | `#575757` (`text-gmt-muted`) |
-
-**Layout dos contadores** (`AboutCounterGrid`):
-
-- Grid `grid-cols-2`.
-- **Card superior** (`wide: true`, `col-span-2`): **24+ serviços disponíveis**.
-- **Dois cards inferiores** lado a lado: **15+ agentes de IA prontos para trabalhar** · **3+ pacotes de marketing**.
-
-> Números derivam da estrutura de serviços: 15 agentes + 3 pacotes + 6 avulsos = 24 serviços totais.
-
-### 3. Imagens / mídia
-Nenhuma nesta seção. Contadores = tipografia + animação de contagem.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Label, h1, p | `RevealOnScroll` | on-scroll | texto linha-a-linha, `2.1s`, ease `[0.22,1,0.36,1]`; p com `delay 0.08` |
-| Cada card contador | `RevealOnScroll` `variant="media"` | on-scroll | `y 24→0`, stagger `delay = i*0.1` |
-| Números dos contadores | `useCountUp` em `AboutCounterGrid` | `useInView` | de `0` até o valor final em `1800ms`, ease cúbico; início sincronizado com `revealDelay * 1000` |
-
-### 6. Responsividade
-- **Desktop:** `flex-row`, texto `md:max-w-[55%]`, grid contadores `md:max-w-md`; `pt-[11vw]`, `px-[5vw]`, `gap-[5vw]`.
-- **Mobile:** `flex-col`, `pt-28`, `px-5`, `gap-12`; valor `text-5xl`. Card largo `col-span-2`.
-
-### 7. Arquivos relacionados
-`src/app/sobre/page.tsx`, `src/components/about/AboutCounterGrid.tsx`, `src/components/ui/RevealOnScroll.tsx`, classes `.type-label`/`.type-h2`/`.type-body-lg` em `src/styles/globals.css`.
-
----
-
-# Seção 02 — Slideshow expansivo (branco → preto)
-
-### 1. Objetivo
-Transição visual institucional: frame pequeno e centralizado que expande no scroll, com slideshow de 5 imagens e fundo que passa de branco para preto. **Mesmo comportamento** que a Secção 04 da Home (`ExpandingFrame`).
-
-### 2. Copy / Textos
-Nenhum texto na seção.
-
-### 3. Imagens / mídia
-
-| ID | Slot | Proporção | Export | Arquivo | Status |
-|---|---|---|---|---|---|
-| ABT-01 | Slideshow frame 1 | 2:1 | 1920×960 | `public/images/ABT-01.webp` | **Produzido** |
-| ABT-02 | Slideshow frame 2 | 2:1 | 1920×960 | `public/images/ABT-02.webp` | **Produzido** |
-| ABT-03 | Slideshow frame 3 | 2:1 | 1920×960 | `public/images/ABT-03.webp` | **Produzido** |
-| ABT-04 | Slideshow frame 4 | 2:1 | 1920×960 | `public/images/ABT-04.webp` | **Produzido** |
-| ABT-05 | Slideshow frame 5 | 2:1 | 1920×960 | `public/images/ABT-05.webp` | **Produzido** |
-
-> Render via `PlaceholderMedia` com `fill`, `reveal={false}`, `object-cover`. Cores de fallback por frame definidas em `ABOUT_SLIDESHOW` em `page.tsx`. Spec em `src/data/media-spec.ts` (`folder: "images"`).
-
-**Comportamento de scroll** (`ExpandingFrame`):
-
-- `SECTION_VH = 250`; `SCALE_START ≈ 0.4`.
-- Frame inicial: `35%` largura × `45vh` altura, centrado.
-- Expansão: `35%→100%` / `45vh→100vh`; `border-radius 16px→0`.
-- Fundo: `#ffffff → #000000` no início da expansão (`SCALE_START` a `SCALE_START + 0.12`).
-- Slideshow: intervalo `700ms` (prop `slideIntervalMs`).
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Efeito |
-|---|---|---|---|
-| Frame (tamanho) | Framer Motion `useScroll` + `useTransform` | scroll da secção | escala controlada pelo progresso |
-| Transição de slides | CSS `transition-opacity duration-500` | `setInterval` 700ms | crossfade entre frames |
-| Mídia individual | — | — | `reveal={false}` (sem `RevealOnScroll` no frame) |
-
-### 6. Responsividade
-- **Todos:** secção com altura `250vh`; sticky `h-screen` durante a expansão.
-- Frame ocupa ~35% do container quando pequeno; expande até full viewport.
-
-### 7. Arquivos relacionados
-`src/app/sobre/page.tsx`, `src/components/ui/ExpandingFrame.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`.
-
----
-
-# Seção 03 — Manifesto
-
-### 1. Objetivo
-Momento de respiro institucional: citação centralizada em fundo preto sólido, **sem imagem**.
-
-### 2. Copy / Textos
-
-| Campo | `<p>` citação |
-|---|---|
-| Conteúdo | `O nosso compromisso é simples. Ajudar o seu negócio a crescer online com soluções profissionais eficazes e acessíveis.` |
-| Elemento HTML | `p` |
-| Classe | `.type-h3` + `text-white` |
-| Família | Host Grotesk |
-| Tamanho | 36px |
-| Peso | 400 |
-| Cor da fonte | `#ffffff` |
-| `text-transform` | none (sem itálico no código) |
-
-### 3. Imagens / mídia
-Nenhuma. A imagem que antes acompanhava o manifesto (`ABT-02`) integra o slideshow da Secção 02.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Citação | `RevealOnScroll` | on-scroll | texto linha-a-linha, `2.1s` |
-
-### 6. Responsividade
-- **Todos:** `py-16 md:py-20`, `px-5 md:px-[5vw]`, texto `max-w-3xl` centrado.
-- Secção mais compacta que o antigo fullscreen com imagem.
-
-### 7. Arquivos relacionados
-`src/app/sobre/page.tsx`, `src/components/ui/RevealOnScroll.tsx`.
-
----
-
-# Seção 04 — Nossos valores
-
-### 1. Objetivo
-Listar os 6 diferenciais da agência (mesma lista da Home) em fundo escuro, com ícones apenas na segunda coluna.
-
-### 2. Copy / Textos
-
-| Campo | Label | Item |
-|---|---|---|
-| Conteúdo | `Nossos valores` (`SectionLabel`) | 6 strings de `DIFERENCIAIS` em `src/data/diferenciais.ts` |
-| Elemento HTML | `p` (via `SectionLabel`) | `p` + ícone `lucide-react` |
-| Classe | `.section-label` + `.section-label--on-dark` | `.type-body-lg` + `text-white` |
-| Família | DM Sans | DM Sans |
-| Tamanho | 14px | 21px |
-| Peso | 400 | 400 |
-| Cor da fonte | `#ffffff` (contexto `.section-cta`) | `#ffffff` (`text-white` explícito) |
-
-**Lista** (partilhada com Home Secção 03): Experiência comprovada · Técnica + criatividade · Tecnologia de ponta · Acompanhamento próximo · Foco em pequenas empresas · Resultados mensuráveis.
-
-**Ícones** (`ICONES_DIFERENCIAIS`): Trophy · Layers · Zap · Users · Target · TrendingUp (`size={22}`, `text-white`).
-
-### 3. Imagens / mídia
-Nenhuma.
-
-### 4. Botões / CTAs
-Nenhum nesta seção. Conversão via `FloatingCTA` global.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Label | `RevealOnScroll` (via `SectionLabel`) | on-scroll | bloco de texto |
-| Cada item (ícone + texto) | `RevealOnScroll` `variant="media"` | on-scroll | stagger `delay = i*0.06` |
-
-### 6. Responsividade
-- **Desktop:** `flex-row` — coluna 1 vazia `md:w-1/2` (`hidden md:block`); lista `md:w-1/2`; `py-[10vw]`, `px-[5vw]`, `gap-[5vw]`.
-- **Mobile:** coluna única (lista ocupa largura total); `py-24`, `px-5`.
-
-### 7. Arquivos relacionados
-`src/app/sobre/page.tsx`, `src/data/diferenciais.ts`, `src/components/ui/SectionLabel.tsx`, `src/components/ui/RevealOnScroll.tsx`.
-
----
-
-## Apêndice — tokens e cores usados na Sobre (de `globals.css`)
-
-| Token / Contexto | Valor | Onde aparece na Sobre |
-|---|---|---|
-| `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper da Secção 01 |
-| `--gmt-bg-alt` | `#f5f5f5` | cartões dos contadores (`bg-gmt-bg-alt`) |
-| `--gmt-border` | `#dcdcdc` | bordas dos contadores |
-| `bg-black` | `#000000` | Secção 03 (manifesto) |
-| `.section-cta` | bg `#000000`, text `#ffffff`, muted `#94a3b8` | Secção 04 (valores) — **último contentor da página** |
-| fallback slideshow | cores por frame em `ABOUT_SLIDESHOW` | Secção 02 (`ExpandingFrame`) |
-
-> `src/styles/tokens.css` define tokens legados **não usados** pela página Sobre — a fonte de verdade é `globals.css`.
-
-*Documento gerado a partir do código do repositório e das fontes de verdade indicadas. Nenhuma informação foi inventada.*
 
 
 ---
@@ -754,7 +471,7 @@ A página termina na **última categoria do Accordion** (Serviços Avulsos) e pa
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`.
 >
-> **Actualização:** 28 Jun 2026 — alinhado ao refactor do template (hero centralizada, slots CF-01…05, remoção de CTA final e secção “Em prática”).
+> **Actualização:** 28 Jun 2026 — hero compacta, preenchimento de mídia corrigido, títulos em “Como funciona”.
 
 ---
 
@@ -800,9 +517,21 @@ As rotas `/servicos/[slug]` são páginas de detalhe de cada serviço da GMT (ag
 Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/vídeo da família visual. Headline **centralizada**; botão de voltar no **canto inferior esquerdo**.
 
 ### Layout
-- Container: `h-[80vh] md:h-[70vh]`, overlay `bg-gradient-to-t from-black via-black/40 to-transparent`
+- Container: `not-prose`, `h-[80vh] md:h-[70vh]`, `overflow-hidden`, fundo inline `backgroundColor: servico.corPlaceholder`
+- Overlay: `bg-gradient-to-t from-black via-black/40 to-black/10` (topo com leve escurecimento — evita faixa branca do `main` a transparecer)
 - Conteúdo textual: `flex h-full flex-col items-center justify-center text-center`
+- Bloco título + subtítulo: `flex flex-col items-center gap-2` (8px entre headline e subtítulo)
 - Botão voltar: `absolute bottom-0 left-0` com `px-5 pb-12 md:px-[5vw] md:pb-[5vw]`
+
+### Espaçamento headline ↔ subtítulo
+
+| Elemento | Regra no código | Valor efectivo |
+|---|---|---|
+| Entre linhas do `<h1>` | `!leading-[1.05]` + `[&>div]:!leading-[1.05]` (override de `.type-hero--fullscreen`) | line-height **1.05** — mais compacto que o default `clamp(1, 8vw, 1.1)` |
+| Entre `<h1>` e `<p>` headline | wrapper `gap-2` | **8px** (`0.5rem`) |
+| Subtítulo anterior | `mt-4` (16px) | **removido** — substituído pelo `gap-2` do wrapper |
+
+> Referência Home: marca GMT usa `line-height: 1`; aqui usa-se **1.05** para legibilidade em nomes longos de serviço, mantendo bloco visual compacto.
 
 ### Copy / tipografia
 
@@ -810,31 +539,62 @@ Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/ví
 |---|---|---|---|
 | Conteúdo | `← Ver todos os serviços` | `servico.nome` (dados) | `servico.headline` (dados; condicional) |
 | Elemento HTML | `a` (`Link`) | `h1` | `p` |
-| Classe | `.type-label` + utilitários inline | `.type-hero` + `.type-hero--fullscreen` | `text-[clamp(1.125rem,2.5vw,1.75rem)]` |
+| Classe | `.type-label` + utilitários inline | `.type-hero` + `.type-hero--fullscreen` + `!leading-[1.05]` | `text-[clamp(1.125rem,2.5vw,1.75rem)]` |
 | Família | DM Sans | Host Grotesk | DM Sans (tamanho fluido via `clamp`) |
 | Tamanho | 14px (label) | `clamp(52px,9vw,108px)` via `--type-hero` | `clamp(1.125rem, 2.5vw, 1.75rem)` — **menor que o h1** |
-| Peso | 400 | 400 | 400 |
-| Cor | `text-gmt-text` (`#0a0a0a`) sobre fundo branco translúcido | `#ffffff` (`!text-white`) | `text-white/80` |
+| Peso | 500 (`font-medium`) | 400 | 400 |
+| Cor | `#ffffff` sobre `bg-white/20` translúcido | `#ffffff` (`!text-white`) | `#ffffff` (`text-white`) |
 
-> `line-height` do h1 = `var(--type-hero-leading)` = `clamp(1, 8vw, 1.1)` (via `.type-hero--fullscreen`).  
-> O subtítulo **não** usa `.type-body-lg` nem tamanho fixo em px.
+> O subtítulo **não** usa `.type-body-lg` nem tamanho fixo em px.  
+> O h1 usa override local `!leading-[1.05]` — não altera tokens globais.
 
 ### Botão “← Ver todos os serviços”
 - Destino: `/servicos`
-- Estilo vidro: `rounded-lg bg-white/75 px-5 py-3 backdrop-blur-md text-gmt-text`
-- Hover: `hover:bg-white/90`
+- Estilo vidro branco translúcido: `rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md`
+- Hover: `hover:bg-white/30`
+- Peso da fonte: **500** (`font-medium` — override local sobre `.type-label` 400)
 - Seta para trás mantida no copy (`←`)
 - **Não existe** botão dinâmico com o nome do serviço nem link antigo `← Serviços`
 - **Um único** botão na hero (sem duplicados)
 
 ### Mídia de fundo
-Hero resolvido por `getServicoHeroId(servico)` (`src/lib/media.ts`): agente → hero da família; pacote → `MKT-04`; avulso → thumb 3:2. Render `fill`, `priority`, `sizes="100vw"`, `reveal={false}`. Cor de fallback = `servico.corPlaceholder`. Cruzado com PLANO § 4.2-B / 4.3 / 4.4.
 
-| ID | Quando | Proporção | Export | Status |
-|---|---|---|---|---|
-| AGH-F1…F4 | Agentes por família | 3:1 | 2560×860 | **Produzido** |
-| MKT-04 | Pacotes | 3:1 | 2560×860 | **Produzido** |
-| AV-01…06 | Avulsos | 3:2 | 1200×800 | **Produzido** |
+Hero resolvido por `getServicoHeroId(servico)` (`src/lib/media.ts`). Render `fill`, `priority`, `sizes="100vw"`, `reveal={false}`. Classes extra na hero: `[&_img]:object-cover [&_img]:object-center [&_img]:scale-[1.02]` (elimina frestas de subpixel).
+
+**Proporção — exportação vs. viewport (fonte: `media-spec.ts` + `page.tsx`):**
+
+| Camada | Valor | Notas |
+|---|---|---|
+| **Exportação (produção)** | **3:1 · 2560×860** | `ratio: [3, 1]`, `exportPx` em `media-spec.ts`; assets AGH-F1…4 confirmados em disco |
+| **Container (runtime)** | `w-full` × `h-[80vh] md:h-[70vh]` | Sem `aspect-ratio` fixo — a proporção visível depende da viewport |
+| **Render** | `object-fit: cover` + `fill` | Crop nas bordas; safe zone **centro 55%** |
+| **≠ 16:9** | — | 16:9 aplica-se a **HER-01** (Home) e outros slots; hero de serviço usa **3:1** na spec |
+
+**Mapeamento ID → tipo de serviço** (fonte: `src/lib/media.ts` + `src/data/media-spec.ts`):
+
+| Tipo | Condição | ID hero | Proporção spec | Export (px) | Pasta | Ficheiro |
+|---|---|---|---|---|---|---|
+| Agente | `familia` F1 | AGH-F1 | 3:1 | 2560×860 | `public/images/` | `AGH-F1.webp` |
+| Agente | `familia` F2 | AGH-F2 | 3:1 | 2560×860 | `public/images/` | `AGH-F2.webp` |
+| Agente | `familia` F3 | AGH-F3 | 3:1 | 2560×860 | `public/images/` | `AGH-F3.webp` |
+| Agente | `familia` F4 | AGH-F4 | 3:1 | 2560×860 | `public/images/` | `AGH-F4.webp` |
+| Pacote | qualquer | MKT-04 | 3:1 | 2560×860 | `public/videos/` | `MKT-04.webp` |
+| Avulso | por slug | AV-01…AV-06 | 3:2 | 1200×800 | `public/images/` | `AV-0X.webp` |
+
+> **AGH-F1…4:** imagens WebP em `public/images/` (antes em `videos/`). **MKT-04** permanece em `public/videos/` até migração futura.  
+> **Avulsos:** o código reutiliza o thumb 3:2 (`getServicoThumbId`) com `object-fit: cover` no container 70–80vh. Compor o assunto no **centro 55%** (safe zone das specs AGH).
+
+### Comportamento da mídia (anti-barra no topo)
+
+| Camada | Função |
+|---|---|
+| `<section>` | `backgroundColor: servico.corPlaceholder` — fallback se a imagem demorar ou houver fresta |
+| `PlaceholderMedia` | `absolute inset-0`, `object-cover object-center`, `scale-[1.02]` na imagem |
+| Overlay gradiente | `to-black/10` no topo (em vez de `to-transparent`) — não expõe o branco do `main` |
+
+**Diagnóstico:** a faixa sólida no topo era causada principalmente pelo **código** (gradiente transparente no topo + fundo branco do `main` visível em frestas de subpixel), não por dimensão incorrecta dos assets AGH (2560×860 confirmado). Avulsos em 3:2 exigem crop via `cover`; composição centralizada no asset evita barras baked-in.
+
+Cruzado com PLANO § 4.2-B (heroes família), § 4.3 (MKT-04), § 4.4 (thumbs avulsos).
 
 ### Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
@@ -910,22 +670,23 @@ Grid de **5 slots de mídia** institucionais, partilhados por todas as rotas `/s
 
 Constante `COMO_FUNCIONA_SLOTS` em `page.tsx`:
 
-| ID | Descrição (placeholder) | Cor fallback |
+| ID | Título (overlay) | Cor fallback mídia |
 |---|---|---|
-| CF-01 | card mídia posição 1 | `#1E293B` |
-| CF-02 | card mídia posição 2 | `#134E4A` |
-| CF-03 | card mídia posição 3 | `#1A3A5F` |
-| CF-04 | card mídia posição 4 | `#3B0764` |
-| CF-05 | card mídia posição 5 | `#0F172A` |
+| CF-01 | Reunião inicial | `#1E293B` |
+| CF-02 | Proposta personalizada | `#134E4A` |
+| CF-03 | Planeamento estratégico | `#1A3A5F` |
+| CF-04 | Execução & implementação | `#3B0764` |
+| CF-05 | Acompanhamento & otimização | `#0F172A` |
 
 ### Layout
 - Rótulo: `<h2>` “Como funciona” · `.type-label`
 - Grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4`
 - Card: `aspect-[3/4] md:aspect-[2/3] rounded-2xl border border-gmt-border overflow-hidden`
-- Cada slot: `PlaceholderMedia` com `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
+- Mídia: `PlaceholderMedia` com `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
+- **Título sobre o card:** overlay absoluto centrado (`flex items-center justify-center`), caixa `rounded-lg bg-white/75 px-4 py-2.5 backdrop-blur-md text-gmt-text type-body-lg`
 
 ### Copy
-**Não há** texto de passos (números 01–05, títulos ou resumos). Apenas o rótulo de secção e os 5 cards visuais.
+Títulos dos 5 passos são **estruturais** (fixos no template, iguais em todos os slugs). Não há números 01–05 nem parágrafos descritivos — apenas título em destaque sobre cada card.
 
 ### Estado actual dos assets
 Até existirem ficheiros em `public/images/CF-*.webp`, o `PlaceholderMedia` exibe fallback de cor. A estrutura está pronta para receber mídias reais — basta produzir e colocar os assets com os IDs correctos.
@@ -980,8 +741,10 @@ Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições n
 
 | Token / Contexto | Valor | Onde aparece |
 |---|---|---|
-| Hero overlay | gradiente `from-black via-black/40 to-transparent`; h1 `#ffffff`; headline `text-white/80` | Sec. Hero |
-| Botão hero | `bg-white/75`, `backdrop-blur-md`, `text-gmt-text` | Sec. Hero |
+| Hero overlay | gradiente `from-black via-black/40 to-black/10`; h1 `#ffffff`; headline `text-white` | Sec. Hero |
+| Hero fallback | `servico.corPlaceholder` inline no `<section>` | Sec. Hero |
+| Título card CF | `bg-white/75 backdrop-blur-md text-gmt-text` | Sec. Como funciona |
+| Botão hero | `bg-white/20 border-white/25`, `backdrop-blur-md`, `font-medium text-white` | Sec. Hero |
 | `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper Sec. 01–04 |
 | `--gmt-text` | `#0a0a0a` | problema (h3), funcionalidades, benefícios |
 | `--gmt-text-muted` | `#575757` | rótulos de secção, solução |
@@ -1601,475 +1364,6 @@ Nenhuma. **Não identificado no projeto**.
 ---
 
 ---
-## COMPONENTES GLOBAIS
----
-
-# GUIA DE EDIÇÃO — PARTE 08 · COMPONENTES GLOBAIS
-
-> Documentação dos componentes globais (não-páginas) usados em todo o site.
->
-> **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/styles/globals.css`, `src/styles/tokens.css`, `src/data/media-spec.ts` + componentes em `src/components/`.
->
-> **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
->
-> **Extração:** 28 Jun 2026.
-
----
-
-## Montagem no layout
-
-Em `src/app/layout.tsx`, dentro de `<body className="flex min-h-full flex-col bg-gmt-bg text-gmt-text">`:
-
-```
-<SmoothScroll />        → inicializa Lenis (sem UI)
-<Navbar />              → cabeçalho fixo
-<main class="prose prose-gmt max-w-none flex-1">{children}</main>
-<Footer />              → rodapé com grid de links
-<HomeLanternSection />  → Lanterna GMT (só na Home, após o Footer)
-<FloatingCTA />         → botão flutuante "Agendar reunião"
-```
-
-Fontes globais (`layout.tsx`): **DM Sans** (`--font-dmsans`, pesos 400/500) e **Host Grotesk** (`--font-hostgrotesk`, pesos 300/400/500/600/700/800), aplicadas via `--font-sans`/`--font-display`. Favicon/apple-icon = `/images/GL-02.webp`.
-
----
-
-# Componente: Navbar (`src/components/ui/Navbar.tsx`)
-
-### 1. Objetivo
-Cabeçalho fixo global: logo (esquerda), pill de navegação central (desktop), hamburger (mobile). Adapta cores conforme hero escuro / scroll.
-
-### 2. Copy / Textos
-
-| Campo | Logo | Links de navegação | Link CTA (menu mobile) |
-|---|---|---|---|
-| Conteúdo | `GMT` (via `GmtLogo`) | `Sobre` · `Serviços` · `Portfolio` · `Contacto` (array `NAV_LINKS`) | `Agendar reunião →` |
-| Elemento HTML | `span` (em `Link`) | `a` (Link) | `a` (Link) |
-| Classe | `.gmt-brand` + `.gmt-brand--navbar` | `.type-label` | `.type-label` |
-| Família | Host Grotesk | DM Sans | DM Sans |
-| Tamanho | `clamp(18px,2.8vw,28px)` | 14px | 14px |
-| Peso | **800** (`--font-weight-brand`) | 400 | 400 |
-| Cor da fonte | `#ffffff` (`logo-gmt--on-dark`, sempre `tone="on-dark"`) | pill escuro `text-white/70 → #fff`; pill claro `#575757 (text-gmt-muted) → #0a0a0a` | `rgba(255,255,255,0.8)` (`text-white/80`) → `#fff` |
-| `letter-spacing` | **0.02em** (via `.gmt-brand`) | 0.1em | 0.1em |
-| `text-transform` | uppercase | uppercase | uppercase |
-
-### 3. Imagens / mídia
-Logo é **texto** (`GmtLogo`), não imagem. `GL-01` (logo 7:2) está produzido em `public/images/GL-01.webp` mas **não é usado** pela Navbar.
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| GL-01 | Navbar logo (PLANO) | 7:2 | 1400×400 | `public/images/GL-01.webp` | **Produzido**, mas **não referenciado** (logo é texto) |
-
-Ícones: `Menu` / `X` (`lucide-react`, `size 20`) no hamburger.
-
-### 4. Botões / CTAs
-- **Logo**: `Link` para `/` com container glass `bg-black/55 backdrop-blur-md rounded-lg` (`px-3 py-2`); glass com `opacity` 0→1 controlada por `logoGlassVisible`.
-- **Hamburger** (`<button>`, `<md`): `h-10 w-10 rounded-lg backdrop-blur-md`. Pill escuro → `bg-white/10 text-white`; pill claro → `bg-black/8 text-gmt-text`.
-- **Pill de navegação** (`<nav>`, desktop): `rounded-full border px-7 py-2.5 backdrop-blur-md`. Escuro → `border-white/20 bg-black/30`; claro → `border-black/8 bg-white/88 shadow-sm`.
-- **CTA mobile** "Agendar reunião →": `rounded-full border border-white/30 px-5 py-2.5 text-white/80`, hover `border-white/60 text-white`.
-
-> O CTA "Agendar reunião" foi **removido da navbar desktop** e substituído pelo `FloatingCTA` global (existe apenas dentro do menu mobile aberto).
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Estado `scrolled` | Framer Motion (`useScroll` + `useMotionValueEvent`) | on-scroll | `scrolled = scrollY > 60` |
-| Cores do pill / hamburger | CSS | mudança de estado | `transition-all 500ms` (pill), `300ms` (hamburger/links) |
-| Glass do logo | CSS | scroll / tipo de página | `transition-opacity 500ms` |
-| Menu mobile | render condicional (`open`) | on-click | aparece/desaparece (sem transição declarada) |
-
-Lógica de tema:
-- `isHeroPageDark(pathname)` = `true` em `/` e `/servicos/[slug]` (heroes escuros).
-- `pillDark = isHeroPageDark && !scrolled`.
-- `logoGlassVisible = scrolled || !isHeroPageDark` (na Home só aparece após scroll).
-
-### 6. Responsividade
-- **Desktop (`md+`):** pill central visível (`hidden ... md:flex`); altura `h-20`, `px-[3vw]`.
-- **Mobile (`<md`):** pill oculto; hamburger visível (`md:hidden`); menu dropdown `bg-black/90 backdrop-blur-xl`; altura `h-16`, `px-5`.
-
-### 7. Arquivos relacionados
-`src/components/ui/Navbar.tsx`, `src/components/ui/GmtLogo.tsx`, `src/lib/utils.ts` (`cn`), classes `.gmt-brand`/`.gmt-brand--navbar`/`.logo-gmt--on-dark` em `src/styles/globals.css`.
-
----
-
-# Componente: FloatingCTA (`src/components/ui/FloatingCTA.tsx`)
-
-### 1. Objetivo
-Botão flutuante global "Agendar reunião" que aparece após sair do hero e some perto do footer.
-
-### 2. Copy / Textos
-
-| Campo | Botão |
-|---|---|
-| Conteúdo | `Agendar reunião` + ícone `ArrowRight` |
-| Elemento HTML | `a` (Link) |
-| Classe | utilitárias inline `text-sm font-medium tracking-wide` |
-| Família | DM Sans (`--font-sans`, herdada) |
-| Tamanho | `text-sm` = 14px (0.875rem) |
-| Peso | 500 (`font-medium`) |
-| Cor da fonte | `#ffffff` (`text-white`) |
-| `letter-spacing` | `tracking-wide` (0.025em) |
-| `text-transform` | none |
-
-### 3. Imagens / mídia
-Nenhuma. Ícone `ArrowRight` (`lucide-react`, `size 14`). **Não identificado no projeto** (sem criativo).
-
-### 4. Botões / CTAs
-"Agendar reunião" (link `/contacto`):
-- Fundo `rgba(0,0,0,0.8)` (`bg-black/80`) · Texto `#ffffff` · `backdrop-blur-md` · `rounded-full` · `px-6 py-3.5`.
-- Hover: `bg-black` (`#000000`) + ícone `ArrowRight` com `translate-x-0.5`.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Entrada/saída | Framer Motion (`AnimatePresence`) | scroll (threshold) | `0.35s`, ease `[0.16,1,0.3,1]`, `opacity 0↔1` + `y 14↔0` |
-| Ícone | CSS | on-hover | `translate-x-0.5`, 300ms |
-
-Lógica de visibilidade (listener de `scroll`): `pastHero = scrollY > viewportHeight * 0.8`; `nearFooter = scrollY + viewportHeight >= pageHeight - 220`; **visível** = `pastHero && !nearFooter`.
-
-### 6. Responsividade
-Posição fixa idêntica em todos os tamanhos: `fixed bottom-8 left-1/2 z-[60] -translate-x-1/2`. Wrapper `pointer-events-none`; o `Link` restaura `pointer-events-auto`.
-
-### 7. Arquivos relacionados
-`src/components/ui/FloatingCTA.tsx`.
-
----
-
-# Componente: Footer (`src/components/ui/Footer.tsx`)
-
-### 1. Objetivo
-Rodapé global: logo, grid de 3 colunas de navegação (gerado a partir dos dados) e barra de copyright. Inclui textura de fundo.
-
-### 2. Copy / Textos
-
-| Campo | Logo | Título de coluna | Links | Copyright |
-|---|---|---|---|---|
-| Conteúdo | `GMT` (via `GmtLogo asLink`) | `Automação & IA` · `Marketing Digital` · `Empresa` | nomes dos serviços/páginas | `© 2026 Growth Marketing Technology · Lisboa, Portugal` |
-| Elemento HTML | `span` (em Link) | `h3` | `a` (Link) | `p` |
-| Classe | `.gmt-brand` + `.gmt-brand--navbar` | `.type-label` | `.type-body` | `.type-label normal-case tracking-normal` |
-| Família | Host Grotesk | DM Sans | DM Sans | DM Sans |
-| Tamanho | `clamp(18px,2.8vw,28px)` | 14px | 18px | 14px |
-| Peso | **800** | 400 | 400 | 400 |
-| Cor da fonte | `#ffffff` (`logo-gmt--on-dark`) | `rgba(182,182,182,0.8)` (`text-gmt-muted` na `.section-footer`) | `text-gmt-muted` → hover `#ffffff` (`text-gmt-text`) | `rgba(182,182,182,0.8)` (`text-gmt-muted`) |
-| `letter-spacing` | **0.02em** | 0.1em | — | normal (`tracking-normal`) |
-| `text-transform` | uppercase | uppercase | none | `normal-case` |
-
-Conteúdo das colunas:
-- **Automação & IA** — os 15 `agentes` (links `/servicos/{slug}`).
-- **Marketing Digital** — os 3 `pacotes` + `Todos os serviços` (`/servicos`).
-- **Empresa** — `Sobre` · `Portfolio` · `Contacto`.
-
-### 3. Imagens / mídia
-Cruzado com PLANO Tabela 4.6.
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| GL-03 | Textura de secção (fundo do footer) | 16:9 | 2560×1440 | `public/images/GL-03.webp` | **Produzido** |
-
-> Render via `PlaceholderMedia` `id="GL-03"`, `opacity-15`, `pointer-events-none absolute inset-0`, `sizes="100vw"`. Cor de fallback `#101010`.
-
-### 4. Botões / CTAs
-Sem botões — apenas links de texto (`.type-body`, hover para `#ffffff`). Logo é `Link` para `/`.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Cor dos links | CSS | on-hover | `transition-colors 300ms` |
-
-Sem reveal on-scroll neste componente.
-
-### 6. Responsividade
-- **Desktop (`md+`):** grid `md:grid-cols-3`; `px-[5vw]`.
-- **Mobile:** grid `grid-cols-1`; `px-5`. Margem `my-[10vw]`; padding interno `py-16`.
-
-### 7. Arquivos relacionados
-`src/components/ui/Footer.tsx`, `src/components/ui/GmtLogo.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/servicos.ts` (`agentes`, `pacotes`), classe `.section-footer` em `src/styles/globals.css`.
-
----
-
-# Componente: HomeLanternSection (`src/components/home/HomeLanternSection.tsx`)
-
-### 1. Objetivo
-Wrapper client-side que renderiza a Lanterna GMT **apenas na Home** (`pathname === "/"`), posicionada no layout global **após** o `Footer`.
-
-### 2. Montagem
-- Importado em `src/app/layout.tsx`, imediatamente após `<Footer />`.
-- Delega para `GMTLightFooter`.
-
-### 7. Arquivos relacionados
-`src/app/layout.tsx`, `src/components/home/HomeLanternSection.tsx`, `src/components/ui/GMTLightFooter.tsx`.
-
----
-
-# Componente: GMTLightFooter (`src/components/ui/GMTLightFooter.tsx`)
-
-### 1. Objetivo
-Secção decorativa de branding na Home: "GMT" gigante revelado por um foco de luz que segue o cursor. **Última secção visual da Home**, após o Footer Navigation. Sem links nem CTAs.
-
-### 2. Copy / Textos
-
-| Campo | Texto (2 camadas sobrepostas, `aria-hidden`) |
-|---|---|
-| Conteúdo | `GMT` |
-| Elemento HTML | `p` |
-| Classe | `.gmt-brand` + `.gmt-brand--footer` |
-| Família | Host Grotesk (`--font-display`) |
-| Tamanho | `clamp(8rem, 33vw, 36rem)` |
-| Peso | **800** (`--font-weight-brand`) |
-| Cor da fonte | camada base `#111111`; camada reveal `#d4d4d4` |
-| `letter-spacing` | **0.02em** |
-| `text-transform` | uppercase |
-| `transform` | `scaleX(1.03)`, `transform-origin: center` |
-
-> `line-height: 0.85` (variante `--footer`). Fundo da secção `#000000` (`bg-black`).
-
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Foco de luz (reveal do texto) | CSS `mask-image` (radial) + JS `requestAnimationFrame` | on-hover (movimento do cursor) | `radial-gradient circle 20vw` em `var(--mx)/var(--my)`; atualização sem re-render React |
-| Opacidade do reveal | CSS transition | on-enter / on-leave | `0.5s ease` |
-
-Touch (`hover: none, pointer: coarse`): iluminação estática centrada (`opacity 0.55`). **Não** usa Framer Motion.
-
-### 6. Responsividade
-- **Desktop:** cursor-follow ativo; `md:py-20`.
-- **Mobile/touch:** fallback estático centrado; `py-12`. Texto fluido por `clamp()`/`vw`.
-
-### 7. Arquivos relacionados
-`src/components/home/HomeLanternSection.tsx`, `src/components/ui/GMTLightFooter.tsx`, `src/app/layout.tsx`.
-
----
-
-# Componente: SectionLabel (`src/components/ui/SectionLabel.tsx`)
-
-### 1. Objetivo
-Rótulo discreto de secção (topo esquerdo), usado na Home para "O que fazemos", "Por que a GMT" e "Trabalhos recentes".
-
-### 2. Copy / Textos
-| Campo | Valor |
-|---|---|
-| Classe | `.section-label` + `.section-label--on-light` ou `--on-dark` |
-| Família | DM Sans |
-| Tamanho | **12px** (`--type-section-label`) |
-| Peso | 500 |
-| `letter-spacing` | 0.14em |
-| `text-transform` | uppercase |
-| Cor (`on-light`) | `#575757` (`--gmt-text-muted`) |
-| Cor (`on-dark`) | `rgba(255,255,255,0.55)` |
-
-Envolve `RevealOnScroll` para animação on-scroll.
-
-### 7. Arquivos relacionados
-`src/components/ui/SectionLabel.tsx`, classes `.section-label*` em `src/styles/globals.css`.
-
----
-
-# Componente: GmtLogo (`src/components/ui/GmtLogo.tsx`)
-
-### 1. Objetivo
-Render do logo textual "GMT" reutilizável (navbar e footer), com variação de tom claro/escuro.
-
-### 2. Copy / Textos
-
-| Campo | Marca |
-|---|---|
-| Conteúdo | `GMT` |
-| Elemento HTML | `span` (ou dentro de `Link` se `asLink`) |
-| Classe | `.gmt-brand` + `.gmt-brand--navbar` + `logo-gmt--on-light` / `logo-gmt--on-dark` |
-| Família | Host Grotesk (`--font-display`) |
-| Tamanho | `clamp(18px,2.8vw,28px)` |
-| Peso | **800** (`--font-weight-brand`) |
-| Cor da fonte | `on-light` → `#0a0a0a`; `on-dark` → `#ffffff` |
-| `letter-spacing` | **0.02em** |
-| `transform` | `scaleX(1.03)`, `transform-origin: center` |
-| `text-transform` | uppercase |
-
-### Props
-| Prop | Tipo | Default | Efeito |
-|---|---|---|---|
-| `tone` | `"on-light" \| "on-dark"` | `"on-light"` | cor do texto (preto/branco) |
-| `className` | `string` | — | classes extra |
-| `asLink` | `boolean` | `false` | envolve em `Link` para `/` (com `aria-label="GMT — início"`) |
-
-### 3. Imagens / mídia
-Nenhuma (logo textual). `GL-01`/`GL-02` não são usados por este componente.
-
-### 4. Botões / CTAs
-Quando `asLink`, é um `Link` para `/`. Sem estilo de botão.
-
-### 5. Animações
-`.gmt-brand--navbar` herda transição de cor via contexto; `logo-gmt--*` define a cor.
-
-### 6. Responsividade
-Tamanho fluido por `clamp()`. Sem breakpoints discretos.
-
-### 7. Arquivos relacionados
-`src/components/ui/GmtLogo.tsx`, `src/lib/utils.ts` (`cn`), classes `.gmt-brand`/`.gmt-brand--navbar`/`.logo-gmt--on-light`/`.logo-gmt--on-dark` em `src/styles/globals.css`.
-
----
-
-# Componente: RevealOnScroll (`src/components/ui/RevealOnScroll.tsx`)
-
-### 1. Objetivo
-Componente central de animação de revelação on-scroll (Framer Motion), usado em quase todas as seções e dentro de `PlaceholderMedia`.
-
-### Props
-| Prop | Tipo | Default | Efeito |
-|---|---|---|---|
-| `children` | `ReactNode` | — | conteúdo a revelar |
-| `className` | `string` | — | classes (aplicadas ao elemento `as` no modo texto) |
-| `delay` | `number` | `0` | atraso adicional (segundos) |
-| `variant` | `"text" \| "media"` | auto | `text` se `children` é string; senão `media` |
-| `as` | `ElementType` | `div` | tag do elemento de texto |
-
-### 2. Copy / Textos
-Não define copy próprio — herda a do filho. As classes/tamanhos dependem do uso.
-
-### 3. Imagens / mídia
-Nenhuma própria.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-Constantes: `REVEAL_DURATION = 2.1s`, ease `REVEAL_EASE_OUT = [0.22,1,0.36,1]`, `REVEAL_LINE_GAP = 0.06s`, `REVEAL_TEXT_Y = 32`, `REVEAL_MEDIA_Y = 24`. Viewport `{ once: true, margin: "-8% 0px" }`.
-
-| Variante | Gatilho | Efeito |
-|---|---|---|
-| `text` (string) | on-scroll (entra no viewport) | divide em linhas visuais (`splitTextIntoLines`) e revela **sequencialmente** linha-a-linha (`delay + i * (REVEAL_DURATION + REVEAL_LINE_GAP)`), `y 32→0` + `opacity 0→1` |
-| `media` | on-scroll | bloco único `y 24→0` + `opacity 0→1` |
-
-Respeita `prefers-reduced-motion` (render estático via `useReducedMotion`).
-
-### 6. Responsividade
-Independente de breakpoint (baseado em viewport intersection). A medição de linhas usa `ResizeObserver` (re-divide ao redimensionar).
-
-### 7. Arquivos relacionados
-`src/components/ui/RevealOnScroll.tsx`, `src/lib/split-text-lines.ts`, `src/hooks/useReducedMotion.ts`, `src/lib/utils.ts`.
-
----
-
-# Componente: HeroTitle (`src/components/hero/HeroTitle.tsx`)
-
-### 1. Objetivo
-Título animado da Home — marca "GMT" + subtítulo, revelados letra-a-letra, com blink ao regressar. Envolvido por `HeroSection.tsx` (`bg-black`, `h-screen`, `[--gmt-text:#ffffff]`).
-
-### 2. Copy / Textos
-
-| Campo | `<h1>` | `<p>` subtítulo |
-|---|---|---|
-| Conteúdo | `GMT` | `Growth Marketing Technology` |
-| Elemento HTML | `h1` (`motion.h1`) | `p` (`motion.p`) |
-| Classe | `.gmt-brand` + `.gmt-brand--hero` | `.type-hero-subtitle` |
-| Família | Host Grotesk | DM Sans |
-| Tamanho | `clamp(6rem,15vw,14rem)` ≡ `clamp(96px,15vw,224px)` | `clamp(3rem,4.5vw,4.5rem)` ≡ `clamp(48px,4.5vw,72px)` |
-| Peso | **800** | 400 |
-| Cor da fonte | `#ffffff` (`text-white`) | `#ffffff` (`text-white`) |
-| `letter-spacing` | **0.02em** | 0.05em |
-| `text-transform` | uppercase | uppercase |
-
-> `line-height` 1 (h1) / 1.2 (p); `white-space: nowrap` em ambos.
-
-### Props
-Sem props (componente sem parâmetros). Usa `useReducedMotion` internamente.
-
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Revelação letra-a-letra | Framer Motion (`useAnimation` + variants) | on-load (após `setTimeout 80ms`) | char `0.28s`, ease `[0.2,0.65,0.3,0.9]`, `opacity 0→1` + `y 10→0` + `blur(4px)→0`. Stagger: linha 1 `0.1s` (delay 0.1s); linha 2 `0.055s` (delay 0.55s) |
-| Blink ao regressar | Framer Motion (`useInView` `amount: 0.1`) | on-view (re-entrada) | `0.8s`, `opacity [1,0.06,…,1]` (não pisca na 1ª vez) |
-
-`prefers-reduced-motion` → render estático (h1 + p sem animação).
-
-### 6. Responsividade
-Tamanhos por `clamp()`/`vw`. Em `<320px` pode haver overflow (`white-space: nowrap`).
-
-### 7. Arquivos relacionados
-`src/components/hero/HeroTitle.tsx`, `src/components/hero/HeroSection.tsx`, `src/hooks/useReducedMotion.ts`, classes `.gmt-brand`/`.gmt-brand--hero`/`.type-hero-subtitle` em `src/styles/globals.css`.
-
----
-
-# Componente: SmoothScroll (`src/components/ui/SmoothScroll.tsx`)
-
-### 1. Objetivo
-Inicializa o smooth scroll global (biblioteca **Lenis**). Sem UI.
-
-### 2. Copy / Textos
-Nenhum (`return null`).
-
-### 3. Imagens / mídia
-Nenhuma.
-
-### 4. Botões / CTAs
-Nenhum.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Scroll suave de toda a página | Lenis | mount (loop `requestAnimationFrame`) | contínuo; `lenis.destroy()` no unmount |
-
-Estilos auxiliares em `globals.css`: `html.lenis`, `.lenis.lenis-smooth { scroll-behavior: auto !important }`, `.lenis.lenis-stopped { overflow: clip }`.
-
-### 6. Responsividade
-Global, sem variação por breakpoint.
-
-### 7. Arquivos relacionados
-`src/components/ui/SmoothScroll.tsx`, dependência `lenis`, regras `.lenis*` em `src/styles/globals.css`.
-
----
-
-# Componentes órfãos (definidos mas NÃO importados)
-
-> Verificado por busca de imports: estes componentes existem mas não são usados por nenhuma página/componente ativo. Mantidos para referência.
-
-| Componente | Arquivo | Propósito (no código) | Observação |
-|---|---|---|---|
-| `HeroSlider` | `src/components/ui/HeroSlider.tsx` | Slider de hero com 5 slides (texto + fundo `HER-01`), arrasto (`drag`), barra de progresso e keyframes `.hero-*`. Usa `RevealText` e `PlaceholderMedia`. | **Órfão** — a Home usa `HeroSection`/`HeroTitle`. As keyframes `.hero-slide-*`/`.hero-fill`/`.hero-darken`/`.hero-bar-fade-out` em `globals.css` só serviriam este componente. `HER-01` (vídeo 16:9, 2560×1440) está **Produzido** em `public/videos/HER-01.webp` mas não é renderizado. |
-| `ServiceCard` | `src/components/ui/ServiceCard.tsx` | Card de serviço (imagem + nome + headline) com `RevealOnScroll`. | **Órfão** — a Home usa `ServiceOverlayCard` (`src/components/home/ServiceOverlayCard.tsx`). |
-| `RevealItem` | `src/components/ui/RevealItem.tsx` | Reveal genérico (`opacity 0→1`, `y 30→0`, `0.6s`) com easings `default`/`services`/`portfolio`. | **Órfão** — nenhuma página o importa. |
-| `RevealText` | `src/components/ui/RevealText.tsx` | Reveal letra-a-letra (`staggerChildren 0.02`, `y 40→0`, `0.6s`, ease `[0.65,0.05,0.1,1]`). | Importado **apenas** por `HeroSlider` (que é órfão) → sem efeito visível no site atual. |
-
-### Props dos órfãos (resumo)
-- **`HeroSlider`** — sem props (slides fixos no array `SLIDES`).
-- **`ServiceCard`** — `servico: Servico`, `placeholderId: string`, `delay?: number`.
-- **`RevealItem`** — `children`, `className?`, `easing?: "default"|"services"|"portfolio"`, `delay?`.
-- **`RevealText`** — `children: string`, `as?: "h1"|"h2"|"h3"|"h4"|"p"|"span"`, `className?`.
-
----
-
-## Apêndice — tokens e classes de cor relevantes (de `globals.css`)
-
-| Token / Classe | Valor | Usado por |
-|---|---|---|
-| `.gmt-brand` (base) | Host Grotesk **800**, `ls 0.02em`, `scaleX(1.03)`, uppercase | Hero, Navbar, Footer logo, Lanterna |
-| `.gmt-brand--hero` | `clamp(96px,15vw,224px)` | `HeroTitle` |
-| `.gmt-brand--navbar` | `clamp(18px,2.8vw,28px)` | `GmtLogo` (Navbar + Footer) |
-| `.gmt-brand--footer` | `clamp(8rem,33vw,36rem)`, `lh 0.85` | `GMTLightFooter` |
-| `.section-label` | DM Sans **12px**, 500, `ls 0.14em`, uppercase | `SectionLabel` (Home) |
-| `.logo-gmt--on-light` / `--on-dark` | `#0a0a0a` / `#ffffff` | `GmtLogo` |
-| `.type-label` | DM Sans 14px, 400, `ls 0.1em`, uppercase | Navbar (links), Footer (títulos/copyright) |
-| `.type-body` | DM Sans 18px, 400, `lh 1.5` | Footer (links) |
-| `.section-footer` | bg `#101010`, text `#ffffff`, muted `rgba(182,182,182,0.8)`, border `#242424` | Footer |
-| `--gmt-text` / `--gmt-text-muted` | `#0a0a0a` / `#575757` | navbar pill claro |
-| `--ease` / `--color-transition` | `cubic-bezier(0.65,0.05,0.1,1)` / `1s` | transição de cor do logo |
-| `FloatingCTA` (inline) | bg `rgba(0,0,0,0.8)` → `#000`, text `#ffffff` | FloatingCTA |
-
-> `src/styles/tokens.css` existe mas define tokens legados (`--color-*`, `--font-geist-*`) **não usados** por estes componentes — a fonte de verdade é `globals.css`.
-
-*Documento gerado a partir do código do repositório e das fontes de verdade indicadas. Nenhuma informação foi inventada.*
-
----
 ## DESIGN SYSTEM
 ---
 
@@ -2191,7 +1485,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 | Efeito | Valor | Onde |
 |---|---|---|
-| Overlay hero serviço | `bg-gradient-to-t from-black via-black/40 to-transparent` | `/servicos/[slug]` Sec0 |
+| Overlay hero serviço | `bg-gradient-to-t from-black via-black/40 to-black/10`; secção com `corPlaceholder` de fallback | `/servicos/[slug]` Sec0 |
 | Manifesto Sobre (Sec. 03) | `bg-black` + `text-white` |
 | Gradiente hero slider (órfão) | `from-gmt-bg/80 to-transparent` | `HeroSlider` |
 | Glass navbar (logo) | `bg-black/55 backdrop-blur-md` | `Navbar` |
@@ -2214,7 +1508,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | `.btn-nav--on-light` | `color-mix(#000 8%)` | `--gmt-text-on-light` | igual | igual | igual | bg `#000 14%` |
 | `.tag-pill` | `rgb(255 255 255 / 0.8)` | `#000` | `0.5vw` | `0.4vw 1vw` | DM Sans `clamp(13px,0.9vw,15px)` / 400 | — (sem hover) |
 | "Ver todos os serviços" (Home, inline) | `#000000` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | `bg-black/80` |
-| "← Ver todos os serviços" (detalhe serviço, hero) | `rgb(255 255 255 / 0.75)` | `#0a0a0a` (`text-gmt-text`) | `0.5rem` (`rounded-lg`) | `px-5 py-3` | `.type-label` 14px / 400 | `bg-white/90` |
+| "← Ver todos os serviços" (detalhe serviço, hero) | `rgb(255 255 255 / 0.2)` + borda `white/25` | `#ffffff` | `0.5rem` (`rounded-lg`) | `px-5 py-3` | `.type-label` + `font-medium` 14px / **500** | `bg-white/30` |
 | "Ver Produto →" (Home NARA, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-6 py-3` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
 | "Ver portfólio completo" (Home, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
 | "Falar sobre um projeto" (case, inline) | `--gmt-accent` `#2563eb` | `#ffffff` | `0.5rem` (`rounded-lg`) | `px-6 py-3` | `.type-body`+`.type-medium` 18px / 500 | `--gmt-accent-2` `#7c3aed` |
@@ -2234,7 +1528,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Hero brand letra-a-letra + blink | Framer Motion (`HeroTitle`) | Home Hero; on-load + on-view | char `0.28s` ease `[0.2,0.65,0.3,0.9]`; blink `0.8s` |
 | Frame expansivo | Framer Motion `useScroll`/`useTransform` | Home transição; on-scroll | scale `35%→100%`/`45vh→100vh` a partir de `SCALE_START≈0.4`; bg `#fff→#000` em janela curta (`0.4→0.52`); radius `16→0`; slideshow 700ms |
 | Service overlay hover | CSS (`group-hover`) | Home "O que fazemos"; on-hover | `blur(4px)` + `saturate(0.35)` na imagem; descrição `opacity 0→1` |
-| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | Home — após Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s` |
+| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | global — acima do Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s` |
 | FloatingCTA | Framer Motion `AnimatePresence` | global; scroll threshold | `0.35s`, `opacity`+`y 14` |
 | Navbar (tema) | Framer Motion `useScroll` | global; scroll > 60px | transição CSS 300–500ms |
 | Accordion | CSS `grid-template-rows` | `/servicos`; on-click | `0.3s cubic-bezier(0.4,0,0.2,1)`; chevron rotação 180° |
@@ -2299,8 +1593,8 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 ### 6.5 Inventário de assets presentes em `public/`
 
-- **`public/images/`:** HER-02..HER-05, ABT-01..ABT-05, CON-01, AGP-F1..F4, AG-01..AG-15, MKT-01..MKT-03, AV-01..AV-06, PF-01..PF-12, GL-01..GL-04.
-- **`public/videos/`:** HER-01, AGH-F1..AGH-F4, MKT-04. *(Cópias legadas de ABT-01/02 podem existir em `videos/`; o código aponta para `images/`.)*
+- **`public/images/`:** HER-02..HER-05, ABT-01..ABT-05, CON-01, AGP-F1..F4, AG-01..AG-15, MKT-01..MKT-03, AV-01..AV-06, PF-01..PF-12, GL-01..GL-04, **AGH-F1..AGH-F4** (heroes família de serviço).
+- **`public/videos/`:** HER-01, MKT-04. *(Cópias legadas de ABT-01/02 ou AGH-F* podem existir em `videos/`; o código aponta para `images/`.)*
 - Todos em `.webp` (vídeos ainda como `.webp`; MP4/WebM previstos no futuro pelo PLANO).
 
 > Resumo: as únicas **lacunas reais de produção** actualmente activas no site são os **6 cards overlay `SERV-AV-01..06`** (Home "O que fazemos"). As demais lacunas (`PF-EB*`, `PF-02a/b`, `PF-SLOT-N`) são **intencionais** ("Em breve") por falta de novos cases.

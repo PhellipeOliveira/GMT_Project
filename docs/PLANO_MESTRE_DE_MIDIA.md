@@ -25,7 +25,7 @@ Ao criar ou substituir mídia, siga **esta ordem** — o nível superior prevale
 **Regras de implementação:**
 - O site aplica proporções via `PlaceholderMedia` + `getMediaContainerStyle(id)` — não definir `proporcao`/`altura` manualmente salvo exceção documentada.
 - **Hero slider (Home):** apenas **HER-01** é mídia de fundo (16:9, `80vh`). Slides 2–5 são **só texto** sobre o mesmo fundo até existirem assets `HER-SLD-02..05` (futuro, 16:9).
-- **Full-bleed heroes** (`HER-01`, `AGH-F*`, `MKT-04`): ratio de exportação ≠ viewport; usar `object-cover` e compor no **centro 55–60%** (safe zone).
+- **Full-bleed heroes** (`HER-01`, `AGH-F*`, `MKT-04`): ratio de **exportação** (3:1 · 2560×860 para serviços) ≠ proporção do **container** (`h-[80vh] md:h-[70vh]`, largura total); usar `object-cover` e compor no **centro 55–60%** (safe zone). **AGH-F1…4** são **imagens** em `public/images/` (não vídeos).
 - **Cards de processo (serviço):** container `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`; slots **CF-01…CF-05** em **2:3** (1200×1800). Legado **AGP-F*** substituído na Sec3 activa.
 
 ### Migração — assets já exportados com proporções antigas
@@ -43,7 +43,8 @@ Ao criar ou substituir mídia, siga **esta ordem** — o nível superior prevale
 ### Notas sobre dimensões (pós-auditoria Script 3)
 
 - As capturas originais estavam em viewport comprimido. As proporções abaixo derivam dos valores **corrigidos e consolidados** nos design maps e em `src/data/media-spec.ts`.
-- Proporções de referência reais: cards Home ≈ **3:4** (334×461), thumbnails de serviços ≈ **3:2** (≈679–691×461), grid portfólio ≈ **9:16** (135×240), galeria de case = **16:9** (1ª) + **4:3** (demais), hero de serviço ≈ **3:1** (1536×532), approach portrait ≈ **110:225**, approach thumbs ≈ **4:3**, mídia institucional (GIF) ≈ **2:1** (1382×668), avatares de testimonial = **1:1** (≈54×54), logo ≈ **7:2** (1382×400).
+- Proporções de referência reais: cards Home ≈ **3:4** (334×461), thumbnails de serviços ≈ **3:2** (≈679–691×461), grid portfólio ≈ **9:16** (135×240), galeria de case = **16:9** (1ª) + **4:3** (demais), **hero de serviço (export) = 3:1 · 2560×860** (`AGH-F*`, `MKT-04` em `media-spec.ts`), approach portrait ≈ **110:225**, approach thumbs ≈ **4:3**, mídia institucional (GIF) ≈ **2:1** (1382×668), avatares de testimonial = **1:1** (≈54×54), logo ≈ **7:2** (1382×400).
+- **Hero de serviço — container vs. export:** o código (`src/app/servicos/[slug]/page.tsx`) usa `h-[80vh] md:h-[70vh]` + `object-cover` **sem** `aspect-ratio` fixo. A proporção visível varia com a viewport (~2:1 a ~3:1 em desktops típicos). **Não é 16:9** — essa proporção aplica-se a **HER-01** (Home). Para produção, exportar sempre **3:1 · 2560×860** conforme `media-spec.ts`.
 - Formatos finais: imagens em **WebP/AVIF**; vídeos em **MP4 + WebM**, loop, **sem áudio**, 5–10s.
 
 ---
@@ -69,7 +70,7 @@ Ao criar ou substituir mídia, siga **esta ordem** — o nível superior prevale
 |---|---|---|
 | Sec 1 — Introdução + contadores | Texto institucional à esquerda; grid contadores à direita | **24+** serviços · **15+** agentes IA · **3+** pacotes; contagem animada de 0 |
 | Sec 2 — Slideshow expansivo | `ExpandingFrame` com ABT-01…05 | Mesmo comportamento que Home Sec. 4; fundo branco→preto no scroll |
-| Sec 3 — Manifesto | Citação em fundo preto, sem imagem | Secção compacta (`py-16 md:py-20`) |
+| Sec 3 — Manifesto | Citação em fundo preto, sem imagem | Secção compacta (`py-16 md:py-16`) |
 | Sec 4 — Nossos valores | 6 diferenciais + ícones (coluna 2) | `.section-cta`; lista partilhada com Home (`src/data/diferenciais.ts`) |
 | CTA final | — | **Removida** — `FloatingCTA` global |
 
@@ -258,14 +259,18 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| AGH-F1 | Hero família Hospitalidade | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F1 | Abrir a página do agente com contexto de hospitalidade | 5–10s loop | Alta |
-| AGH-F2 | Hero família Operação Eficiente | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F2 | Contexto de agenda/operação | 5–10s loop | Alta |
-| AGH-F3 | Hero família Growth & Dados | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F3 | Contexto de dados/crescimento | 5–10s loop | Alta |
-| AGH-F4 | Hero família Inovação Sob Medida | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F4 | Contexto premium/custom | 5–10s loop | Média |
+| AGH-F1 | Hero família Hospitalidade | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F1 | Abrir a página do agente com contexto de hospitalidade | — | Alta |
+| AGH-F2 | Hero família Operação Eficiente | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F2 | Contexto de agenda/operação | — | Alta |
+| AGH-F3 | Hero família Growth & Dados | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F3 | Contexto de dados/crescimento | — | Alta |
+| AGH-F4 | Hero família Inovação Sob Medida | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F4 | Contexto premium/custom | — | Média |
 | AGP-F1 | Imagem de processo — F1 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F1 | Fundo das etapas (01–06) | — | Baixa |
 | AGP-F2 | Imagem de processo — F2 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F2 | Fundo das etapas | — | Baixa |
 | AGP-F3 | Imagem de processo — F3 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F3 | Fundo das etapas | — | Baixa |
 | AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 process cards (legado) | background card | imagem | **2:3** | 1200×1800 | F4 | Fundo das etapas (legado) | — | Baixa |
+
+> **Hero Sec0 (`getServicoHeroId`):** container `h-[80vh] md:h-[70vh]`, `object-fit: cover`, fundo fallback `corPlaceholder`. Agentes → **3:1 · 2560×860** (`AGH-F1…4` em `public/images/`). Pacotes → **3:1 · 2560×860** (`MKT-04` em `public/videos/`). Avulsos → thumb **3:2 · 1200×800** (`AV-01…06`) com crop central. Safe zone recomendada: **centro 55%**. Assets confirmados: AGH-F1 = 2560×860, AV-01 = 1200×800.
+>
+> **Reorganização (Jun 2026):** `AGH-F1.webp`…`AGH-F4.webp` migrados de `public/videos/` para `public/images/`; `media-spec.ts` com `folder: "images"`. Tratados como imagens estáticas WebP — não vídeo loop.
 
 **4.2-C · Cards de mídia — Como funciona (5 slots por página de serviço)**
 
@@ -279,7 +284,7 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 | CF-04 | Card mídia — posição 4 | Serviço Item | Sec3 grid col 4 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 4) | — | Média |
 | CF-05 | Card mídia — posição 5 | Serviço Item | Sec3 grid col 5 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 5) | — | Média |
 
-> **Nota:** até existirem assets em `public/images/CF-*.webp`, o componente `PlaceholderMedia` exibe fallback de cor. Os IDs **AGP-F*** permanecem no inventário como legado; a Sec3 activa usa **CF-01…05**.
+> **Nota:** até existirem assets em `public/images/CF-*.webp`, o componente `PlaceholderMedia` exibe fallback de cor. Títulos dos passos (Reunião inicial… Acompanhamento & otimização) são overlay fixo com `bg-white/75 backdrop-blur-md`. Os IDs **AGP-F*** permanecem no inventário como legado.
 
 ### Tabela 4.3 — Marketing Digital (3 pacotes)
 

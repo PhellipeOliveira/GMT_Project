@@ -179,7 +179,7 @@ Nenhum.
 | Citação | `RevealOnScroll` | on-scroll | texto linha-a-linha, `2.1s` |
 
 ### 6. Responsividade
-- **Todos:** `py-16 md:py-20`, `px-5 md:px-[5vw]`, texto `max-w-3xl` centrado.
+- **Todos:** `py-16 md:py-16`, `px-5 md:px-[5vw]`, texto `max-w-3xl` centrado.
 - Secção mais compacta que o antigo fullscreen com imagem.
 
 ### 7. Arquivos relacionados

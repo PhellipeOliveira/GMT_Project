@@ -84,13 +84,13 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 ---
 
-### Lanterna GMT (após Footer)
+### GMT Lantern (global — acima do Footer Navigation)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
 | `<p>` ×2 | "GMT" | `.gmt-brand` + `.gmt-brand--footer` | Host Grotesk | `clamp(8rem, 33vw, 36rem)` | **800** |
 
-> Renderizada via `HomeLanternSection` em `layout.tsx`, não em `page.tsx`.
+> Renderizada via `GMTLightFooter` em `layout.tsx` — **antes** de `<Footer />`, em todas as páginas. Padding: `py-[2.4rem] md:py-16`.
 
 ---
 
@@ -194,11 +194,13 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 ### Secção: Hero do serviço (fullscreen 70–80vh, fundo escuro)
 
-| Elemento | Texto | Classe | Família | Tamanho | Peso |
-|----------|-------|--------|---------|---------|------|
-| Link | "← Ver todos os serviços" | `.type-label` + `bg-white/75 backdrop-blur-md text-gmt-text` | DM Sans | 14px | 400 |
-| `<h1>` | Nome do serviço (centrado) | `.type-hero .type-hero--fullscreen` | Host Grotesk | clamp(52px → 108px) | 400 |
-| `<p>` | Headline do serviço (centrado) | `text-[clamp(1.125rem,2.5vw,1.75rem)]` | DM Sans | clamp(18px → 28px) | 400 |
+| Elemento | Texto | Classe | Família | Tamanho | Peso | Cor |
+|----------|-------|--------|---------|---------|------|-----|
+| Link | "← Ver todos os serviços" | `.type-label` + `bg-white/20 border-white/25 font-medium text-white backdrop-blur-md` | DM Sans | 14px | **500** | `#ffffff` |
+| `<h1>` | Nome do serviço (centrado) | `.type-hero .type-hero--fullscreen` + `!leading-[1.05]` + `!text-white` | Host Grotesk | clamp(52px → 108px) | 400 | `#ffffff` |
+| `<p>` | Headline do serviço (centrado) | `text-[clamp(1.125rem,2.5vw,1.75rem)]` + `text-white` | DM Sans | clamp(18px → 28px) | 400 | `#ffffff` |
+
+> Espaçamento: wrapper `gap-2` (8px) entre h1 e headline; line-height do h1 override local **1.05** (mais compacto que o token global).
 
 ---
 
@@ -235,9 +237,10 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
 | `<h2>` | "Como funciona" | `.type-label` | DM Sans | 14px | 400 |
-| Slots mídia | CF-01…CF-05 (sem copy textual) | `PlaceholderMedia` em card `aspect-[3/4] md:aspect-[2/3]` | — | — | — |
+| Título do card (overlay) | Reunião inicial · Proposta… · etc. | `.type-body-lg` + `bg-white/75 backdrop-blur-md text-gmt-text` | DM Sans | 21px | 400 |
+| Slots mídia | CF-01…CF-05 | `PlaceholderMedia` em card `aspect-[3/4] md:aspect-[2/3]` | — | — | — |
 
-> Sem números, títulos ou resumos de passos. Apenas rótulo de secção + grid de 5 cards visuais. Ver `docs/guia/PARTE_04_SERVICO_DETALHE.md` § D.
+> Títulos fixos no template, centrados sobre cada card com caixa branca translúcida. Mídia: 2:3, 1200×1800 (ver `media-spec.ts`).
 
 ---
 
@@ -418,7 +421,7 @@ FloatingCTA    → DM Sans 500       · 14px  (fixed global, z-60)
 ─────────────────────────────────────────────────────────────────────────────
 Mono           → Sistema           · variável  ← números/índices
 Logo GMT       → Host Grotesk 800  · clamp(18px, 2.8vw, 28px)  (navbar + footer)
-Lanterna GMT   → Host Grotesk 800  · clamp(8rem, 33vw, 36rem)  (após footer, só Home)
+Lanterna GMT   → Host Grotesk 800  · clamp(8rem, 33vw, 36rem)  (global, acima do Footer)
 ```
 
 ---

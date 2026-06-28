@@ -130,7 +130,7 @@
 
 | Secção referência | Estado GMT | Lacunas |
 |---|---|---|
-| **Sec 0 — Hero 80vh/70vh** | Implementado | Vídeos AGH-F*/MKT-04 ainda WebP |
+| **Sec 0 — Hero 80vh/70vh** | Implementado | Imagens AGH-F1…4 em `public/images/`; MKT-04 ainda em `videos/` |
 | **Sec 1–4 — Conteúdo claro `#EBEBEB`** | `section-light` | — |
 | **Sec 3 — Process cards 6× `aspect-2/3`** | 5 passos (copy tem 5, layout 6) | 6º slot vazio ou duplicar; scroll horizontal desktop opcional |
 | **Sec 4 — Portfolio 2 cases** | 1 case NARA | 2º case — lacuna |

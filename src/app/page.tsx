@@ -37,8 +37,8 @@ export default function HomePage() {
       <HeroSection />
 
       {/* ══ 2 ── O QUE FAZEMOS ══════════════════════════════════════ */}
-      <section className="bg-white px-5 py-20 md:px-[5vw] md:py-[8vw]">
-        <SectionLabel>O que fazemos</SectionLabel>
+      <section className="not-prose bg-white px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
+        <SectionLabel className="block w-full text-left">O que fazemos</SectionLabel>
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {avulsos.map((servico, i) => (
@@ -64,8 +64,8 @@ export default function HomePage() {
       </section>
 
       {/* ══ 3 ── POR QUE A GMT ═══════════════════════════════════════ */}
-      <section className="bg-gmt-bg-alt px-5 py-20 md:px-[5vw] md:py-[8vw]">
-        <SectionLabel>Por que a GMT</SectionLabel>
+      <section className="not-prose bg-gmt-bg-alt px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
+        <SectionLabel className="block w-full text-left">Por que a GMT</SectionLabel>
 
         <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
           {DIFERENCIAIS.map((titulo, i) => {
@@ -94,7 +94,7 @@ export default function HomePage() {
       <section className="section-cta px-5 py-20 md:px-[5vw] md:py-[8vw]">
         <SectionLabel tone="on-dark">Trabalhos recentes</SectionLabel>
 
-        <div className="mt-12 flex flex-col gap-16 md:gap-20">
+        <div className="mt-12">
           {nara && (
             <HomePortfolioRow
               placeholderId="PF-01"
@@ -104,20 +104,6 @@ export default function HomePage() {
               resumo={nara.resumo}
             />
           )}
-          <HomePortfolioRow
-            placeholderId="PF-02a"
-            nome="Projeto"
-            cor="#1E293B"
-            emBreve
-            delay={0.08}
-          />
-          <HomePortfolioRow
-            placeholderId="PF-02b"
-            nome="Projeto"
-            cor="#1E293B"
-            emBreve
-            delay={0.16}
-          />
         </div>
 
         <RevealOnScroll variant="media" delay={0.16}>

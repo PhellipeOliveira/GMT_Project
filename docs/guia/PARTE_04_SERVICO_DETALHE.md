@@ -8,7 +8,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`.
 >
-> **Actualização:** 28 Jun 2026 — alinhado ao refactor do template (hero centralizada, slots CF-01…05, remoção de CTA final e secção “Em prática”).
+> **Actualização:** 28 Jun 2026 — hero compacta, preenchimento de mídia corrigido, títulos em “Como funciona”.
 
 ---
 
@@ -54,9 +54,21 @@ As rotas `/servicos/[slug]` são páginas de detalhe de cada serviço da GMT (ag
 Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/vídeo da família visual. Headline **centralizada**; botão de voltar no **canto inferior esquerdo**.
 
 ### Layout
-- Container: `h-[80vh] md:h-[70vh]`, overlay `bg-gradient-to-t from-black via-black/40 to-transparent`
+- Container: `not-prose`, `h-[80vh] md:h-[70vh]`, `overflow-hidden`, fundo inline `backgroundColor: servico.corPlaceholder`
+- Overlay: `bg-gradient-to-t from-black via-black/40 to-black/10` (topo com leve escurecimento — evita faixa branca do `main` a transparecer)
 - Conteúdo textual: `flex h-full flex-col items-center justify-center text-center`
+- Bloco título + subtítulo: `flex flex-col items-center gap-2` (8px entre headline e subtítulo)
 - Botão voltar: `absolute bottom-0 left-0` com `px-5 pb-12 md:px-[5vw] md:pb-[5vw]`
+
+### Espaçamento headline ↔ subtítulo
+
+| Elemento | Regra no código | Valor efectivo |
+|---|---|---|
+| Entre linhas do `<h1>` | `!leading-[1.05]` + `[&>div]:!leading-[1.05]` (override de `.type-hero--fullscreen`) | line-height **1.05** — mais compacto que o default `clamp(1, 8vw, 1.1)` |
+| Entre `<h1>` e `<p>` headline | wrapper `gap-2` | **8px** (`0.5rem`) |
+| Subtítulo anterior | `mt-4` (16px) | **removido** — substituído pelo `gap-2` do wrapper |
+
+> Referência Home: marca GMT usa `line-height: 1`; aqui usa-se **1.05** para legibilidade em nomes longos de serviço, mantendo bloco visual compacto.
 
 ### Copy / tipografia
 
@@ -64,31 +76,62 @@ Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/ví
 |---|---|---|---|
 | Conteúdo | `← Ver todos os serviços` | `servico.nome` (dados) | `servico.headline` (dados; condicional) |
 | Elemento HTML | `a` (`Link`) | `h1` | `p` |
-| Classe | `.type-label` + utilitários inline | `.type-hero` + `.type-hero--fullscreen` | `text-[clamp(1.125rem,2.5vw,1.75rem)]` |
+| Classe | `.type-label` + utilitários inline | `.type-hero` + `.type-hero--fullscreen` + `!leading-[1.05]` | `text-[clamp(1.125rem,2.5vw,1.75rem)]` |
 | Família | DM Sans | Host Grotesk | DM Sans (tamanho fluido via `clamp`) |
 | Tamanho | 14px (label) | `clamp(52px,9vw,108px)` via `--type-hero` | `clamp(1.125rem, 2.5vw, 1.75rem)` — **menor que o h1** |
-| Peso | 400 | 400 | 400 |
-| Cor | `text-gmt-text` (`#0a0a0a`) sobre fundo branco translúcido | `#ffffff` (`!text-white`) | `text-white/80` |
+| Peso | 500 (`font-medium`) | 400 | 400 |
+| Cor | `#ffffff` sobre `bg-white/20` translúcido | `#ffffff` (`!text-white`) | `#ffffff` (`text-white`) |
 
-> `line-height` do h1 = `var(--type-hero-leading)` = `clamp(1, 8vw, 1.1)` (via `.type-hero--fullscreen`).  
-> O subtítulo **não** usa `.type-body-lg` nem tamanho fixo em px.
+> O subtítulo **não** usa `.type-body-lg` nem tamanho fixo em px.  
+> O h1 usa override local `!leading-[1.05]` — não altera tokens globais.
 
 ### Botão “← Ver todos os serviços”
 - Destino: `/servicos`
-- Estilo vidro: `rounded-lg bg-white/75 px-5 py-3 backdrop-blur-md text-gmt-text`
-- Hover: `hover:bg-white/90`
+- Estilo vidro branco translúcido: `rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md`
+- Hover: `hover:bg-white/30`
+- Peso da fonte: **500** (`font-medium` — override local sobre `.type-label` 400)
 - Seta para trás mantida no copy (`←`)
 - **Não existe** botão dinâmico com o nome do serviço nem link antigo `← Serviços`
 - **Um único** botão na hero (sem duplicados)
 
 ### Mídia de fundo
-Hero resolvido por `getServicoHeroId(servico)` (`src/lib/media.ts`): agente → hero da família; pacote → `MKT-04`; avulso → thumb 3:2. Render `fill`, `priority`, `sizes="100vw"`, `reveal={false}`. Cor de fallback = `servico.corPlaceholder`. Cruzado com PLANO § 4.2-B / 4.3 / 4.4.
 
-| ID | Quando | Proporção | Export | Status |
-|---|---|---|---|---|
-| AGH-F1…F4 | Agentes por família | 3:1 | 2560×860 | **Produzido** |
-| MKT-04 | Pacotes | 3:1 | 2560×860 | **Produzido** |
-| AV-01…06 | Avulsos | 3:2 | 1200×800 | **Produzido** |
+Hero resolvido por `getServicoHeroId(servico)` (`src/lib/media.ts`). Render `fill`, `priority`, `sizes="100vw"`, `reveal={false}`. Classes extra na hero: `[&_img]:object-cover [&_img]:object-center [&_img]:scale-[1.02]` (elimina frestas de subpixel).
+
+**Proporção — exportação vs. viewport (fonte: `media-spec.ts` + `page.tsx`):**
+
+| Camada | Valor | Notas |
+|---|---|---|
+| **Exportação (produção)** | **3:1 · 2560×860** | `ratio: [3, 1]`, `exportPx` em `media-spec.ts`; assets AGH-F1…4 confirmados em disco |
+| **Container (runtime)** | `w-full` × `h-[80vh] md:h-[70vh]` | Sem `aspect-ratio` fixo — a proporção visível depende da viewport |
+| **Render** | `object-fit: cover` + `fill` | Crop nas bordas; safe zone **centro 55%** |
+| **≠ 16:9** | — | 16:9 aplica-se a **HER-01** (Home) e outros slots; hero de serviço usa **3:1** na spec |
+
+**Mapeamento ID → tipo de serviço** (fonte: `src/lib/media.ts` + `src/data/media-spec.ts`):
+
+| Tipo | Condição | ID hero | Proporção spec | Export (px) | Pasta | Ficheiro |
+|---|---|---|---|---|---|---|
+| Agente | `familia` F1 | AGH-F1 | 3:1 | 2560×860 | `public/images/` | `AGH-F1.webp` |
+| Agente | `familia` F2 | AGH-F2 | 3:1 | 2560×860 | `public/images/` | `AGH-F2.webp` |
+| Agente | `familia` F3 | AGH-F3 | 3:1 | 2560×860 | `public/images/` | `AGH-F3.webp` |
+| Agente | `familia` F4 | AGH-F4 | 3:1 | 2560×860 | `public/images/` | `AGH-F4.webp` |
+| Pacote | qualquer | MKT-04 | 3:1 | 2560×860 | `public/videos/` | `MKT-04.webp` |
+| Avulso | por slug | AV-01…AV-06 | 3:2 | 1200×800 | `public/images/` | `AV-0X.webp` |
+
+> **AGH-F1…4:** imagens WebP em `public/images/` (antes em `videos/`). **MKT-04** permanece em `public/videos/` até migração futura.  
+> **Avulsos:** o código reutiliza o thumb 3:2 (`getServicoThumbId`) com `object-fit: cover` no container 70–80vh. Compor o assunto no **centro 55%** (safe zone das specs AGH).
+
+### Comportamento da mídia (anti-barra no topo)
+
+| Camada | Função |
+|---|---|
+| `<section>` | `backgroundColor: servico.corPlaceholder` — fallback se a imagem demorar ou houver fresta |
+| `PlaceholderMedia` | `absolute inset-0`, `object-cover object-center`, `scale-[1.02]` na imagem |
+| Overlay gradiente | `to-black/10` no topo (em vez de `to-transparent`) — não expõe o branco do `main` |
+
+**Diagnóstico:** a faixa sólida no topo era causada principalmente pelo **código** (gradiente transparente no topo + fundo branco do `main` visível em frestas de subpixel), não por dimensão incorrecta dos assets AGH (2560×860 confirmado). Avulsos em 3:2 exigem crop via `cover`; composição centralizada no asset evita barras baked-in.
+
+Cruzado com PLANO § 4.2-B (heroes família), § 4.3 (MKT-04), § 4.4 (thumbs avulsos).
 
 ### Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
@@ -164,22 +207,23 @@ Grid de **5 slots de mídia** institucionais, partilhados por todas as rotas `/s
 
 Constante `COMO_FUNCIONA_SLOTS` em `page.tsx`:
 
-| ID | Descrição (placeholder) | Cor fallback |
+| ID | Título (overlay) | Cor fallback mídia |
 |---|---|---|
-| CF-01 | card mídia posição 1 | `#1E293B` |
-| CF-02 | card mídia posição 2 | `#134E4A` |
-| CF-03 | card mídia posição 3 | `#1A3A5F` |
-| CF-04 | card mídia posição 4 | `#3B0764` |
-| CF-05 | card mídia posição 5 | `#0F172A` |
+| CF-01 | Reunião inicial | `#1E293B` |
+| CF-02 | Proposta personalizada | `#134E4A` |
+| CF-03 | Planeamento estratégico | `#1A3A5F` |
+| CF-04 | Execução & implementação | `#3B0764` |
+| CF-05 | Acompanhamento & otimização | `#0F172A` |
 
 ### Layout
 - Rótulo: `<h2>` “Como funciona” · `.type-label`
 - Grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4`
 - Card: `aspect-[3/4] md:aspect-[2/3] rounded-2xl border border-gmt-border overflow-hidden`
-- Cada slot: `PlaceholderMedia` com `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
+- Mídia: `PlaceholderMedia` com `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
+- **Título sobre o card:** overlay absoluto centrado (`flex items-center justify-center`), caixa `rounded-lg bg-white/75 px-4 py-2.5 backdrop-blur-md text-gmt-text type-body-lg`
 
 ### Copy
-**Não há** texto de passos (números 01–05, títulos ou resumos). Apenas o rótulo de secção e os 5 cards visuais.
+Títulos dos 5 passos são **estruturais** (fixos no template, iguais em todos os slugs). Não há números 01–05 nem parágrafos descritivos — apenas título em destaque sobre cada card.
 
 ### Estado actual dos assets
 Até existirem ficheiros em `public/images/CF-*.webp`, o `PlaceholderMedia` exibe fallback de cor. A estrutura está pronta para receber mídias reais — basta produzir e colocar os assets com os IDs correctos.
@@ -234,8 +278,10 @@ Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições n
 
 | Token / Contexto | Valor | Onde aparece |
 |---|---|---|
-| Hero overlay | gradiente `from-black via-black/40 to-transparent`; h1 `#ffffff`; headline `text-white/80` | Sec. Hero |
-| Botão hero | `bg-white/75`, `backdrop-blur-md`, `text-gmt-text` | Sec. Hero |
+| Hero overlay | gradiente `from-black via-black/40 to-black/10`; h1 `#ffffff`; headline `text-white` | Sec. Hero |
+| Hero fallback | `servico.corPlaceholder` inline no `<section>` | Sec. Hero |
+| Título card CF | `bg-white/75 backdrop-blur-md text-gmt-text` | Sec. Como funciona |
+| Botão hero | `bg-white/20 border-white/25`, `backdrop-blur-md`, `font-medium text-white` | Sec. Hero |
 | `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper Sec. 01–04 |
 | `--gmt-text` | `#0a0a0a` | problema (h3), funcionalidades, benefícios |
 | `--gmt-text-muted` | `#575757` | rótulos de secção, solução |
