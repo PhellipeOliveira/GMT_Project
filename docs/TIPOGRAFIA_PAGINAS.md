@@ -90,7 +90,7 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 |----------|-------|--------|---------|---------|------|
 | `<p>` ×2 | "GMT" | `.gmt-brand` + `.gmt-brand--footer` | Host Grotesk | `clamp(8rem, 33vw, 36rem)` | **800** |
 
-> Renderizada via `GMTLightFooter` em `layout.tsx` — **antes** de `<Footer />`, em todas as páginas. Padding: `py-[2.4rem] md:py-16`.
+> Renderizada via `GMTLightFooter` em `layout.tsx` — **antes** de `<Footer />`, em todas as páginas. Padding: `py-[2.04rem] md:py-[3.4rem]` (−15% vs. faixa anterior).
 
 ---
 
@@ -277,11 +277,7 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 | Tag pill | Tag | `.tag-pill` → `.type-body` | DM Sans | 18px | 400 |
 | Seta | "→" | inline | DM Sans | 18px | 400 |
 
----
-
-### Secção: CTA final
-
-Padrão: `type-h3` + `type-body` + botão.
+> Apenas o case **NARA** listado. Sem CTA final nesta página — conversão via `FloatingCTA` global.
 
 ---
 
@@ -301,19 +297,17 @@ Padrão: `type-h3` + `type-body` + botão.
 
 ---
 
-### Secção: "Próximo projecto"
+### Secção: Lista de projectos
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` | "Próximo projecto" | `.type-label` | DM Sans | 14px | 400 |
-| `<h3>` | "Em breve" | `.type-h3` | Host Grotesk | 36px | 400 |
-| `<p>` | "Novo case em produção" | `.type-body` | DM Sans | 18px | 400 |
+| Índice | "01" | `font-mono .type-body` | Mono sistema | 18px | 400 |
+| `<h3>` | Nome do case (`NARA`) | `.type-h3` | Host Grotesk | 36px | 400 |
+| Local | Localização | `.type-body` | DM Sans | 18px | 400 |
+| Tag pill | Tags | `.tag-pill` | DM Sans | 18px | 400 |
+| Seta | "→" | inline | DM Sans | 18px | 400 |
 
----
-
-### Secção: CTA final
-
-Padrão: `type-h3` + `type-body` + botão.
+> Apenas cases reais de `portfolio.ts`. Sem placeholders "Em breve" nem CTA final — conversão via `FloatingCTA` global.
 
 ---
 
@@ -386,6 +380,8 @@ Padrão: `type-h3` + `type-body` + botão.
 | Logo "GMT" | "GMT" | `.gmt-brand` + `.gmt-brand--navbar` | Host Grotesk | clamp(18px, 2.8vw, 28px) | **800** |
 | Links | Navegação secundária | `.type-label` | DM Sans | 14px | 400 |
 | Copyright / legal | Texto legal | `.type-label` | DM Sans | 14px | 400 |
+
+> **Espaçamento (Footer Navigation):** `pt-[8vw]` · `py-[3.2rem]` · `mb-[2.4rem]` (logo) · `gap-[2.4rem]` (grid) · `mt-[2.4rem] pt-[1.6rem]` (copyright) — compactação −20% (Jun 2026). Ver `PARTE_08` § Footer.
 
 ---
 

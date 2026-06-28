@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { portfolio, getCaseBySlug } from "@/data/portfolio";
 
 export function generateStaticParams() {
@@ -108,49 +107,46 @@ export default async function PortfolioItemPage({
       </section>
 
       <section className="mt-20 px-5 md:mt-[8vw] md:px-[5vw]">
-        <RevealOnScroll as="h2" className="type-label text-gmt-muted">
-          Próximo projeto
-        </RevealOnScroll>
-        <ul className="mt-6 border-t border-gmt-border">
-          {[0, 1].map((i) => (
-            <li key={i} className="border-b border-gmt-border">
+        <ul className="border-t border-gmt-border">
+          {portfolio.map((c, i) => (
+            <li key={c.slug} className="border-b border-gmt-border">
               <RevealOnScroll variant="media" delay={i * 0.08}>
-                <div className="flex items-center gap-5 py-8 opacity-50 md:gap-[2vw]">
+                <Link
+                  href={`/portfolio/${c.slug}`}
+                  className="group flex items-center gap-5 py-16 md:gap-[2vw] md:py-[8vw]"
+                >
+                  <span className="font-mono type-body text-gmt-muted">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                   <PlaceholderMedia
                     id="PF-02"
                     descricao="9:16"
-                    cor="#1E293B"
+                    cor={c.corPlaceholder}
                     className="w-20 shrink-0 rounded-md md:w-28"
                     sizes="112px"
                     reveal={false}
                   />
                   <div className="flex-1">
-                    <h3 className="type-h3">Em breve</h3>
-                    <p className="type-body mt-1 text-gmt-muted">
-                      Novo case em produção
-                    </p>
+                    <h3 className="type-h3 group-hover:text-gmt-accent">
+                      {c.nome}
+                    </h3>
+                    <p className="type-body mt-1 text-gmt-muted">{c.local}</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {c.tags.map((tag) => (
+                        <span key={tag} className="tag-pill">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                  <span className="text-gmt-muted transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </Link>
               </RevealOnScroll>
             </li>
           ))}
         </ul>
-      </section>
-
-      <section className="section-cta px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
-        <RevealSequence>
-          <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
-            Pronto para automatizar o seu negócio?
-          </RevealOnScroll>
-          <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted">
-            Reunião gratuita e sem compromisso.
-          </RevealOnScroll>
-          <RevealOnScroll variant="media">
-            <Link href="/contacto" className="btn-submit mt-8">
-              Agendar agora
-            </Link>
-          </RevealOnScroll>
-        </RevealSequence>
       </section>
     </>
   );

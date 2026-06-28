@@ -221,7 +221,7 @@ Integrado em `RevealOnScroll` via hook `useChainedDelay` + `useRevealSequence()`
 | `/sobre` | Intro: label + h1 + parágrafo |
 | `/contacto` | Cabeçalho (label + h1 + p); CTA final (h2 + p + botão) |
 | `/servicos` | Cabeçalho (label + h1 + p) via `RevealSequence` — **sem CTA final** |
-| `/portfolio` | Intro (label + h1 + p); CTA final |
+| `/portfolio` | Intro (label + h1 + p) |
 | `/servicos/[slug]` | *(não usa `RevealSequence`)* — hero: link + h1 + headline em blocos independentes |
 
 ### Onde **não** está aplicado (relevante)

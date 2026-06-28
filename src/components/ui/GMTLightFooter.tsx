@@ -87,7 +87,7 @@ export function GMTLightFooter() {
     <section
       ref={containerRef}
       aria-label="GMT"
-      className="not-prose relative overflow-hidden bg-black py-[2.4rem] md:py-16"
+      className="not-prose relative overflow-hidden bg-black py-[2.04rem] md:py-[3.4rem]"
     >
       {/* Ambas as camadas partilham o mesmo contentor centrado — alinhamento idêntico */}
       <div className="relative flex w-full items-center justify-center">

@@ -38,7 +38,9 @@ export default function HomePage() {
 
       {/* ══ 2 ── O QUE FAZEMOS ══════════════════════════════════════ */}
       <section className="not-prose bg-white px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
-        <SectionLabel className="block w-full text-left">O que fazemos</SectionLabel>
+        <SectionLabel tone="on-light" className="block w-full text-left text-gmt-text">
+          O que fazemos
+        </SectionLabel>
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {avulsos.map((servico, i) => (
@@ -65,7 +67,9 @@ export default function HomePage() {
 
       {/* ══ 3 ── POR QUE A GMT ═══════════════════════════════════════ */}
       <section className="not-prose bg-gmt-bg-alt px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
-        <SectionLabel className="block w-full text-left">Por que a GMT</SectionLabel>
+        <SectionLabel tone="on-light" className="block w-full text-left text-gmt-text">
+          Por que a GMT
+        </SectionLabel>
 
         <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
           {DIFERENCIAIS.map((titulo, i) => {
@@ -91,8 +95,10 @@ export default function HomePage() {
       <ExpandingFrame />
 
       {/* ══ 5 ── TRABALHOS RECENTES ══════════════════════════════════ */}
-      <section className="section-cta px-5 py-20 md:px-[5vw] md:py-[8vw]">
-        <SectionLabel tone="on-dark">Trabalhos recentes</SectionLabel>
+      <section className="section-cta px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
+        <SectionLabel tone="on-dark" className="block w-full text-left text-white">
+          Trabalhos recentes
+        </SectionLabel>
 
         <div className="mt-12">
           {nara && (

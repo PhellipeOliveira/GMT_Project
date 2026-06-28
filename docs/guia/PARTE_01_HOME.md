@@ -310,7 +310,7 @@ As seguintes secções foram **removidas** da Home e não devem ser documentadas
 
 ---
 
-> **GMT Lantern:** documentação completa em `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md` § GMTLightFooter. Posição global: **acima** do Footer Navigation; padding `py-[2.4rem] md:py-16`.
+> **GMT Lantern:** documentação completa em `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md` § GMTLightFooter. Posição global: **acima** do Footer Navigation; padding `py-[2.04rem] md:py-[3.4rem]` (−15%).
 
 ---
 
@@ -343,6 +343,6 @@ As seguintes secções foram **removidas** da Home e não devem ser documentadas
 |---|---|---|
 | `.gmt-brand--footer` | `GMTLightFooter` — todas as páginas | `clamp(8rem, 33vw, 36rem)` |
 
-> Detalhes: `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md`. Padding da faixa: `py-[2.4rem] md:py-16`.
+> Detalhes: `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md`. Padding da faixa: `py-[2.04rem] md:py-[3.4rem]`.
 
 *Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*

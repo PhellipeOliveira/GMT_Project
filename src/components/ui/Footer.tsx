@@ -5,7 +5,7 @@ import { GmtLogo } from "@/components/ui/GmtLogo";
 
 export function Footer() {
   return (
-    <footer className="section-footer relative w-full overflow-hidden pt-[10vw]">
+    <footer className="section-footer relative w-full overflow-hidden pt-[8vw]">
       <PlaceholderMedia
         id="GL-03"
         descricao="textura de secção · 16:9"
@@ -13,11 +13,11 @@ export function Footer() {
         className="pointer-events-none absolute inset-0 opacity-15"
         sizes="100vw"
       />
-      <div className="relative z-10 mx-auto px-5 py-16 md:px-[5vw]">
-        <GmtLogo tone="on-dark" asLink className="mb-12" />
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+      <div className="relative z-10 mx-auto px-5 py-[3.2rem] md:px-[5vw]">
+        <GmtLogo tone="on-dark" asLink className="mb-[2.4rem]" />
+        <div className="grid grid-cols-1 gap-[2.4rem] md:grid-cols-3">
           <div>
-            <h3 className="type-label mb-5 text-gmt-muted">
+            <h3 className="type-label mb-4 text-gmt-muted">
               Automação &amp; IA
             </h3>
             <ul className="flex flex-col gap-2">
@@ -35,7 +35,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="type-label mb-5 text-gmt-muted">
+            <h3 className="type-label mb-4 text-gmt-muted">
               Marketing Digital
             </h3>
             <ul className="flex flex-col gap-2">
@@ -61,7 +61,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="type-label mb-5 text-gmt-muted">Empresa</h3>
+            <h3 className="type-label mb-4 text-gmt-muted">Empresa</h3>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link
@@ -91,7 +91,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-gmt-border pt-8">
+        <div className="mt-[2.4rem] border-t border-gmt-border pt-[1.6rem]">
           <p className="type-label text-gmt-muted normal-case tracking-normal">
             © 2026 Growth Marketing Technology · Lisboa, Portugal
           </p>

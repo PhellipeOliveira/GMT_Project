@@ -6,7 +6,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
 >
-> **Extração:** 28 Jun 2026 · **Actualização Lantern:** global acima do Footer; container −20% altura (`py-[2.4rem] md:py-16`).
+> **Extração:** 28 Jun 2026 · **Compactação global (Jun 2026):** Footer Navigation −20%; GMT Lantern −15% (padding vertical).
 
 ---
 
@@ -23,7 +23,7 @@ Em `src/app/layout.tsx`, dentro de `<body className="flex min-h-full flex-col bg
 <FloatingCTA />         → botão flutuante "Agendar reunião"
 ```
 
-> **Ordem visual:** conteúdo da página → **GMT Lantern** (faixa slim preta) → **Footer Navigation** (links + copyright). A lanterna cria respiração entre o `<main>` e a navegação do rodapé.
+> **Ordem visual:** conteúdo da página → **GMT Lantern** (faixa slim preta) → **Footer Navigation** (links + copyright). Sem gap entre lantern e footer — contacto directo. A lanterna cria **respiro** entre o `<main>` e a navegação do rodapé, com alturas compactas para não dominar o viewport.
 
 Fontes globais (`layout.tsx`): **DM Sans** (`--font-dmsans`, pesos 400/500) e **Host Grotesk** (`--font-hostgrotesk`, pesos 300/400/500/600/700/800), aplicadas via `--font-sans`/`--font-display`. Favicon/apple-icon = `/images/GL-02.webp`.
 
@@ -154,7 +154,22 @@ Conteúdo das colunas:
 - **Marketing Digital** — os 3 `pacotes` + `Todos os serviços` (`/servicos`).
 - **Empresa** — `Sobre` · `Portfolio` · `Contacto`.
 
-### 3. Imagens / mídia
+### 3. Layout e espaçamento (Footer Navigation)
+
+| Propriedade | Valor no código | Notas |
+|---|---|---|
+| Padding topo secção | `pt-[8vw]` | **−20%** vs. `pt-[10vw]` |
+| Padding interno | `py-[3.2rem]` | **−20%** vs. `py-16` (4rem) |
+| Padding horizontal | `px-5` · `md:px-[5vw]` | Inalterado |
+| Logo → grid | `mb-[2.4rem]` | **−20%** vs. `mb-12` |
+| Gap colunas | `gap-[2.4rem]` | **−20%** vs. `gap-12` |
+| Título coluna → links | `mb-4` | **−20%** vs. `mb-5` |
+| Grid → copyright | `mt-[2.4rem] pt-[1.6rem]` | **−20%** vs. `mt-12 pt-8` |
+| Fundo | `.section-footer` · `#101010` | Textura `GL-03` a 15% opacidade |
+
+> **Respiro visual:** o footer ocupa só a altura necessária ao conteúdo textual — evitar bloco preto alto demais. Tipografia e tokens **inalterados**.
+
+### 4. Imagens / mídia
 Cruzado com PLANO Tabela 4.6.
 
 | ID | Slot | Proporção | Export | Arquivo atual | Status |
@@ -163,21 +178,21 @@ Cruzado com PLANO Tabela 4.6.
 
 > Render via `PlaceholderMedia` `id="GL-03"`, `opacity-15`, `pointer-events-none absolute inset-0`, `sizes="100vw"`. Cor de fallback `#101010`.
 
-### 4. Botões / CTAs
+### 5. Botões / CTAs
 Sem botões — apenas links de texto (`.type-body`, hover para `#ffffff`). Logo é `Link` para `/`.
 
-### 5. Animações
+### 6. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
 | Cor dos links | CSS | on-hover | `transition-colors 300ms` |
 
 Sem reveal on-scroll neste componente.
 
-### 6. Responsividade
-- **Desktop (`md+`):** grid `md:grid-cols-3`; `px-[5vw]`.
-- **Mobile:** grid `grid-cols-1`; `px-5`. Margem `my-[10vw]`; padding interno `py-16`.
+### 7. Responsividade
+- **Desktop (`md+`):** grid `md:grid-cols-3`; `px-[5vw]`; padding interno `py-[3.2rem]`.
+- **Mobile:** grid `grid-cols-1`; `px-5`; padding topo secção `pt-[8vw]`.
 
-### 7. Arquivos relacionados
+### 8. Arquivos relacionados
 `src/components/ui/Footer.tsx`, `src/components/ui/GmtLogo.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/servicos.ts` (`agentes`, `pacotes`), classe `.section-footer` em `src/styles/globals.css`.
 
 ---
@@ -198,11 +213,11 @@ Faixa decorativa de branding **global**: "GMT" gigante revelado por foco de luz 
 ### 3. Layout e espaçamento
 | Propriedade | Valor no código | Notas |
 |---|---|---|
-| Padding vertical | `py-[2.4rem]` mobile · `md:py-16` desktop | **−20%** vs. anterior (`py-[2.4rem]` / `md:py-16`) — faixa mais slim |
+| Padding vertical | `py-[2.04rem]` mobile · `md:py-[3.4rem]` desktop | **−15%** vs. `py-[2.4rem]` / `md:py-16` — faixa mais slim; tipografia GMT **inalterada** |
 | Fundo | `bg-black` (`#000000`) | Contínuo com Footer Navigation |
 | Overflow | `overflow-hidden` | Texto gigante cortado nas bordas |
 | Alinhamento texto | `flex items-center justify-center` | Base e reveal partilham o mesmo contentor centrado |
-| Respiração | Entre `<main>` e `<Footer />` | Separa conteúdo da grelha de links |
+| Respiração | Entre `<main>` e `<Footer />` | Separa conteúdo da grelha de links; contacto directo (sem margem entre blocos) |
 
 ### 4. Copy / tipografia
 
@@ -233,8 +248,8 @@ Nenhuma asset de ficheiro. Efeito puro CSS/JS (ID conceptual **GL-06** no Plano 
 Touch (`hover: none`): iluminação estática centrada (`opacity 0.55`). **Não** usa Framer Motion.
 
 ### 7. Responsividade
-- **Desktop:** cursor-follow; padding `md:py-16` (64px total vertical ≈ 128px com texto).
-- **Mobile/touch:** fallback estático; padding `py-[2.4rem]` (38.4px × 2).
+- **Desktop:** cursor-follow; padding `md:py-[3.4rem]` (3.4rem × 2 ≈ 6.8rem vertical só de padding).
+- **Mobile/touch:** fallback estático; padding `py-[2.04rem]` (2.04rem × 2).
 
 ### 8. Arquivos relacionados
 `src/components/ui/GMTLightFooter.tsx`, `src/app/layout.tsx`, classes `.gmt-brand`/`.gmt-brand--footer` em `src/styles/globals.css`.
@@ -263,7 +278,9 @@ Fonte canónica: `src/data/media-spec.ts` + `PlaceholderMedia`. Usar esta tabela
 | Label → conteúdo | `mt-10` (40px) | Secções Home com `SectionLabel` |
 | Título hero → subtítulo | `gap-2` (8px) | Hero serviço; Home `HeroTitle` usa `gap-6` |
 | Rótulo secção → grid | `mt-10` / `mt-12` | Home sec. 2–5 |
-| Lantern → Footer nav | 0 (contacto directo) | `GMTLightFooter` imediatamente acima de `<Footer />` |
+| Lantern → Footer nav | 0 (contacto directo) | `GMTLightFooter` imediatamente acima de `<Footer />` — sem gap |
+| Footer nav — respiro interno | `pt-[8vw]` + `py-[3.2rem]` + gaps −20% | `Footer.tsx` — altura proporcional ao conteúdo |
+| Lantern — altura faixa | `py-[2.04rem]` / `md:py-[3.4rem]` | `GMTLightFooter.tsx` — texto GMT centrado, tamanho inalterado |
 
 ---
 

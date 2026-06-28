@@ -230,7 +230,7 @@ Ver tabela completa em `PLANO_MESTRE_DE_MIDIA.md` § Hierarquia da Verdade → M
 | Componente | Ficheiro | Implementado | Falta |
 |---|---|---|---|
 | Navbar | `Navbar.tsx` | Blur, altura vw, CTA pill, hamburger box, modo claro | Opacity fade no scroll; seta animada ✓ |
-| Footer | `Footer.tsx` | `#101010`, `my-[10vw]`, 3 colunas | Grid 5 col; ticker; social strip |
+| Footer | `Footer.tsx` | `#101010`, `pt-[8vw]`, `py-[3.2rem]`, 3 colunas | Grid 5 col; ticker; social strip |
 | HeroSlider | `HeroSlider.tsx` | Keyframes, drag, barra 7s | Preloader; multi-mídia slides |
 | Accordion | `Accordion.tsx` | Blur, border 1s, grid reveal | 3º nível nested; transform scale sub-list |
 | ContactForm | `ContactForm.tsx` | Labels, pills, shake, spinner, sucesso | API; validação campo-a-campo |

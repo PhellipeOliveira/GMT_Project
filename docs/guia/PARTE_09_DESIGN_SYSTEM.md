@@ -159,7 +159,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Hero brand letra-a-letra + blink | Framer Motion (`HeroTitle`) | Home Hero; on-load + on-view | char `0.28s` ease `[0.2,0.65,0.3,0.9]`; blink `0.8s` |
 | Frame expansivo | Framer Motion `useScroll`/`useTransform` | Home transição; on-scroll | scale `35%→100%`/`45vh→100vh` a partir de `SCALE_START≈0.4`; bg `#fff→#000` em janela curta (`0.4→0.52`); radius `16→0`; slideshow 700ms |
 | Service overlay hover | CSS (`group-hover`) | Home "O que fazemos"; on-hover | `blur(4px)` + `saturate(0.35)` na imagem; descrição `opacity 0→1` |
-| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | global — acima do Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s`; padding `py-[2.4rem] md:py-16` |
+| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | global — acima do Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s`; padding `py-[2.04rem] md:py-[3.4rem]` |
 | FloatingCTA | Framer Motion `AnimatePresence` | global; scroll threshold | `0.35s`, `opacity`+`y 14` |
 | Navbar (tema) | Framer Motion `useScroll` | global; scroll > 60px | transição CSS 300–500ms |
 | Accordion | CSS `grid-template-rows` | `/servicos`; on-click | `0.3s cubic-bezier(0.4,0,0.2,1)`; chevron rotação 180° |

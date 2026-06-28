@@ -319,7 +319,7 @@ As seguintes secções foram **removidas** da Home e não devem ser documentadas
 
 ---
 
-> **GMT Lantern:** documentação completa em `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md` § GMTLightFooter. Posição global: **acima** do Footer Navigation; padding `py-[2.4rem] md:py-16`.
+> **GMT Lantern:** documentação completa em `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md` § GMTLightFooter. Posição global: **acima** do Footer Navigation; padding `py-[2.04rem] md:py-[3.4rem]` (−15%).
 
 ---
 
@@ -352,7 +352,7 @@ As seguintes secções foram **removidas** da Home e não devem ser documentadas
 |---|---|---|
 | `.gmt-brand--footer` | `GMTLightFooter` — todas as páginas | `clamp(8rem, 33vw, 36rem)` |
 
-> Detalhes: `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md`. Padding da faixa: `py-[2.4rem] md:py-16`.
+> Detalhes: `docs/guia/PARTE_08_COMPONENTES_GLOBAIS.md`. Padding da faixa: `py-[2.04rem] md:py-[3.4rem]`.
 
 *Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*
 
@@ -782,162 +782,17 @@ Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições n
 |---|---|
 | Rota | `/portfolio` |
 | Arquivo | `src/app/portfolio/page.tsx` |
-| Componentes | `RevealOnScroll`, `PlaceholderMedia` |
-| Dados | `portfolio` (`src/data/portfolio.ts`); array `EM_BREVE = ["PF-EB1","PF-EB2","PF-EB3"]` no próprio arquivo |
+| Componentes | `RevealOnScroll`, `RevealSequence`, `PlaceholderMedia` |
+| Dados | `portfolio` (`src/data/portfolio.ts`) — **1 case real (NARA)** |
 | Metadata | `title: "Portfolio"`; `description` sobre o case NARA |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `layout.tsx`) | `Navbar`, `GMTLightFooter`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
 
 **Ordem das seções:**
 
 1. Seção 01 — Cabeçalho + grid de thumbnails
 2. Seção 02 — Lista de projetos
-3. Seção 03 — CTA final
 
-> A página **não** usa o wrapper `.section-light`; as Seções 01 e 02 ficam sobre o fundo padrão (`--gmt-bg` = `#ffffff`). Atualmente o array `portfolio` contém **1 case real (NARA)** + slots "em breve".
-
----
-
-# Seção 01 — Cabeçalho + grid de thumbnails
-
-### 1. Objetivo
-Apresentar o título da página + tagline sobre o NARA (esquerda) e um grid de thumbnails verticais (direita), incluindo slots "em breve".
-
-### 2. Copy / Textos
-
-| Campo | Label | `<h1>` | `<p>` tagline |
-|---|---|---|---|
-| Conteúdo | `Trabalho recente` | `Portfolio` | `Criámos integralmente o NARA — uma plataforma tecnológica que atende profissionais em vários países. Do branding e website a chatbots inteligentes e campanhas publicitárias, todo o ecossistema digital foi desenvolvido pela agência.` |
-| Elemento HTML | `p` | `h1` | `p` |
-| Classe | `.type-label` | `.type-h2` | `.type-body-lg` |
-| Família | DM Sans | Host Grotesk | DM Sans |
-| Tamanho | 14px | `clamp(42px,6vw,72px)` | 21px |
-| Peso | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` | `#575757` (`text-gmt-muted`) |
-| `letter-spacing` | 0.1em | — | — |
-| `text-transform` | uppercase | none | none |
-
-### 3. Imagens / mídia
-Thumbnails verticais. Para cada case real renderiza-se `PF-02` (id fixo no código); os 3 slots vazios usam os ids `EM_BREVE`. Render `rounded-lg`, `reveal={false}`; slots "em breve" com `opacity-50`. Cruzado com PLANO Tabela 4.5 (PF-02 + PF-SLOT-G).
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| PF-02 | Grid hero — thumb do case (NARA) | 9:16 | 1080×1920 | `public/images/PF-02.webp` | **Produzido** |
-| PF-EB1 | Grid — slot vazio 1 | 9:16 | 1080×1920 | (não existe) | **Lacuna** (intencional) |
-| PF-EB2 | Grid — slot vazio 2 | 9:16 | 1080×1920 | (não existe) | **Lacuna** (intencional) |
-| PF-EB3 | Grid — slot vazio 3 | 9:16 | 1080×1920 | (não existe) | **Lacuna** (intencional) |
-
-> Cor de fallback: case real `c.corPlaceholder` = `#134E4A` (NARA); slots "em breve" `#1E293B`. `PF-EB1..3` existem em `media-spec.ts` com `slot: "Lacuna — grid hero"`.
-
-### 4. Botões / CTAs
-Nenhum (thumbnails desta seção não são clicáveis).
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Label, h1, tagline | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; tagline `delay 0.08` |
-| Cada thumbnail (real + "em breve") | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger crescente (`delay = i*0.08`, "em breve" continuam o índice: `(portfolio.length + i) * 0.08`) |
-| Imagem (quando há asset) | CSS (`.media-zoom`) | on-hover | `scale(1.03)`, 400ms |
-
-### 6. Responsividade
-- **Desktop:** cabeçalho `flex-row` (cada bloco `md:w-1/2`); grid de thumbs `md:grid-cols-4`; `pt-[11vw]`, `px-[5vw]`, `gap-[5vw]`.
-- **Tablet:** grid de thumbs `grid-cols-2`.
-- **Mobile:** `flex-col`; grid `grid-cols-2`; `pt-28`, `px-5`, `gap-10`.
-
-### 7. Arquivos relacionados
-`src/app/portfolio/page.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`, `src/data/media-spec.ts`.
-
----
-
-# Seção 02 — Lista de projetos
-
-### 1. Objetivo
-Lista vertical numerada dos projetos (case real como link + slots "em breve" não-clicáveis).
-
-### 2. Copy / Textos
-
-| Campo | Índice | `<h3>` projeto | `<p>` local | Tag | Seta |
-|---|---|---|---|---|---|
-| Conteúdo | `01`, `02`… (`String(i+1).padStart(2,"0")`) | `c.nome` (ex.: `NARA`) / `Em breve` | `c.local` (ex.: `Portugal · Internacional`) / `Novo case em produção` | `c.tags[]` (`Branding`, `Website`, `Chatbots`, `Campanhas`) | `→` |
-| Elemento HTML | `span` | `h3` | `p` | `span` | `span` |
-| Classe | `font-mono` + `.type-body` | `.type-h3` | `.type-body` | `.tag-pill` | inline |
-| Família | Mono sistema (`--font-mono`) | Host Grotesk | DM Sans | DM Sans | DM Sans |
-| Tamanho | 18px | 36px | 18px | `clamp(13px,0.9vw,15px)` | 18px (herdado) |
-| Peso | 400 | 400 | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a`; hover `#2563eb` (`group-hover:text-gmt-accent`) | `#575757` (`text-gmt-muted`) | `#000` (definido em `.tag-pill`) | `#575757` (`text-gmt-muted`) |
-| `letter-spacing` | — | — | — | normal (`.tag-pill` reseta) | — |
-| `text-transform` | none | none | none | none | none |
-
-> Linhas "em breve" (3, do array `EM_BREVE`) usam `opacity-50` e o `h3` `Em breve` não tem hover de cor.
-
-### 3. Imagens / mídia
-Thumb por linha. Render `w-20 md:w-28`, `rounded-md`, `reveal={false}`. Cruzado com PLANO Tabela 4.5.
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| PF-02 | Thumb da linha (case real) | 9:16 | 1080×1920 | `public/images/PF-02.webp` | **Produzido** |
-| PF-EB1 / PF-EB2 / PF-EB3 | Thumb das linhas "em breve" | 9:16 | 1080×1920 | (não existe) | **Lacuna** (intencional) |
-
-> Cor de fallback: case real `#134E4A`; "em breve" `#1E293B`.
-
-### 4. Botões / CTAs
-- **Linha de case real** = `Link` para `/portfolio/{slug}` (grupo `group`), sem fundo. Hover: título → `--gmt-accent` (`#2563eb`); seta `→` com `translate-x-1`.
-- **Linhas "em breve"** = `<div>` não-clicável (`opacity-50`).
-- **Tags** = `.tag-pill` (fundo `rgb(255 255 255 / 0.8)`, texto `#000`, `border-radius 0.5vw`, `backdrop-blur 8px`), não-clicáveis.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Cada linha (real + "em breve") | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger (`delay = i*0.08` e continuação para "em breve") |
-| Título da linha | CSS | on-hover (group) | cor → `--gmt-accent`, 300ms |
-| Seta `→` | CSS | on-hover (group) | `translate-x-1` |
-
-### 6. Responsividade
-- **Desktop:** linhas `py-[8vw]`, `gap-[2vw]`; thumb `md:w-28`; `mt-[8vw]`, `px-[5vw]`.
-- **Tablet/Mobile:** linhas reais `py-16`, "em breve" `py-8`; thumb `w-20`; `mt-20`, `px-5`, `gap-5`.
-
-### 7. Arquivos relacionados
-`src/app/portfolio/page.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`, classes `.type-h3`/`.tag-pill` em `src/styles/globals.css`.
-
----
-
-# Seção 03 — CTA final
-
-### 1. Objetivo
-Conversão (faixa preta `.section-cta`, centrada).
-
-### 2. Copy / Textos
-
-| Campo | `<h2>` | `<p>` |
-|---|---|---|
-| Conteúdo | `Quer ser o nosso próximo case?` | `Agende uma reunião gratuita e sem compromisso.` |
-| Elemento HTML | `h2` | `p` |
-| Classe | `.type-h3` | `.type-body` |
-| Família | Host Grotesk | DM Sans |
-| Tamanho | 36px | 18px |
-| Peso | 400 | 400 |
-| Cor da fonte | `#ffffff` (em `.section-cta`, regra `:where(.type-h3) → var(--gmt-text)` = `#ffffff`) | `#94a3b8` (`text-gmt-muted` redefinido na `.section-cta`) |
-| `letter-spacing` | — | — |
-| `text-transform` | none | none |
-
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 4. Botões / CTAs
-"Agendar reunião" — classe `.btn-submit` (link para `/contacto`).
-- Fundo `rgb(255 255 255 / 0.7)` · Texto `#000` · `border-radius 9999px` · `padding 0.75rem 2rem` · DM Sans 18px peso 500.
-- Hover: `bg rgb(255 255 255 / 0.85)` + `scale(1.02)`.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| h2, p e botão | Framer Motion (`RevealOnScroll`) | on-scroll | stagger (`delay 0.08`/`0.16`) |
-
-### 6. Responsividade
-- **Todos:** centrado, h2 `max-w-2xl`.
-- **Desktop:** `mt-[8vw] px-[5vw] py-[8vw]`. **Mobile:** `mt-20 px-5 py-20`.
-
-### 7. Arquivos relacionados
-`src/app/portfolio/page.tsx`, classes `.btn-submit` e `.section-cta` em `src/styles/globals.css`.
+> Documentação completa: `docs/guia/PARTE_05_PORTFOLIO_LISTAGEM.md`.
 
 ---
 
@@ -945,19 +800,17 @@ Nenhuma. **Não identificado no projeto**.
 
 | Token / Contexto | Valor | Onde aparece |
 |---|---|---|
-| `--gmt-bg` | `#ffffff` | fundo das Seções 01–02 |
+| `--gmt-bg` | `#ffffff` | fundo das Secções 01–02 |
 | `--gmt-text` | `#0a0a0a` | h1, h3 dos projetos |
 | `--gmt-text-muted` | `#575757` | label, tagline, local, índice, seta |
 | `--gmt-accent` | `#2563eb` | hover do título da linha |
 | `--gmt-border` | `#dcdcdc` | linhas da lista (`border-t`/`border-b border-gmt-border`) |
-| `.tag-pill` | fundo `rgb(255 255 255 / 0.8)`, texto `#000` | tags da Seção 02 |
+| `.tag-pill` | fundo `rgb(255 255 255 / 0.8)`, texto `#000` | tags da Sec. 02 |
 | `COR_PORTFOLIO` | `#134E4A` | fallback do thumb NARA (PF-02) |
-| fallback "em breve" | `#1E293B` | thumbs/linhas PF-EB1..3 |
-| `.section-cta` | bg `#000000`, text `#ffffff`, muted `#94a3b8` | Seção 03 |
 
-> `src/styles/tokens.css` existe mas define tokens legados (`--color-*`, `--font-geist-*`) **não usados** por esta página — a fonte de verdade é `globals.css`.
+> Documentação completa: `docs/guia/PARTE_05_PORTFOLIO_LISTAGEM.md`.
 
-*Documento gerado a partir do código do repositório e das fontes de verdade indicadas. Nenhuma informação foi inventada.*
+*Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*
 
 
 ---
@@ -988,170 +841,14 @@ Nenhuma. **Não identificado no projeto**.
 | Dados | `portfolio`, `getCaseBySlug` (`src/data/portfolio.ts`) |
 | Geração estática | `generateStaticParams()` → 1 página por case (**atualmente 1: NARA**); `generateMetadata()` (title = `caso.nome`, description = `caso.resumo`) |
 | 404 | `notFound()` quando o slug não existe |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `layout.tsx`) | `Navbar`, `GMTLightFooter`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
 
 **Ordem das seções:**
 
 1. Seção 01 — Ficha lateral (sticky) + galeria
-2. Seção 02 — Próximo projeto
-3. Seção 03 — CTA final
+2. Seção 02 — Lista de projetos (cases em `portfolio`)
 
-> A página **não** usa o wrapper `.section-light`; as Seções 01 e 02 ficam sobre o fundo padrão (`--gmt-bg` = `#ffffff`).
-
----
-
-## Dados vs. estrutura do template
-
-| Origem | Conteúdo |
-|---|---|
-| **Dados — `portfolio.ts` (por case)** | `nome` (h1), `tags[]`, `resumo`, `local`, `industria`, `servicos`, `galeria[]` (ids + proporção + legenda), `corPlaceholder` |
-| **Estrutural — fixo no template** | Link `← Portfolio`, rótulos `Localização`/`Indústria`/`Serviços`, botão `Falar sobre um projeto`, Seção 02 "Próximo projeto" (2 placeholders fixos "Em breve"), copy do CTA final |
-
----
-
-# Seção 01 — Ficha lateral (sticky) + galeria
-
-### 1. Objetivo
-Layout split: ficha do case numa coluna sticky à esquerda (nome, tags, resumo, metadados, CTA) + galeria vertical de imagens à direita.
-
-### 2. Copy / Textos
-
-| Campo | Link voltar | `<h1>` | Tag | `<p>` resumo | `<dt>` rótulo | `<dd>` valor | Botão CTA |
-|---|---|---|---|---|---|---|---|
-| Conteúdo | `← Portfolio` (estrutural) | `caso.nome` (dados; ex.: `NARA`) | `caso.tags[]` (dados) | `caso.resumo` (dados) | `Localização` / `Indústria` / `Serviços` (estrutural) | `caso.local` / `caso.industria` / `caso.servicos` (dados) | `Falar sobre um projeto` (estrutural) |
-| Elemento HTML | `a` (Link) | `h1` | `span` | `p` | `dt` | `dd` | `a` (Link) |
-| Classe | `.type-label` | `.type-h2` | `.type-body` (em pill `bg-gmt-bg-alt`) | `.type-body-lg` | `.type-label` | `.type-body` | `.type-body` + `.type-medium` |
-| Família | DM Sans | Host Grotesk | DM Sans | DM Sans | DM Sans | DM Sans | DM Sans |
-| Tamanho | 14px | `clamp(42px,6vw,72px)` | 18px | 21px | 14px | 18px | 18px |
-| Peso | 400 | 400 | 400 | 400 | 400 | 400 | **500** |
-| Cor da fonte | `#575757` (`text-gmt-muted`, hover `#0a0a0a`) | `var(--gmt-text)` = `#0a0a0a` | `#0a0a0a` (`text-gmt-text`) | `#575757` (`text-gmt-muted`) | `#575757` (`text-gmt-muted`) | `#0a0a0a` (`text-gmt-text`) | `#ffffff` (`text-white`) |
-| `letter-spacing` | 0.1em | — | — | — | 0.1em | — | — |
-| `text-transform` | uppercase | none | none | none | uppercase | none | none |
-
-> Valores do NARA (de `portfolio.ts`): `local` = `Portugal · Internacional`; `industria` = `Tecnologia`; `servicos` = `Website + IA`; `tags` = `Branding`, `Website`, `Chatbots`, `Campanhas`. Tag pill usa `rounded-lg bg-gmt-bg-alt px-3 py-1` (não a classe `.tag-pill`).
-
-### 3. Imagens / mídia
-Galeria de `caso.galeria` (NARA = 10 imagens). Render `rounded-lg md:rounded-[1vw]`, `sizes="(max-width: 768px) 100vw, 60vw"`, `reveal={false}`. A proporção de cada item vem de `media-spec.ts` (a `proporcao` no dado é usada só na legenda). Cor de fallback `caso.corPlaceholder` = `#134E4A`. Cruzado com PLANO Tabela 4.5.
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| PF-03 | Galeria — capa (1ª) | 16:9 | 2560×1440 | `public/images/PF-03.webp` | **Produzido** |
-| PF-04 | Galeria — tela 1 | 4:3 | 1600×1200 | `public/images/PF-04.webp` | **Produzido** |
-| PF-05 | Galeria — tela 2 | 4:3 | 1600×1200 | `public/images/PF-05.webp` | **Produzido** |
-| PF-06 | Galeria — tela 3 | 4:3 | 1600×1200 | `public/images/PF-06.webp` | **Produzido** |
-| PF-07 | Galeria — tela 4 | 4:3 | 1600×1200 | `public/images/PF-07.webp` | **Produzido** |
-| PF-08 | Galeria — tela 5 | 4:3 | 1600×1200 | `public/images/PF-08.webp` | **Produzido** |
-| PF-09 | Galeria — tela 6 | 4:3 | 1600×1200 | `public/images/PF-09.webp` | **Produzido** |
-| PF-10 | Galeria — tela 7 | 4:3 | 1600×1200 | `public/images/PF-10.webp` | **Produzido** |
-| PF-11 | Galeria — tela 8 | 4:3 | 1600×1200 | `public/images/PF-11.webp` | **Produzido** |
-| PF-12 | Galeria — tela 9 | 4:3 | 1600×1200 | `public/images/PF-12.webp` | **Produzido** |
-
-### 4. Botões / CTAs
-"Falar sobre um projeto" — classes inline `.type-body` + `.type-medium` + `mt-8 inline-flex w-full justify-center rounded-lg bg-gmt-accent px-6 py-3 text-white`.
-- Fundo `--gmt-accent` = `#2563eb` · Texto `#ffffff` · `border-radius 0.5rem` (`rounded-lg`) · full-width (`w-full`).
-- Hover: `bg-gmt-accent-2` = `#7c3aed`.
-- Link para `/contacto`.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Link, h1, tags, resumo, metadados, CTA | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; delays escalonados `0.08`/`0.16`/`0.24` |
-| Cada imagem da galeria | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger `delay = i*0.08` |
-
-### 6. Responsividade
-- **Desktop:** `flex-row`; ficha `md:sticky md:top-24 md:w-2/5`; galeria `md:w-3/5` com `gap-[1.5vw]`; `pt-[11vw]`, `px-[5vw]`.
-- **Tablet/Mobile:** `flex-col` (ficha não-sticky, acima da galeria); `gap-[3vw]`/`gap-4`; `pt-28`, `px-5`.
-
-### 7. Arquivos relacionados
-`src/app/portfolio/[slug]/page.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`, `src/data/media-spec.ts`, classe `.type-medium` em `src/styles/globals.css`.
-
----
-
-# Seção 02 — Próximo projeto
-
-### 1. Objetivo
-Navegação para próximos cases — atualmente 2 placeholders fixos "Em breve" (não dependem dos dados).
-
-### 2. Copy / Textos
-
-| Campo | `<h2>` | `<h3>` | `<p>` |
-|---|---|---|---|
-| Conteúdo | `Próximo projeto` (estrutural) | `Em breve` (estrutural) | `Novo case em produção` (estrutural) |
-| Elemento HTML | `h2` | `h3` | `p` |
-| Classe | `.type-label` | `.type-h3` | `.type-body` |
-| Família | DM Sans | Host Grotesk | DM Sans |
-| Tamanho | 14px | 36px | 18px |
-| Peso | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` | `#575757` (`text-gmt-muted`) |
-| `letter-spacing` | 0.1em | — | — |
-| `text-transform` | uppercase | none | none |
-
-> As 2 linhas são geradas por `[0, 1].map(...)` (fixas no template), com `opacity-50`.
-
-### 3. Imagens / mídia
-Thumb `PF-02` (id fixo no código) por linha placeholder. Render `w-20 md:w-28`, `rounded-md`, `sizes="112px"`, `reveal={false}`, cor de fallback `#1E293B`. Corresponde a `PF-SLOT-N` na PARTE 4.
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| PF-02 (reutilizado) | Próximo projeto — placeholder | 9:16 | 1080×1920 | `public/images/PF-02.webp` (existe, mas renderizado em cinza com cor `#1E293B`) | **Lacuna** (slot de navegação `PF-SLOT-N` — depende de novos cases) |
-
-> Nota: embora `PF-02.webp` exista, estas linhas são placeholders de **lacuna** ("Em breve") — não representam um case real navegável.
-
-### 4. Botões / CTAs
-Nenhum. As linhas são `<div>` não-clicáveis (`opacity-50`).
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Cada linha placeholder | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger `delay = i*0.08` |
-
-### 6. Responsividade
-- **Desktop:** linhas `py-8`, `gap-[2vw]`; thumb `md:w-28`; `mt-[8vw]`, `px-[5vw]`.
-- **Mobile:** thumb `w-20`, `gap-5`; `mt-20`, `px-5`.
-
-### 7. Arquivos relacionados
-`src/app/portfolio/[slug]/page.tsx`, `src/components/ui/PlaceholderMedia.tsx`.
-
----
-
-# Seção 03 — CTA final
-
-### 1. Objetivo
-Conversão (faixa preta `.section-cta`, centrada).
-
-### 2. Copy / Textos
-
-| Campo | `<h2>` | `<p>` |
-|---|---|---|
-| Conteúdo | `Pronto para automatizar o seu negócio?` (estrutural) | `Reunião gratuita e sem compromisso.` (estrutural) |
-| Elemento HTML | `h2` | `p` |
-| Classe | `.type-h3` | `.type-body` |
-| Família | Host Grotesk | DM Sans |
-| Tamanho | 36px | 18px |
-| Peso | 400 | 400 |
-| Cor da fonte | `#ffffff` (em `.section-cta`, regra `:where(.type-h3) → var(--gmt-text)` = `#ffffff`) | `#94a3b8` (`text-gmt-muted` redefinido na `.section-cta`) |
-| `letter-spacing` | — | — |
-| `text-transform` | none | none |
-
-### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
-
-### 4. Botões / CTAs
-"Agendar agora" — classe `.btn-submit` (link para `/contacto`).
-- Fundo `rgb(255 255 255 / 0.7)` · Texto `#000` · `border-radius 9999px` · `padding 0.75rem 2rem` · DM Sans 18px peso 500.
-- Hover: `bg rgb(255 255 255 / 0.85)` + `scale(1.02)`.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| h2, p e botão | Framer Motion (`RevealOnScroll`) | on-scroll | stagger (`delay 0.08`/`0.16`) |
-
-### 6. Responsividade
-- **Todos:** centrado, h2 `max-w-2xl`.
-- **Desktop:** `px-[5vw] py-[8vw]`. **Mobile:** `px-5 py-20`.
-
-### 7. Arquivos relacionados
-`src/app/portfolio/[slug]/page.tsx`, classes `.btn-submit` e `.section-cta` em `src/styles/globals.css`.
+> Documentação completa: `docs/guia/PARTE_06_PORTFOLIO_DETALHE.md`.
 
 ---
 
@@ -1159,20 +856,18 @@ Nenhuma. **Não identificado no projeto**.
 
 | Token / Contexto | Valor | Onde aparece |
 |---|---|---|
-| `--gmt-bg` | `#ffffff` | fundo das Seções 01–02 |
-| `--gmt-bg-alt` | `#f5f5f5` | pills de tag da ficha (`bg-gmt-bg-alt`) |
-| `--gmt-text` | `#0a0a0a` | h1, h3, tags, valores `<dd>` |
-| `--gmt-text-muted` | `#575757` | link voltar, resumo, rótulos `<dt>`, "Próximo projeto" |
-| `--gmt-accent` | `#2563eb` | fundo do botão "Falar sobre um projeto" |
-| `--gmt-accent-2` | `#7c3aed` | hover do botão da ficha |
-| `--gmt-border` | `#dcdcdc` | divisórias (`border-t`/`border-b border-gmt-border`) |
-| `COR_PORTFOLIO` | `#134E4A` | fallback da galeria (PF-03..12) |
-| fallback "em breve" | `#1E293B` | thumbs da Seção 02 |
-| `.section-cta` | bg `#000000`, text `#ffffff`, muted `#94a3b8` | Seção 03 |
+| `--gmt-bg` | `#ffffff` | Secções 01–02 |
+| `--gmt-bg-alt` | `#f5f5f5` | pills de tag da ficha |
+| `--gmt-text` | `#0a0a0a` | h1, h3, tags, `<dd>` |
+| `--gmt-text-muted` | `#575757` | link voltar, resumo, rótulos, local na lista |
+| `--gmt-accent` | `#2563eb` | botão ficha + hover título lista |
+| `--gmt-accent-2` | `#7c3aed` | hover botão ficha |
+| `--gmt-border` | `#dcdcdc` | divisórias da lista |
+| `COR_PORTFOLIO` | `#134E4A` | fallback galeria e thumb NARA |
 
-> `src/styles/tokens.css` existe mas define tokens legados (`--color-*`, `--font-geist-*`) **não usados** por esta página — a fonte de verdade é `globals.css`.
+> Documentação completa: `docs/guia/PARTE_06_PORTFOLIO_DETALHE.md`.
 
-*Documento gerado a partir do código do repositório e das fontes de verdade indicadas. Nenhuma informação foi inventada.*
+*Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*
 
 
 ---
@@ -1528,7 +1223,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Hero brand letra-a-letra + blink | Framer Motion (`HeroTitle`) | Home Hero; on-load + on-view | char `0.28s` ease `[0.2,0.65,0.3,0.9]`; blink `0.8s` |
 | Frame expansivo | Framer Motion `useScroll`/`useTransform` | Home transição; on-scroll | scale `35%→100%`/`45vh→100vh` a partir de `SCALE_START≈0.4`; bg `#fff→#000` em janela curta (`0.4→0.52`); radius `16→0`; slideshow 700ms |
 | Service overlay hover | CSS (`group-hover`) | Home "O que fazemos"; on-hover | `blur(4px)` + `saturate(0.35)` na imagem; descrição `opacity 0→1` |
-| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | global — acima do Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s` |
+| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | global — acima do Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s`; padding `py-[2.04rem] md:py-[3.4rem]` |
 | FloatingCTA | Framer Motion `AnimatePresence` | global; scroll threshold | `0.35s`, `opacity`+`y 14` |
 | Navbar (tema) | Framer Motion `useScroll` | global; scroll > 60px | transição CSS 300–500ms |
 | Accordion | CSS `grid-template-rows` | `/servicos`; on-click | `0.3s cubic-bezier(0.4,0,0.2,1)`; chevron rotação 180° |
