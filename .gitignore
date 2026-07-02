@@ -3,6 +3,7 @@
 # dependencies
 node_modules
 /node_modules
+.venv/
 /.pnp
 .pnp.*
 .yarn/*
@@ -43,3 +44,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+__pycache__/
+*.py[cod]
+.langgraph_api/
+
+# secrets (ex.: Google Service Account JSON)
+secrets/
+*.json.key
+
+.env.local
+
+# Secrets e Credenciais
+backend/secrets/
+google_service_account.json
+*.json.key
+

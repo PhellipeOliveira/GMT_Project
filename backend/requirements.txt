@@ -1,0 +1,32 @@
+# Web API
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+python-dotenv==1.1.1
+python-multipart==0.0.20
+
+# Agente (LangChain / LangGraph)
+langchain==1.3.11
+langchain-openai==1.3.3
+langchain-text-splitters==1.1.2
+langgraph==1.2.7
+langgraph-prebuilt==1.1.0
+
+# Banco (Supabase / Postgres)
+psycopg[binary]==3.2.10
+psycopg-pool==3.2.6
+
+# E-mail (confirmações ao lead + alertas à equipe)
+resend==2.32.2
+
+# Google Calendar (push one-way na confirmação de reunião)
+google-api-python-client==2.169.0
+google-auth==2.40.3
+
+# Persistência do agente (checkpointing no Supabase/Postgres)
+langgraph-checkpoint-postgres==3.1.0
+
+# Dev: LangGraph Studio (`make studio`) + testes (`make test`)
+langgraph-cli==0.4.2
+pytest==8.4.2
+
+# Opcional (rerank Cohere no RAG): langchain-cohere + COHERE_API_KEY
