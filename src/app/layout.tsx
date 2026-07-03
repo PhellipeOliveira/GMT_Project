@@ -6,6 +6,7 @@ import { Footer } from "@/components/ui/Footer";
 import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { FloatingCTA } from "@/components/ui/FloatingCTA";
+import { ChatWidgetLoader } from "@/components/agent/ChatWidgetLoader";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -53,6 +54,7 @@ export default function RootLayout({
         <GMTLightFooter />
         <Footer />
         <FloatingCTA />
+        <ChatWidgetLoader />
       </body>
     </html>
   );

@@ -62,6 +62,13 @@ async def health():
     return {"status": "ok", "service": "agente-gmt"}
 
 
+@app.get("/config")
+async def config():
+    """Expõe configuração pública do widget para o front-end Next.js."""
+    enabled = os.getenv("AGENT_WIDGET_ENABLED", "false").strip().lower() == "true"
+    return {"widget_enabled": enabled}
+
+
 @app.post("/chat")
 async def chat(req: Request):
     """Endpoint principal: recebe a mensagem do visitante e devolve a resposta do agente."""
