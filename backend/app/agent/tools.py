@@ -145,7 +145,11 @@ def cadastrar_lead(
                 (nome, email, telefone, empresa, origem, consentimento_lgpd),
             )
             lead_id = cur.fetchone()[0]
-    return {"message": "Lead cadastrado", "data": {"lead_id": lead_id, "nome": nome, "email": email, "empresa": empresa}}
+    # psycopg devolve colunas uuid como objetos uuid.UUID; convertemos para str
+    # para garantir que o retorno seja JSON-serializável (o ToolNode do subgrafo
+    # ReAct serializa o dict via json.dumps, e um UUID cru quebraria essa etapa,
+    # impedindo a propagação de tool_result -> lead_atual -> lead_id).
+    return {"message": "Lead cadastrado", "data": {"lead_id": str(lead_id), "nome": nome, "email": email, "empresa": empresa}}
 
 
 @tool
@@ -164,7 +168,7 @@ def obter_lead(ref: str) -> Dict[str, Any]:
                 if not r:
                     return {"error": {"message": "Lead não encontrado"}}
                 return {"message": "Lead encontrado", "data": {
-                    "lead_id": r[0], "nome": r[1], "email": r[2], "telefone": r[3],
+                    "lead_id": str(r[0]), "nome": r[1], "email": r[2], "telefone": r[3],
                     "empresa": r[4], "status_codigo": r[5], "qualificado": r[6], "score": r[7]}}
             if matches:
                 return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
@@ -264,7 +268,7 @@ def qualificar_lead(
                 sets.append("etapa_funil=%s"); vals.append(etapa_funil)
             sets.append("atualizado_em=now()")
             cur.execute(f"update public.leads set {', '.join(sets)} where id=%s", (*vals, lead_id))
-    return {"message": "Lead qualificado", "data": {"lead_id": lead_id, "qualificado": qualificado, "score": score}}
+    return {"message": "Lead qualificado", "data": {"lead_id": str(lead_id), "qualificado": qualificado, "score": score}}
 
 
 @tool
@@ -281,7 +285,7 @@ def classificar_lead(lead_ref_ou_id: str, status_codigo: str) -> Dict[str, Any]:
                     return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
                 return {"error": {"message": "Lead não encontrado"}}
             cur.execute("update public.leads set status_codigo=%s, atualizado_em=now() where id=%s", (status_codigo, lead_id))
-    return {"message": "Lead classificado", "data": {"lead_id": lead_id, "status_codigo": status_codigo}}
+    return {"message": "Lead classificado", "data": {"lead_id": str(lead_id), "status_codigo": status_codigo}}
 
 
 # ═══════════════════════════ DÚVIDAS / RAG ═══════════════════════════
@@ -439,7 +443,7 @@ def criar_orcamento(lead_ref_ou_id: str, titulo: str, moeda: str = "EUR") -> Dic
                 (lead_id, titulo, moeda),
             )
             orcamento_id = cur.fetchone()[0]
-    return {"message": "Orçamento criado", "data": {"orcamento_id": orcamento_id, "lead_id": lead_id, "titulo": titulo}}
+    return {"message": "Orçamento criado", "data": {"orcamento_id": str(orcamento_id), "lead_id": str(lead_id), "titulo": titulo}}
 
 
 def _recalc_orcamento(cur, orcamento_id: str) -> None:
@@ -470,7 +474,7 @@ def adicionar_item_orcamento(orcamento_id: str, descricao: str, quantidade: floa
             )
             item_id = cur.fetchone()[0]
             _recalc_orcamento(cur, orcamento_id)
-    return {"message": "Item adicionado", "data": {"orcamento_id": orcamento_id, "item_id": item_id}}
+    return {"message": "Item adicionado", "data": {"orcamento_id": str(orcamento_id), "item_id": str(item_id)}}
 
 
 @tool
@@ -731,7 +735,7 @@ def agendar_reuniao(lead_ref_ou_id: str, data_hora: str, tipo: str = "online", l
         logger.warning("Falha ao enviar e-mails de confirmação (reuniao %s): %s", reuniao_id, e)
 
     return {"message": "Reunião agendada", "data": {
-        "reuniao_id": reuniao_id, "lead_id": lead_id, "data_hora": dt.isoformat(),
+        "reuniao_id": str(reuniao_id), "lead_id": str(lead_id), "data_hora": dt.isoformat(),
         "tipo": tipo, "status": "agendada", "gcal_event_id": gcal_event_id}}
 
 
@@ -755,7 +759,7 @@ def remarcar_reuniao(reuniao_id: str, nova_data_hora: str) -> Dict[str, Any]:
             row = cur.fetchone()
             if not row:
                 return {"error": {"message": "Reunião não encontrada"}}
-    return {"message": "Reunião remarcada", "data": {"reuniao_id": reuniao_id, "nova_data_hora": dt.isoformat(), "lead_id": row[0]}}
+    return {"message": "Reunião remarcada", "data": {"reuniao_id": str(reuniao_id), "nova_data_hora": dt.isoformat(), "lead_id": str(row[0])}}
 
 
 @tool
@@ -1050,7 +1054,7 @@ def resolver_lead(ref: str) -> Dict[str, Any]:
         with conn.cursor() as cur:
             lead_id, matches = resolve_lead_id_by_ref(cur, ref)
             if lead_id:
-                return {"message": "Lead resolvido", "data": {"lead_id": lead_id}}
+                return {"message": "Lead resolvido", "data": {"lead_id": str(lead_id)}}
             if matches:
                 return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
             return {"error": {"message": "Lead não encontrado"}}

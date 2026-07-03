@@ -5,19 +5,45 @@ Reutilizado pelos subgrafos: leads_agent, orcamentos_agent, reunioes_agent, duvi
 Fluxo: prepare -> agent -> tools -> agent (até não haver tool_calls).
 """
 
-from typing import Iterable, Annotated, List, Optional
+import json
+from typing import Any, Dict, Iterable, Annotated, List, Optional
 from typing_extensions import TypedDict
 
 from langgraph.graph import END, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
-from langchain_core.messages import AIMessage, AnyMessage, BaseMessage, SystemMessage
+from langchain_core.messages import (
+    AIMessage,
+    AnyMessage,
+    BaseMessage,
+    SystemMessage,
+    ToolMessage,
+)
 
 
 # ── Estado MANUAL (TypedDict) ──
 class AppState(TypedDict, total=False):
     messages: Annotated[List[AnyMessage], add_messages]
     react_prompt: str
+    # Última saída (dict) de uma tool, propagada ao grafo pai (AgentState.tool_result)
+    # para que `update_context` consiga consolidar `lead_atual`/`lead_id`.
+    tool_result: Dict[str, Any]
+
+
+def _parse_tool_content(content: Any) -> Optional[Dict[str, Any]]:
+    """Converte o conteúdo de um ToolMessage no dict originalmente retornado pela tool.
+
+    O ToolNode serializa retornos não-string via json.dumps; aqui desfazemos isso.
+    """
+    if isinstance(content, dict):
+        return content
+    if isinstance(content, str):
+        try:
+            parsed = json.loads(content)
+        except Exception:
+            return None
+        return parsed if isinstance(parsed, dict) else None
+    return None
 
 
 # ── Fábrica do grafo ReAct ──
@@ -52,6 +78,23 @@ def create_react_executor(
         response = bound_model.invoke(msgs)
         return {"messages": [response]}
 
+    def run_tools(state: AppState):
+        """Executa as tools e propaga o último resultado (dict) para `tool_result`.
+
+        Sem isso, o retorno da tool (ex.: cadastrar_lead -> {"data": {"lead_id": ...}})
+        ficaria preso apenas no ToolMessage e nunca chegaria ao grafo pai.
+        """
+        result = tool_node.invoke(state)
+        updates = dict(result) if isinstance(result, dict) else {"messages": result}
+        new_messages = updates.get("messages") or []
+        for msg in reversed(new_messages):
+            if isinstance(msg, ToolMessage):
+                parsed = _parse_tool_content(msg.content)
+                if isinstance(parsed, dict):
+                    updates["tool_result"] = parsed
+                    break
+        return updates
+
     def should_continue(state: AppState) -> str:
         last: BaseMessage = state["messages"][-1]
         if isinstance(last, AIMessage) and getattr(last, "tool_calls", None):
@@ -61,7 +104,7 @@ def create_react_executor(
     graph = StateGraph(AppState)
     graph.add_node("agent", call_model)
     graph.add_node("prepare", prepare)
-    graph.add_node("tools", tool_node)
+    graph.add_node("tools", run_tools)
 
     graph.set_entry_point("prepare" if prompt else "agent")
     graph.add_edge("prepare", "agent")
