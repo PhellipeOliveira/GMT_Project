@@ -1,4 +1,4 @@
-import { HeroBackgroundVideo } from "./HeroBackgroundVideo";
+import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { HeroTitle } from "./HeroTitle";
 
 export function HeroSection() {
@@ -7,7 +7,15 @@ export function HeroSection() {
       id="hero"
       className="not-prose relative flex h-[60vh] min-h-[22rem] w-full items-center justify-center overflow-hidden bg-black [--gmt-text:#ffffff] md:min-h-[28rem]"
     >
-      <HeroBackgroundVideo />
+      <PlaceholderMedia
+        id="HER-01"
+        descricao="hero home · 16:9"
+        cor="#000000"
+        fill
+        priority
+        sizes="100vw"
+        reveal={false}
+      />
       <div
         className="pointer-events-none absolute inset-0 z-[1] bg-black/40"
         aria-hidden

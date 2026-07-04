@@ -125,15 +125,6 @@ export function Navbar() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link
-                href="/contacto"
-                className="type-label inline-flex items-center gap-2 rounded-full border border-white/30 px-5 py-2.5 text-white/80 transition-all hover:border-white/60 hover:text-white"
-                onClick={() => setOpen(false)}
-              >
-                Agendar reunião →
-              </Link>
-            </li>
           </ul>
         </div>
       )}
