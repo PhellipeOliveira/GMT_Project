@@ -13,16 +13,20 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| HER-01 | Hero principal do site | Home | Sec0 slider | background | OPCIONAL (vídeo→imagem) | 16:9 | 2560×1440 | Institucional/IA | Posicionar GMT como automação+IA que gera crescimento | 5–10s loop | Alta |
-| HER-02 | Imagem de apoio "diferenciais" | Home | Sec2 destaque portrait | background | imagem | **110:225** | 880×1800 | Institucional | Humanizar a proximidade/competência | — | Média |
-| HER-03 | Thumb diferencial A | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
-| HER-04 | Thumb diferencial B | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
-| HER-05 | Thumb diferencial C | Home | Sec2 thumb | thumbnail | imagem | **4:3** | 1200×900 | Institucional | Ilustrar área de especialização | — | Baixa |
-| ABT-01 | Slideshow institucional frame 1 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Ecossistema digital GMT/NARA | — | Média |
-| ABT-02 | Slideshow institucional frame 2 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Momento contemplativo da marca | — | Média |
-| ABT-03 | Slideshow institucional frame 3 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Variação visual do slideshow | — | Média |
-| ABT-04 | Slideshow institucional frame 4 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Variação visual do slideshow | — | Média |
-| ABT-05 | Slideshow institucional frame 5 | Sobre | Sec2 expansivo | background | imagem | 2:1 | 1920×960 | Institucional | Variação visual do slideshow | — | Média |
+| HER-01 | Hero principal do site | Home | Sec0 — hero background | background | imagem | 16:9 | 2560×1440 | Institucional/IA | Posicionar GMT como automação+IA que gera crescimento | — | Alta |
+
+> **HER-01 — container:** secção `h-[45vw]` (**−20%** vs 16:9 full-bleed `56.25vw`); wrapper interno `aspect-video` (16:9) centrado — imagem encaixa sem distorção (`fill` + `object-cover`). Largura visível da mídia ≈ **80vw**.
+| HER-02 | Slide expansivo — frame 1 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 1 do frame expansivo (grupo HER-02…07) | — | Média |
+| HER-03 | Slide expansivo — frame 2 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 2 do frame expansivo (grupo HER-02…07) | — | Média |
+| HER-04 | Slide expansivo — frame 3 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 3 do frame expansivo (grupo HER-02…07) | — | Média |
+| HER-05 | Slide expansivo — frame 4 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 4 do frame expansivo (grupo HER-02…07) | — | Média |
+| HER-06 | Slide expansivo — frame 5 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 5 do frame expansivo (grupo HER-02…07) | — | Média |
+| HER-07 | Slide expansivo — frame 6 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 6 do frame expansivo (grupo HER-02…07) | — | Média |
+| ABT-01 | Slide expansivo — frame 1 | Sobre | Sec2 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 1 do frame expansivo (grupo ABT-01…05) | — | Média |
+| ABT-02 | Slide expansivo — frame 2 | Sobre | Sec2 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 2 do frame expansivo (grupo ABT-01…05) | — | Média |
+| ABT-03 | Slide expansivo — frame 3 | Sobre | Sec2 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 3 do frame expansivo (grupo ABT-01…05) | — | Média |
+| ABT-04 | Slide expansivo — frame 4 | Sobre | Sec2 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 4 do frame expansivo (grupo ABT-01…05) | — | Média |
+| ABT-05 | Slide expansivo — frame 5 | Sobre | Sec2 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 5 do frame expansivo (grupo ABT-01…05) | — | Média |
 | CON-01 | Fundo decorativo (grade/gradiente) | Contacto | bg da seção | background decorativo | OPCIONAL (imagem) | 16:9 | 2560×1440 | Institucional | Dar caráter sem distrair do formulário | — | Baixa |
 
 > Counters do Sobre e Services Grid da Home = **tipografia/animação** (sem criativo de produção).
@@ -119,18 +123,53 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 - Paleta alinhada à família visual respectiva (F3 = azul/dados; F4 = azul-noite/premium; Institucional = neutro/claro).
 | AV-06 | Thumb · Analytics & Otimização | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | GA4/GTM/Pixel e auditorias | — | Baixa |
 
-### Tabela 4.4-C — Frame Expansivo (secção de transição Home)
+### Tabela 4.4-C — Frame Expansivo (`ExpandingFrame`)
 
-> Imagens HER-02 a HER-05 reutilizadas dentro do frame animado que expande no scroll e transiciona o fundo de branco para preto.
+> Componente: `src/components/ui/ExpandingFrame.tsx`. Usado na **Home Sec4** (**6 slides**: HER-02…07) e na **Sobre Sec2** (5 slides). Não são imagens isoladas — cada conjunto de IDs pertence a **um único slide expansivo**.
 
-| ID | Slot | Comportamento |
+#### Regras de produção e visualização
+
+| Regra | Detalhe |
+|---|---|
+| **Conjunto único** | HER-02…07 (Home) e ABT-01…05 (Sobre) são grupos de slides do mesmo `ExpandingFrame` |
+| **Proporção** | **16:9 · 2560×1440** — frame pai **e** assets do mesmo grupo produzidos em **16:9** |
+| **Frame pai** | `aspect-video` (16:9) — moldura e imagens alinhadas; largura animada **35% → 90%** |
+| **Estado inicial** | **35% de largura** (16:9) — refere-se ao **bloco pai**, não ao tamanho isolado da imagem |
+| **Expansão máxima** | **90% de largura** (16:9); depois o scroll **continua** pela secção (`250vh`) |
+| **Render das imagens** | `PlaceholderMedia` com `fill` + `object-cover` dentro do frame 16:9 |
+| **Safe zone** | Compor assunto no **centro 55–60%** |
+
+#### Home — conjunto HER-02…07 (6 slides)
+
+| ID | Posição no slideshow | Comportamento |
 |---|---|---|
-| HER-02 | Frame — slide 1 (portrait) | Cicla a 750 ms; `object-cover` dentro do frame |
-| HER-03 | Frame — slide 2 | Cicla a 750 ms; `object-cover` |
-| HER-04 | Frame — slide 3 | Cicla a 750 ms; `object-cover` |
-| HER-05 | Frame — slide 4 | Cicla a 750 ms; `object-cover` |
+| HER-02 | Slide 1 | Crossfade a 700 ms; `object-cover` dentro do frame pai |
+| HER-03 | Slide 2 | Idem |
+| HER-04 | Slide 3 | Idem |
+| HER-05 | Slide 4 | Idem |
+| HER-06 | Slide 5 | Idem |
+| HER-07 | Slide 6 | Idem |
 
-**Comportamento:** Frame entra com 35% de largura e 45vh de altura, centrado. Quando atinge o centro e inicia expansão (`SCALE_START ≈ 0.4`), o fundo passa rapidamente de branco a preto. Expande até 100vw × 100vh durante o scroll. Secção 05 (Trabalhos recentes) e seguintes ficam com fundo preto.
+#### Sobre — conjunto ABT-01…05 (5 slides)
+
+| ID | Posição no slideshow | Comportamento |
+|---|---|---|
+| ABT-01 | Slide 1 | Crossfade a 700 ms; `object-cover` dentro do frame pai |
+| ABT-02 | Slide 2 | Idem |
+| ABT-03 | Slide 3 | Idem |
+| ABT-04 | Slide 4 | Idem |
+| ABT-05 | Slide 5 | Idem |
+
+**Comportamento da secção (Home e Sobre):**
+
+1. Secção com altura `250vh`; container interno `sticky top-0` (`h-screen`).
+2. Progress `0 → SCALE_START` (~0,4): frame sobe ao centro **sem crescer**.
+3. Progress `SCALE_START → 1`: frame expande de **35% → 90% largura**, mantendo **16:9** (`aspect-video`); `border-radius 16px → 0`.
+4. Fundo da secção: `#ffffff → #000000` no início da expansão (`SCALE_START` a `SCALE_START + 0,12`).
+5. Slideshow interno cicla independentemente do scroll (intervalo 700 ms).
+6. Após atingir **90%**, o utilizador **continua a scrollar** pelo resto da secção até entrar na seguinte.
+
+> **Nota:** HER-02…07 **não** existem como secções separadas na Home. ABT-01…05 **não** são backgrounds independentes na Sobre. Todos só são renderizados dentro do `ExpandingFrame`.
 
 ### Tabela 4.5 — Portfolio / Cases
 

@@ -8,7 +8,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores de fonte extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
 >
-> **Extração:** 28 Jun 2026 (actualizado pós-refactor Sobre).
+> **Extração:** Jul 2026 (frame expansivo documentado; ABT-01…05 unificados em 4:3).
 
 ---
 
@@ -105,30 +105,50 @@ Nenhum.
 # Seção 02 — Slideshow expansivo (branco → preto)
 
 ### 1. Objetivo
-Transição visual institucional: frame pequeno e centralizado que expande no scroll, com slideshow de 5 imagens e fundo que passa de branco para preto. **Mesmo comportamento** que a Secção 04 da Home (`ExpandingFrame`).
+Transição visual institucional: **frame pai** pequeno e centralizado que expande no scroll, com slideshow de **5 imagens do mesmo conjunto** e fundo que passa de branco para preto. **Mesma lógica estrutural** que a Secção 04 da Home (`ExpandingFrame`).
+
+> **Importante:** ABT-01…05 **não** são imagens isoladas. Pertencem a **um único slide expansivo**. O **35%** refere-se à **largura inicial do bloco pai**, não ao tamanho de cada imagem.
 
 ### 2. Copy / Textos
 Nenhum texto na seção.
 
 ### 3. Imagens / mídia
 
-| ID | Slot | Proporção | Export | Arquivo | Status |
+Componente: `ExpandingFrame` com array `ABOUT_SLIDESHOW` em `sobre/page.tsx`. Cruzado com PLANO Tabela 4.4-C.
+
+**Conjunto único — 5 slides (mesmo padrão de produção):**
+
+| ID | Posição | Proporção (asset) | Export | Arquivo | Status |
 |---|---|---|---|---|---|
-| ABT-01 | Slideshow frame 1 | 2:1 | 1920×960 | `public/images/ABT-01.webp` | **Produzido** |
-| ABT-02 | Slideshow frame 2 | 2:1 | 1920×960 | `public/images/ABT-02.webp` | **Produzido** |
-| ABT-03 | Slideshow frame 3 | 2:1 | 1920×960 | `public/images/ABT-03.webp` | **Produzido** |
-| ABT-04 | Slideshow frame 4 | 2:1 | 1920×960 | `public/images/ABT-04.webp` | **Produzido** |
-| ABT-05 | Slideshow frame 5 | 2:1 | 1920×960 | `public/images/ABT-05.webp` | **Produzido** |
+| ABT-01 | Slide 1 | **16:9** | 2560×1440 | `public/images/ABT-01.webp` | **Produzido** |
+| ABT-02 | Slide 2 | **16:9** | 2560×1440 | `public/images/ABT-02.webp` | **Produzido** |
+| ABT-03 | Slide 3 | **16:9** | 2560×1440 | `public/images/ABT-03.webp` | **Produzido** |
+| ABT-04 | Slide 4 | **16:9** | 2560×1440 | `public/images/ABT-04.webp` | **Produzido** |
+| ABT-05 | Slide 5 | **16:9** | 2560×1440 | `public/images/ABT-05.webp` | **Produzido** |
 
-> Render via `PlaceholderMedia` com `fill`, `reveal={false}`, `object-cover`. Cores de fallback por frame definidas em `ABOUT_SLIDESHOW` em `page.tsx`. Spec em `src/data/media-spec.ts` (`folder: "images"`).
+**Regras de renderização:**
 
-**Comportamento de scroll** (`ExpandingFrame`):
+| Regra | Detalhe |
+|---|---|
+| **Grupo** | Os 5 IDs partilham o mesmo `ExpandingFrame` — slideshow interno, não backgrounds independentes |
+| **Produção** | Todos os slides: **16:9 · 2560×1440** — mesmo padrão que o frame pai |
+| **Frame pai** | `aspect-video` (16:9); largura animada **35% → 90%** |
+| **Estado inicial** | **35% largura** (16:9), centrado — **não** é o tamanho isolado do asset |
+| **Expansão máxima** | **90% largura** (16:9); depois o scroll **continua** pela secção |
+| **Render** | `PlaceholderMedia` com `fill`, `reveal={false}`, `object-cover` dentro do frame 16:9 |
+| **Ratio visível** | Frame pai e asset **ambos 16:9** — encaixe sem distorção |
+| **Safe zone** | Compor assunto no **centro 55–60%** |
+
+> Cores de fallback por frame definidas em `ABOUT_SLIDESHOW`. Spec em `src/data/media-spec.ts` (`folder: "images"`).
+
+**Comportamento de scroll** (`ExpandingFrame` — idêntico à Home):
 
 - `SECTION_VH = 250`; `SCALE_START ≈ 0.4`.
-- Frame inicial: `35%` largura × `45vh` altura, centrado.
-- Expansão: `35%→100%` / `45vh→100vh`; `border-radius 16px→0`.
+- **Frame pai inicial:** **35% largura** (16:9 via `aspect-video`), centrado.
+- Expansão do frame pai: **35% → 90% largura**, mantendo 16:9; `border-radius 16px→0`.
+- Após **90%**, scroll continua pelo resto da secção (`250vh`).
 - Fundo: `#ffffff → #000000` no início da expansão (`SCALE_START` a `SCALE_START + 0.12`).
-- Slideshow: intervalo `700ms` (prop `slideIntervalMs`).
+- Slideshow interno: intervalo `700ms` (prop `slideIntervalMs`).
 
 ### 4. Botões / CTAs
 Nenhum.
@@ -136,13 +156,14 @@ Nenhum.
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Efeito |
 |---|---|---|---|
-| Frame (tamanho) | Framer Motion `useScroll` + `useTransform` | scroll da secção | escala controlada pelo progresso |
-| Transição de slides | CSS `transition-opacity duration-500` | `setInterval` 700ms | crossfade entre frames |
-| Mídia individual | — | — | `reveal={false}` (sem `RevealOnScroll` no frame) |
+| **Frame pai** (tamanho) | Framer Motion `useScroll` + `useTransform` | scroll da secção | **35% → 90% largura**, 16:9 (`aspect-video`) |
+| Transição de slides | CSS `transition-opacity duration-500` | `setInterval` 700ms | crossfade entre frames do conjunto |
+| Mídia individual | — | — | `fill` + `object-cover`; `reveal={false}` |
 
 ### 6. Responsividade
 - **Todos:** secção com altura `250vh`; sticky `h-screen` durante a expansão.
-- Frame ocupa ~35% do container quando pequeno; expande até full viewport.
+- **Frame pai** inicia a **35% largura** (16:9); expande até **90%**; scroll continua depois.
+- Slides internos acompanham o crescimento do frame pai.
 
 ### 7. Arquivos relacionados
 `src/app/sobre/page.tsx`, `src/components/ui/ExpandingFrame.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`.

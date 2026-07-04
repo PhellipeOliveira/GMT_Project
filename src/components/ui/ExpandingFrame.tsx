@@ -5,10 +5,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { PlaceholderMedia } from "./PlaceholderMedia";
 
 const HOME_FRAME_IMAGES = [
-  { id: "HER-02", descricao: "approach portrait" },
-  { id: "HER-03", descricao: "approach thumb A" },
-  { id: "HER-04", descricao: "approach thumb B" },
-  { id: "HER-05", descricao: "approach thumb C" },
+  { id: "HER-02", descricao: "frame expansivo slide 1" },
+  { id: "HER-03", descricao: "frame expansivo slide 2" },
+  { id: "HER-04", descricao: "frame expansivo slide 3" },
+  { id: "HER-05", descricao: "frame expansivo slide 4" },
+  { id: "HER-06", descricao: "frame expansivo slide 5" },
+  { id: "HER-07", descricao: "frame expansivo slide 6" },
 ];
 
 export interface ExpandingFrameImage {
@@ -29,10 +31,13 @@ interface ExpandingFrameProps {
  * 1. Secção entra pela base do viewport (progress = 0).
  * 2. Progress 0 → SCALE_START: frame sobe até ao centro (sem crescer).
  * 3. Progress = SCALE_START: sticky activa; expansão e transição de fundo começam.
- * 4. Progress SCALE_START → 1: frame cresce; fundo branco → preto no início.
+ * 4. Progress SCALE_START → 1: frame cresce (35% → 90% largura, 16:9); fundo branco → preto no início.
+ * 5. Após expansão máxima, o scroll continua pela secção (250vh) até à seguinte.
  */
 const SECTION_VH = 250;
 const SCALE_START = 100 / SECTION_VH; // ≈ 0.4
+const FRAME_WIDTH_START = "35%";
+const FRAME_WIDTH_END = "90%";
 
 export function ExpandingFrame({
   images = HOME_FRAME_IMAGES,
@@ -50,12 +55,7 @@ export function ExpandingFrame({
   const frameWidth = useTransform(
     scrollYProgress,
     [SCALE_START, 1],
-    ["35%", "100%"],
-  );
-  const frameHeight = useTransform(
-    scrollYProgress,
-    [SCALE_START, 1],
-    ["45vh", "100vh"],
+    [FRAME_WIDTH_START, FRAME_WIDTH_END],
   );
   const borderRadius = useTransform(
     scrollYProgress,
@@ -87,8 +87,8 @@ export function ExpandingFrame({
         className="sticky top-0 flex h-screen items-center justify-center overflow-hidden"
       >
         <motion.div
-          style={{ width: frameWidth, height: frameHeight, borderRadius }}
-          className="relative overflow-hidden"
+          style={{ width: frameWidth, borderRadius }}
+          className="relative aspect-video overflow-hidden"
         >
           {images.map((img, i) => (
             <div

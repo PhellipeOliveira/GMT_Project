@@ -8,7 +8,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores de fonte extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
 >
-> **Última actualização:** 28 Jun 2026 (pós-refactor Home).
+> **Última actualização:** Jul 2026 (hero HER-01 · h-[45vw]; frame expansivo 16:9).
 
 ---
 
@@ -40,7 +40,7 @@
 # Seção 01 — Hero
 
 ### 1. Objetivo
-Primeira impressão institucional: afirma a marca **GMT** a ecrã inteiro (`h-screen`), fundo preto, com o título animado letra-a-letra.
+Primeira impressão institucional: fundo **HER-01** (16:9) com título animado **GMT** letra-a-letra sobre overlay escuro.
 
 ### 2. Copy / Textos
 Componente: `src/components/hero/HeroTitle.tsx`
@@ -61,7 +61,22 @@ Componente: `src/components/hero/HeroTitle.tsx`
 > Outros: `line-height` 1 (h1) / 1.2 (p); `white-space: nowrap` em ambos. Fundo da secção `bg-black` (`#000000`) com override local `[--gmt-text:#ffffff]`.
 
 ### 3. Imagens / mídia
-Nenhuma. Hero puramente tipográfico → **Não identificado no projeto** (sem criativo na PARTE 4 para este hero; `HER-01` pertence ao `HeroSlider`, que está inativo).
+Componente: `HeroSection` → `PlaceholderMedia` (`HER-01`). Cruzado com PLANO Tabela 4.1.
+
+| ID | Slot | Proporção (asset) | Export | Arquivo | Status |
+|---|---|---|---|---|---|
+| HER-01 | Hero background | **16:9** | 2560×1440 | `public/images/HER-01.webp` | **Produzido** |
+
+**Container vs asset:**
+
+| Camada | Comportamento |
+|---|---|
+| **Secção** | `h-[45vw]` — **20% menos altura** que um 16:9 full-bleed (`56.25vw`); fundo `bg-black` |
+| **Wrapper interno** | `h-full aspect-video` — moldura **16:9** centrada; largura visível ≈ **80vw** |
+| **Imagem** | `fill` + `object-cover` — asset 16:9 encaixa **sem distorção** dentro do wrapper |
+| **Overlay** | `bg-black/40` sobre a secção inteira |
+
+> O **35%** / frame expansivo **não** se aplica aqui — isso é Secção 04 (`ExpandingFrame`).
 
 ### 4. Botões / CTAs
 Nenhum nesta secção.
@@ -75,11 +90,11 @@ Nenhum nesta secção.
 Respeita `prefers-reduced-motion` (render estático).
 
 ### 6. Responsividade
-- **Desktop / Tablet / Mobile:** `h-screen w-full`, flex centrado. Tamanhos fluidos por `clamp()`/`vw` (sem breakpoints discretos).
-- Em viewports < 320px pode haver overflow lateral (efeito do `white-space: nowrap`).
+- **Desktop / Tablet / Mobile:** altura fluida `45vw` (80% de 16:9 full-bleed); wrapper 16:9 centrado; título por `clamp()`/`vw`.
+- Em viewports < 320px pode haver overflow lateral (efeito do `white-space: nowrap` no título).
 
 ### 7. Arquivos relacionados
-`src/app/page.tsx`, `src/components/hero/HeroSection.tsx`, `src/components/hero/HeroTitle.tsx`, `src/hooks/useReducedMotion.ts`, classes `.gmt-brand`/`.gmt-brand--hero`/`.type-hero-subtitle` em `src/styles/globals.css`.
+`src/app/page.tsx`, `src/components/hero/HeroSection.tsx`, `src/components/hero/HeroTitle.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/hooks/useReducedMotion.ts`, `src/data/media-spec.ts`.
 
 ---
 
@@ -197,22 +212,42 @@ Nenhum. Itens não são clicáveis.
 # Seção 04 — Transição expansiva (ExpandingFrame)
 
 ### 1. Objetivo
-Transição cinematográfica entre o bloco claro e o bloco preto: um frame cresce no scroll enquanto cicla imagens e o fundo do container passa de branco a preto **no início da expansão**.
+Transição cinematográfica entre o bloco claro e o bloco preto: um **frame pai** começa pequeno, cresce no scroll enquanto cicla **6 imagens do mesmo conjunto** e o fundo do container passa de branco a preto **no início da expansão**.
+
+> **Importante:** HER-02…07 **não** são imagens isoladas. Pertencem a **um único slide expansivo** (`ExpandingFrame`). O **35%** refere-se à **largura inicial do bloco pai**, não ao tamanho de cada imagem.
 
 ### 2. Copy / Textos
-Nenhum texto. **Não identificado no projeto** (secção puramente visual).
+Nenhum texto. Secção puramente visual.
 
 ### 3. Imagens / mídia
-Componente: `src/components/ui/ExpandingFrame.tsx` (array `FRAME_IMAGES`). Cruzado com PLANO Tabela 4.4-C.
 
-| ID | Slot | Proporção (spec) | Export | Arquivo actual | Status |
+Componente: `src/components/ui/ExpandingFrame.tsx` (array `HOME_FRAME_IMAGES`). Cruzado com PLANO Tabela 4.4-C.
+
+**Conjunto único — 6 slides (mesmo padrão de produção):**
+
+| ID | Posição | Proporção (asset) | Export | Arquivo | Status |
 |---|---|---|---|---|---|
-| HER-02 | Frame slide 1 (portrait) | 110:225 | 880×1800 | `public/images/HER-02.webp` | **Produzido** |
-| HER-03 | Frame slide 2 | 4:3 | 1200×900 | `public/images/HER-03.webp` | **Produzido** |
-| HER-04 | Frame slide 3 | 4:3 | 1200×900 | `public/images/HER-04.webp` | **Produzido** |
-| HER-05 | Frame slide 4 | 4:3 | 1200×900 | `public/images/HER-05.webp` | **Produzido** |
+| HER-02 | Slide 1 | **16:9** | 2560×1440 | `public/images/HER-02.webp` | **Produzido** |
+| HER-03 | Slide 2 | **16:9** | 2560×1440 | `public/images/HER-03.webp` | **Produzido** |
+| HER-04 | Slide 3 | **16:9** | 2560×1440 | `public/images/HER-04.webp` | **Produzido** |
+| HER-05 | Slide 4 | **16:9** | 2560×1440 | `public/images/HER-05.webp` | **Produzido** |
+| HER-06 | Slide 5 | **16:9** | 2560×1440 | `public/images/HER-06.webp` | **Produzido** |
+| HER-07 | Slide 6 | **16:9** | 2560×1440 | `public/images/HER-07.webp` | **Produzido** |
 
-> Dentro do frame são renderizadas em `fill` (`object-cover`), ignorando o ratio da spec. Cor de fallback `#111827`.
+**Regras de renderização:**
+
+| Regra | Detalhe |
+|---|---|
+| **Grupo** | Os 6 IDs partilham o mesmo `ExpandingFrame` — slideshow interno, não secções separadas |
+| **Produção** | Todos os slides: **16:9 · 2560×1440** — mesmo padrão que o frame pai |
+| **Frame pai** | `aspect-video` (16:9); largura animada **35% → 90%** |
+| **Estado inicial** | **35% largura** (16:9), centrado — **não** é o tamanho isolado do asset |
+| **Expansão máxima** | **90% largura** (16:9); depois o scroll **continua** pela secção |
+| **Render** | `PlaceholderMedia` com `fill` + `object-cover` dentro do frame 16:9 |
+| **Ratio visível** | Frame pai e asset **ambos 16:9** — encaixe sem distorção |
+| **Safe zone** | Compor assunto no **centro 55–60%** |
+
+> Cor de fallback `#0a0a0a`. Spec em `media-spec.ts`: 16:9 para produção; frame pai usa `aspect-video`.
 
 ### 4. Botões / CTAs
 Nenhum.
@@ -220,25 +255,26 @@ Nenhum.
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Tamanho do frame | Framer Motion (`useScroll`/`useTransform`) | on-scroll | `35% × 45vh → 100% × 100vh` (progress `SCALE_START`→1, onde `SCALE_START ≈ 0.4`) |
+| Tamanho do **frame pai** | Framer Motion (`useScroll`/`useTransform`) | on-scroll | **35% → 90% largura**, **16:9** (`aspect-video`); progress `SCALE_START`→1 |
 | `border-radius` | Framer Motion | on-scroll | `16px → 0px` |
 | Fundo do container | Framer Motion | on-scroll | `#ffffff → #000000` (progress **`0.4 → 0.52`**, janela de ~12% do scroll) |
-| Slideshow das 4 imagens | `setInterval` + CSS | tempo (700ms) | fade `opacity`, 500ms |
+| Slideshow dos 6 slides | `setInterval` + CSS | tempo (700ms) | crossfade `opacity`, 500ms |
 
 **Comportamento observável:**
-1. A secção entra pelo fundo do viewport (fundo branco, frame pequeno).
+1. A secção entra pelo fundo do viewport (fundo branco, **frame pai pequeno** ~35% largura).
 2. O frame sobe até ao centro (~40% do progress da secção de 250vh).
 3. Quando o sticky activa e a expansão **começa**, o fundo inicia transição rápida branco → preto.
-4. Durante a maior parte da expansão (progress > 0.52), o fundo já está completamente preto.
-5. Scroll para cima inverte tudo.
+4. Durante a expansão, o **frame pai** cresce até **90%** mantendo 16:9; imagens internas acompanham via `fill`.
+5. Após **90%**, o scroll **continua** pela secção até à seguinte.
+6. Scroll para cima inverte tudo.
 
 A secção tem `250vh`; o container é `sticky top-0`. Totalmente reversível com o scroll.
 
 ### 6. Responsividade
-Comportamento idêntico em todos os tamanhos (medidas em `%`/`vw`/`vh`, sem breakpoints específicos).
+Comportamento idêntico em todos os tamanhos (medidas em `%`/`vw`/`vh`, sem breakpoints específicos). O **35%** aplica-se à largura do frame pai em qualquer viewport.
 
 ### 7. Arquivos relacionados
-`src/app/page.tsx`, `src/components/ui/ExpandingFrame.tsx`, `src/components/ui/PlaceholderMedia.tsx`.
+`src/app/page.tsx`, `src/components/ui/ExpandingFrame.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`.
 
 ---
 
@@ -325,7 +361,7 @@ As seguintes secções foram **removidas** da Home e não devem ser documentadas
 | `--type-section-label` | `12px` | rótulos de secção (`.section-label`) |
 | `--font-weight-brand` | `800` | marca GMT (`.gmt-brand`) |
 | `.section-cta` | bg `#000000`, text `#ffffff`, muted `#94a3b8` | Secção 05 |
-| Hero (`HeroSection`) | bg `#000000`, text `#ffffff` | Secção 01 |
+| Hero (`HeroSection`) | bg `#000000`, text `#ffffff`, altura `45vw` | Secção 01 |
 | Família AV (placeholder) | `#1A3A2A` | fallback cards Secção 02 |
 | `COR_PORTFOLIO` | `#134E4A` | showcase NARA (Secção 05) |
 | "em breve" / fallback frame | `#1E293B` / `#111827` | Secções 04 e 05 |
