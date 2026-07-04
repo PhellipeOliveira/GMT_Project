@@ -18,15 +18,7 @@ import { ServiceOverlayCard } from "@/components/home/ServiceOverlayCard";
 import { HomePortfolioRow } from "@/components/home/HomePortfolioRow";
 import { avulsos } from "@/data/servicos";
 import { getCaseBySlug } from "@/data/portfolio";
-
-const SERV_IMAGE_IDS = [
-  "SERV-AV-01",
-  "SERV-AV-02",
-  "SERV-AV-03",
-  "SERV-AV-04",
-  "SERV-AV-05",
-  "SERV-AV-06",
-];
+import { getServicoHomeCardId } from "@/lib/media";
 
 export default function HomePage() {
   const nara = getCaseBySlug("nara");
@@ -47,7 +39,7 @@ export default function HomePage() {
             <RevealOnScroll key={servico.slug} variant="media" delay={i * 0.08}>
               <ServiceOverlayCard
                 servico={servico}
-                imageId={SERV_IMAGE_IDS[i] ?? "SERV-AV-01"}
+                imageId={getServicoHomeCardId(servico)}
               />
             </RevealOnScroll>
           ))}

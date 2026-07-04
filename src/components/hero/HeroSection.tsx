@@ -5,7 +5,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="not-prose relative flex h-[60vh] min-h-[22rem] w-full items-center justify-center overflow-hidden bg-black [--gmt-text:#ffffff] md:min-h-[28rem]"
+      className="not-prose relative flex w-full aspect-video items-center justify-center overflow-hidden bg-black [--gmt-text:#ffffff]"
     >
       <PlaceholderMedia
         id="HER-01"

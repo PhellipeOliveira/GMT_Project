@@ -43,6 +43,15 @@ const AVULSO_THUMB_BY_SLUG: Record<string, string> = {
   "analytics-otimizacao": "AV-06",
 };
 
+const AVULSO_HOME_CARD_BY_SLUG: Record<string, string> = {
+  "criacao-conteudo-avulso": "SERV-AV-01",
+  "publicidade-digital": "SERV-AV-02",
+  "branding-estrategia": "SERV-AV-03",
+  websites: "SERV-AV-04",
+  "inteligencia-artificial": "SERV-AV-05",
+  "analytics-otimizacao": "SERV-AV-06",
+};
+
 const FAMILIA_HERO: Record<Exclude<Familia, "MKT" | "AV">, string> = {
   F1: "AGH-F1",
   F2: "AGH-F2",
@@ -81,6 +90,10 @@ export function getServicoThumbId(servico: Servico): string {
   if (servico.tipo === "agente") return AGENTE_THUMB_BY_SLUG[servico.slug] ?? "AG-01";
   if (servico.tipo === "pacote") return PACOTE_THUMB_BY_SLUG[servico.slug] ?? "MKT-01";
   return AVULSO_THUMB_BY_SLUG[servico.slug] ?? "AV-01";
+}
+
+export function getServicoHomeCardId(servico: Servico): string {
+  return AVULSO_HOME_CARD_BY_SLUG[servico.slug] ?? "SERV-AV-01";
 }
 
 export function getServicoHeroId(servico: Servico): string {

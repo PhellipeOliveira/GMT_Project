@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Mail, Phone, Link2, MapPin } from "lucide-react";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
@@ -7,35 +6,8 @@ import { RevealSequence } from "@/components/ui/reveal-sequence";
 export const metadata: Metadata = {
   title: "Contacto",
   description:
-    "Agende uma reunião gratuita e sem compromisso com a GMT. Email, WhatsApp e LinkedIn. Lisboa, Portugal.",
+    "Agende uma reunião gratuita e sem compromisso com a GMT.",
 };
-
-const CANAIS = [
-  {
-    icone: Mail,
-    label: "Email",
-    valor: "contato@phellipeoliveira.org",
-    href: "mailto:contato@phellipeoliveira.org",
-  },
-  {
-    icone: Phone,
-    label: "WhatsApp / Telefone",
-    valor: "+351 913 628 211",
-    href: "tel:+351913628211",
-  },
-  {
-    icone: Link2,
-    label: "LinkedIn",
-    valor: "linkedin.com/in/phellipeoliveira-org",
-    href: "https://linkedin.com/in/phellipeoliveira-org/",
-  },
-  {
-    icone: MapPin,
-    label: "Localização",
-    valor: "Lisboa, Portugal",
-    href: undefined,
-  },
-];
 
 export default function ContactoPage() {
   return (
@@ -56,49 +28,6 @@ export default function ContactoPage() {
             </RevealOnScroll>
           </RevealSequence>
         </div>
-
-        <ul className="mt-12 flex flex-col gap-6">
-          {CANAIS.map((canal, i) => {
-            const Icone = canal.icone;
-            const conteudo = (
-              <span className="flex items-start gap-4">
-                <span className="rounded-lg border border-gmt-border p-2.5 text-gmt-text">
-                  <Icone size={18} strokeWidth={1.5} />
-                </span>
-                <span>
-                  <span className="type-label block text-gmt-muted">
-                    {canal.label}
-                  </span>
-                  <span className="type-body mt-1 block text-gmt-text">
-                    {canal.valor}
-                  </span>
-                </span>
-              </span>
-            );
-            return (
-              <li key={canal.label}>
-                <RevealOnScroll variant="media" delay={i * 0.08}>
-                  {canal.href ? (
-                    <a
-                      href={canal.href}
-                      target={canal.href.startsWith("http") ? "_blank" : undefined}
-                      rel={
-                        canal.href.startsWith("http")
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
-                      className="hover:opacity-80"
-                    >
-                      {conteudo}
-                    </a>
-                  ) : (
-                    conteudo
-                  )}
-                </RevealOnScroll>
-              </li>
-            );
-          })}
-        </ul>
       </div>
 
       <div className="md:w-3/5">
