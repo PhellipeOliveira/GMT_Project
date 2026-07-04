@@ -71,6 +71,12 @@ export function getMediaSrc(id: string): string {
   return `/${folder}/${id}.webp`;
 }
 
+export function getVideoSrc(id: string): string {
+  const slot = MEDIA_SLOTS[id];
+  const folder = slot?.folder ?? (VIDEO_SLOT_IDS.has(id) ? "videos" : "images");
+  return `/${folder}/${id}.mp4`;
+}
+
 export function getServicoThumbId(servico: Servico): string {
   if (servico.tipo === "agente") return AGENTE_THUMB_BY_SLUG[servico.slug] ?? "AG-01";
   if (servico.tipo === "pacote") return PACOTE_THUMB_BY_SLUG[servico.slug] ?? "MKT-01";
