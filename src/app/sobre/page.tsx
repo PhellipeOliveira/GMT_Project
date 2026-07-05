@@ -59,7 +59,7 @@ export default function SobrePage() {
       {/* ══ 3 — Manifesto + valores (bloco preto contínuo) ═════════════ */}
       <section className="section-cta not-prose px-5 py-[6vw] md:px-[5vw]">
         <div className="text-center">
-          <RevealOnScroll as="p" className="type-h3 mx-auto max-w-3xl !text-white">
+          <RevealOnScroll as="p" className="type-manifesto mx-auto max-w-4xl !text-white">
             O nosso compromisso é simples. Ajudar o seu negócio a crescer online com
             soluções profissionais eficazes e acessíveis.
           </RevealOnScroll>
