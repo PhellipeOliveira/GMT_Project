@@ -6,7 +6,7 @@
 >
 > **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/data/media-spec.ts`, `src/lib/media.ts`, `src/data/servicos.ts`.
 >
-> **Actualização:** Jul 2026 — strip hero AG-01, MKT-02, AV-05 produzidos.
+> **Actualização:** Jul 2026 — strip hero + thumbs 3:2 no Accordion (AG/MKT/AV via `getServicoThumbId`); ver `docs/MAPA_APLICACAO_MIDIA.md`.
 
 ---
 
@@ -19,7 +19,7 @@ A rota `/servicos` apresenta toda a oferta da GMT organizada em três categorias
 | Rota | `/servicos` |
 | Arquivo | `src/app/servicos/page.tsx` |
 | Componentes | `RevealOnScroll`, `RevealSequence`, `PlaceholderMedia`, `Accordion` |
-| Dados | `agentes`, `pacotes`, `avulsos` (`src/data/servicos.ts`); `SERVICOS_HERO_THUMBS` (`src/lib/media.ts`); `CATEGORIAS` + `toItems()` no próprio arquivo |
+| Dados | `agentes`, `pacotes`, `avulsos` (`src/data/servicos.ts`); `SERVICOS_HERO_THUMBS`, `getServicoThumbId` (`src/lib/media.ts`); `CATEGORIAS` + `toItems()` no próprio arquivo |
 | Metadata | `title: "Serviços"`; description institucional |
 | Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
 
@@ -66,7 +66,19 @@ Geradas a partir de `CATEGORIAS`:
 | Pacotes de Marketing | `Pacotes de Marketing` | 3 pacotes para iniciar… | 3 pacotes |
 | Serviços Avulsos | `Serviços Avulsos` | 6 áreas de especialização… | 6 avulsos |
 
-Cada item do Accordion expõe: nome, headline, lista de `funcionalidades`, link `Ver serviço →` para `/servicos/{slug}`. Um item aberto de cada vez.
+Cada item do Accordion expõe: **thumb 3:2** (`mediaId` = AG/MKT/AV), nome, headline, lista de `funcionalidades`, link `Ver serviço →` para `/servicos/{slug}`. Um item aberto de cada vez.
+
+### Thumbs no Accordion (listagem activa)
+
+| Grupo | IDs | Proporção | Função | Código |
+|---|---|---|---|---|
+| Agentes | AG-01…15 | 3:2 | 1 thumb por agente | `getServicoThumbId()` → `toItems()` → `Accordion.mediaId` |
+| Pacotes | MKT-01…03 | 3:2 | 1 thumb por pacote | idem |
+| Avulsos | AV-01…06 | 3:2 | 1 thumb por avulso | idem |
+
+> Render: `PlaceholderMedia` `w-14 md:w-20`, `rounded-md`, ratio da spec. Substitui o ponto colorido quando `mediaId` existe.
+
+> **Strip vs. Accordion:** o strip hero (AG-01, MKT-02, AV-05) é **só decorativo por categoria**. Os restantes thumbs (AG-02…15, MKT-01/03, etc.) aparecem **só no Accordion**. Ver `docs/MAPA_APLICACAO_MIDIA.md`.
 
 ---
 
@@ -97,6 +109,7 @@ A página termina na **última categoria do Accordion** (Serviços Avulsos) e pa
 | `--gmt-accent` | `#2563eb` | link "Ver serviço →" |
 | `--gmt-accent-2` | `#7c3aed` | hover do link |
 | fallback thumbnail | `#1E293B` | cabeçalho (AG-01, MKT-02, AV-05) |
-| Cores de família (ponto) | F1–F4, MKT, AV | ponto colorido por item do Accordion |
+| Cores de família (ponto) | F1–F4, MKT, AV | fallback do thumb se imagem falhar |
+| Thumb accordion | `w-14 md:w-20` | AG/MKT/AV por linha |
 
 *Documento alinhado com `src/app/servicos/page.tsx`. Nenhuma informação foi inventada.*

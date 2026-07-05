@@ -8,7 +8,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`.
 >
-> **Actualização:** Jul 2026 — hero: navegação anterior/próximo em loop (substitui “Ver todos os serviços”).
+> **Actualização:** Jul 2026 — Sec3 usa **AGP-F1…4** via `getComoFuncionaCardId()`; mapa completo em `docs/MAPA_APLICACAO_MIDIA.md`.
 
 ---
 
@@ -204,11 +204,23 @@ Tags `.tag-pill` com `servico.casosDeUso[]`. Padding inferior próprio: `pb-16 m
 ## D. Como funciona (Sec. 03)
 
 ### Objetivo
-Grid de **5 slots de mídia** institucionais, partilhados por todas as rotas `/servicos/[slug]`. Substituem os antigos cards de processo com texto (`PROCESSO`) e fundos por família (`AGP-F*`).
+Grid de **5 cards de mídia**, partilhados por todas as rotas `/servicos/[slug]`. Cada card mostra um passo do método GMT com overlay de título.
+
+### Mídia activa: AGP-F* (até CF-*)
+
+| Família do serviço | ID de fundo (5 cards) | Proporção | Ficheiro |
+|---|---|---|---|
+| F1 | AGP-F1 | 2:3 · 1200×1800 | `public/images/AGP-F1.webp` |
+| F2 | AGP-F2 | 2:3 | `AGP-F2.webp` |
+| F3 | AGP-F3 | 2:3 | `AGP-F3.webp` |
+| F4 | AGP-F4 | 2:3 | `AGP-F4.webp` |
+| MKT / AV | AGP-F3 | 2:3 | `AGP-F3.webp` |
+
+Resolvido por `getComoFuncionaCardId(servico.familia, slot.id)` (`src/lib/media.ts`). **Os 5 cards da mesma página partilham a mesma imagem** — diferenciação visual futura via **CF-01…05** (1 asset distinto por coluna, institucional).
 
 ### Estrutura no código
 
-Constante `COMO_FUNCIONA_SLOTS` em `page.tsx`:
+Constante `COMO_FUNCIONA_SLOTS` em `page.tsx` (títulos + fallback de cor):
 
 | ID | Título (overlay) | Cor fallback mídia |
 |---|---|---|
@@ -222,7 +234,7 @@ Constante `COMO_FUNCIONA_SLOTS` em `page.tsx`:
 - Rótulo: `<h2>` “Como funciona” · `.type-label`
 - Grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4`
 - Card: `aspect-[3/4] md:aspect-[2/3] rounded-2xl border border-gmt-border overflow-hidden`
-- Mídia: `PlaceholderMedia` com `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
+- Mídia: `PlaceholderMedia` com `id={getComoFuncionaCardId(...)}`, `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
 - **Título sobre o card:** overlay absoluto centrado (`flex items-center justify-center`), caixa `rounded-lg bg-white/75 px-4 py-2.5 backdrop-blur-md text-gmt-text type-body-lg`
 
 ### Copy

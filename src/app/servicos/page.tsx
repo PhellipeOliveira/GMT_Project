@@ -4,7 +4,7 @@ import { Accordion, type AccordionItem } from "@/components/ui/Accordion";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { agentes, pacotes, avulsos, type Servico } from "@/data/servicos";
-import { SERVICOS_HERO_THUMBS } from "@/lib/media";
+import { SERVICOS_HERO_THUMBS, getServicoThumbId } from "@/lib/media";
 
 export const metadata: Metadata = {
   title: "Serviços",
@@ -20,6 +20,7 @@ function toItems(lista: Servico[]): AccordionItem[] {
     href: `/servicos/${s.slug}`,
     itens: s.funcionalidades,
     cor: s.corPlaceholder,
+    mediaId: getServicoThumbId(s),
   }));
 }
 

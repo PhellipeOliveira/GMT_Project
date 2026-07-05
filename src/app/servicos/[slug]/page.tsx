@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { servicos, getServicoBySlug, getAdjacentServicos } from "@/data/servicos";
-import { getServicoHeroId } from "@/lib/media";
+import { getComoFuncionaCardId, getServicoHeroId } from "@/lib/media";
 
 /** Slots de mídia da Sec3 — Como funciona (ver `docs/PLANO_MESTRE_DE_MIDIA.md` § CF-01…05). */
 const COMO_FUNCIONA_SLOTS = [
@@ -193,7 +193,7 @@ export default async function ServicoItemPage({
               <RevealOnScroll key={slot.id} variant="media" delay={i * 0.08}>
                 <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-gmt-border md:aspect-[2/3]">
                   <PlaceholderMedia
-                    id={slot.id}
+                    id={getComoFuncionaCardId(servico.familia, slot.id)}
                     descricao={slot.descricao}
                     cor={slot.cor}
                     fill

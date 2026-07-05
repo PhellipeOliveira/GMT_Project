@@ -7,6 +7,8 @@
 
 ## PARTE 4 — INVENTÁRIO COMPLETO DE CRIATIVOS
 
+> **Mapa de aplicação no site:** ver `docs/MAPA_APLICACAO_MIDIA.md` — explica onde cada ID é renderizado, o que está activo vs. legado, e a diferença entre thumbs de listagem (3:2), heroes (3:1) e cards Home (7:5).
+
 Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão sugerida (px) | Família Visual | Objetivo de Comunicação | Duração | Prioridade`
 
 ### Tabela 4.1 — Hero e Institucionais
@@ -35,7 +37,9 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 ### Tabela 4.2 — Agentes de IA (15 agentes)
 
-**4.2-A · Thumbnails únicos (1 por agente) — listagem de serviços, card 3:2**
+**4.2-A · Thumbnails únicos (1 por agente) — listagem `/servicos` (Accordion) + strip hero**
+
+> **Aplicação:** cada AG-0X aparece no **Accordion** da categoria Automação & IA (`getServicoThumbId`). Só **AG-01** entra no **strip hero** do cabeçalho (representante da categoria). Ver `docs/MAPA_APLICACAO_MIDIA.md`.
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -63,10 +67,10 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | AGH-F2 | Hero família Operação Eficiente | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F2 | Contexto de agenda/operação | — | Alta |
 | AGH-F3 | Hero família Growth & Dados | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F3 | Contexto de dados/crescimento | — | Alta |
 | AGH-F4 | Hero família Inovação Sob Medida | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F4 | Contexto premium/custom | — | Média |
-| AGP-F1 | Imagem de processo — F1 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F1 | Fundo das etapas (01–06) | — | Baixa |
-| AGP-F2 | Imagem de processo — F2 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F2 | Fundo das etapas | — | Baixa |
-| AGP-F3 | Imagem de processo — F3 | Serviço Item | Sec3 process cards | background card | imagem | **2:3** | 1200×1800 | F3 | Fundo das etapas | — | Baixa |
-| AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 process cards (legado) | background card | imagem | **2:3** | 1200×1800 | F4 | Fundo das etapas (legado) | — | Baixa |
+| AGP-F1 | Imagem de processo — F1 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F1 | Fundo partilhado das 5 etapas (até CF-01…05) | — | Baixa |
+| AGP-F2 | Imagem de processo — F2 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F2 | Fundo partilhado das 5 etapas | — | Baixa |
+| AGP-F3 | Imagem de processo — F3 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F3 | Fundo partilhado (F3, MKT, AV) | — | Baixa |
+| AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F4 | Fundo partilhado das 5 etapas | — | Baixa |
 
 > **Hero Sec0 (`getServicoHeroId`):** container `h-[80vh] md:h-[70vh]`, `object-fit: cover`, fundo fallback `corPlaceholder`. Agentes → **3:1 · 2560×860** (`AGH-F1…4` em `public/images/`). Pacotes → **3:1 · 2560×860** (`MKT-04` em `public/videos/`). Avulsos → thumb **3:2 · 1200×800** (`AV-01…06`) com crop central. Safe zone recomendada: **centro 55%**. Assets confirmados: AGH-F1 = 2560×860, AV-01 = 1200×800.
 >
@@ -84,9 +88,11 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 | CF-04 | Card mídia — posição 4 | Serviço Item | Sec3 grid col 4 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 4) | — | Média |
 | CF-05 | Card mídia — posição 5 | Serviço Item | Sec3 grid col 5 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 5) | — | Média |
 
-> **Nota:** até existirem assets em `public/images/CF-*.webp`, o componente `PlaceholderMedia` exibe fallback de cor. Títulos dos passos (Reunião inicial… Acompanhamento & otimização) são overlay fixo com `bg-white/75 backdrop-blur-md`. Os IDs **AGP-F*** permanecem no inventário como legado.
+> **Nota:** até existirem assets **CF-01…05** em `public/images/`, a Sec3 usa **AGP-F1…4** via `getComoFuncionaCardId()` — um fundo por família nos 5 cards. Títulos dos passos (Reunião inicial… Acompanhamento & otimização) são overlay fixo com `bg-white/75 backdrop-blur-md`. Quando CF-* forem produzidos, passam a substituir AGP-F* (visual institucional distinto por coluna).
 
 ### Tabela 4.3 — Marketing Digital (3 pacotes)
+
+> **Aplicação thumbs MKT-01…03:** Accordion em `/servicos` (1 por pacote). **MKT-02** adicionalmente no strip hero. **MKT-04** = hero Sec0 das 3 páginas de pacote. Ver mapa.
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -96,6 +102,8 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 | MKT-04 | Hero família Marketing (compartilhado) | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F3 | Abrir páginas de pacotes | 5–10s loop | Média |
 
 ### Tabela 4.4 — Serviços Avulsos (6 categorias)
+
+> **Aplicação AV-01…06:** Accordion em `/servicos` + hero Sec0 de cada avulso (crop 3:2 em banner). **AV-05** adicionalmente no strip hero. **Não** confundir com **SERV-AV-01…06** (7:5, só Home). Ver mapa.
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|

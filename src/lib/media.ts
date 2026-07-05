@@ -107,3 +107,8 @@ export function getServicoHeroId(servico: Servico): string {
 export function getFamiliaProcessBg(familia: Familia): string | undefined {
   return FAMILIA_PROCESS_BG[familia];
 }
+
+/** Fundo dos 5 cards “Como funciona” até existirem assets CF-01…05. */
+export function getComoFuncionaCardId(familia: Familia, slotId: string): string {
+  return getFamiliaProcessBg(familia) ?? slotId;
+}

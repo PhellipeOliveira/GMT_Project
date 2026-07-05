@@ -75,8 +75,10 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 
 | Slot | Componente | Ratio esperado | Ratio real | Status | Correção |
 |---|---|---|---|---|---|
-| **AG-01..15** · listagem | `ServiceCard` (**órfão**) | 3:2 · 1200×800 | — | **Não activo** | `/servicos` usa `Accordion` sem imagens; activar thumbs no accordion **ou** retirar do PLANO como “listagem activa” |
+| **AG-01..15** · listagem | `servicos/page.tsx` Accordion | 3:2 · 1200×800 | **3:2** (`getServicoThumbId`) | **OK** | Jul 2026 |
 | **AG-01** · strip hero `/servicos` | `servicos/page.tsx` | 3:2 | **3:2** (spec, sem `fill`) | **OK** | — |
+| **AGH-F1..4** · hero agente | `getServicoHeroId()` | 3:1 · 2560×860 | **3:1** em container vh | **OK** (crop intencional) | — |
+| **AGP-F1..4** · Sec3 Como funciona | `getComoFuncionaCardId()` | 2:3 · 1200×1800 | **2:3** (`aspect-[3/4] md:aspect-[2/3]`) | **OK** | Jul 2026 — até CF-* |
 
 ---
 
@@ -86,8 +88,8 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 |---|---|---|---|---|---|
 | **AGH-F1..4** · hero agente | `servicos/[slug]/page.tsx` | 3:1 · 2560×860 | **~2:1–3:1** (`h-[80vh] md:h-[70vh]`, largura 100vw) | **Conflito intencional** | Manter crop + safe zone 55%; alinhar PLANO com `aspect-video` **não** aplicável aqui |
 | **MKT-04** · hero pacote | Idem | 3:1 | Idem | **Conflito intencional** | Idem |
-| **AV-01..06** · hero avulso | `getServicoHeroId()` → thumb 3:2 | PLANO: 3:2 com crop | **~2:1–3:1** container vs asset **3:2** | **Conflito forte** | Criar heroes AV dedicados 3:1 **ou** documentar crop severo de thumb 3:2 em banner 80vh |
-| **AGP-F1..4** | — (legado) | 2:3 | — | **Substituído por CF** | Manter no inventário como legado (PLANO já nota) |
+| **AV-01..06** · hero avulso | `getServicoHeroId()` → thumb 3:2 | PLANO: 3:2 com crop | **~2:1–3:1** container vs asset **3:2** | **Conflito intencional** | Thumb 3:2 reutilizado em banner 80vh; safe zone centro 55% |
+| **AGP-F1..4** · Sec3 | `getComoFuncionaCardId()` | 2:3 | **2:3** em card | **OK** | Activo até CF-*; ver `docs/MAPA_APLICACAO_MIDIA.md` |
 
 **Trecho hero serviço:**
 
@@ -114,7 +116,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 
 | Slot | Componente | Ratio esperado | Ratio real | Status | Correção |
 |---|---|---|---|---|---|
-| **MKT-01..03** · listagem | `ServiceCard` (órfão) | 3:2 | — | **Não activo** | Idem AG |
+| **MKT-01..03** · listagem | `servicos/page.tsx` Accordion | 3:2 | **3:2** | **OK** | Jul 2026 |
 | **MKT-02** · strip `/servicos` | `servicos/page.tsx` | 3:2 | **3:2** | **OK** | — |
 | **MKT-04** · hero pacote | Hero serviço | 3:1 | vh-based | **Conflito intencional** | Idem AGH |
 
@@ -124,7 +126,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 
 | Slot | Componente | Ratio esperado | Ratio real | Status | Correção |
 |---|---|---|---|---|---|
-| **AV-01..06** · listagem | `ServiceCard` (órfão) | 3:2 | — | **Não activo** | Idem AG |
+| **AV-01..06** · listagem | `servicos/page.tsx` Accordion | 3:2 | **3:2** | **OK** | Jul 2026 |
 | **AV-05** · strip `/servicos` | `servicos/page.tsx` | 3:2 | **3:2** | **OK** | — |
 | **SERV-AV-01..06** · Home | `ServiceOverlayCard` | 7:5 · 1400×1000 | **7:5** (`aspect-[7/5]`) | **OK** | Produzir assets; PLANO correcto |
 
@@ -177,8 +179,8 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 | HER-01 slot | Sec0 hero · asset 16:9 · container `h-[45vw]` | `HeroSection` · inner `aspect-video` centrado |
 | HER-02…07 | Conjunto ExpandingFrame Home Sec4 · 16:9 · 35%→90% | `ExpandingFrame` |
 | ABT-01…05 | Conjunto ExpandingFrame Sobre Sec2 · 16:9 · 35%→90% | `ExpandingFrame` |
-| Thumbs listagem AG/MKT/AV | Cards 3:2 na listagem | `Accordion` sem imagens; `ServiceCard` órfão |
-| AGP-F* | Sec3 processo | Substituído por **CF-01..05** |
+| Thumbs listagem AG/MKT/AV | Cards 3:2 na listagem | `Accordion` + `getServicoThumbId` (**activo** Jul 2026) |
+| AGP-F* | Sec3 processo / Como funciona | **Activo** via `getComoFuncionaCardId`; CF-* substituem no futuro |
 | CON-01 | Fundo contacto | Não implementado |
 | CF cards | 2:3 uniforme | 3:4 mobile + 2:3 desktop |
 

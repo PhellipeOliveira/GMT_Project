@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { PlaceholderMedia } from "./PlaceholderMedia";
 import { RevealOnScroll } from "./RevealOnScroll";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,8 @@ export interface AccordionItem {
   href?: string;
   itens: string[];
   cor?: string;
+  /** ID de mídia 3:2 (AG/MKT/AV) — thumb na linha do accordion. */
+  mediaId?: string;
 }
 
 interface AccordionProps {
@@ -41,15 +44,26 @@ export function Accordion({ items }: AccordionProps) {
                 style={{ transitionTimingFunction: "var(--ease)" }}
               >
                 <span className="flex min-w-0 flex-1 items-center gap-4">
-                  {item.cor && (
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "size-2.5 shrink-0 rounded-full transition-opacity duration-300",
-                        isOpen ? "opacity-80" : "opacity-100 group-hover:opacity-80",
-                      )}
-                      style={{ backgroundColor: item.cor }}
+                  {item.mediaId ? (
+                    <PlaceholderMedia
+                      id={item.mediaId}
+                      descricao="3:2"
+                      cor={item.cor ?? "#1E293B"}
+                      className="w-14 shrink-0 rounded-md md:w-20"
+                      sizes="80px"
+                      reveal={false}
                     />
+                  ) : (
+                    item.cor && (
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "size-2.5 shrink-0 rounded-full transition-opacity duration-300",
+                          isOpen ? "opacity-80" : "opacity-100 group-hover:opacity-80",
+                        )}
+                        style={{ backgroundColor: item.cor }}
+                      />
+                    )
                   )}
                   <span
                     className={cn(
