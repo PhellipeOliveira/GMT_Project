@@ -43,7 +43,7 @@
   --type-hero-leading: clamp(1, 8vw, 1.1);
   --type-hero-brand: clamp(6rem, 15vw, 14rem);
   --type-hero-subtitle: clamp(3rem, 4.5vw, 4.5rem);
-  --type-footer-subtitle: clamp(2.04rem, 5.29vw, 6rem);
+  --type-footer-subtitle: clamp(1.5rem, 4.15vw, 5rem);
 
   /* Secções dual-mode (design_map_services_item / about) */
   --gmt-bg-light: #ebebeb;
