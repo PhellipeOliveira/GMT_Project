@@ -45,14 +45,17 @@ export function Accordion({ items }: AccordionProps) {
               >
                 <span className="flex min-w-0 flex-1 items-center gap-4">
                   {item.mediaId ? (
-                    <PlaceholderMedia
-                      id={item.mediaId}
-                      descricao="3:2"
-                      cor={item.cor ?? "#1E293B"}
-                      className="w-14 shrink-0 rounded-md md:w-20"
-                      sizes="80px"
-                      reveal={false}
-                    />
+                    <div className="relative aspect-[3/2] h-auto w-14 shrink-0 self-center overflow-hidden rounded-md md:w-20">
+                      <PlaceholderMedia
+                        id={item.mediaId}
+                        descricao="3:2"
+                        cor={item.cor ?? "#1E293B"}
+                        fill
+                        className="size-full"
+                        sizes="80px"
+                        reveal={false}
+                      />
+                    </div>
                   ) : (
                     item.cor && (
                       <span

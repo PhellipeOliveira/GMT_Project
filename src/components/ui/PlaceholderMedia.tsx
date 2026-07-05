@@ -6,6 +6,7 @@ import type { CSSProperties } from "react";
 import { getMediaContainerStyle, getMediaSlot } from "@/data/media-spec";
 import { getMediaSrc, hasMediaAsset } from "@/lib/media";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { cn } from "@/lib/utils";
 
 interface PlaceholderMediaProps {
   /** Proporção e container vêm de `src/data/media-spec.ts` quando o ID existe. */
@@ -45,8 +46,6 @@ export function PlaceholderMedia({
 
   const style: CSSProperties = { backgroundColor: cor };
   if (fill) {
-    style.position = "absolute";
-    style.inset = 0;
     style.width = "100%";
     style.height = "100%";
   } else if (altura) {
@@ -56,12 +55,18 @@ export function PlaceholderMedia({
   }
 
   const objectFit = spec?.objectFit ?? "cover";
+  const hasExplicitWidth = /\bw-/.test(className);
 
   const media = !hasAsset ? (
     <div
       role="img"
       aria-label={`Placeholder ${id}: ${descricao}`}
-      className={`media-zoom relative flex w-full items-center justify-center overflow-hidden ${className}`}
+      className={cn(
+        "media-zoom overflow-hidden",
+        fill ? "relative size-full min-h-0" : "relative flex items-center justify-center",
+        !fill && !hasExplicitWidth && "w-full",
+        className,
+      )}
       style={style}
     >
       <span className="type-label select-none px-3 text-center font-mono normal-case tracking-normal text-gmt-muted/60">
@@ -70,7 +75,12 @@ export function PlaceholderMedia({
     </div>
   ) : (
     <div
-      className={`media-zoom relative w-full overflow-hidden ${className}`}
+      className={cn(
+        "media-zoom overflow-hidden",
+        fill ? "relative size-full min-h-0" : "relative",
+        !fill && !hasExplicitWidth && "w-full",
+        className,
+      )}
       style={style}
     >
       <Image

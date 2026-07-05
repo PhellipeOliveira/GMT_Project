@@ -77,14 +77,17 @@ export default function PortfolioPage() {
                   <span className="font-mono type-body text-gmt-muted">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                <PlaceholderMedia
-                  id="PF-02"
-                  descricao="9:16"
-                  cor={c.corPlaceholder}
-                  className="w-20 shrink-0 rounded-md md:w-28"
-                  sizes="112px"
-                  reveal={false}
-                />
+                <div className="relative aspect-[9/16] w-20 shrink-0 overflow-hidden rounded-md md:w-28">
+                  <PlaceholderMedia
+                    id="PF-02"
+                    descricao="9:16"
+                    cor={c.corPlaceholder}
+                    fill
+                    className="size-full"
+                    sizes="112px"
+                    reveal={false}
+                  />
+                </div>
                   <div className="flex-1">
                     <h3 className="type-h3 group-hover:text-gmt-accent">
                       {c.nome}

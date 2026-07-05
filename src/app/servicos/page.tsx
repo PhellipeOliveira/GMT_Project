@@ -69,17 +69,25 @@ export default function ServicosPage() {
             </div>
           </RevealSequence>
 
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3 md:mt-[5vw]">
+          <div className="mt-10 grid grid-cols-1 items-start gap-4 sm:grid-cols-3 md:mt-[5vw]">
             {SERVICOS_HERO_THUMBS.map((id, i) => (
-              <RevealOnScroll key={id} variant="media" delay={i * 0.08}>
-                <PlaceholderMedia
-                  id={id}
-                  descricao="thumbnail · 3:2"
-                  cor="#1E293B"
-                  className="rounded-lg md:rounded-[1vw]"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  reveal={false}
-                />
+              <RevealOnScroll
+                key={id}
+                variant="media"
+                delay={i * 0.08}
+                className="w-full"
+              >
+                <div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg md:rounded-[1vw]">
+                  <PlaceholderMedia
+                    id={id}
+                    descricao="thumbnail · 3:2"
+                    cor="#1E293B"
+                    fill
+                    className="size-full"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    reveal={false}
+                  />
+                </div>
               </RevealOnScroll>
             ))}
           </div>

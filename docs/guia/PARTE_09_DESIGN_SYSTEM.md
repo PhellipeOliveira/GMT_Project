@@ -224,8 +224,9 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 ### 6.5 Inventário de assets presentes em `public/`
 
-- **`public/images/`:** HER-02..HER-05, ABT-01..ABT-05, CON-01, AGP-F1..F4, AG-01..AG-15, MKT-01..MKT-03, AV-01..AV-06, PF-01..PF-12, GL-01..GL-04, **AGH-F1..AGH-F4**.
-- **`public/videos/`:** HER-01, MKT-04. *(Cópias legadas de ABT-01/02 ou AGH-F* podem existir em `videos/`; o código aponta para `images/`.)*
+- **`public/images/`:** HER-02..HER-07, ABT-01..ABT-05, CON-01, AGP-F1..F4, **AG-01..AG-15**, MKT-01..MKT-03, AV-01..AV-06, SERV-AV-01..06, PF-01..PF-12, GL-01..GL-04, CF-01..05 (quando produzidos).
+- **`public/videos/`:** HER-01.
+- **Retirados (podem apagar):** ~~AGH-F1..AGH-F4~~ (`public/images/`), ~~MKT-04~~ (`public/videos/`).
 - Todos em `.webp` (vídeos ainda como `.webp`; MP4/WebM previstos no futuro pelo PLANO).
 
 > Resumo: as únicas **lacunas reais de produção** actualmente activas no site são os **6 cards overlay `SERV-AV-01..06`** (Home "O que fazemos"). As demais lacunas (`PF-EB*`, `PF-02a/b`, `PF-SLOT-N`) são **intencionais** ("Em breve") por falta de novos cases.

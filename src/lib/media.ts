@@ -52,13 +52,6 @@ const AVULSO_HOME_CARD_BY_SLUG: Record<string, string> = {
   "analytics-otimizacao": "SERV-AV-06",
 };
 
-const FAMILIA_HERO: Record<Exclude<Familia, "MKT" | "AV">, string> = {
-  F1: "AGH-F1",
-  F2: "AGH-F2",
-  F3: "AGH-F3",
-  F4: "AGH-F4",
-};
-
 const FAMILIA_PROCESS_BG: Partial<Record<Familia, string>> = {
   F1: "AGP-F1",
   F2: "AGP-F2",
@@ -96,11 +89,8 @@ export function getServicoHomeCardId(servico: Servico): string {
   return AVULSO_HOME_CARD_BY_SLUG[servico.slug] ?? "SERV-AV-01";
 }
 
+/** Hero Sec0 — thumb 3:2 do serviço (AG/MKT/AV) com crop no banner; ver `getServicoThumbId`. */
 export function getServicoHeroId(servico: Servico): string {
-  if (servico.tipo === "agente") {
-    return FAMILIA_HERO[servico.familia as keyof typeof FAMILIA_HERO];
-  }
-  if (servico.tipo === "pacote") return "MKT-04";
   return getServicoThumbId(servico);
 }
 

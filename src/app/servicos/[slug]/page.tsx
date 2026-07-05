@@ -51,7 +51,7 @@ export default async function ServicoItemPage({
 
   return (
     <>
-      {/* ===== Sec 0 — Hero do serviço (full-bleed 70–80vh) ===== */}
+      {/* ===== Sec 0 — Hero (banner · thumb AG/MKT/AV + gradiente + título branco) ===== */}
       <section
         className="not-prose relative h-[80vh] w-full overflow-hidden md:h-[70vh]"
         style={{ backgroundColor: servico.corPlaceholder }}

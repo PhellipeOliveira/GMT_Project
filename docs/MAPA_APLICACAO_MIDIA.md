@@ -23,11 +23,27 @@
 
 O site trata **três tipos** de serviço (`src/data/servicos.ts`). Cada tipo usa **conjuntos diferentes** de mídia:
 
-| Tipo | Quantidade | Thumb listagem (3:2) | Hero detalhe (Sec0) | Fundo “Como funciona” (Sec3) |
+| Tipo | Quantidade | Thumb listagem (3:2) | Hero Sec0 (`/servicos/[slug]`) | Fundo “Como funciona” (Sec3) |
 |---|---:|---|---|---|
-| **Agente** (`tipo: "agente"`) | 15 | **AG-01…15** (1 por slug) | **AGH-F1…4** (1 por família F1–F4) | **AGP-F1…4** (1 por família) |
-| **Pacote** (`tipo: "pacote"`) | 3 | **MKT-01…03** | **MKT-04** (partilhado) | **AGP-F3** |
-| **Avulso** (`tipo: "avulso"`) | 6 | **AV-01…06** | **AV-01…06** (thumb com crop em banner) | **AGP-F3** |
+| **Agente** (`tipo: "agente"`) | 15 | **AG-01…15** (1 por slug) | **AG-01…15** (mesmo thumb, crop no banner) | **AGP-F1…4** (1 por família) |
+| **Pacote** (`tipo: "pacote"`) | 3 | **MKT-01…03** | **MKT-01…03** (mesmo thumb) | **AGP-F3** |
+| **Avulso** (`tipo: "avulso"`) | 6 | **AV-01…06** | **AV-01…06** (mesmo thumb) | **AGP-F3** |
+
+> **Hero Sec0 (Jul 2026):** todos os serviços usam o **thumb 3:2** via `getServicoHeroId()` → `getServicoThumbId()`. Container `h-[80vh] md:h-[70vh]`, `object-cover`, gradiente `from-black via-black/40 to-black/10`, título branco centrado. Safe zone: **centro 55%**.
+
+---
+
+## IDs retirados — não produzir / podem apagar do disco
+
+| ID | Motivo | Substituído por |
+|---|---|---|
+| **AGH-F1** | Hero partilhado por família F1 | **AG-01…05** (thumb de cada agente F1) |
+| **AGH-F2** | Hero partilhado por família F2 | **AG-06…09** |
+| **AGH-F3** | Hero partilhado por família F3 | **AG-10…13** |
+| **AGH-F4** | Hero partilhado por família F4 | **AG-14…15** |
+| **MKT-04** | Hero partilhado dos pacotes | **MKT-01**, **MKT-02**, **MKT-03** |
+
+> Ficheiros históricos (se existirem): `public/images/AGH-F1.webp`…`AGH-F4.webp`, `public/videos/MKT-04.webp`. **Não referenciados** em `src/lib/media.ts` nem em nenhuma página. Entrada em `media-spec.ts` mantida só como registo — candidatos a remoção futura do repo.
 
 > **Dois “mundos” de thumb avulso:** na **Home** os cards “O que fazemos” usam **SERV-AV-01…06** (7:5). Na **listagem `/servicos`** e no **hero avulso** usam-se **AV-01…06** (3:2). São slots distintos no Plano Mestre.
 
@@ -46,31 +62,19 @@ O site trata **três tipos** de serviço (`src/data/servicos.ts`). Cada tipo usa
 
 | Local | Comportamento |
 |---|---|
-| **`/servicos` — Accordion** (Sec. Automação & IA) | Thumb 3:2 à esquerda de **cada** linha (`Accordion` · prop `mediaId`) |
+| **`/servicos` — Accordion** (Sec. Automação & IA) | Thumb 3:2 à esquerda de **cada** linha — wrapper `aspect-[3/2]` + `fill` (evita crop incorrecto em flex) |
 | **`/servicos` — strip hero** | Só **AG-01** (representante da categoria agentes) |
-| **`/servicos/[slug]` hero** | **Não** — agentes usam banner **AGH-F*** no hero |
+| **`/servicos/[slug]` hero** | **Sim** — thumb AG/MKT/AV do slug (ex. AV-05 em IA) |
 
 ---
 
-## AGH-F1 … AGH-F4 — Heroes por família (agentes)
+## ~~AGH-F1 … AGH-F4~~ — Retirados (Jul 2026)
 
 | Campo | Detalhe |
 |---|---|
-| **Proporção** | 3:1 · 2560×860 |
-| **Ficheiros** | `public/images/AGH-F1.webp` … `AGH-F4.webp` |
-| **Função** | Banner full-bleed da **primeira secção** de cada página de **agente** |
-| **Mapeamento** | `getServicoHeroId()` → família F1→AGH-F1, F2→AGH-F2, etc. |
-
-### Onde aparecem
-
-| Local | Comportamento |
-|---|---|
-| **`/servicos/reservas-whatsapp`** (F1) | Hero Sec0 → **AGH-F1** |
-| **`/servicos/agendamento-universal`** (F2) | Hero Sec0 → **AGH-F2** |
-| **`/servicos/criacao-conteudo`** (F3) | Hero Sec0 → **AGH-F3** |
-| **`/servicos/grafos-personalizados`** (F4) | Hero Sec0 → **AGH-F4** |
-
-> Container: `h-[80vh] md:h-[70vh]`, `fill` + `object-cover`. Compor assunto no **centro 55%** — o crop é severo face ao export 3:1.
+| **Estado** | **Removidos do site** — não produzir, não manter em produção activa |
+| **Substituição** | Thumb **AG-01…15** no hero Sec0 de cada agente |
+| **Ficheiros antigos** | `public/images/AGH-F*.webp` — podem ser apagados |
 
 ---
 
@@ -119,18 +123,17 @@ Imagens **partilhadas por família visual**, não por agente individual. Todos o
 |---|---|
 | **`/servicos` Accordion** (Pacotes) | MKT-01, MKT-02, MKT-03 — um por linha |
 | **`/servicos` strip hero** | Só **MKT-02** (representante da categoria) |
-| **`/servicos/[slug]` hero** | **MKT-04** (não MKT-01…03) |
+| **`/servicos/[slug]` hero** | **MKT-01**, **MKT-02** ou **MKT-03** conforme slug |
 
 ---
 
-## MKT-04 — Hero partilhado dos pacotes
+## ~~MKT-04~~ — Retirado (Jul 2026)
 
 | Campo | Detalhe |
 |---|---|
-| **Proporção** | 3:1 · 2560×860 |
-| **Ficheiro** | `public/videos/MKT-04.webp` |
-| **Função** | Banner Sec0 das 3 páginas de pacote |
-| **Código** | `getServicoHeroId()` quando `tipo === "pacote"` |
+| **Estado** | **Removido do site** — não produzir |
+| **Substituição** | **MKT-01**, **MKT-02**, **MKT-03** no hero Sec0 de cada pacote |
+| **Ficheiro antigo** | `public/videos/MKT-04.webp` — pode ser apagado |
 
 ---
 
@@ -147,7 +150,7 @@ Imagens **partilhadas por família visual**, não por agente individual. Todos o
 |---|---|
 | **`/servicos` Accordion** (Avulsos) | AV-01…06 — um por linha |
 | **`/servicos` strip hero** | Só **AV-05** (representante IA) |
-| **`/servicos/[slug]` hero** | O **mesmo** AV-0X do slug, crop em banner 70–80vh |
+| **`/servicos/[slug]` hero** | **AV-01…06** — thumb do slug (crop banner + gradiente) |
 
 > **Não confundir** com **SERV-AV-01…06** (7:5) usados só na **Home** Sec2 “O que fazemos”.
 
@@ -183,11 +186,31 @@ Os restantes thumbs (AG-02…15, MKT-01/03, AV-01…04/06) aparecem no **Accordi
 ## Checklist de verificação no browser
 
 1. **`/servicos`** — strip: AG-01, MKT-02, AV-05 · accordion: 24 linhas com thumb 3:2  
-2. **`/servicos/reservas-whatsapp`** — hero AGH-F1 · Sec3 cinco cards com AGP-F1  
-3. **`/servicos/pacote-essencial`** — hero MKT-04 · accordion/listagem MKT-01  
-4. **`/servicos/inteligencia-artificial`** — hero AV-05 · Sec3 AGP-F3  
+2. **`/servicos/reservas-whatsapp`** — hero **AG-01** · Sec3 **AGP-F1**  
+3. **`/servicos/pacote-essencial`** — hero **MKT-01** · Sec3 **AGP-F3**  
+4. **`/servicos/inteligencia-artificial`** — hero **AV-05** · Sec3 **AGP-F3**  
 5. **`/` Home Sec2** — SERV-AV-* (7:5), **não** AV-*
 
 ---
 
-*Cruzado com `docs/PLANO_MESTRE_DE_MIDIA.md`, `docs/guia/PARTE_03_SERVICOS_LISTAGEM.md`, `docs/guia/PARTE_04_SERVICO_DETALHE.md`.*
+## Thumbs pequenos em flex (Accordion) — nota técnica
+
+Thumbs 3:2 dentro de **linhas flex** (ex.: Accordion `/servicos`) não devem usar só `aspect-ratio` inline + largura fixa no mesmo elemento que é filho flex — o browser pode **ignorar o ratio** e esticar o container à altura da linha (texto + `py-5`).
+
+**Sintoma:** faixa sólida `corPlaceholder` no topo (~60%), imagem só na base.
+
+**Causa:** `PlaceholderMedia` aplica `backgroundColor: cor` no frame pai; se o frame fica mais alto que 3:2, a cor preenche o excesso antes do `Image fill` cobrir tudo.
+
+**Padrão correcto:**
+
+```tsx
+<div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg">
+  <PlaceholderMedia id="AG-01" fill className="size-full" cor="..." ... />
+</div>
+```
+
+Em **grid** (`sm:grid-cols-3`), usar `items-start` no grid e `className="w-full"` no `RevealOnScroll` — sem isso, células esticam à altura da linha e o frame fica mais alto que 3:2.
+
+O **wrapper** define largura + ratio; `PlaceholderMedia fill` usa `relative size-full` (não `absolute`) para preencher o wrapper sem colapsar a altura. A cor de fallback só aparece enquanto o asset carrega ou se falhar.
+
+---

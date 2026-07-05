@@ -37,9 +37,9 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 ### Tabela 4.2 — Agentes de IA (15 agentes)
 
-**4.2-A · Thumbnails únicos (1 por agente) — listagem `/servicos` (Accordion) + strip hero**
+**4.2-A · Thumbnails únicos (1 por agente) — listagem `/servicos` + hero Sec0**
 
-> **Aplicação:** cada AG-0X aparece no **Accordion** da categoria Automação & IA (`getServicoThumbId`). Só **AG-01** entra no **strip hero** do cabeçalho (representante da categoria). Ver `docs/MAPA_APLICACAO_MIDIA.md`.
+> **Aplicação:** cada AG-0X no **Accordion**, no **strip hero** (só AG-01) e no **hero Sec0** da página do agente (`getServicoHeroId` → `getServicoThumbId`). Ver `docs/MAPA_APLICACAO_MIDIA.md`.
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -59,22 +59,22 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | AG-14 | Thumb · Grafos Personalizados | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Automação sob medida | — | Média |
 | AG-15 | Thumb · Onboarding de Clientes | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Entrada de cliente impecável | — | Média |
 
-**4.2-B · Heros e Processos por família (compartilhados)**
+**4.2-B · Processos por família (AGP-F*) + IDs retirados (AGH-F*, MKT-04)**
+
+> **Jul 2026 — hero Sec0 unificado:** todos os serviços (agentes, pacotes, avulsos) usam o **thumb 3:2 do slug** no banner. Os IDs **AGH-F1, AGH-F2, AGH-F3, AGH-F4** e **MKT-04** **deixaram de ser necessários** — não são referenciados no código; podem ser removidos de `public/images/` e `public/videos/`. Mantidos abaixo só como registo histórico do inventário.
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| AGH-F1 | Hero família Hospitalidade | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F1 | Abrir a página do agente com contexto de hospitalidade | — | Alta |
-| AGH-F2 | Hero família Operação Eficiente | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F2 | Contexto de agenda/operação | — | Alta |
-| AGH-F3 | Hero família Growth & Dados | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F3 | Contexto de dados/crescimento | — | Alta |
-| AGH-F4 | Hero família Inovação Sob Medida | Serviço Item | Sec0 hero | banner | **imagem** | 3:1 | 2560×860 | F4 | Contexto premium/custom | — | Média |
+| ~~AGH-F1~~ | ~~Hero família Hospitalidade~~ | — | — | — | — | 3:1 | 2560×860 | F1 | **Retirado** → AG-01…15 por slug | — | **Removido** |
+| ~~AGH-F2~~ | ~~Hero família Operação Eficiente~~ | — | — | — | — | 3:1 | 2560×860 | F2 | **Retirado** → AG-01…15 por slug | — | **Removido** |
+| ~~AGH-F3~~ | ~~Hero família Growth & Dados~~ | — | — | — | — | 3:1 | 2560×860 | F3 | **Retirado** → AG-01…15 por slug | — | **Removido** |
+| ~~AGH-F4~~ | ~~Hero família Inovação Sob Medida~~ | — | — | — | — | 3:1 | 2560×860 | F4 | **Retirado** → AG-01…15 por slug | — | **Removido** |
 | AGP-F1 | Imagem de processo — F1 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F1 | Fundo partilhado das 5 etapas (até CF-01…05) | — | Baixa |
 | AGP-F2 | Imagem de processo — F2 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F2 | Fundo partilhado das 5 etapas | — | Baixa |
 | AGP-F3 | Imagem de processo — F3 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F3 | Fundo partilhado (F3, MKT, AV) | — | Baixa |
 | AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F4 | Fundo partilhado das 5 etapas | — | Baixa |
 
-> **Hero Sec0 (`getServicoHeroId`):** container `h-[80vh] md:h-[70vh]`, `object-fit: cover`, fundo fallback `corPlaceholder`. Agentes → **3:1 · 2560×860** (`AGH-F1…4` em `public/images/`). Pacotes → **3:1 · 2560×860** (`MKT-04` em `public/videos/`). Avulsos → thumb **3:2 · 1200×800** (`AV-01…06`) com crop central. Safe zone recomendada: **centro 55%**. Assets confirmados: AGH-F1 = 2560×860, AV-01 = 1200×800.
->
-> **Reorganização (Jun 2026):** `AGH-F1.webp`…`AGH-F4.webp` migrados de `public/videos/` para `public/images/`; `media-spec.ts` com `folder: "images"`. Tratados como imagens estáticas WebP — não vídeo loop.
+> **Hero Sec0 (`getServicoHeroId`):** container `h-[80vh] md:h-[70vh]`, `object-fit: cover`, fundo fallback `corPlaceholder`, gradiente `bg-gradient-to-t from-black via-black/40 to-black/10`, título branco centrado. **Todos os serviços** usam o **thumb 3:2** do slug (AG/MKT/AV) via `getServicoThumbId()`. Safe zone: **centro 55%**.
 
 **4.2-C · Cards de mídia — Como funciona (5 slots por página de serviço)**
 
@@ -92,18 +92,18 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 
 ### Tabela 4.3 — Marketing Digital (3 pacotes)
 
-> **Aplicação thumbs MKT-01…03:** Accordion em `/servicos` (1 por pacote). **MKT-02** adicionalmente no strip hero. **MKT-04** = hero Sec0 das 3 páginas de pacote. Ver mapa.
+> **Aplicação thumbs MKT-01…03:** Accordion + **strip hero** (MKT-02) + **hero Sec0** de cada pacote. **MKT-04 retirado** — substituído por MKT-01…03. Ver mapa.
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | MKT-01 | Thumb · Pacote Essencial | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | Início de presença digital | — | Média |
 | MKT-02 | Thumb · Pacote Crescimento | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | Expansão de quem já está online | — | Alta |
-| MKT-03 | Thumb · Pacote Premium | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | Domínio do digital | — | Média |
-| MKT-04 | Hero família Marketing (compartilhado) | Serviço Item | Sec0 hero | banner | OPCIONAL (vídeo→imagem) | 3:1 | 2560×860 | F3 | Abrir páginas de pacotes | 5–10s loop | Média |
+| MKT-03 | Thumb · Pacote Premium | Serviços Geral | listagem + hero Sec0 | thumbnail | imagem | 3:2 | 1200×800 | F3 | Domínio do digital | — | Média |
+| ~~MKT-04~~ | ~~Hero família Marketing~~ | — | — | — | — | 3:1 | 2560×860 | F3 | **Retirado** → MKT-01…03 por slug | — | **Removido** |
 
 ### Tabela 4.4 — Serviços Avulsos (6 categorias)
 
-> **Aplicação AV-01…06:** Accordion em `/servicos` + hero Sec0 de cada avulso (crop 3:2 em banner). **AV-05** adicionalmente no strip hero. **Não** confundir com **SERV-AV-01…06** (7:5, só Home). Ver mapa.
+> **Aplicação AV-01…06:** Accordion + **strip hero** (AV-05) + **hero Sec0** de cada avulso. **Não** confundir com **SERV-AV-01…06** (7:5, só Home). Ver mapa.
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|

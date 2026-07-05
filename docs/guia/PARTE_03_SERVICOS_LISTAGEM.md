@@ -45,7 +45,7 @@ Toda a página está dentro de `<div className="section-light">` (fundo claro). 
 
 - **Copy:** label `Os nossos serviços` · h1 `Serviços` · tagline institucional (`.type-h3`)
 - **Layout:** split `md:flex-row` (rótulo/h1 `md:w-1/3`, tagline `md:w-2/3`); intro encadeada com `RevealSequence`
-- **Thumbnails:** grid `sm:grid-cols-3` de `SERVICOS_HERO_THUMBS`; `PlaceholderMedia`, `reveal={false}`, fallback `#1E293B`
+- **Thumbnails:** grid `sm:grid-cols-3` de `SERVICOS_HERO_THUMBS`; wrapper `aspect-[3/2]` + `PlaceholderMedia fill` (mesmo padrão do Accordion)
 - **CTAs nesta secção:** nenhum (thumbs não são clicáveis)
 
 | ID | Categoria representada | Proporção | Export | Arquivo | Status |
@@ -76,7 +76,7 @@ Cada item do Accordion expõe: **thumb 3:2** (`mediaId` = AG/MKT/AV), nome, head
 | Pacotes | MKT-01…03 | 3:2 | 1 thumb por pacote | idem |
 | Avulsos | AV-01…06 | 3:2 | 1 thumb por avulso | idem |
 
-> Render: `PlaceholderMedia` `w-14 md:w-20`, `rounded-md`, ratio da spec. Substitui o ponto colorido quando `mediaId` existe.
+> Render: wrapper `aspect-[3/2] w-14 md:w-20` + `PlaceholderMedia` com `fill` — o wrapper fixa o ratio; a cor `corPlaceholder` só aparece se o asset falhar. Substitui o ponto colorido quando `mediaId` existe.
 
 > **Strip vs. Accordion:** o strip hero (AG-01, MKT-02, AV-05) é **só decorativo por categoria**. Os restantes thumbs (AG-02…15, MKT-01/03, etc.) aparecem **só no Accordion**. Ver `docs/MAPA_APLICACAO_MIDIA.md`.
 

@@ -262,14 +262,15 @@ Fonte canónica: `src/data/media-spec.ts` + `PlaceholderMedia`. Usar esta tabela
 
 | Tipo | `container` na spec | Comportamento no código | Exemplos de ID |
 |---|---|---|---|
-| **Thumbnail** | `aspect` · ratio **3:2** · 1200×800 | Card/listagem com ratio fixo; `object-fit: cover` | `AG-01…15`, `MKT-01…03`, `AV-01…06` |
+| **Thumbnail + hero serviço** | `aspect` · ratio **3:2** · 1200×800 | Listagem Accordion + hero Sec0 `/servicos/[slug]`; `object-fit: cover` em banner vh | `AG-01…15`, `MKT-01…03`, `AV-01…06` |
 | **Card overlay** | `aspect` · ratio **7:5** · 1400×1000 | Home `ServiceOverlayCard`; texto no overlay | `SERV-AV-01…06` |
-| **Frame / hero full-bleed** | `full-bleed` · ratio **3:1** · 2560×860 | `fill` no pai; altura `70–80vh`; cover | `AGH-F1…4` (`public/images/`), `MKT-04` |
+| **Frame / hero full-bleed** | thumb **3:2** em container vh | `fill` + gradiente; altura `70–80vh`; cover | `AG/MKT/AV` via `getServicoHeroId` |
+| ~~**Hero 3:1 partilhado**~~ | — | **Removido Jul 2026** | ~~`AGH-F1…4`, `MKT-04`~~ |
 | **Frame expansivo** | `aspect` variável (slideshow) | `ExpandingFrame`; slides com `fill` + cover | `HER-02…05`, `ABT-01…05` |
 | **Card vertical (processo)** | `aspect` · **2:3** · 1200×1800 | Grid com `aspect-[3/4] md:aspect-[2/3]` | `CF-01…05` |
 | **Portfolio / case** | `aspect` · 3:4 ou 9:16 | Cards ou galeria com ratio da spec | `PF-01`, `PF-02` |
 | **Textura de secção** | `full-bleed` · 16:9 | Fundo decorativo com opacidade reduzida | `GL-03` (Footer) |
-| **Vídeo (futuro)** | `folder: "videos"` | Mesmas regras de ratio; ficheiro `.webp` por agora | `HER-01`, `MKT-04` |
+| **Vídeo (futuro)** | `folder: "videos"` | Mesmas regras de ratio; ficheiro `.webp` por agora | `HER-01` |
 
 ### Espaçamentos tipográficos frequentes (não-tokens — valores do código)
 

@@ -77,19 +77,22 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 |---|---|---|---|---|---|
 | **AG-01..15** · listagem | `servicos/page.tsx` Accordion | 3:2 · 1200×800 | **3:2** (`getServicoThumbId`) | **OK** | Jul 2026 |
 | **AG-01** · strip hero `/servicos` | `servicos/page.tsx` | 3:2 | **3:2** (spec, sem `fill`) | **OK** | — |
-| **AGH-F1..4** · hero agente | `getServicoHeroId()` | 3:1 · 2560×860 | **3:1** em container vh | **OK** (crop intencional) | — |
+| **AG-01..15** · hero Sec0 | `getServicoHeroId()` → thumb | 3:2 asset · banner vh | **OK** | Jul 2026 — padrão AV-05 |
+| **AGH-F1..4** · hero | — | — | — | **Removido** | Substituído por thumbs AG-01…15 |
 | **AGP-F1..4** · Sec3 Como funciona | `getComoFuncionaCardId()` | 2:3 · 1200×1800 | **2:3** (`aspect-[3/4] md:aspect-[2/3]`) | **OK** | Jul 2026 — até CF-* |
 
 ---
 
-## Tabela 4.2-B — Heros família + processos
+## Tabela 4.2-B — Hero Sec0 + processos (AGP-F*)
 
 | Slot | Componente | Ratio esperado | Ratio real | Status | Correção |
 |---|---|---|---|---|---|
-| **AGH-F1..4** · hero agente | `servicos/[slug]/page.tsx` | 3:1 · 2560×860 | **~2:1–3:1** (`h-[80vh] md:h-[70vh]`, largura 100vw) | **Conflito intencional** | Manter crop + safe zone 55%; alinhar PLANO com `aspect-video` **não** aplicável aqui |
-| **MKT-04** · hero pacote | Idem | 3:1 | Idem | **Conflito intencional** | Idem |
-| **AV-01..06** · hero avulso | `getServicoHeroId()` → thumb 3:2 | PLANO: 3:2 com crop | **~2:1–3:1** container vs asset **3:2** | **Conflito intencional** | Thumb 3:2 reutilizado em banner 80vh; safe zone centro 55% |
-| **AGP-F1..4** · Sec3 | `getComoFuncionaCardId()` | 2:3 | **2:3** em card | **OK** | Activo até CF-*; ver `docs/MAPA_APLICACAO_MIDIA.md` |
+| **AG-01..15** · hero agente | `getServicoHeroId()` → thumb | 3:2 asset · banner vh | **OK** | Jul 2026 |
+| **MKT-01..03** · hero pacote | idem | 3:2 · banner vh | **OK** | Jul 2026 |
+| **AV-01..06** · hero avulso | idem | 3:2 · banner vh | **OK** | Padrão AV-05 |
+| ~~**AGH-F1..4**~~ | — | 3:1 | — | **Removido** | Thumbs AG por slug |
+| ~~**MKT-04**~~ | — | 3:1 | — | **Removido** | MKT-01…03 por slug |
+| **AGP-F1..4** · Sec3 | `getComoFuncionaCardId()` | 2:3 | **2:3** em card | **OK** | Activo até CF-* |
 
 **Trecho hero serviço:**
 
@@ -116,9 +119,9 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 
 | Slot | Componente | Ratio esperado | Ratio real | Status | Correção |
 |---|---|---|---|---|---|
-| **MKT-01..03** · listagem | `servicos/page.tsx` Accordion | 3:2 | **3:2** | **OK** | Jul 2026 |
+| **MKT-01..03** · listagem + hero | Accordion + `getServicoHeroId` | 3:2 | **3:2** / crop banner vh | **OK** | Jul 2026 |
 | **MKT-02** · strip `/servicos` | `servicos/page.tsx` | 3:2 | **3:2** | **OK** | — |
-| **MKT-04** · hero pacote | Hero serviço | 3:1 | vh-based | **Conflito intencional** | Idem AGH |
+| ~~**MKT-04**~~ · hero | — | 3:1 | — | **Removido** | MKT-01…03 por slug |
 
 ---
 
@@ -179,8 +182,8 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 | HER-01 slot | Sec0 hero · asset 16:9 · container `h-[45vw]` | `HeroSection` · inner `aspect-video` centrado |
 | HER-02…07 | Conjunto ExpandingFrame Home Sec4 · 16:9 · 35%→90% | `ExpandingFrame` |
 | ABT-01…05 | Conjunto ExpandingFrame Sobre Sec2 · 16:9 · 35%→90% | `ExpandingFrame` |
-| Thumbs listagem AG/MKT/AV | Cards 3:2 na listagem | `Accordion` + `getServicoThumbId` (**activo** Jul 2026) |
-| AGP-F* | Sec3 processo / Como funciona | **Activo** via `getComoFuncionaCardId`; CF-* substituem no futuro |
+| Thumbs listagem + hero | AG/MKT/AV 3:2 | `Accordion` + `getServicoHeroId` | **24+3 activos** |
+| ~~AGH-F*, MKT-04~~ | Hero 3:1 partilhado | — | **Removidos Jul 2026** |
 | CON-01 | Fundo contacto | Não implementado |
 | CF cards | 2:3 uniforme | 3:4 mobile + 2:3 desktop |
 
@@ -192,8 +195,8 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 |---|---|---|---|---|---|
 | Home hero + cards | HER-01, SERV-AV-* | 7 | 0 | 0 | 0 |
 | Frame expansivo | HER-02…07, ABT-* | 11 | 11 | 0 | 0 |
-| Serviços listagem | AG/MKT/AV thumbs | 3 (strip) | 0 | 0 | ~24 (accordion) |
-| Serviço item hero | AGH, MKT-04, AV | 0 | 3 famílias | **6 avulsos (3:2 em banner)** | 0 |
+| Serviços listagem + hero | AG/MKT/AV thumbs 3:2 | 27 (strip+accordion+hero) | **OK** | 0 | 0 |
+| ~~Serviço hero partilhado~~ | ~~AGH-F*, MKT-04~~ | 5 | — | — | **5 removidos** |
 | Serviço item CF | CF-01..05 | 0 (desktop) | 0 | **5 (mobile 3:4)** | 0 |
 | Portfolio | PF-01..12 | 10 | 0 | 0 | 3 slots |
 | Globais | GL-* | 2 | 1 (GL-03) | 1 (GL-01) | 1 (GL-04) |
@@ -204,7 +207,8 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 ## Prioridades de correcção
 
 1. **Alta — CF mobile:** `aspect-[2/3]` em todos os breakpoints **ou** actualizar PLANO para 3:4 mobile.
-2. **Média — heroes avulsos:** assets 3:1 dedicados **ou** nota explícita de crop de thumb 3:2 em banner 80vh.
+2. **Média — CF mobile:** `aspect-[2/3]` em todos os breakpoints **ou** actualizar PLANO para 3:4 mobile.
+3. ~~**Média — heroes avulsos:**~~ **Resolvido Jul 2026** — todos os serviços usam thumb 3:2 no hero.
 3. **Baixa — CON-01, GL-01, PF-SLOT-*:** implementar ou marcar inactivos no PLANO.
 
 ---

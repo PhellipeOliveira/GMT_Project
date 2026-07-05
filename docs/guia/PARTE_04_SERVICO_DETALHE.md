@@ -8,7 +8,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`.
 >
-> **Actualização:** Jul 2026 — Sec3 usa **AGP-F1…4** via `getComoFuncionaCardId()`; mapa completo em `docs/MAPA_APLICACAO_MIDIA.md`.
+> **Actualização:** Jul 2026 — hero Sec0: thumb AG/MKT/AV por slug (padrão AV-05); Sec3 AGP-F*; mapa em `docs/MAPA_APLICACAO_MIDIA.md`.
 
 ---
 
@@ -98,30 +98,27 @@ Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/ví
 
 ### Mídia de fundo
 
-Hero resolvido por `getServicoHeroId(servico)` (`src/lib/media.ts`). Render `fill`, `priority`, `sizes="100vw"`, `reveal={false}`. Classes extra na hero: `[&_img]:object-cover [&_img]:object-center [&_img]:scale-[1.02]` (elimina frestas de subpixel).
+Hero resolvido por `getServicoHeroId(servico)` → **`getServicoThumbId()`** (thumb 3:2 AG/MKT/AV do slug). Render `fill`, `priority`, `sizes="100vw"`, `reveal={false}`. Classes extra: `[&_img]:object-cover [&_img]:object-center [&_img]:scale-[1.02]`.
 
-**Proporção — exportação vs. viewport (fonte: `media-spec.ts` + `page.tsx`):**
+**Padrão visual (todas as rotas `/servicos/[slug]`):**
 
-| Camada | Valor | Notas |
-|---|---|---|
-| **Exportação (produção)** | **3:1 · 2560×860** | `ratio: [3, 1]`, `exportPx` em `media-spec.ts`; assets AGH-F1…4 confirmados em disco |
-| **Container (runtime)** | `w-full` × `h-[80vh] md:h-[70vh]` | Sem `aspect-ratio` fixo — a proporção visível depende da viewport |
-| **Render** | `object-fit: cover` + `fill` | Crop nas bordas; safe zone **centro 55%** |
-| **≠ 16:9** | — | 16:9 aplica-se a **HER-01** (Home) e outros slots; hero de serviço usa **3:1** na spec |
+| Camada | Detalhe |
+|---|---|
+| Container | `h-[80vh] md:h-[70vh]`, `corPlaceholder` como fallback |
+| Mídia | Thumb 3:2 com `object-cover` — adapta-se ao banner (~3:1 efectivo) |
+| Overlay | `bg-gradient-to-t from-black via-black/40 to-black/10` |
+| Título | `h1` branco centrado · `type-hero--fullscreen` · headline opcional abaixo |
+| Navegação | Botões anterior/próximo no rodapé da hero |
 
-**Mapeamento ID → tipo de serviço** (fonte: `src/lib/media.ts` + `src/data/media-spec.ts`):
+**Mapeamento ID → serviço (hero = thumb da listagem):**
 
-| Tipo | Condição | ID hero | Proporção spec | Export (px) | Pasta | Ficheiro |
-|---|---|---|---|---|---|---|
-| Agente | `familia` F1 | AGH-F1 | 3:1 | 2560×860 | `public/images/` | `AGH-F1.webp` |
-| Agente | `familia` F2 | AGH-F2 | 3:1 | 2560×860 | `public/images/` | `AGH-F2.webp` |
-| Agente | `familia` F3 | AGH-F3 | 3:1 | 2560×860 | `public/images/` | `AGH-F3.webp` |
-| Agente | `familia` F4 | AGH-F4 | 3:1 | 2560×860 | `public/images/` | `AGH-F4.webp` |
-| Pacote | qualquer | MKT-04 | 3:1 | 2560×860 | `public/videos/` | `MKT-04.webp` |
-| Avulso | por slug | AV-01…AV-06 | 3:2 | 1200×800 | `public/images/` | `AV-0X.webp` |
+| Tipo | Condição | ID hero | Proporção asset | Export (px) | Ficheiro |
+|---|---|---|---|---|---|
+| Agente | por slug | AG-01…15 | 3:2 | 1200×800 | `public/images/AG-0X.webp` |
+| Pacote | por slug | MKT-01…03 | 3:2 | 1200×800 | `public/images/MKT-0X.webp` |
+| Avulso | por slug | AV-01…06 | 3:2 | 1200×800 | `public/images/AV-0X.webp` |
 
-> **AGH-F1…4:** imagens WebP em `public/images/` (antes em `videos/`). **MKT-04** permanece em `public/videos/` até migração futura.  
-> **Avulsos:** o código reutiliza o thumb 3:2 (`getServicoThumbId`) com `object-fit: cover` no container 70–80vh. Compor o assunto no **centro 55%** (safe zone das specs AGH).
+> **Retirados (Jul 2026):** ~~AGH-F1…4~~, ~~MKT-04~~ — substituídos pelos thumbs do slug; ver `docs/MAPA_APLICACAO_MIDIA.md` § IDs retirados. Compor assunto no **centro 55%** dos thumbs.
 
 ### Comportamento da mídia (anti-barra no topo)
 
@@ -133,7 +130,7 @@ Hero resolvido por `getServicoHeroId(servico)` (`src/lib/media.ts`). Render `fil
 
 **Diagnóstico:** a faixa sólida no topo era causada principalmente pelo **código** (gradiente transparente no topo + fundo branco do `main` visível em frestas de subpixel), não por dimensão incorrecta dos assets AGH (2560×860 confirmado). Avulsos em 3:2 exigem crop via `cover`; composição centralizada no asset evita barras baked-in.
 
-Cruzado com PLANO § 4.2-B (heroes família), § 4.3 (MKT-04), § 4.4 (thumbs avulsos).
+Cruzado com PLANO § 4.2-A (thumbs AG/MKT/AV), § 4.2-B (AGP-F* Sec3).
 
 ### Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |

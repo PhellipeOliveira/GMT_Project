@@ -130,7 +130,7 @@
 
 | Secção referência | Estado GMT | Lacunas |
 |---|---|---|
-| **Sec 0 — Hero 80vh/70vh** | Implementado | Imagens AGH-F1…4 em `public/images/`; MKT-04 ainda em `videos/` |
+| **Sec 0 — Hero 80vh/70vh** | Implementado | Thumb 3:2 por slug (AG/MKT/AV) via `getServicoHeroId`; ~~AGH-F*~~, ~~MKT-04~~ retirados |
 | **Sec 1–4 — Conteúdo claro `#EBEBEB`** | `section-light` | — |
 | **Sec 3 — Process cards 6× `aspect-2/3`** | 5 passos (copy tem 5, layout 6) | 6º slot vazio ou duplicar; scroll horizontal desktop opcional |
 | **Sec 4 — Portfolio 2 cases** | 1 case NARA | 2º case — lacuna |
@@ -204,8 +204,8 @@ Ver tabela completa em `PLANO_MESTRE_DE_MIDIA.md` § Hierarquia da Verdade → M
 |---|---|---|
 | HER-01 | Home hero | MP4/WebM loop 5–10s, sem áudio |
 | ABT-01…ABT-05 | Sobre slideshow | WebP em `public/images/` (2:1); futuro: vídeo loop opcional |
-| AGH-F1..F4 | Serviço item hero | Idem |
-| MKT-04 | Pacotes marketing hero | Idem |
+| AGH-F1..F4 | ~~Serviço item hero~~ | **Retirado** — thumbs AG-01…15 |
+| MKT-04 | ~~Pacotes marketing hero~~ | **Retirado** — MKT-01…03 |
 
 ### 4.3 Slides hero futuros (opcional)
 
