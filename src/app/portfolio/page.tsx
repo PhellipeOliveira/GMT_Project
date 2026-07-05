@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -75,8 +74,6 @@ export default function PortfolioPage() {
           ))}
         </ul>
       </section>
-
-      <GMTLightFooter />
     </>
   );
 }

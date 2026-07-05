@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/ui/ContactForm";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -52,8 +51,6 @@ export default function ContactoPage() {
           </RevealOnScroll>
         </RevealSequence>
       </section>
-
-      <GMTLightFooter />
     </>
   );
 }

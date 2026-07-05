@@ -3,7 +3,6 @@ import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { Accordion, type AccordionItem } from "@/components/ui/Accordion";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { agentes, pacotes, avulsos, type Servico } from "@/data/servicos";
 import { SERVICOS_HERO_THUMBS, getServicoThumbId } from "@/lib/media";
 
@@ -112,8 +111,6 @@ export default function ServicosPage() {
           </section>
         ))}
       </div>
-
-      <GMTLightFooter />
     </>
   );
 }

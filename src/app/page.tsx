@@ -14,7 +14,6 @@ import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { ServiceOverlayCard } from "@/components/home/ServiceOverlayCard";
 import { HomePortfolioRow } from "@/components/home/HomePortfolioRow";
 import { avulsos } from "@/data/servicos";
@@ -116,8 +115,6 @@ export default function HomePage() {
           </div>
         </RevealOnScroll>
       </section>
-
-      <GMTLightFooter />
     </>
   );
 }

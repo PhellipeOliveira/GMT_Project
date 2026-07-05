@@ -63,9 +63,9 @@ Padrão de animação ao scroll: conteúdo «nasce» de baixo para cima quando e
 
 | Constante | Valor actual | O que faz | Afeta |
 |-----------|--------------|-----------|--------|
-| `REVEAL_DURATION` | `2.75` s | Duração de cada linha ou bloco | Texto, títulos, cards, imagens |
-| `REVEAL_LINE_GAP` | `0.12` s | Pausa entre linhas **do mesmo** bloco | Texto multi-linha |
-| `REVEAL_BLOCK_GAP` | `0.18` s | Pausa entre blocos em `RevealSequence` | Label → título → parágrafo |
+| `REVEAL_DURATION` | `2.0` s | Duração de cada linha ou bloco | Texto, títulos, cards, imagens |
+| `REVEAL_LINE_GAP` | `0` s | Pausa entre linhas **do mesmo** bloco | Texto multi-linha |
+| `REVEAL_BLOCK_GAP` | `0` s | Pausa entre blocos em `RevealSequence` | Label → título → parágrafo |
 | `REVEAL_TEXT_Y` | `28` px | Deslocamento inicial do texto | Títulos, parágrafos |
 | `REVEAL_MEDIA_Y` | `20` px | Deslocamento inicial de mídia | Cards, thumbs, imagens |
 | `REVEAL_EASE_OUT` | `[0.25, 1, 0.35, 1]` | Curva de desaceleração | Tudo |
@@ -85,7 +85,7 @@ Padrão de animação ao scroll: conteúdo «nasce» de baixo para cima quando e
 delay_linha(i) = delay_prop + i × (REVEAL_DURATION + REVEAL_LINE_GAP)
 ```
 
-Com 3 linhas: 0 s → 2.87 s → 5.74 s (explica títulos «demorados»).
+Com 3 linhas: 0 s → 2.0 s → 4.0 s (explica títulos «demorados»).
 
 ### Stagger manual em grids
 
@@ -97,7 +97,7 @@ Fora de `RevealSequence`, muitas páginas usam `delay={i * 0.08}` ou `0.06` — 
 
 Para **acelerar** o site sem mexer na Hero:
 
-1. **Baixar `REVEAL_DURATION`** — ex.: `2.75` → `1.4` ou `1.8` (impacto imediato em tudo)
+1. **Baixar `REVEAL_DURATION`** — ex.: `2.0` → `1.4` ou `1.8` (impacto imediato em tudo)
 2. **Baixar `REVEAL_LINE_GAP`** — ex.: `0.12` → `0.06` (cascata de linhas mais rápida)
 3. **Baixar `REVEAL_BLOCK_GAP`** — ex.: `0.18` → `0.08` (cabecalhos com sequence)
 4. **Reduzir `REVEAL_TEXT_Y` / `REVEAL_MEDIA_Y`** — menos deslocamento = sensação mais ágil

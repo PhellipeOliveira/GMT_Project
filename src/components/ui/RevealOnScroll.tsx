@@ -16,11 +16,11 @@ import { useRevealSequence } from "@/components/ui/reveal-sequence";
 
 // Entrada suave — desaceleração longa no fim (sensação de “nascer”)
 export const REVEAL_EASE_OUT = [0.25, 1, 0.35, 1] as const;
-export const REVEAL_DURATION = 2.75;
+export const REVEAL_DURATION = 2.0;
 /** Pausa entre o fim de uma linha e o início da seguinte. */
-export const REVEAL_LINE_GAP = 0.12;
+export const REVEAL_LINE_GAP = 0;
 /** Pausa entre blocos encadeados (label → título → parágrafo). */
-export const REVEAL_BLOCK_GAP = 0.18;
+export const REVEAL_BLOCK_GAP = 0;
 export const REVEAL_TEXT_Y = 28;
 export const REVEAL_MEDIA_Y = 20;
 

@@ -5,7 +5,6 @@ import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { AboutCounterGrid } from "@/components/about/AboutCounterGrid";
 
 export const metadata: Metadata = {
@@ -97,8 +96,6 @@ export default function SobrePage() {
           </div>
         </div>
       </section>
-
-      <GMTLightFooter />
     </>
   );
 }

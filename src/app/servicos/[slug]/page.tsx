@@ -6,7 +6,6 @@ import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { servicos, getServicoBySlug, getAdjacentServicos } from "@/data/servicos";
 import { getComoFuncionaCardId, getServicoHeroId } from "@/lib/media";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 
 /** Slots de mídia da Sec3 — Como funciona (ver `docs/PLANO_MESTRE_DE_MIDIA.md` § CF-01…05). */
 const COMO_FUNCIONA_SLOTS = [
@@ -277,8 +276,6 @@ export default async function ServicoItemPage({
           </div>
         </section>
       </div>
-
-      <GMTLightFooter />
     </>
   );
 }

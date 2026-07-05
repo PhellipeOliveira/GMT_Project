@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { portfolio, getCaseBySlug } from "@/data/portfolio";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 
 export function generateStaticParams() {
   return portfolio.map((c) => ({ slug: c.slug }));
@@ -149,8 +148,6 @@ export default async function PortfolioItemPage({
           ))}
         </ul>
       </section>
-
-      <GMTLightFooter />
     </>
   );
 }
