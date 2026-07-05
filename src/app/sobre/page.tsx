@@ -71,7 +71,9 @@ export default function SobrePage() {
           <div className="hidden md:block md:w-1/2" aria-hidden />
 
           <div className="md:w-1/2">
-            <SectionLabel tone="on-dark">Nossos valores</SectionLabel>
+            <SectionLabel variant="title" tone="on-dark">
+              Nossos valores
+            </SectionLabel>
 
             <div className="mt-12 flex flex-col gap-10 md:gap-12">
               {DIFERENCIAIS.map((titulo, i) => {

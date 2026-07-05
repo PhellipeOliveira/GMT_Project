@@ -94,11 +94,13 @@ As variáveis são injectadas no `<html>` via `className={dmSans.variable} ${hos
 | Token | Valor | Papel semântico |
 |-------|-------|-----------------|
 | `--type-label` | `14px` | Labels uppercase, metadados, botões CTA |
-| `--type-section-label` | `12px` | Rótulos de secção (topo esquerdo, Home) |
+| `--type-section-label` | `13px` | Eyebrow / kicker de secção (uppercase, acima do título) |
+| `--type-body-sm` | `16px` | Texto denso: overlays de cartão, legendas, contextos compactos |
 | `--type-body` | `18px` | Texto corrido, inputs, botões (também no `body`) |
 | `--type-body-lg` | `21px` | Lead / parágrafo introdutório |
+| `--type-section-title` | `clamp(30px, 4vw, 46px)` | **Título de secção** — heading visível de cada secção de conteúdo |
 | `--type-h3` | `36px` | Títulos de cartão, nomes de projeto |
-| `--type-h2` | `72px` | Títulos de secção (com clamp responsivo na classe) |
+| `--type-h2` | `72px` | Títulos de página / hero (com clamp responsivo na classe) |
 | `--type-hero` | `clamp(52px, 9vw, 108px)` | H1 de hero fullscreen (serviços) |
 | `--type-hero-brand` | `clamp(6rem, 15vw, 14rem)` | Tamanho da variante `.gmt-brand--hero` |
 | `--type-hero-subtitle` | `clamp(3rem, 4.5vw, 4.5rem)` | Subtítulo «Growth Marketing Technology» |
@@ -111,9 +113,11 @@ Definidas em `src/styles/globals.css`:
 | Classe | Fonte | Tamanho | Peso | Detalhes |
 |--------|-------|---------|------|----------|
 | `.type-label` | DM Sans | 14px | 400 | `letter-spacing: 0.1em`, uppercase |
-| `.section-label` | DM Sans | 12px | 500 | `letter-spacing: 0.14em`, uppercase — rótulos de secção |
+| `.section-label` | DM Sans | 13px | 500 | `letter-spacing: 0.14em`, uppercase — eyebrow de secção |
+| `.type-body-sm` | DM Sans | 16px | 400 | line-height 1.6 — texto denso (overlays, legendas) |
 | `.type-body` | DM Sans | 18px | 400 | line-height 1.5 — **tamanho base do site** |
 | `.type-body-lg` | DM Sans | 21px | 400 | line-height 1.55 |
+| `.type-section-title` | Host Grotesk | clamp(30px, 4vw, 46px) | 400 | line-height 1.1, `ls -0.01em` — **título de secção** |
 | `.type-h3` | Host Grotesk | 36px | 400 | line-height 1.2, cor `gmt-text` |
 | `.type-h2` | Host Grotesk | clamp(42px, 6vw, 72px) | 400 | line-height 1.1 |
 | `.type-hero` | Host Grotesk | clamp hero | 400 | cor `gmt-text` |
@@ -143,6 +147,27 @@ Definidas em `src/styles/globals.css`:
 {/* Botão */}
 <button className="type-body type-medium ...">Enviar</button>
 ```
+
+### Padrão editorial de secções (2026)
+
+O site tinha um "buraco" na hierarquia: secções eram anunciadas apenas por micro-rótulos de 12–14px e saltavam directo para 36–72px, sem um nível intermédio. O padrão editorial resolve isto com **níveis fixos e previsíveis** para cada papel:
+
+```
+EYEBROW        → .section-label (13px, uppercase)      ← kicker opcional acima do título
+SECTION TITLE  → .type-section-title (30→46px)         ← heading visível de cada secção
+─────────────────────────────────────────────────────────────
+BODY SM        → .type-body-sm (16px)                  ← overlays de cartão, legendas, denso
+BODY           → .type-body (18px)                     ← leitura base
+BODY LG        → .type-body-lg (21px)                  ← lead / introdução
+```
+
+**Regras:**
+1. Toda secção de conteúdo tem um **título** em `.type-section-title` (não usar `.section-label`/`.type-label` de 12–14px como título de secção).
+2. O eyebrow (`.section-label`) é **opcional** e fica acima do título — nunca substitui o título.
+3. `.type-h2` fica reservado a **títulos de página / hero**; `.type-section-title` é o degrau abaixo, para secções dentro da página.
+4. Texto denso em espaços pequenos (overlays sobre imagem, legendas) usa `.type-body-sm` (16px) — nunca `text-sm`/14px ad hoc.
+
+**Componente:** `SectionLabel` aceita `variant="title"` (renderiza `<h2 class="type-section-title">`) ou `variant="eyebrow"` (default, `.section-label`).
 
 ### Utilitários Tailwind alternativos (`tailwind.config.ts`)
 

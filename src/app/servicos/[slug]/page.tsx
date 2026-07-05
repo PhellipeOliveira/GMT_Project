@@ -19,6 +19,16 @@ const COMO_FUNCIONA_SLOTS = [
 const HERO_NAV_LINK =
   "type-label inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md transition-colors hover:bg-white/30";
 
+/** Eyebrow visível de secção: barra de destaque + rótulo escuro (não cinzento). */
+function Kicker({ children }: { children: string }) {
+  return (
+    <RevealOnScroll variant="media" className="mb-5 flex items-center gap-3">
+      <span className="h-px w-8 shrink-0 bg-gmt-accent" aria-hidden />
+      <span className="type-label text-gmt-text">{children}</span>
+    </RevealOnScroll>
+  );
+}
+
 export function generateStaticParams() {
   return servicos.map((s) => ({ slug: s.slug }));
 }
@@ -49,6 +59,9 @@ export default async function ServicoItemPage({
   const heroId = getServicoHeroId(servico);
   const { prev, next } = getAdjacentServicos(slug);
 
+  const mostrarSolucao = Boolean(servico.solucao) && servico.tipo !== "pacote";
+  const prefacioInclui = servico.tipo === "pacote" ? servico.solucao : "";
+
   return (
     <>
       {/* ===== Sec 0 — Hero (banner · thumb AG/MKT/AV + gradiente + título branco) ===== */}
@@ -68,7 +81,7 @@ export default async function ServicoItemPage({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10">
           <div className="flex h-full flex-col items-center justify-center px-5 text-center text-white md:px-[5vw]">
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-3">
               <RevealOnScroll
                 as="h1"
                 className="type-hero type-hero--fullscreen mx-auto max-w-4xl !text-white !leading-[1.05] [&>div]:!leading-[1.05]"
@@ -78,7 +91,7 @@ export default async function ServicoItemPage({
               {servico.headline && (
                 <RevealOnScroll
                   as="p"
-                  className="mx-auto max-w-2xl text-[clamp(1.125rem,2.5vw,1.75rem)] leading-snug text-white"
+                  className="mx-auto max-w-2xl text-[clamp(1.125rem,2.5vw,1.75rem)] leading-snug text-white/90"
                   delay={0.08}
                 >
                   {servico.headline}
@@ -102,130 +115,166 @@ export default async function ServicoItemPage({
         </div>
       </section>
 
-      <div className="section-light">
-        {/* ===== Sec 1 — Proposta de valor (problema + solução) ===== */}
-        {(servico.problema || servico.solucao) && (
-          <section className="px-5 pt-16 md:px-[5vw] md:pt-[5vw]">
-            <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
-              {servico.problema && (
-                <div className="md:w-1/2">
-                  <RevealOnScroll as="h2" className="type-label text-gmt-muted">
-                    O desafio
-                  </RevealOnScroll>
-                  <RevealOnScroll as="p" className="type-h3 mt-5">
-                    {servico.problema}
-                  </RevealOnScroll>
-                </div>
-              )}
-              {servico.solucao && (
-                <div className="md:w-1/2">
-                  <RevealOnScroll as="h2" className="type-label text-gmt-muted">
-                    A solução
-                  </RevealOnScroll>
-                  <RevealOnScroll as="p" className="type-body-lg mt-5 text-gmt-muted" delay={0.08}>
-                    {servico.solucao}
-                  </RevealOnScroll>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* ===== Sec 1b — Benefícios ===== */}
-        {servico.beneficios.length > 0 && (
-          <section className="px-5 pt-16 md:px-[5vw] md:pt-[5vw]">
-            <RevealOnScroll as="h2" className="type-label text-gmt-muted">
-              Benefícios
-            </RevealOnScroll>
-            <ul className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
-              {servico.beneficios.map((b, i) => (
-                <li key={b}>
-                  <RevealOnScroll variant="media" delay={i * 0.08}>
-                    <div className="flex items-start gap-3 rounded-lg border border-gmt-border bg-gmt-bg-alt p-5">
-                      <Check size={18} className="mt-0.5 shrink-0 text-gmt-accent" />
-                      <span className="type-body text-gmt-text">{b}</span>
-                    </div>
-                  </RevealOnScroll>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {/* ===== Sec 2 — O que inclui (funcionalidades) ===== */}
-        <section className="flex flex-col px-5 pt-16 md:px-[5vw] md:pt-[8vw]">
-          <div className="flex flex-col gap-8 md:flex-row md:gap-[5vw]">
-            <div className="md:w-1/3">
-              <RevealOnScroll as="h2" className="type-label text-gmt-muted">
-                O que inclui
+      <div className="section-light not-prose">
+        {/* ===== Sec 1 — O desafio (hook prominente) ===== */}
+        {servico.problema && (
+          <section className="px-5 pt-20 md:px-[5vw] md:pt-[7vw]">
+            <div className="mx-auto max-w-5xl">
+              <Kicker>O desafio</Kicker>
+              <RevealOnScroll as="p" className="type-section-title max-w-4xl">
+                {servico.problema}
               </RevealOnScroll>
             </div>
-            <div className="md:w-2/3">
-              {servico.solucao && servico.tipo === "pacote" && (
-                <RevealOnScroll as="p" className="type-body mb-6 text-gmt-muted">
-                  {servico.solucao}
-                </RevealOnScroll>
-              )}
-              <ul className="flex flex-col divide-y divide-gmt-border border-t border-gmt-border">
-                {servico.funcionalidades.map((f, i) => (
-                  <li key={f}>
-                    <RevealOnScroll variant="media" delay={i * 0.08}>
-                      <span className="type-body-lg block py-4 text-gmt-text">{f}</span>
+          </section>
+        )}
+
+        {/* ===== Sec 2 — A solução + benefícios ===== */}
+        {(mostrarSolucao || servico.beneficios.length > 0) && (
+          <section className="px-5 pt-16 md:px-[5vw] md:pt-[6vw]">
+            <div className="mx-auto max-w-5xl border-t border-gmt-border pt-16 md:pt-[5vw]">
+              <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
+                <div className="md:w-1/3">
+                  <Kicker>A solução</Kicker>
+                  <RevealOnScroll as="h2" className="type-section-title">
+                    Como resolvemos
+                  </RevealOnScroll>
+                </div>
+                <div className="md:w-2/3">
+                  {mostrarSolucao && (
+                    <RevealOnScroll as="p" className="type-body-lg text-gmt-muted">
+                      {servico.solucao}
                     </RevealOnScroll>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* ===== Sec 3 — Como funciona (5 slots CF-01…05) ===== */}
-        <section
-          className={`px-5 pt-16 md:px-[5vw] md:pt-[8vw] ${
-            servico.casosDeUso.length === 0 ? "pb-16 md:pb-[8vw]" : ""
-          }`}
-        >
-          <RevealOnScroll as="h2" className="type-label text-gmt-muted">
-            Como funciona
-          </RevealOnScroll>
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {COMO_FUNCIONA_SLOTS.map((slot, i) => (
-              <RevealOnScroll key={slot.id} variant="media" delay={i * 0.08}>
-                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-gmt-border md:aspect-[2/3]">
-                  <PlaceholderMedia
-                    id={getComoFuncionaCardId(servico.familia, slot.id)}
-                    descricao={slot.descricao}
-                    cor={slot.cor}
-                    fill
-                    sizes="(max-width: 1024px) 50vw, 20vw"
-                    reveal={false}
-                  />
-                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-4">
-                    <span className="rounded-lg bg-white/75 px-4 py-2.5 text-center text-gmt-text backdrop-blur-md type-body-lg">
-                      {slot.titulo}
-                    </span>
-                  </div>
+                  )}
+                  {servico.beneficios.length > 0 && (
+                    <ul
+                      className={`grid grid-cols-1 gap-5 sm:grid-cols-2 ${
+                        mostrarSolucao ? "mt-10" : ""
+                      }`}
+                    >
+                      {servico.beneficios.map((b, i) => (
+                        <li key={b}>
+                          <RevealOnScroll variant="media" delay={i * 0.08}>
+                            <div className="flex items-start gap-3 rounded-xl border border-gmt-border bg-gmt-bg-alt p-5">
+                              <Check size={18} className="mt-0.5 shrink-0 text-gmt-accent" />
+                              <span className="type-body text-gmt-text">{b}</span>
+                            </div>
+                          </RevealOnScroll>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </section>
-
-        {/* ===== Sec 4 — Casos de uso ===== */}
-        {servico.casosDeUso.length > 0 && (
-          <section className="px-5 pt-16 pb-16 md:px-[5vw] md:pt-[8vw] md:pb-[8vw]">
-            <RevealOnScroll as="h2" className="type-label text-gmt-muted">
-              Para quem é
-            </RevealOnScroll>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {servico.casosDeUso.map((c, i) => (
-                <RevealOnScroll key={c} variant="media" delay={i * 0.08}>
-                  <span className="tag-pill">{c}</span>
-                </RevealOnScroll>
-              ))}
+              </div>
             </div>
           </section>
         )}
+
+        {/* ===== Sec 3 — O que inclui (funcionalidades) ===== */}
+        <section className="px-5 pt-16 md:px-[5vw] md:pt-[6vw]">
+          <div className="mx-auto max-w-5xl border-t border-gmt-border pt-16 md:pt-[5vw]">
+            <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
+              <div className="md:w-1/3">
+                <Kicker>Em detalhe</Kicker>
+                <RevealOnScroll as="h2" className="type-section-title">
+                  O que inclui
+                </RevealOnScroll>
+              </div>
+              <div className="md:w-2/3">
+                {prefacioInclui && (
+                  <RevealOnScroll as="p" className="type-body mb-8 text-gmt-muted">
+                    {prefacioInclui}
+                  </RevealOnScroll>
+                )}
+                <ul className="flex flex-col divide-y divide-gmt-border border-t border-gmt-border">
+                  {servico.funcionalidades.map((f, i) => (
+                    <li key={f}>
+                      <RevealOnScroll variant="media" delay={i * 0.06}>
+                        <span className="type-body-lg flex items-baseline gap-4 py-5 text-gmt-text">
+                          <span className="font-mono text-sm text-gmt-muted">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <span>{f}</span>
+                        </span>
+                      </RevealOnScroll>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== Sec 4 — Como funciona (5 slots CF-01…05) ===== */}
+        <section className="px-5 pt-16 md:px-[5vw] md:pt-[6vw]">
+          <div className="mx-auto max-w-6xl border-t border-gmt-border pt-16 md:pt-[5vw]">
+            <Kicker>O processo</Kicker>
+            <RevealOnScroll as="h2" className="type-section-title">
+              Como funciona
+            </RevealOnScroll>
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              {COMO_FUNCIONA_SLOTS.map((slot, i) => (
+                <RevealOnScroll key={slot.id} variant="media" delay={i * 0.08}>
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-gmt-border md:aspect-[2/3]">
+                    <PlaceholderMedia
+                      id={getComoFuncionaCardId(servico.familia, slot.id)}
+                      descricao={slot.descricao}
+                      cor={slot.cor}
+                      fill
+                      sizes="(max-width: 1024px) 50vw, 20vw"
+                      reveal={false}
+                    />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3">
+                      <span className="type-body block rounded-lg bg-white/80 px-3 py-2 text-center text-gmt-text backdrop-blur-md">
+                        <span className="mr-1.5 font-mono text-xs text-gmt-muted">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        {slot.titulo}
+                      </span>
+                    </div>
+                  </div>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== Sec 5 — Para quem é ===== */}
+        <section className="px-5 pt-16 pb-20 md:px-[5vw] md:pt-[6vw] md:pb-[8vw]">
+          <div className="mx-auto max-w-5xl border-t border-gmt-border pt-16 md:pt-[5vw]">
+            <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
+              <div className="md:w-1/3">
+                <Kicker>Ideal para</Kicker>
+                <RevealOnScroll as="h2" className="type-section-title">
+                  Para quem é
+                </RevealOnScroll>
+              </div>
+              <div className="md:w-2/3">
+                {servico.casosDeUso.length > 0 ? (
+                  <div className="flex flex-wrap gap-3">
+                    {servico.casosDeUso.map((c, i) => (
+                      <RevealOnScroll key={c} variant="media" delay={i * 0.08}>
+                        <span className="tag-pill">{c}</span>
+                      </RevealOnScroll>
+                    ))}
+                  </div>
+                ) : (
+                  <RevealOnScroll as="p" className="type-body-lg text-gmt-muted">
+                    Pequenas e médias empresas que querem resultados reais, com um
+                    parceiro que trata de tudo de ponta a ponta.
+                  </RevealOnScroll>
+                )}
+                <RevealOnScroll variant="media" delay={0.16}>
+                  <Link
+                    href="/contacto"
+                    className="type-label mt-10 inline-flex items-center gap-2 rounded-full bg-black px-8 py-3.5 text-white transition-colors duration-300 hover:bg-black/80"
+                  >
+                    Falar sobre este serviço →
+                  </Link>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </>
   );

@@ -27,11 +27,15 @@
   --fade-duration: 1s;
   --color-transition: 1s;
 
-  /* Escala tipográfica (design_map_home_v2 — bump legibilidade 2026) */
+  /* Escala tipográfica — padrão editorial GMT (2026)
+     Hierarquia: eyebrow → section-title → h2/hero (display)
+                 body-sm → body → body-lg (texto) */
   --type-label: 14px;
-  --type-section-label: 12px;
+  --type-section-label: 13px;
+  --type-body-sm: 16px;
   --type-body: 18px;
   --type-body-lg: 21px;
+  --type-section-title: clamp(30px, 4vw, 46px);
   --type-h3: 36px;
   --type-h2: 72px;
   --type-hero: clamp(52px, 9vw, 108px);
@@ -118,6 +122,13 @@ body {
   color: rgba(255, 255, 255, 0.55);
 }
 
+.type-body-sm {
+  font-family: var(--font-sans);
+  font-size: var(--type-body-sm);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
 .type-body {
   font-family: var(--font-sans);
   font-size: var(--type-body);
@@ -130,6 +141,17 @@ body {
   font-size: var(--type-body-lg);
   font-weight: 400;
   line-height: 1.55;
+}
+
+/* Título de secção — degrau editorial entre eyebrow e página/hero.
+   Usar como heading visível de cada secção de conteúdo. */
+.type-section-title {
+  font-family: var(--font-display);
+  font-size: var(--type-section-title);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--gmt-text);
 }
 
 .type-h3 {
@@ -251,11 +273,11 @@ body {
 }
 
 /* Último contentor de cada página — texto sempre claro sobre preto */
-.section-cta :where(.type-h2, .type-h3, .type-hero, .type-label) {
+.section-cta :where(.type-section-title, .type-h2, .type-h3, .type-hero, .type-label) {
   color: var(--gmt-text);
 }
 
-.section-cta :where(.type-body, .type-body-lg, p) {
+.section-cta :where(.type-body-sm, .type-body, .type-body-lg, p) {
   color: var(--gmt-text-muted);
 }
 

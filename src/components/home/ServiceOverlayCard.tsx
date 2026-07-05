@@ -38,14 +38,18 @@ export function ServiceOverlayCard({ servico, imageId }: ServiceOverlayCardProps
       />
 
       <div className="absolute inset-0 flex flex-col p-5 text-left md:p-6">
-        <h3 className="type-body shrink-0 font-medium text-white">{servico.nome}</h3>
+        <h3 className="type-body-lg shrink-0 font-medium text-white md:text-2xl">
+          {servico.nome}
+        </h3>
 
         {overlay ? (
           <div className="mt-3 flex min-h-0 flex-1 flex-col gap-3 opacity-0 translate-y-1 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0">
-            <p className="min-h-0 flex-1 overflow-y-auto text-sm leading-relaxed text-white/90">
+            <p className="type-body-sm min-h-0 flex-1 overflow-y-auto text-white/90">
               {overlay.body}
             </p>
-            <p className="shrink-0 text-sm font-medium text-white">{overlay.cta}</p>
+            <p className="type-body-sm shrink-0 font-medium text-white">
+              {overlay.cta}
+            </p>
           </div>
         ) : (
           fallbackText && (

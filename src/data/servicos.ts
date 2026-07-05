@@ -389,9 +389,14 @@ export const servicos: Servico[] = [
     familia: "MKT",
     corPlaceholder: CORES_FAMILIA.MKT,
     headline: "Para pequenas empresas a iniciar a presença digital.",
-    problema: "",
+    problema:
+      "O seu negócio existe, mas online quase não aparece — e quem não aparece perde os clientes para quem aparece primeiro.",
     solucao: "",
-    beneficios: [],
+    beneficios: [
+      "Identidade e presença desde a primeira semana",
+      "Publicações consistentes sem esforço seu",
+      "Uma marca que parece o que já é: séria e presente",
+    ],
     funcionalidades: [
       "Identidade visual básica (logótipo, cores, tipografia)",
       "Criação e configuração de perfis (Instagram e Facebook)",
@@ -409,9 +414,14 @@ export const servicos: Servico[] = [
     familia: "MKT",
     corPlaceholder: CORES_FAMILIA.MKT,
     headline: "Para empresas já online que querem expandir.",
-    problema: "",
+    problema:
+      "Já está online, mas o crescimento estagnou. Mais publicações não chegam quando falta estratégia, publicidade e um site que converte.",
     solucao: "Inclui tudo do Essencial, mais:",
-    beneficios: [],
+    beneficios: [
+      "Presença, tráfego pago e site a trabalhar juntos",
+      "Decisões guiadas por dados reais",
+      "Crescimento com direção, não ao acaso",
+    ],
     funcionalidades: [
       "Website profissional (landing page ou institucional)",
       "Estratégia de conteúdo personalizada",
@@ -430,9 +440,14 @@ export const servicos: Servico[] = [
     familia: "MKT",
     corPlaceholder: CORES_FAMILIA.MKT,
     headline: "Para empresas que querem dominar o digital.",
-    problema: "",
+    problema:
+      "Quer dominar o digital no seu setor, não apenas marcar presença — ser a referência, não mais um nome.",
     solucao: "Inclui tudo do Crescimento, mais:",
-    beneficios: [],
+    beneficios: [
+      "Todos os canais a trabalhar em conjunto",
+      "Tecnologia de IA a poupar tempo e a multiplicar qualidade",
+      "A referência do setor na cabeça dos clientes",
+    ],
     funcionalidades: [
       "Chatbot inteligente (WhatsApp, site ou Telegram)",
       "Branding completo (valores, visão, missão, posicionamento)",
@@ -454,10 +469,16 @@ export const servicos: Servico[] = [
     tipo: "avulso",
     familia: "AV",
     corPlaceholder: CORES_FAMILIA.AV,
-    headline: "",
-    problema: "",
-    solucao: "",
-    beneficios: [],
+    headline: "Conteúdo profissional, pronto a publicar, sem lhe ocupar uma hora.",
+    problema:
+      "Criar vídeos, carrosséis e artigos de qualidade todos os meses consome o tempo que não tem — e cada semana sem publicar é visibilidade que a concorrência aproveita.",
+    solucao:
+      "Produzimos o conteúdo que o seu negócio precisa, do design ao vídeo curto para redes sociais, ao artigo que posiciona no LinkedIn e no Google — entregue pronto a publicar, com a sua identidade.",
+    beneficios: [
+      "Presença constante sem esforço seu",
+      "Conteúdo com a sua identidade e a mensagem certa",
+      "Mais alcance enquanto poupa tempo",
+    ],
     funcionalidades: [
       "Vídeos curtos para redes sociais",
       "Carrosséis para Instagram",
@@ -477,10 +498,16 @@ export const servicos: Servico[] = [
     tipo: "avulso",
     familia: "AV",
     corPlaceholder: CORES_FAMILIA.AV,
-    headline: "",
-    problema: "",
-    solucao: "",
-    beneficios: [],
+    headline: "Anúncios que trabalham por um único número: o retorno.",
+    problema:
+      "Já gastou dinheiro em anúncios sem perceber se resultou. O problema raramente é o orçamento — é a campanha mal configurada que come o dinheiro sem trazer clientes.",
+    solucao:
+      "Configuramos, gerimos e otimizamos campanhas no Meta Ads e no Google Ads, ajustando audiências, criativos e lances de forma contínua para cada euro render mais.",
+    beneficios: [
+      "Campanhas focadas em leads e vendas",
+      "Otimização contínua do investimento",
+      "Cada euro a trabalhar mais",
+    ],
     funcionalidades: [
       "Configuração de campanha Meta Ads",
       "Configuração de campanha Google Ads",
@@ -500,10 +527,16 @@ export const servicos: Servico[] = [
     tipo: "avulso",
     familia: "AV",
     corPlaceholder: CORES_FAMILIA.AV,
-    headline: "",
-    problema: "",
-    solucao: "",
-    beneficios: [],
+    headline: "Uma marca alinhada faz o marketing render o dobro.",
+    problema:
+      "Uma identidade visual inconsistente e um posicionamento indefinido custam clientes antes de eles sequer entrarem em contacto.",
+    solucao:
+      "Criamos ou refinamos a sua identidade completa — logótipo, cores, tipografia, valores, missão e visão — e a estratégia que liga tudo isso ao crescimento real.",
+    beneficios: [
+      "Identidade coerente em todos os pontos de contacto",
+      "Posicionamento claro e com propósito",
+      "Marketing mais eficaz com o mesmo esforço",
+    ],
     funcionalidades: [
       "Identidade visual completa",
       "Refinamento de branding existente",
@@ -523,10 +556,16 @@ export const servicos: Servico[] = [
     tipo: "avulso",
     familia: "AV",
     corPlaceholder: CORES_FAMILIA.AV,
-    headline: "",
-    problema: "",
-    solucao: "",
-    beneficios: [],
+    headline: "Um site que carrega rápido, aparece no Google e converte.",
+    problema:
+      "O seu site ou não existe, ou existe mas não converte. Cada visitante que sai sem contactar é um cliente que foi à concorrência a seguir.",
+    solucao:
+      "Criamos landing pages e sites institucionais rápidos e otimizados — WordPress, SEO, velocidade e performance — para transformar visitas em contactos.",
+    beneficios: [
+      "Presença que trabalha enquanto você dorme",
+      "Velocidade e SEO cuidados ao detalhe",
+      "Visitas transformadas em contactos",
+    ],
     funcionalidades: [
       "Landing page",
       "Site institucional",
@@ -546,10 +585,16 @@ export const servicos: Servico[] = [
     tipo: "avulso",
     familia: "AV",
     corPlaceholder: CORES_FAMILIA.AV,
-    headline: "",
-    problema: "",
-    solucao: "",
-    beneficios: [],
+    headline: "Assistentes virtuais que parecem parte da sua equipa.",
+    problema:
+      "Quer automatizar o atendimento mas não sabe por onde começar. Um chatbot mal feito frustra os clientes; um bem feito parece parte da sua equipa.",
+    solucao:
+      "Desenvolvemos assistentes virtuais para WhatsApp, website e Telegram, ligados ao conhecimento do seu negócio, para responder, qualificar e encaminhar clientes em segundos.",
+    beneficios: [
+      "Atendimento imediato, dia e noite",
+      "Configurado à medida do seu processo",
+      "Nunca perde um contacto por falta de disponibilidade",
+    ],
     funcionalidades: [
       "Chatbot para WhatsApp",
       "Chatbot para website",
@@ -569,10 +614,16 @@ export const servicos: Servico[] = [
     tipo: "avulso",
     familia: "AV",
     corPlaceholder: CORES_FAMILIA.AV,
-    headline: "",
-    problema: "",
-    solucao: "",
-    beneficios: [],
+    headline: "Decisões de marketing com dados reais, não palpites.",
+    problema:
+      "Sem tracking correto, o Google Analytics mente, o Meta Pixel perde conversões e o dinheiro investido em anúncios desaparece sem rasto.",
+    solucao:
+      "Configuramos o GA4, o Tag Manager e o Meta Pixel corretamente, auditamos o que já tem e entregamos relatórios claros sobre onde está o retorno e o desperdício.",
+    beneficios: [
+      "Tracking fiável e completo",
+      "Relatórios que mostram o retorno real",
+      "Marketing gerido como um ativo, não uma despesa",
+    ],
     funcionalidades: [
       "Configuração Google Analytics 4",
       "Configuração Google Tag Manager",

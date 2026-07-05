@@ -30,7 +30,7 @@ export default function HomePage() {
 
       {/* ══ 2 ── O QUE FAZEMOS ══════════════════════════════════════ */}
       <section className="not-prose bg-white px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
-        <SectionLabel tone="on-light" className="block w-full text-left text-gmt-text">
+        <SectionLabel variant="title" tone="on-light" className="block w-full text-left">
           O que fazemos
         </SectionLabel>
 
@@ -59,7 +59,7 @@ export default function HomePage() {
 
       {/* ══ 3 ── POR QUE A GMT ═══════════════════════════════════════ */}
       <section className="not-prose bg-gmt-bg-alt px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
-        <SectionLabel tone="on-light" className="block w-full text-left text-gmt-text">
+        <SectionLabel variant="title" tone="on-light" className="block w-full text-left">
           Por que a GMT
         </SectionLabel>
 
@@ -88,7 +88,7 @@ export default function HomePage() {
 
       {/* ══ 5 ── TRABALHOS RECENTES ══════════════════════════════════ */}
       <section className="section-cta px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
-        <SectionLabel tone="on-dark" className="block w-full text-left text-white">
+        <SectionLabel variant="title" tone="on-dark" className="block w-full text-left">
           Trabalhos recentes
         </SectionLabel>
 

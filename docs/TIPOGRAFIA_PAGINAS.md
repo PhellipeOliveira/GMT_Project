@@ -22,9 +22,11 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 | Token | Valor actual | Referência em px (1440px) | Classe utilitária |
 |-------|-------------|--------------------------|------------------|
 | `--type-label` | `14px` | 14px | `.type-label` |
-| `--type-section-label` | `12px` | 12px | `.section-label` |
+| `--type-section-label` | `13px` | 13px | `.section-label` (eyebrow) |
+| `--type-body-sm` | `16px` | 16px | `.type-body-sm` |
 | `--type-body` | `18px` | 18px | `.type-body` |
 | `--type-body-lg` | `21px` | 21px | `.type-body-lg` |
+| `--type-section-title` | `clamp(30px, 4vw, 46px)` | 46px | `.type-section-title` |
 | `--type-h3` | `36px` | 36px | `.type-h3` |
 | `--type-h2` | `clamp(42px, 6vw, 72px)` | 72px | `.type-h2` |
 | `--type-hero` | `clamp(52px, 9vw, 108px)` | 108px | `.type-hero` |
@@ -52,11 +54,12 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 | Elemento | Texto exemplo | Classe | Família | Tamanho | Peso |
 |----------|--------------|--------|---------|---------|------|
-| Label | "O que fazemos" | `.section-label` + `--on-light` | DM Sans | **12px** | 500 |
-| Overlay `<h3>` | Nome do serviço | `.type-body` + `font-medium` | DM Sans | 18px | 500 |
-| Overlay `<p>` (hover) | 1.ª funcionalidade | `.type-body` | DM Sans | 18px | 400 |
+| Título de secção | "O que fazemos" | `.type-section-title` (via `SectionLabel variant="title"`) | Host Grotesk | clamp(30px → 46px) | 400 |
+| Overlay `<h3>` | Nome do serviço | `.type-body-lg` + `font-medium` (`md:text-2xl`) | DM Sans | 21px → 24px | 500 |
+| Overlay `<p>` (hover) | Copy editorial (`homeOverlay.body`) | `.type-body-sm` | DM Sans | 16px | 400 |
+| Overlay CTA (hover) | Pergunta (`homeOverlay.cta`) | `.type-body-sm` + `font-medium` | DM Sans | 16px | 500 |
 
-> Cards: `ServiceOverlayCard` — texto sobre imagem, gradiente escuro, hover com blur/saturate.
+> Cards: `ServiceOverlayCard` — texto sobre imagem; no hover o gradiente dá lugar a um overlay preto (`bg-black/90`) e revela o parágrafo + CTA. Copy em `servico.homeOverlay` (`src/data/servicos.ts`).
 
 ---
 
@@ -64,7 +67,7 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 | Elemento | Texto exemplo | Classe | Família | Tamanho | Peso |
 |----------|--------------|--------|---------|---------|------|
-| Label | "Por que a GMT" | `.section-label` + `--on-light` | DM Sans | **12px** | 500 |
+| Título de secção | "Por que a GMT" | `.type-section-title` (via `SectionLabel variant="title"`) | Host Grotesk | clamp(30px → 46px) | 400 |
 | Item | "Experiência comprovada" (etc.) | `.type-body` | DM Sans | 18px | 400 |
 
 > Layout minimalista: ícone + texto curto, sem cards com caixa.
@@ -75,7 +78,7 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 | Elemento | Texto exemplo | Classe | Família | Tamanho | Peso |
 |----------|--------------|--------|---------|---------|------|
-| Label | "Trabalhos recentes" | `.section-label` + `--on-dark` | DM Sans | **12px** | 500 |
+| Título de secção | "Trabalhos recentes" | `.type-section-title` (via `SectionLabel variant="title"`) | Host Grotesk | clamp(30px → 46px) | 400 |
 | Projecto `<h3>` | "NARA" | `.type-h3` | Host Grotesk | 36px | 400 |
 | Descrição | `resumo` do case | `.type-body` | DM Sans | 18px | 400 |
 | Botão | "Ver Produto →" | `.type-label` | DM Sans | 14px | 400 |
@@ -146,7 +149,7 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Label | "Nossos valores" | `.section-label` + `.section-label--on-dark` | DM Sans | 14px | 400 |
+| Título de secção | "Nossos valores" | `.type-section-title` (via `SectionLabel variant="title"`, branco) | Host Grotesk | clamp(30→46px) | 400 |
 | Item | Título do diferencial (6 itens de `DIFERENCIAIS`) | `.type-body-lg` + `text-white` | DM Sans | 21px | 400 |
 
 Ícones `lucide-react` (`size={22}`, brancos) na segunda coluna; primeira coluna vazia em desktop.
@@ -200,26 +203,29 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 | `<h1>` | Nome do serviço (centrado) | `.type-hero .type-hero--fullscreen` + `!leading-[1.05]` + `!text-white` | Host Grotesk | clamp(52px → 108px) | 400 | `#ffffff` |
 | `<p>` | Headline do serviço (centrado) | `text-[clamp(1.125rem,2.5vw,1.75rem)]` + `text-white` | DM Sans | clamp(18px → 28px) | 400 | `#ffffff` |
 
-> Espaçamento: wrapper `gap-2` (8px) entre h1 e headline; line-height do h1 override local **1.05** (mais compacto que o token global).
+> Espaçamento: wrapper `gap-3` entre h1 e headline; line-height do h1 override local **1.05** (mais compacto que o token global). Headline em `text-white/90`.
+
+> **Padrão de secção (todo o corpo da página):** cada secção usa o par **Kicker + título**. O *Kicker* é um eyebrow visível (barra de destaque `bg-gmt-accent` + `.type-label text-gmt-text`, não cinzento) e o título é `.type-section-title` (Host Grotesk, clamp 30→46px). Secções separadas por `border-t border-gmt-border` e envolvidas em `not-prose` para controlo total. Conteúdo textual em coluna 1/3 (heading) + 2/3 (conteúdo).
 
 ---
 
-### Secção: Proposta de valor
+### Secção: O desafio (hook)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` | "O desafio" / "A solução" | `.type-label` | DM Sans | 14px | 400 |
-| `<p>` problema | Texto do desafio | `.type-h3` | Host Grotesk | 36px | 400 |
-| `<p>` solução | Texto da solução | `.type-body-lg` | DM Sans | 21px | 400 |
+| Kicker | "O desafio" | barra `bg-gmt-accent` + `.type-label` `text-gmt-text` | DM Sans | 14px | 400 |
+| `<p>` problema | Texto do desafio (hook prominente) | `.type-section-title` | Host Grotesk | clamp(30→46px) | 400 |
 
 ---
 
-### Secção: Benefícios
+### Secção: A solução + benefícios
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` | "Benefícios" | `.type-label` | DM Sans | 14px | 400 |
-| Item | Texto de benefício | `.type-body` | DM Sans | 18px | 400 |
+| Kicker | "A solução" | barra + `.type-label` | DM Sans | 14px | 400 |
+| `<h2>` | "Como resolvemos" | `.type-section-title` | Host Grotesk | clamp(30→46px) | 400 |
+| `<p>` solução | Texto da solução (só `tipo !== pacote`) | `.type-body-lg` | DM Sans | 21px | 400 |
+| Benefício (card) | Item de benefício | `.type-body` em card `border` | DM Sans | 18px | 400 |
 
 ---
 
@@ -227,8 +233,10 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` | "O que inclui" | `.type-label` | DM Sans | 14px | 400 |
-| Funcionalidade | Texto da funcionalidade | `.type-body-lg` | DM Sans | 21px | 400 |
+| Kicker | "Em detalhe" | barra + `.type-label` | DM Sans | 14px | 400 |
+| `<h2>` | "O que inclui" | `.type-section-title` | Host Grotesk | clamp(30→46px) | 400 |
+| Preâmbulo (pacotes) | "Inclui tudo do X, mais:" | `.type-body` | DM Sans | 18px | 400 |
+| Funcionalidade | Índice `01` + texto | `.type-body-lg` (índice `font-mono text-sm`) | DM Sans | 21px | 400 |
 
 ---
 
@@ -236,22 +244,23 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` | "Como funciona" | `.type-label` | DM Sans | 14px | 400 |
-| Título do card (overlay) | Reunião inicial · Proposta… · etc. | `.type-body-lg` + `bg-white/75 backdrop-blur-md text-gmt-text` | DM Sans | 21px | 400 |
+| Kicker | "O processo" | barra + `.type-label` | DM Sans | 14px | 400 |
+| `<h2>` | "Como funciona" | `.type-section-title` | Host Grotesk | clamp(30→46px) | 400 |
+| Título do card (overlay) | Índice + "Reunião inicial" · etc. | `.type-body` + `bg-white/80 backdrop-blur-md` (rodapé do card) | DM Sans | 18px | 400 |
 | Slots mídia | CF-01…CF-05 | `PlaceholderMedia` em card `aspect-[3/4] md:aspect-[2/3]` | — | — | — |
-
-> Títulos fixos no template, centrados sobre cada card com caixa branca translúcida. Mídia: 2:3, 1200×1800 (ver `media-spec.ts`).
 
 ---
 
-### Secção: Para quem é *(condicional)*
+### Secção: Para quem é
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<h2>` | "Para quem é" | `.type-label` | DM Sans | 14px | 400 |
-| Tag pill | Caso de uso | `.tag-pill` → `.type-body` | DM Sans | 18px | 400 |
+| Kicker | "Ideal para" | barra + `.type-label` | DM Sans | 14px | 400 |
+| `<h2>` | "Para quem é" | `.type-section-title` | Host Grotesk | clamp(30→46px) | 400 |
+| Tag pill / fallback | Caso de uso (ou texto genérico) | `.tag-pill` / `.type-body-lg` | DM Sans | 18–21px | 400 |
+| CTA | "Falar sobre este serviço →" | `.type-label` + `rounded-full bg-black text-white` | DM Sans | 14px | 400 |
 
-> **Removido desta página:** secção "Em prática" (NARA), CTA final "Quer este serviço no seu negócio?". Footer global vem do `layout.tsx`.
+> Todas as secções sempre presentes (avulsos e pacotes agora têm `problema`, `solucao` e `beneficios` preenchidos a partir de `docs/referencias`). Footer global vem do `layout.tsx`.
 
 ---
 
@@ -377,11 +386,13 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Logo "GMT" | "GMT" | `.gmt-brand` + `.gmt-brand--navbar` | Host Grotesk | clamp(18px, 2.8vw, 28px) | **800** |
-| Links | Navegação secundária | `.type-label` | DM Sans | 14px | 400 |
-| Copyright / legal | Texto legal | `.type-label` | DM Sans | 14px | 400 |
+| Título | "Growth Marketing Technology" | `.type-section-title` (centrado, branco) | Host Grotesk | clamp(30px → 46px) | 400 |
+| Headline coluna | "Automação & IA" (etc.) | `.type-label` + `text-white` | DM Sans | 14px | 400 |
+| Links | Navegação secundária | `.type-body` + `text-white` | DM Sans | 18px | 400 |
+| Copyright / legal | Texto legal | `.type-label` + `text-white` | DM Sans | 14px | 400 |
 
-> **Espaçamento (Footer Navigation):** `pt-[8vw]` · `py-[3.2rem]` · `mb-[2.4rem]` (logo) · `gap-[2.4rem]` (grid) · `mt-[2.4rem] pt-[1.6rem]` (copyright) — compactação −20% (Jun 2026). Ver `PARTE_08` § Footer.
+> **Fundo:** `.section-footer` a **preto puro `#000000`**, texto branco (alinhado ao `GMTLightFooter`). Título centrado no topo em `.type-section-title`.
+> **Espaçamento (Footer Navigation):** `py-[3.2rem]` · `mb-10 md:mb-14` (título) · `gap-[2.4rem]` (grid) · `mt-[2.4rem] pt-[1.6rem]` (copyright). Ver `PARTE_08` § Footer.
 
 ---
 
@@ -403,15 +414,17 @@ btn → .btn-submit → base .type-body · DM Sans · 18px · weight 500
 ```
 HERO BRAND     → Host Grotesk 800  · clamp(96px, 15vw, 224px)   ← Home Hero · ls 0.02em · scaleX(1.03)
 HERO SUBTITLE  → DM Sans 400       · clamp(48px, 4.5vw, 72px)   ← só Home · tracking 0.05em
-SECTION LABEL  → DM Sans 500       · 12px                        ← rótulos de secção Home
 HERO SERVICE   → Host Grotesk 400  · clamp(52px, 9vw, 108px)    ← heroes de serviço
 ─────────────────────────────────────────────────────────────────────────────
-H2 de secção   → Host Grotesk 400  · clamp(42px, 6vw, 72px)
+H2 / página    → Host Grotesk 400  · clamp(42px, 6vw, 72px)     ← títulos de página / hero
+SECTION TITLE  → Host Grotesk 400  · clamp(30px, 4vw, 46px)     ← título de cada secção de conteúdo
 Category       → Host Grotesk 300  · clamp(36px, 5vw, 48px)
-H3 / CTA       → Host Grotesk 400  · 36px
+H3 / cartão    → Host Grotesk 400  · 36px
 ─────────────────────────────────────────────────────────────────────────────
-Body large     → DM Sans 400       · 21px
+Body large     → DM Sans 400       · 21px  (lead / introdução)
 Body           → DM Sans 400       · 18px  ← tamanho base
+Body small     → DM Sans 400       · 16px  (overlays, legendas, denso)
+Eyebrow        → DM Sans 500       · 13px  (uppercase — acima do título)
 Label          → DM Sans 400       · 14px  (uppercase, tracking)
 FloatingCTA    → DM Sans 500       · 14px  (fixed global, z-60)
 ─────────────────────────────────────────────────────────────────────────────

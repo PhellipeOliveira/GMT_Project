@@ -2,10 +2,12 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { cn } from "@/lib/utils";
 
 type SectionLabelTone = "on-light" | "on-dark";
+type SectionLabelVariant = "eyebrow" | "title";
 
 interface SectionLabelProps {
   children: React.ReactNode;
   tone?: SectionLabelTone;
+  variant?: SectionLabelVariant;
   className?: string;
   delay?: number;
 }
@@ -13,16 +15,23 @@ interface SectionLabelProps {
 export function SectionLabel({
   children,
   tone = "on-light",
+  variant = "eyebrow",
   className,
   delay = 0,
 }: SectionLabelProps) {
+  const isTitle = variant === "title";
+
   return (
     <RevealOnScroll
-      as="p"
+      as={isTitle ? "h2" : "p"}
       delay={delay}
       className={cn(
-        "section-label",
-        tone === "on-dark" ? "section-label--on-dark" : "section-label--on-light",
+        isTitle ? "type-section-title" : "section-label",
+        !isTitle &&
+          (tone === "on-dark"
+            ? "section-label--on-dark"
+            : "section-label--on-light"),
+        isTitle && (tone === "on-dark" ? "text-white" : "text-gmt-text"),
         className,
       )}
     >
