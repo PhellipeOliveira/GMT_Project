@@ -31,13 +31,13 @@ interface ExpandingFrameProps {
  * 1. Secção entra pela base do viewport (progress = 0).
  * 2. Progress 0 → SCALE_START: frame sobe até ao centro (sem crescer).
  * 3. Progress = SCALE_START: sticky activa; expansão e transição de fundo começam.
- * 4. Progress SCALE_START → 1: frame cresce (35% → 90% largura, 16:9); fundo branco → preto no início.
+ * 4. Progress SCALE_START → 1: frame cresce (35% → 75% largura, 16:9); fundo branco → preto no início.
  * 5. Após expansão máxima, o scroll continua pela secção (250vh) até à seguinte.
  */
 const SECTION_VH = 250;
 const SCALE_START = 100 / SECTION_VH; // ≈ 0.4
 const FRAME_WIDTH_START = "35%";
-const FRAME_WIDTH_END = "90%";
+const FRAME_WIDTH_END = "75%";
 
 export function ExpandingFrame({
   images = HOME_FRAME_IMAGES,

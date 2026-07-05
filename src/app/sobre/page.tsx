@@ -5,6 +5,7 @@ import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
+import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { AboutCounterGrid } from "@/components/about/AboutCounterGrid";
 
 export const metadata: Metadata = {
@@ -58,8 +59,8 @@ export default function SobrePage() {
       />
 
       {/* ══ 3 — Manifesto (fundo preto, sem imagem) ═══════════════════ */}
-      <section className="bg-black px-5 py-16 text-center md:px-[5vw] md:py-20">
-        <RevealOnScroll as="p" className="type-h3 mx-auto max-w-3xl text-white">
+      <section className="not-prose bg-black px-5 py-16 text-center md:px-[5vw] md:py-20">
+        <RevealOnScroll as="p" className="type-h3 mx-auto max-w-3xl !text-white">
           O nosso compromisso é simples. Ajudar o seu negócio a crescer online com
           soluções profissionais eficazes e acessíveis.
         </RevealOnScroll>
@@ -96,6 +97,8 @@ export default function SobrePage() {
           </div>
         </div>
       </section>
+
+      <GMTLightFooter />
     </>
   );
 }

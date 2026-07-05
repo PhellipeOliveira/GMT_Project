@@ -44,7 +44,8 @@ export function PlaceholderMedia({
   const proporcao = proporcaoOverride ?? fromSpec.proporcao;
   const altura = alturaOverride ?? fromSpec.altura;
 
-  const style: CSSProperties = { backgroundColor: cor };
+  const style: CSSProperties =
+    hasAsset && loaded ? {} : { backgroundColor: cor };
   if (fill) {
     // Pai `relative` com dimensões explícitas ou aspect-ratio; filho usa `absolute inset-0`.
   } else if (altura) {
@@ -62,7 +63,7 @@ export function PlaceholderMedia({
       aria-label={`Placeholder ${id}: ${descricao}`}
       className={cn(
         "media-zoom overflow-hidden",
-        fill ? "absolute inset-0" : "relative flex items-center justify-center",
+        fill ? "absolute inset-0 h-full w-full" : "relative flex items-center justify-center",
         !fill && !hasExplicitWidth && "w-full",
         className,
       )}
@@ -76,7 +77,7 @@ export function PlaceholderMedia({
     <div
       className={cn(
         "media-zoom overflow-hidden",
-        fill ? "absolute inset-0" : "relative",
+        fill ? "absolute inset-0 h-full w-full" : "relative",
         !fill && !hasExplicitWidth && "w-full",
         className,
       )}
@@ -86,7 +87,7 @@ export function PlaceholderMedia({
         src={getMediaSrc(id)}
         alt={`${id}: ${descricao}`}
         fill
-        className={`${objectFit === "cover" ? "object-cover object-center" : "object-contain"} transition-transform duration-[400ms]${fill ? " min-h-full min-w-full" : ""}`}
+        className={`${objectFit === "cover" ? "object-cover object-center" : "object-contain"} transition-transform duration-[400ms]${fill ? " !h-full !w-full min-h-full min-w-full scale-[1.02]" : ""}`}
         style={{ transitionTimingFunction: "var(--ease)" }}
         sizes={sizes}
         priority={priority}

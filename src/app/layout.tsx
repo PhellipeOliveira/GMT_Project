@@ -3,7 +3,6 @@ import { DM_Sans, Host_Grotesk } from "next/font/google";
 import "@/styles/globals.css";
 import { Navbar } from "@/components/ui/Navbar";
 import { Footer } from "@/components/ui/Footer";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { ChatWidgetLoader } from "@/components/agent/ChatWidgetLoader";
 
@@ -50,7 +49,6 @@ export default function RootLayout({
         <main className="prose prose-gmt max-w-none flex-1">
           {children}
         </main>
-        <GMTLightFooter />
         <Footer />
         <ChatWidgetLoader />
       </body>
