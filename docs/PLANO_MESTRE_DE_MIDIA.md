@@ -31,6 +31,8 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 > Counters do Sobre e Services Grid da Home = **tipografia/animação** (sem criativo de produção).
 
+> **Strip `/servicos`:** cabeçalho da listagem usa **AG-01**, **MKT-02**, **AV-05** (3:2 · 1200×800) — um thumb por categoria principal. Assets em `public/images/`. **Produzido.**
+
 ### Tabela 4.2 — Agentes de IA (15 agentes)
 
 **4.2-A · Thumbnails únicos (1 por agente) — listagem de serviços, card 3:2**
@@ -176,7 +178,7 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | PF-01 | Card NARA (showcase) | Home | Sec5 — Trabalhos recentes | linha 2 colunas | imagem | 3:4 | 1200×1600 | Institucional | Prova real de entrega | — | Alta |
-| PF-02 | Thumb NARA (catálogo) | Portfolio Geral | grid/lista | thumbnail | imagem | **9:16** | 1080×1920 | Institucional | Entrada do case no catálogo | — | Alta |
+| PF-02 | Thumb NARA (catálogo) | Portfolio Geral | grid hero + lista | thumbnail | imagem | **9:16** | 1080×1920 | Institucional | Hero Sec.01: largura total coluna direita se 1 case; lista Sec.02: `w-20 md:w-28` | — | Alta |
 | PF-03 | Galeria NARA — capa | Portfolio Item | Sec0 galeria (1ª) | background | imagem | 16:9 | 2560×1440 | Institucional | Abrir o case com impacto | — | Alta |
 | PF-04..12 | Galeria NARA — telas (×9) | Portfolio Item | Sec0 galeria | imagem | imagem | 4:3 | 1600×1200 | Institucional | Branding/website/chatbots/campanhas do NARA | — | Média |
 | PF-SLOT-H | Slots de portfólio Home (2 vazios) | Home | Sec3 cards | card | imagem | 3:4 | 1200×1600 | — | **Lacuna**: aguardam novos cases | — | Baixa |

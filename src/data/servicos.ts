@@ -563,6 +563,22 @@ export function getServicoBySlug(slug: string): Servico | undefined {
   return servicos.find((s) => s.slug === slug);
 }
 
+/** Serviço anterior/próximo na ordem de `servicos` (lista completa, loop circular). */
+export function getAdjacentServicos(slug: string): {
+  prev: Servico;
+  next: Servico;
+} {
+  const index = servicos.findIndex((s) => s.slug === slug);
+  if (index === -1) {
+    throw new Error(`Serviço não encontrado: ${slug}`);
+  }
+  const len = servicos.length;
+  return {
+    prev: servicos[(index - 1 + len) % len],
+    next: servicos[(index + 1) % len],
+  };
+}
+
 export const agentes = servicos.filter((s) => s.tipo === "agente");
 export const pacotes = servicos.filter((s) => s.tipo === "pacote");
 export const avulsos = servicos.filter((s) => s.tipo === "avulso");

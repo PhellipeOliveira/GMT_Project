@@ -11,7 +11,15 @@ export const metadata: Metadata = {
     "Trabalho recente da GMT. Criámos integralmente o NARA — branding, website, chatbots inteligentes e campanhas publicitárias.",
 };
 
+const HERO_GRID_SINGLE = "grid-cols-2";
+const HERO_GRID_MULTI = "grid-cols-2 md:grid-cols-4";
+const HERO_THUMB_SINGLE = "col-span-2 row-span-2";
+const HERO_SIZES_SINGLE = "(max-width: 768px) 100vw, 45vw";
+const HERO_SIZES_MULTI = "(max-width: 768px) 50vw, 12vw";
+
 export default function PortfolioPage() {
+  const singleCase = portfolio.length === 1;
+
   return (
     <>
       <section className="px-5 pt-28 md:px-[5vw] md:pt-[11vw]">
@@ -33,15 +41,22 @@ export default function PortfolioPage() {
             </RevealSequence>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 md:w-1/2 md:grid-cols-4">
+          <div
+            className={`grid gap-3 md:w-1/2 ${singleCase ? HERO_GRID_SINGLE : HERO_GRID_MULTI}`}
+          >
             {portfolio.map((c, i) => (
-              <RevealOnScroll key={c.slug} variant="media" delay={i * 0.08}>
+              <RevealOnScroll
+                key={c.slug}
+                variant="media"
+                delay={i * 0.08}
+                className={singleCase ? HERO_THUMB_SINGLE : undefined}
+              >
                 <PlaceholderMedia
                   id="PF-02"
                   descricao={`${c.nome} · 9:16`}
                   cor={c.corPlaceholder}
                   className="rounded-lg"
-                  sizes="(max-width: 768px) 50vw, 12vw"
+                  sizes={singleCase ? HERO_SIZES_SINGLE : HERO_SIZES_MULTI}
                   reveal={false}
                 />
               </RevealOnScroll>

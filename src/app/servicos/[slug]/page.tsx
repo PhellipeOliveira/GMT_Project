@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Check } from "lucide-react";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { servicos, getServicoBySlug } from "@/data/servicos";
+import { servicos, getServicoBySlug, getAdjacentServicos } from "@/data/servicos";
 import { getServicoHeroId } from "@/lib/media";
 
 /** Slots de mídia da Sec3 — Como funciona (ver `docs/PLANO_MESTRE_DE_MIDIA.md` § CF-01…05). */
@@ -15,6 +15,9 @@ const COMO_FUNCIONA_SLOTS = [
   { id: "CF-04", titulo: "Execução & implementação", descricao: "card mídia posição 4", cor: "#3B0764" },
   { id: "CF-05", titulo: "Acompanhamento & otimização", descricao: "card mídia posição 5", cor: "#0F172A" },
 ] as const;
+
+const HERO_NAV_LINK =
+  "type-label inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md transition-colors hover:bg-white/30";
 
 export function generateStaticParams() {
   return servicos.map((s) => ({ slug: s.slug }));
@@ -44,6 +47,7 @@ export default async function ServicoItemPage({
   if (!servico) notFound();
 
   const heroId = getServicoHeroId(servico);
+  const { prev, next } = getAdjacentServicos(slug);
 
   return (
     <>
@@ -83,13 +87,15 @@ export default async function ServicoItemPage({
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 px-5 pb-12 md:px-[5vw] md:pb-[5vw]">
+          <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-5 pb-12 md:px-[5vw] md:pb-[5vw]">
             <RevealOnScroll variant="media">
-              <Link
-                href="/servicos"
-                className="type-label inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md transition-colors hover:bg-white/30"
-              >
-                ← Ver todos os serviços
+              <Link href={`/servicos/${prev.slug}`} className={HERO_NAV_LINK}>
+                ← Serviço anterior
+              </Link>
+            </RevealOnScroll>
+            <RevealOnScroll variant="media" delay={0.08}>
+              <Link href={`/servicos/${next.slug}`} className={HERO_NAV_LINK}>
+                Próximo serviço →
               </Link>
             </RevealOnScroll>
           </div>

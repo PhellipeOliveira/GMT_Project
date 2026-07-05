@@ -6,7 +6,7 @@
 >
 > **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/data/media-spec.ts`, `src/lib/media.ts`, `src/data/servicos.ts`.
 >
-> **Actualização:** 28 Jun 2026 — CTA final removida; página enxuta.
+> **Actualização:** Jul 2026 — strip hero AG-01, MKT-02, AV-05 produzidos.
 
 ---
 
@@ -47,6 +47,14 @@ Toda a página está dentro de `<div className="section-light">` (fundo claro). 
 - **Layout:** split `md:flex-row` (rótulo/h1 `md:w-1/3`, tagline `md:w-2/3`); intro encadeada com `RevealSequence`
 - **Thumbnails:** grid `sm:grid-cols-3` de `SERVICOS_HERO_THUMBS`; `PlaceholderMedia`, `reveal={false}`, fallback `#1E293B`
 - **CTAs nesta secção:** nenhum (thumbs não são clicáveis)
+
+| ID | Categoria representada | Proporção | Export | Arquivo | Status |
+|---|---|---|---|---|---|
+| AG-01 | Automação & IA | 3:2 | 1200×800 | `public/images/AG-01.webp` | **Produzido** |
+| MKT-02 | Pacotes de Marketing | 3:2 | 1200×800 | `public/images/MKT-02.webp` | **Produzido** |
+| AV-05 | Serviços Avulsos (IA) | 3:2 | 1200×800 | `public/images/AV-05.webp` | **Produzido** |
+
+> Ordem no grid (esquerda → direita): AG-01 · MKT-02 · AV-05. Definida em `SERVICOS_HERO_THUMBS` (`src/lib/media.ts`). Ratio via spec (`PlaceholderMedia` sem `fill`).
 
 ### Categorias (Accordion) — 3 secções em loop
 

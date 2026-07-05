@@ -8,7 +8,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`.
 >
-> **Actualização:** 28 Jun 2026 — hero compacta, preenchimento de mídia corrigido, títulos em “Como funciona”.
+> **Actualização:** Jul 2026 — hero: navegação anterior/próximo em loop (substitui “Ver todos os serviços”).
 
 ---
 
@@ -72,27 +72,29 @@ Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/ví
 
 ### Copy / tipografia
 
-| Campo | Botão voltar | `<h1>` | `<p>` headline |
-|---|---|---|---|
-| Conteúdo | `← Ver todos os serviços` | `servico.nome` (dados) | `servico.headline` (dados; condicional) |
-| Elemento HTML | `a` (`Link`) | `h1` | `p` |
-| Classe | `.type-label` + utilitários inline | `.type-hero` + `.type-hero--fullscreen` + `!leading-[1.05]` | `text-[clamp(1.125rem,2.5vw,1.75rem)]` |
-| Família | DM Sans | Host Grotesk | DM Sans (tamanho fluido via `clamp`) |
-| Tamanho | 14px (label) | `clamp(52px,9vw,108px)` via `--type-hero` | `clamp(1.125rem, 2.5vw, 1.75rem)` — **menor que o h1** |
-| Peso | 500 (`font-medium`) | 400 | 400 |
-| Cor | `#ffffff` sobre `bg-white/20` translúcido | `#ffffff` (`!text-white`) | `#ffffff` (`text-white`) |
+| Campo | Botão anterior | Botão próximo | `<h1>` | `<p>` headline |
+|---|---|---|---|---|
+| Conteúdo | `← Serviço anterior` | `Próximo serviço →` | `servico.nome` (dados) | `servico.headline` (dados; condicional) |
+| Elemento HTML | `a` (`Link`) | `a` (`Link`) | `h1` | `p` |
+| Classe | `.type-label` + utilitários inline (`HERO_NAV_LINK`) | idem | `.type-hero` + `.type-hero--fullscreen` + `!leading-[1.05]` | `text-[clamp(1.125rem,2.5vw,1.75rem)]` |
+| Família | DM Sans | DM Sans | Host Grotesk | DM Sans (tamanho fluido via `clamp`) |
+| Tamanho | 14px (label) | 14px (label) | `clamp(52px,9vw,108px)` via `--type-hero` | `clamp(1.125rem, 2.5vw, 1.75rem)` — **menor que o h1** |
+| Peso | 500 (`font-medium`) | 500 (`font-medium`) | 400 | 400 |
+| Cor | `#ffffff` sobre `bg-white/20` translúcido | idem | `#ffffff` (`!text-white`) | `#ffffff` (`text-white`) |
 
 > O subtítulo **não** usa `.type-body-lg` nem tamanho fixo em px.  
 > O h1 usa override local `!leading-[1.05]` — não altera tokens globais.
 
-### Botão “← Ver todos os serviços”
-- Destino: `/servicos`
-- Estilo vidro branco translúcido: `rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md`
-- Hover: `hover:bg-white/30`
-- Peso da fonte: **500** (`font-medium` — override local sobre `.type-label` 400)
-- Seta para trás mantida no copy (`←`)
-- **Não existe** botão dinâmico com o nome do serviço nem link antigo `← Serviços`
-- **Um único** botão na hero (sem duplicados)
+### Navegação anterior / próximo (hero)
+
+- **Removido:** botão `← Ver todos os serviços` → `/servicos`
+- **Adicionado:** dois botões no rodapé da hero — `← Serviço anterior` (esquerda) e `Próximo serviço →` (direita)
+- **Layout:** `absolute inset-x-0 bottom-0 flex justify-between` — cantos inferiores da secção
+- **Destino:** sempre `/servicos/{slug}` — nunca sai da rota de detalhe
+- **Ordem:** array `servicos` em `src/data/servicos.ts` (agentes → pacotes → avulsos, mesma ordem da listagem `/servicos`)
+- **Loop:** circular via `getAdjacentServicos(slug)` — o último serviço aponta para o primeiro e vice-versa
+- **Estilo:** constante `HERO_NAV_LINK` — vidro branco translúcido: `rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md`; hover `hover:bg-white/30`
+- **Não existe** link para `/servicos` na hero
 
 ### Mídia de fundo
 
@@ -137,14 +139,14 @@ Cruzado com PLANO § 4.2-B (heroes família), § 4.3 (MKT-04), § 4.4 (thumbs av
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
 | h1, headline | `RevealOnScroll` (texto) | on-scroll | `REVEAL_DURATION` 2.75s; headline `delay={0.08}` |
-| Botão voltar | `RevealOnScroll variant="media"` | on-scroll | translateY + opacity, 2.75s |
+| Botões anterior/próximo | `RevealOnScroll variant="media"` | on-scroll | translateY + opacity, 2.75s; próximo `delay={0.08}` |
 | Mídia de fundo | — | — | `reveal={false}` |
 
 > A hero **não** usa `RevealSequence`. Cada bloco anima de forma independente ao entrar no viewport.
 
 ### Responsividade
-- **Desktop:** `h-[70vh]`; conteúdo centrado, `px-[5vw]`; botão `md:pb-[5vw]`
-- **Mobile:** `h-[80vh]`; conteúdo centrado, `px-5`; botão `pb-12`
+- **Desktop:** `h-[70vh]`; conteúdo centrado, `px-[5vw]`; botões `md:pb-[5vw]`, `justify-between`
+- **Mobile:** `h-[80vh]`; conteúdo centrado, `px-5`; botões `pb-12`
 
 ### Arquivos relacionados
 `src/app/servicos/[slug]/page.tsx`, `src/lib/media.ts`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`, classes `.type-hero`/`.type-hero--fullscreen` em `src/styles/globals.css`.
@@ -159,7 +161,8 @@ Cruzado com PLANO § 4.2-B (heroes família), § 4.3 (MKT-04), § 4.4 (thumbs av
 |---|---|
 | **Dados — `servicos.ts` (por serviço)** | `nome`, `headline`, `problema`, `solucao`, `beneficios[]`, `funcionalidades[]`, `casosDeUso[]`, `familia`, `corPlaceholder`, `tipo` |
 | **Dados — `lib/media.ts`** | ID do hero (`getServicoHeroId`) |
-| **Estrutural — fixo no template** | Rótulos (`O desafio`, `A solução`, `Benefícios`, `O que inclui`, `Como funciona`, `Para quem é`); constante `COMO_FUNCIONA_SLOTS` (CF-01…05); copy do botão hero |
+| **Dados — `servicos.ts`** | `getAdjacentServicos(slug)` — anterior/próximo na ordem global |
+| **Estrutural — fixo no template** | Rótulos (`O desafio`, `A solução`, `Benefícios`, `O que inclui`, `Como funciona`, `Para quem é`); constante `COMO_FUNCIONA_SLOTS` (CF-01…05); copy dos botões hero (`← Serviço anterior`, `Próximo serviço →`) |
 | **Condicional** | Sec. Desafio/Solução se `problema \|\| solucao`; Benefícios se `beneficios.length > 0`; intro “O que inclui” (solução repetida) só se `tipo === "pacote"`; Para quem é se `casosDeUso.length > 0` |
 
 ### Secção 01 — Proposta de valor (desafio + solução)
@@ -267,7 +270,7 @@ Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições n
 
 - **Página enxuta:** sem CTA final de conversão; sem showcase de portfolio (NARA); conversão global via `FloatingCTA` do layout.
 - **Template único:** qualquer alteração em `page.tsx` afecta os 24 slugs.
-- **Hero actualizada:** headline centrada, subtítulo fluido, botão vidro “← Ver todos os serviços”.
+- **Hero actualizada:** headline centrada, subtítulo fluido; navegação anterior/próximo em loop na base da hero.
 - **Sec. Como funciona:** 5 slots CF prontos para mídia; placeholders de cor até produção dos assets.
 - **Footer global:** renderizado em `src/app/layout.tsx`, fora do `page.tsx` do serviço.
 - **Documentação alinhada** com o código em `src/app/servicos/[slug]/page.tsx`, `src/data/media-spec.ts` e `docs/PLANO_MESTRE_DE_MIDIA.md` § 4.2-C.
@@ -281,7 +284,7 @@ Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições n
 | Hero overlay | gradiente `from-black via-black/40 to-black/10`; h1 `#ffffff`; headline `text-white` | Sec. Hero |
 | Hero fallback | `servico.corPlaceholder` inline no `<section>` | Sec. Hero |
 | Título card CF | `bg-white/75 backdrop-blur-md text-gmt-text` | Sec. Como funciona |
-| Botão hero | `bg-white/20 border-white/25`, `backdrop-blur-md`, `font-medium text-white` | Sec. Hero |
+| Botões hero (anterior/próximo) | `bg-white/20 border-white/25`, `backdrop-blur-md`, `font-medium text-white` | Sec. Hero |
 | `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper Sec. 01–04 |
 | `--gmt-text` | `#0a0a0a` | problema (h3), funcionalidades, benefícios |
 | `--gmt-text-muted` | `#575757` | rótulos de secção, solução |

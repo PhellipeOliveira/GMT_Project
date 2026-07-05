@@ -8,7 +8,7 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores de fonte extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
 >
-> **Extração:** 28 Jun 2026 · **Actualização:** Jun 2026 — apenas case NARA; slots "em breve" e CTA final removidos do template activo.
+> **Extração:** 28 Jun 2026 · **Actualização:** Jul 2026 — apenas case NARA; hero thumb em modo single-case (2×2 / largura total da coluna direita); slots "em breve" e CTA final removidos do template activo.
 
 ---
 
@@ -65,9 +65,20 @@ Uma thumbnail por entrada em `portfolio` (actualmente só NARA). Id fixo `PF-02`
 
 | ID | Slot | Proporção | Export | Arquivo actual | Status |
 |---|---|---|---|---|---|
-| PF-02 | Grid hero — thumb do case (NARA) | 9:16 | 1080×1920 | `public/images/PF-02.webp` | **Produzido** |
+| PF-02 | Grid hero — thumb do case (NARA) | **9:16** | 1080×1920 | `public/images/PF-02.webp` | **Produzido** |
 
 > Cor de fallback NARA: `c.corPlaceholder` = `#134E4A`.
+
+**Layout do grid hero (Sec. 01, coluna direita):**
+
+| Casos em `portfolio` | Grelha | Thumb | Largura efectiva (desktop) |
+|---|---|---|---|
+| **1** (actual) | `grid-cols-2` | `col-span-2 row-span-2` | **100% da coluna direita** (`md:w-1/2` ≈ 45vw) |
+| **2+** | `grid-cols-2 md:grid-cols-4` | 1 célula por case | ~¼ da coluna direita por thumb (~12vw) |
+
+> **Proporção do asset:** inalterada — **9:16** (1080×1920). Só muda o **tamanho do frame** no browser; o export e a spec (`media-spec.ts`) mantêm-se.
+
+> **Modo single-case:** activado quando `portfolio.length === 1`. O thumb ocupa a grelha 2×2 inteira (= largura total da coluna direita). Ao adicionar novos cases em `portfolio.ts`, o layout regressa automaticamente ao mosaico 4 colunas.
 
 ### 4. Botões / CTAs
 Nenhum (thumbnails desta secção não são clicáveis).
@@ -80,9 +91,11 @@ Nenhum (thumbnails desta secção não são clicáveis).
 | Imagem (quando há asset) | CSS (`.media-zoom`) | on-hover | `scale(1.03)`, 400ms |
 
 ### 6. Responsividade
-- **Desktop:** cabeçalho `flex-row` (cada bloco `md:w-1/2`); grid de thumbs `md:grid-cols-4`; `pt-[11vw]`, `px-[5vw]`, `gap-[5vw]`.
-- **Tablet:** grid de thumbs `grid-cols-2`.
-- **Mobile:** `flex-col`; grid `grid-cols-2`; `pt-28`, `px-5`, `gap-10`.
+- **Desktop:** cabeçalho `flex-row` (cada bloco `md:w-1/2`); `pt-[11vw]`, `px-[5vw]`, `gap-[5vw]`.
+  - **1 case:** grelha `grid-cols-2`; thumb `col-span-2 row-span-2` → largura total da coluna direita; `sizes` ≈ `45vw`.
+  - **2+ cases:** grelha `md:grid-cols-4`; 1 célula por thumb; `sizes` ≈ `12vw`.
+- **Tablet:** igual ao desktop para o grid hero.
+- **Mobile:** `flex-col`; grelha `grid-cols-2`; com 1 case o thumb faz `col-span-2` (largura total); `pt-28`, `px-5`, `gap-10`.
 
 ### 7. Arquivos relacionados
 `src/app/portfolio/page.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`, `src/data/media-spec.ts`.

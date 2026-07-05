@@ -148,7 +148,8 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 | Slot | Componente | Ratio esperado | Ratio real | Status | Correção |
 |---|---|---|---|---|---|
 | **PF-01** · Home NARA | `HomePortfolioRow` | 3:4 · 1200×1600 | **3:4** (spec, sem `fill`) | **OK** | — |
-| **PF-02** · catálogo | `portfolio/page.tsx` | 9:16 · 1080×1920 | **9:16** (spec); lista usa `w-20 md:w-28` mas mantém ratio | **OK** | — |
+| **PF-02** · hero Sec.01 | `portfolio/page.tsx` | 9:16 · 1080×1920 | **9:16** (spec); **1 case:** `col-span-2 row-span-2` → largura total coluna direita; **2+ cases:** 1 célula em `md:grid-cols-4` | **OK** | — |
+| **PF-02** · lista Sec.02 | `portfolio/page.tsx` | 9:16 · 1080×1920 | **9:16** (spec); `w-20 md:w-28` | **OK** | — |
 | **PF-03** · capa case | `portfolio/[slug]/page.tsx` | 16:9 | **16:9** (spec) | **OK** | — |
 | **PF-04..12** · galeria | Idem | 4:3 | **4:3** (spec) | **OK** | — |
 | **PF-SLOT-H** · Home “em breve” | — | 3:4 | **Não renderizado** | **Lacuna intencional** | Home só mostra NARA |
