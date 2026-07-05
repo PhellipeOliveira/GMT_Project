@@ -8,6 +8,9 @@ interface ServiceOverlayCardProps {
 }
 
 export function ServiceOverlayCard({ servico, imageId }: ServiceOverlayCardProps) {
+  const overlay = servico.homeOverlay;
+  const fallbackText = servico.funcionalidades[0];
+
   return (
     <Link
       href={`/servicos/${servico.slug}`}
@@ -26,14 +29,31 @@ export function ServiceOverlayCard({ servico, imageId }: ServiceOverlayCardProps
 
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-black/15"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-black/15 transition-opacity duration-300 group-hover:opacity-0"
       />
 
-      <div className="absolute top-0 left-0 p-5 text-left md:p-6">
-        <h3 className="type-body font-medium text-white">{servico.nome}</h3>
-        <p className="type-body mt-2 max-w-xs text-white/90 opacity-0 translate-y-1 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0">
-          {servico.funcionalidades[0]}
-        </p>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-black/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      />
+
+      <div className="absolute inset-0 flex flex-col p-5 text-left md:p-6">
+        <h3 className="type-body shrink-0 font-medium text-white">{servico.nome}</h3>
+
+        {overlay ? (
+          <div className="mt-3 flex min-h-0 flex-1 flex-col gap-3 opacity-0 translate-y-1 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0">
+            <p className="min-h-0 flex-1 overflow-y-auto text-sm leading-relaxed text-white/90">
+              {overlay.body}
+            </p>
+            <p className="shrink-0 text-sm font-medium text-white">{overlay.cta}</p>
+          </div>
+        ) : (
+          fallbackText && (
+            <p className="type-body mt-2 max-w-xs text-white/90 opacity-0 translate-y-1 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0">
+              {fallbackText}
+            </p>
+          )
+        )}
       </div>
     </Link>
   );

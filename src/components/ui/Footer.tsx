@@ -1,30 +1,24 @@
 import Link from "next/link";
 import { agentes, pacotes } from "@/data/servicos";
-import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
+
+const linkClass =
+  "type-body text-white transition-colors hover:text-white/75";
 
 export function Footer() {
   return (
-    <footer className="section-footer relative w-full overflow-hidden pt-[8vw]">
-      <PlaceholderMedia
-        id="GL-03"
-        descricao="textura de secção · 16:9"
-        cor="#101010"
-        className="pointer-events-none absolute inset-0 opacity-15"
-        sizes="100vw"
-      />
+    <footer className="section-footer relative w-full overflow-hidden bg-black">
       <div className="relative z-10 mx-auto px-5 py-[3.2rem] md:px-[5vw]">
+        <p className="type-label mb-10 text-center text-white md:mb-12">
+          Growth Marketing Technology
+        </p>
+
         <div className="grid grid-cols-1 gap-[2.4rem] md:grid-cols-3">
           <div>
-            <h3 className="type-label mb-4 text-gmt-muted">
-              Automação &amp; IA
-            </h3>
+            <h3 className="type-label mb-4 text-white">Automação &amp; IA</h3>
             <ul className="flex flex-col gap-2">
               {agentes.map((a) => (
                 <li key={a.slug}>
-                  <Link
-                    href={`/servicos/${a.slug}`}
-                    className="type-body text-gmt-muted transition-colors hover:text-gmt-text"
-                  >
+                  <Link href={`/servicos/${a.slug}`} className={linkClass}>
                     {a.nome}
                   </Link>
                 </li>
@@ -33,25 +27,17 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="type-label mb-4 text-gmt-muted">
-              Marketing Digital
-            </h3>
+            <h3 className="type-label mb-4 text-white">Marketing Digital</h3>
             <ul className="flex flex-col gap-2">
               {pacotes.map((p) => (
                 <li key={p.slug}>
-                  <Link
-                    href={`/servicos/${p.slug}`}
-                    className="type-body text-gmt-muted transition-colors hover:text-gmt-text"
-                  >
+                  <Link href={`/servicos/${p.slug}`} className={linkClass}>
                     {p.nome}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link
-                  href="/servicos"
-                  className="type-body text-gmt-muted transition-colors hover:text-gmt-text"
-                >
+                <Link href="/servicos" className={linkClass}>
                   Todos os serviços
                 </Link>
               </li>
@@ -59,29 +45,20 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="type-label mb-4 text-gmt-muted">Empresa</h3>
+            <h3 className="type-label mb-4 text-white">Empresa</h3>
             <ul className="flex flex-col gap-2">
               <li>
-                <Link
-                  href="/sobre"
-                  className="type-body text-gmt-muted transition-colors hover:text-gmt-text"
-                >
+                <Link href="/sobre" className={linkClass}>
                   Sobre
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/portfolio"
-                  className="type-body text-gmt-muted transition-colors hover:text-gmt-text"
-                >
+                <Link href="/portfolio" className={linkClass}>
                   Portfolio
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/contacto"
-                  className="type-body text-gmt-muted transition-colors hover:text-gmt-text"
-                >
+                <Link href="/contacto" className={linkClass}>
                   Contacto
                 </Link>
               </li>
@@ -89,8 +66,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-[2.4rem] border-t border-gmt-border pt-[1.6rem]">
-          <p className="type-label text-gmt-muted normal-case tracking-normal">
+        <div className="mt-[2.4rem] border-t border-white/15 pt-[1.6rem]">
+          <p className="type-label text-center text-white normal-case tracking-normal md:text-left">
             © 2026 Growth Marketing Technology · Lisboa, Portugal
           </p>
         </div>

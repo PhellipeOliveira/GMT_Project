@@ -14,6 +14,11 @@ export interface Servico {
   beneficios: string[];
   funcionalidades: string[];
   casosDeUso: string[];
+  /** Copy do overlay na home (secção «O que fazemos»). */
+  homeOverlay?: {
+    body: string;
+    cta: string;
+  };
 }
 
 /** Cores de placeholder por família visual (Plano Mestre de Mídia). */
@@ -461,6 +466,10 @@ export const servicos: Servico[] = [
       "Fotografia e produção visual",
     ],
     casosDeUso: [],
+    homeOverlay: {
+      body: "Sabe que o conteúdo é o que atrai, mas criar vídeos, carrosséis e artigos de qualidade todos os meses consome tempo que não tem. Cada semana sem publicar é visibilidade que a concorrência aproveita. Produzimos o conteúdo que o seu negócio precisa, do design ao vídeo curto para redes sociais, ao artigo que posiciona no LinkedIn ou no Google. Entregamos pronto a publicar, com a sua identidade e a mensagem certa para quem você quer alcançar. O seu negócio aparece, você não perde uma hora a criar.",
+      cta: "Quer ver o que produzimos para marcas como a sua?",
+    },
   },
   {
     slug: "publicidade-digital",
@@ -480,6 +489,10 @@ export const servicos: Servico[] = [
       "Geração e qualificação de leads",
     ],
     casosDeUso: [],
+    homeOverlay: {
+      body: "Já gastou dinheiro em anúncios sem perceber se resultou. O problema raramente é o orçamento — é a campanha mal configurada que come o dinheiro sem trazer clientes. Configuramos, gerimos e otimizamos campanhas no Meta Ads e no Google Ads com foco num único número: o retorno. Desde a estrutura inicial ao ajuste contínuo de audiências, criativos e lances, cada euro trabalha mais. Campanhas que geram leads, campanhas que geram vendas, ou as duas ao mesmo tempo. Você define o objetivo, nós fazemos os anúncios trabalhar por ele.",
+      cta: "Quer uma análise das suas campanhas atuais, sem compromisso?",
+    },
   },
   {
     slug: "branding-estrategia",
@@ -499,6 +512,10 @@ export const servicos: Servico[] = [
       "Consultoria estratégica (sessões)",
     ],
     casosDeUso: [],
+    homeOverlay: {
+      body: "A sua marca já existe — mas os clientes veem-na como você quer que a vejam? Uma identidade visual inconsistente e um posicionamento indefinido custam clientes antes de eles sequer entrarem em contacto. Criamos ou refinamos a sua identidade completa: logótipo, cores, tipografia, valores, missão e visão, e a estratégia que liga tudo isso ao crescimento real. Da consultoria pontual à transformação completa do branding, cada decisão é tomada com propósito. Quando a marca está alinhada, o marketing rende o dobro com o mesmo esforço.",
+      cta: "Quer perceber onde o seu branding está a perder dinheiro?",
+    },
   },
   {
     slug: "websites",
@@ -518,6 +535,10 @@ export const servicos: Servico[] = [
       "SEO",
     ],
     casosDeUso: [],
+    homeOverlay: {
+      body: "O seu site ou não existe, ou existe mas não converte. Cada visitante que sai sem contactar é um potencial cliente que foi ao site da concorrência a seguir. Criamos landing pages e sites institucionais que carregam rápido, aparecem no Google e transformam visitas em contactos. WordPress, SEO, velocidade e performance — tudo cuidado para que o seu site trabalhe enquanto você dorme. Não é só uma montra: é a peça central da sua presença digital a puxar clientes todos os dias.",
+      cta: "Quer ver exemplos do que construímos?",
+    },
   },
   {
     slug: "inteligencia-artificial",
@@ -537,6 +558,10 @@ export const servicos: Servico[] = [
       "Automação de atendimento",
     ],
     casosDeUso: [],
+    homeOverlay: {
+      body: "Quer automatizar o atendimento mas não sabe por onde começar? Um chatbot mal feito frustra os clientes; um bem feito parece parte da sua equipa. Desenvolvemos assistentes virtuais para WhatsApp, website e Telegram, ligados ao conhecimento do seu negócio e capazes de responder, qualificar e encaminhar clientes em segundos. Cada solução é configurada à medida do seu processo, testada antes de ir a ar e entregue com suporte. Você atende mais, com menos esforço, e nunca perde um contacto por falta de disponibilidade.",
+      cta: "Quer um chatbot adaptado ao seu negócio?",
+    },
   },
   {
     slug: "analytics-otimizacao",
@@ -556,6 +581,10 @@ export const servicos: Servico[] = [
       "Relatórios personalizados de performance",
     ],
     casosDeUso: [],
+    homeOverlay: {
+      body: "Está a tomar decisões de marketing sem saber o que realmente está a acontecer. Sem tracking correto, o Google Analytics mente, o Meta Pixel perde conversões e o dinheiro investido em anúncios desaparece sem rasto. Configuramos o GA4, o Tag Manager e o Meta Pixel corretamente, auditamos o que já tem e entregamos relatórios que mostram, de forma clara, onde está o retorno e onde está o desperdício. Com dados reais, cada decisão passa a ser uma aposta informada. O seu marketing começa a ser gerido como um ativo, não como uma despesa.",
+      cta: "Quer saber o que o seu tracking atual está a perder?",
+    },
   },
 ];
 

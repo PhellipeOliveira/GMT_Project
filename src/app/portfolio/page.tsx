@@ -77,13 +77,12 @@ export default function PortfolioPage() {
                   <span className="font-mono type-body text-gmt-muted">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                <div className="relative aspect-[9/16] w-20 shrink-0 overflow-hidden rounded-md md:w-28">
+                <div className="relative h-[calc(5rem*16/9)] w-20 shrink-0 overflow-hidden rounded-md md:h-[calc(7rem*16/9)] md:w-28">
                   <PlaceholderMedia
                     id="PF-02"
                     descricao="9:16"
                     cor={c.corPlaceholder}
                     fill
-                    className="size-full"
                     sizes="112px"
                     reveal={false}
                   />

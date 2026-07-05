@@ -201,16 +201,19 @@ Thumbs 3:2 dentro de **linhas flex** (ex.: Accordion `/servicos`) não devem usa
 
 **Causa:** `PlaceholderMedia` aplica `backgroundColor: cor` no frame pai; se o frame fica mais alto que 3:2, a cor preenche o excesso antes do `Image fill` cobrir tudo.
 
-**Padrão correcto:**
+**Padrão correcto (Accordion — 24 thumbs):**
 
 ```tsx
-<div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg">
-  <PlaceholderMedia id="AG-01" fill className="size-full" cor="..." ... />
+const LISTING_THUMB_FRAME =
+  "relative w-14 h-[calc(3.5rem*2/3)] shrink-0 flex-none ... md:w-20 md:h-[calc(5rem*2/3)]";
+
+<div className={LISTING_THUMB_FRAME}>
+  <PlaceholderMedia id="AG-01" fill ... />  {/* absolute inset-0 */}
 </div>
 ```
 
-Em **grid** (`sm:grid-cols-3`), usar `items-start` no grid e `className="w-full"` no `RevealOnScroll` — sem isso, células esticam à altura da linha e o frame fica mais alto que 3:2.
+Altura **explícita** derivada de `w-14`/`w-20` (3:2) — `aspect-ratio` sozinho falha dentro de flex. `PlaceholderMedia fill` = `absolute inset-0` (requisito do Next.js `Image fill`).
 
-O **wrapper** define largura + ratio; `PlaceholderMedia fill` usa `relative size-full` (não `absolute`) para preencher o wrapper sem colapsar a altura. A cor de fallback só aparece enquanto o asset carrega ou se falhar.
+Em **grid** (strip hero): `relative aspect-[3/2] w-full` + `fill`.
 
 ---

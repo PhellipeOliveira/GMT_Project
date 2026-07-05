@@ -76,7 +76,7 @@ Cada item do Accordion expõe: **thumb 3:2** (`mediaId` = AG/MKT/AV), nome, head
 | Pacotes | MKT-01…03 | 3:2 | 1 thumb por pacote | idem |
 | Avulsos | AV-01…06 | 3:2 | 1 thumb por avulso | idem |
 
-> Render: wrapper `aspect-[3/2] w-14 md:w-20` + `PlaceholderMedia` com `fill` — o wrapper fixa o ratio; a cor `corPlaceholder` só aparece se o asset falhar. Substitui o ponto colorido quando `mediaId` existe.
+> Render: frame `LISTING_THUMB_FRAME` — `w-14 h-[calc(3.5rem*2/3)]` · `md:w-20 md:h-[calc(5rem*2/3)]` + `PlaceholderMedia fill` (`absolute inset-0`). `RevealOnScroll` só envolve o botão, não o painel.
 
 > **Strip vs. Accordion:** o strip hero (AG-01, MKT-02, AV-05) é **só decorativo por categoria**. Os restantes thumbs (AG-02…15, MKT-01/03, etc.) aparecem **só no Accordion**. Ver `docs/MAPA_APLICACAO_MIDIA.md`.
 

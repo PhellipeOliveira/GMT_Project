@@ -184,7 +184,7 @@ body {
 }
 
 .gmt-brand--footer {
-  font-size: clamp(8rem, 33vw, 36rem);
+  font-size: clamp(6.4rem, 26.4vw, 28.8rem);
   line-height: 0.85;
 }
 
@@ -260,13 +260,13 @@ body {
 }
 
 .section-footer {
-  --gmt-bg: var(--gmt-footer);
-  --gmt-bg-alt: #1a1a1a;
-  --gmt-border: #242424;
+  --gmt-bg: #000000;
+  --gmt-bg-alt: #0a0a0a;
+  --gmt-border: rgba(255, 255, 255, 0.15);
   --gmt-text: #ffffff;
-  --gmt-text-muted: rgba(182, 182, 182, 0.8);
-  background-color: var(--gmt-bg);
-  color: var(--gmt-text);
+  --gmt-text-muted: #ffffff;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 /* ===== Botões (design_map — navbar + submit) ===== */

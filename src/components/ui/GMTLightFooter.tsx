@@ -87,7 +87,7 @@ export function GMTLightFooter() {
     <section
       ref={containerRef}
       aria-label="GMT"
-      className="not-prose relative overflow-hidden bg-black py-[2.04rem] md:py-[3.4rem]"
+      className="not-prose relative overflow-hidden bg-black py-3 md:py-4"
     >
       {/* Ambas as camadas partilham o mesmo contentor centrado — alinhamento idêntico */}
       <div className="relative flex w-full items-center justify-center">
@@ -109,7 +109,7 @@ export function GMTLightFooter() {
               "--my": "50%",
               maskImage: [
                 "radial-gradient(",
-                "  circle 20vw at var(--mx) var(--my),",
+                "  circle 16vw at var(--mx) var(--my),",
                 "  rgba(255,255,255,0.95) 0%,",
                 "  rgba(255,255,255,0.6)  25%,",
                 "  rgba(255,255,255,0.15) 50%,",
@@ -118,7 +118,7 @@ export function GMTLightFooter() {
               ].join(""),
               WebkitMaskImage: [
                 "radial-gradient(",
-                "  circle 20vw at var(--mx) var(--my),",
+                "  circle 16vw at var(--mx) var(--my),",
                 "  rgba(255,255,255,0.95) 0%,",
                 "  rgba(255,255,255,0.6)  25%,",
                 "  rgba(255,255,255,0.15) 50%,",

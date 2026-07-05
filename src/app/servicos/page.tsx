@@ -83,7 +83,6 @@ export default function ServicosPage() {
                     descricao="thumbnail · 3:2"
                     cor="#1E293B"
                     fill
-                    className="size-full"
                     sizes="(max-width: 768px) 100vw, 33vw"
                     reveal={false}
                   />

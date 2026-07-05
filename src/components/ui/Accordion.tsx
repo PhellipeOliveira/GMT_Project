@@ -22,6 +22,10 @@ interface AccordionProps {
   items: AccordionItem[];
 }
 
+/** 3:2 · alinhado a w-14 / md:w-20 — altura explícita evita stretch em flex. */
+const LISTING_THUMB_FRAME =
+  "relative w-14 h-[calc(3.5rem*2/3)] shrink-0 flex-none self-center overflow-hidden rounded-md md:w-20 md:h-[calc(5rem*2/3)]";
+
 export function Accordion({ items }: AccordionProps) {
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -45,13 +49,12 @@ export function Accordion({ items }: AccordionProps) {
               >
                 <span className="flex min-w-0 flex-1 items-center gap-4">
                   {item.mediaId ? (
-                    <div className="relative aspect-[3/2] h-auto w-14 shrink-0 self-center overflow-hidden rounded-md md:w-20">
+                    <div className={LISTING_THUMB_FRAME}>
                       <PlaceholderMedia
                         id={item.mediaId}
                         descricao="3:2"
                         cor={item.cor ?? "#1E293B"}
                         fill
-                        className="size-full"
                         sizes="80px"
                         reveal={false}
                       />
@@ -101,6 +104,7 @@ export function Accordion({ items }: AccordionProps) {
                   )}
                 />
               </button>
+            </RevealOnScroll>
 
               <div
                 className={cn(
@@ -126,7 +130,6 @@ export function Accordion({ items }: AccordionProps) {
                   )}
                 </div>
               </div>
-            </RevealOnScroll>
           </li>
         );
       })}

@@ -112,7 +112,7 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 | AV-03 | Thumb · Branding & Estratégia | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | Institucional | Identidade visual e posicionamento | — | Baixa |
 | AV-04 | Thumb · Websites | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Landing/institucional/SEO | — | Média |
 | AV-05 | Thumb · Inteligência Artificial | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Chatbots e automação de atendimento | — | Alta |
-
+| AV-06 | Thumb · Analytics & Otimização | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | GA4/GTM/Pixel e auditorias | — | Baixa |
 ### Tabela 4.4-B — Cards de Serviços na Home (O que fazemos)
 
 > Cards 7:5 exclusivos para a grade da Home. Distintos dos thumbs 3:2 usados na listagem de Serviços.
@@ -131,7 +131,6 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 - A composição deve colocar o assunto principal no **centro superior** — o rodapé inferior é coberto pelo overlay de texto no card.
 - Exportar em WebP/AVIF, qualidade ≥ 85%, max 400 KB por imagem.
 - Paleta alinhada à família visual respectiva (F3 = azul/dados; F4 = azul-noite/premium; Institucional = neutro/claro).
-| AV-06 | Thumb · Analytics & Otimização | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | GA4/GTM/Pixel e auditorias | — | Baixa |
 
 ### Tabela 4.4-C — Frame Expansivo (`ExpandingFrame`)
 

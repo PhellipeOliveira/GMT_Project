@@ -46,8 +46,7 @@ export function PlaceholderMedia({
 
   const style: CSSProperties = { backgroundColor: cor };
   if (fill) {
-    style.width = "100%";
-    style.height = "100%";
+    // Pai `relative` com dimensões explícitas ou aspect-ratio; filho usa `absolute inset-0`.
   } else if (altura) {
     style.height = altura;
   } else if (proporcao) {
@@ -63,7 +62,7 @@ export function PlaceholderMedia({
       aria-label={`Placeholder ${id}: ${descricao}`}
       className={cn(
         "media-zoom overflow-hidden",
-        fill ? "relative size-full min-h-0" : "relative flex items-center justify-center",
+        fill ? "absolute inset-0" : "relative flex items-center justify-center",
         !fill && !hasExplicitWidth && "w-full",
         className,
       )}
@@ -77,7 +76,7 @@ export function PlaceholderMedia({
     <div
       className={cn(
         "media-zoom overflow-hidden",
-        fill ? "relative size-full min-h-0" : "relative",
+        fill ? "absolute inset-0" : "relative",
         !fill && !hasExplicitWidth && "w-full",
         className,
       )}
