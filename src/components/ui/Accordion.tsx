@@ -22,9 +22,9 @@ interface AccordionProps {
   items: AccordionItem[];
 }
 
-/** 3:2 · alinhado a w-14 / md:w-20 — altura explícita evita stretch em flex. */
+/** 3:2 · largura fixa + aspect-ratio garante enquadramento exacto em flex. */
 const LISTING_THUMB_FRAME =
-  "relative w-14 h-[calc(3.5rem*2/3)] shrink-0 flex-none self-center overflow-hidden rounded-md md:w-20 md:h-[calc(5rem*2/3)]";
+  "relative w-14 aspect-[3/2] shrink-0 flex-none self-center overflow-hidden rounded-md md:w-20";
 
 export function Accordion({ items }: AccordionProps) {
   const [openId, setOpenId] = useState<string | null>(null);

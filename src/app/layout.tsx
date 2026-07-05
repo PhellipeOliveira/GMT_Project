@@ -50,8 +50,8 @@ export default function RootLayout({
         <main className="prose prose-gmt max-w-none flex-1">
           {children}
         </main>
-        <GMTLightFooter />
         <Footer />
+        <GMTLightFooter />
         <ChatWidgetLoader />
       </body>
     </html>

@@ -3,7 +3,6 @@ import { Target } from "lucide-react";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
 import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
-import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
 import { AboutCounterGrid } from "@/components/about/AboutCounterGrid";
 
@@ -57,43 +56,32 @@ export default function SobrePage() {
         fallbackColor="#1E293B"
       />
 
-      {/* ══ 3 — Manifesto (fundo preto, sem imagem) ═══════════════════ */}
-      <section className="not-prose bg-black px-5 py-16 text-center md:px-[5vw] md:py-20">
-        <RevealOnScroll as="p" className="type-h3 mx-auto max-w-3xl !text-white">
-          O nosso compromisso é simples. Ajudar o seu negócio a crescer online com
-          soluções profissionais eficazes e acessíveis.
-        </RevealOnScroll>
-      </section>
+      {/* ══ 3 — Manifesto + valores (bloco preto contínuo) ═════════════ */}
+      <section className="section-cta not-prose px-5 pb-16 md:px-[5vw] md:pb-[8vw]">
+        <div className="pt-16 text-center md:pt-[6vw]">
+          <RevealOnScroll as="p" className="type-h3 mx-auto max-w-3xl !text-white">
+            O nosso compromisso é simples. Ajudar o seu negócio a crescer online com
+            soluções profissionais eficazes e acessíveis.
+          </RevealOnScroll>
+        </div>
 
-      {/* ══ 4 — Nossos valores (fundo preto) ══════════════════════════ */}
-      <section className="section-cta px-5 py-24 md:px-[5vw] md:py-[10vw]">
-        <div className="flex flex-col gap-16 md:flex-row md:gap-[5vw]">
-          <div className="hidden md:block md:w-1/2" aria-hidden />
-
-          <div className="md:w-1/2">
-            <SectionLabel variant="title" tone="on-dark">
-              Nossos valores
-            </SectionLabel>
-
-            <div className="mt-12 flex flex-col gap-10 md:gap-12">
-              {DIFERENCIAIS.map((titulo, i) => {
-                const Icone = ICONES_DIFERENCIAIS[i] ?? Target;
-                return (
-                  <RevealOnScroll key={titulo} variant="media" delay={i * 0.06}>
-                    <div className="flex items-start gap-5">
-                      <Icone
-                        size={22}
-                        strokeWidth={1.5}
-                        className="mt-0.5 shrink-0 text-white"
-                        aria-hidden
-                      />
-                      <p className="type-body-lg text-white">{titulo}</p>
-                    </div>
-                  </RevealOnScroll>
-                );
-              })}
-            </div>
-          </div>
+        <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 md:mt-14 md:gap-y-10">
+          {DIFERENCIAIS.map((titulo, i) => {
+            const Icone = ICONES_DIFERENCIAIS[i] ?? Target;
+            return (
+              <RevealOnScroll key={titulo} variant="media" delay={i * 0.06}>
+                <div className="flex items-start gap-4">
+                  <Icone
+                    size={22}
+                    strokeWidth={1.5}
+                    className="mt-0.5 shrink-0 text-white"
+                    aria-hidden
+                  />
+                  <p className="type-body-lg text-white">{titulo}</p>
+                </div>
+              </RevealOnScroll>
+            );
+          })}
         </div>
       </section>
     </>

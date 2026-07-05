@@ -6,25 +6,12 @@ import {
   useContext,
   useMemo,
   useRef,
-  useState,
   type ReactNode,
 } from "react";
-import {
-  REVEAL_BLOCK_GAP,
-  REVEAL_DURATION,
-  REVEAL_LINE_GAP,
-} from "@/components/ui/RevealOnScroll";
-
-export function blockRevealDuration(lineCount: number): number {
-  if (lineCount <= 0) return 0;
-  return (
-    lineCount * REVEAL_DURATION + Math.max(0, lineCount - 1) * REVEAL_LINE_GAP
-  );
-}
+import { REVEAL_BLOCK_GAP } from "@/components/ui/RevealOnScroll";
 
 interface RevealSequenceContextValue {
   register: (id: string) => number;
-  reportLines: (index: number, lineCount: number) => void;
   getDelay: (index: number) => number;
 }
 
@@ -37,14 +24,13 @@ export function useRevealSequence() {
 }
 
 /**
- * Encadeia reveals de texto/mídia na ordem do DOM.
- * Cada filho só começa depois do bloco anterior terminar (com base nas linhas medidas).
+ * Encadeia reveals de texto/mídia na ordem do DOM com um stagger uniforme.
+ * Cada bloco sobe como uma peça única (igual às imagens); o único atraso entre
+ * irmãos é `REVEAL_BLOCK_GAP × índice` (0 = todos sobem em simultâneo).
  */
 export function RevealSequence({ children }: { children: ReactNode }) {
   const indexByIdRef = useRef(new Map<string, number>());
-  const lineCountsRef = useRef<number[]>([]);
   const nextIndexRef = useRef(0);
-  const [version, setVersion] = useState(0);
 
   const register = useCallback((id: string) => {
     const existing = indexByIdRef.current.get(id);
@@ -56,27 +42,11 @@ export function RevealSequence({ children }: { children: ReactNode }) {
     return index;
   }, []);
 
-  const reportLines = useCallback((index: number, lineCount: number) => {
-    if (lineCountsRef.current[index] === lineCount) return;
-    lineCountsRef.current[index] = lineCount;
-    setVersion((v) => v + 1);
-  }, []);
-
-  const getDelay = useCallback(
-    (index: number) => {
-      let delay = 0;
-      for (let i = 0; i < index; i++) {
-        const lines = lineCountsRef.current[i] ?? 1;
-        delay += blockRevealDuration(lines) + REVEAL_BLOCK_GAP;
-      }
-      return delay;
-    },
-    [version],
-  );
+  const getDelay = useCallback((index: number) => index * REVEAL_BLOCK_GAP, []);
 
   const value = useMemo(
-    () => ({ register, reportLines, getDelay }),
-    [register, reportLines, getDelay],
+    () => ({ register, getDelay }),
+    [register, getDelay],
   );
 
   return (

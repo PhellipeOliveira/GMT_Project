@@ -34,7 +34,7 @@ export default function HomePage() {
           O que fazemos
         </SectionLabel>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-7 sm:grid-cols-2">
           {avulsos.map((servico, i) => (
             <RevealOnScroll key={servico.slug} variant="media" delay={i * 0.08}>
               <ServiceOverlayCard

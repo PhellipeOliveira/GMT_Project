@@ -29,11 +29,34 @@ export default function ContactoPage() {
       </section>
 
       <section className="not-prose border-t border-gmt-border px-5 py-12 md:px-[5vw] md:py-16">
-        <RevealOnScroll variant="media">
-          <div className="mx-auto max-w-2xl">
-            <ContactForm />
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-[6vw]">
+          <div className="md:sticky md:top-28 md:self-start">
+            <RevealSequence>
+              <SectionLabel variant="title" tone="on-light" className="block text-left">
+                Conte-nos o essencial
+              </SectionLabel>
+              <RevealOnScroll as="p" className="type-body-lg mt-6 max-w-md text-gmt-muted">
+                Quanto mais soubermos sobre o seu negócio e objetivos, mais
+                concreta será a nossa resposta. Preencha o formulário — respondemos
+                em 24 horas.
+              </RevealOnScroll>
+              <RevealOnScroll className="mt-8">
+                <a
+                  href="tel:+351913628211"
+                  className="type-label inline-flex items-center gap-2 text-gmt-text underline-offset-4 hover:underline"
+                >
+                  Prefere ligar? +351 913 628 211
+                </a>
+              </RevealOnScroll>
+            </RevealSequence>
           </div>
-        </RevealOnScroll>
+
+          <div>
+            <RevealOnScroll variant="media">
+              <ContactForm />
+            </RevealOnScroll>
+          </div>
+        </div>
       </section>
 
       <section className="section-cta px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">

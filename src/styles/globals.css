@@ -497,6 +497,11 @@ button,
   overflow: hidden;
 }
 
+/* Blinda a mídia das margens do plugin `prose` (evita faixa branca / crop). */
+.media-zoom img {
+  margin: 0;
+}
+
 .media-zoom img,
 .media-zoom .object-cover {
   transition:

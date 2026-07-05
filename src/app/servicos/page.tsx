@@ -48,7 +48,7 @@ const CATEGORIAS = [
 export default function ServicosPage() {
   return (
     <>
-      <div className="section-light">
+      <div className="section-light not-prose">
         <section className="flex flex-col px-5 pt-28 md:px-[5vw] md:pt-[11vw]">
           <RevealSequence>
             <div className="flex flex-col gap-6 md:flex-row md:gap-[5vw]">
