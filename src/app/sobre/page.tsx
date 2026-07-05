@@ -57,24 +57,24 @@ export default function SobrePage() {
       />
 
       {/* ══ 3 — Manifesto + valores (bloco preto contínuo) ═════════════ */}
-      <section className="section-cta not-prose px-5 pb-16 md:px-[5vw] md:pb-[8vw]">
-        <div className="pt-16 text-center md:pt-[6vw]">
+      <section className="section-cta not-prose px-5 py-[6vw] md:px-[5vw]">
+        <div className="text-center">
           <RevealOnScroll as="p" className="type-h3 mx-auto max-w-3xl !text-white">
             O nosso compromisso é simples. Ajudar o seu negócio a crescer online com
             soluções profissionais eficazes e acessíveis.
           </RevealOnScroll>
         </div>
 
-        <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 md:mt-14 md:gap-y-10">
+        <div className="mx-auto mt-[5vw] grid max-w-5xl grid-cols-1 gap-x-[4vw] gap-y-[5vw] sm:grid-cols-2">
           {DIFERENCIAIS.map((titulo, i) => {
             const Icone = ICONES_DIFERENCIAIS[i] ?? Target;
             return (
               <RevealOnScroll key={titulo} variant="media" delay={i * 0.06}>
-                <div className="flex items-start gap-4">
+                <div className="flex flex-col items-center gap-4 text-center md:gap-5">
                   <Icone
-                    size={22}
+                    size={30}
                     strokeWidth={1.5}
-                    className="mt-0.5 shrink-0 text-white"
+                    className="shrink-0 text-white"
                     aria-hidden
                   />
                   <p className="type-body-lg text-white">{titulo}</p>

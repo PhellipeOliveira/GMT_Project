@@ -83,9 +83,9 @@ export default async function PortfolioItemPage({
           <RevealOnScroll variant="media" delay={0.24}>
             <Link
               href="/contacto"
-              className="type-body type-medium mt-8 inline-flex w-full justify-center rounded-lg bg-gmt-accent px-6 py-3 text-white transition-colors hover:bg-gmt-accent-2"
+              className="type-label mt-8 inline-flex items-center gap-2 rounded-full bg-black px-8 py-3.5 text-white transition-colors duration-300 hover:bg-black/80"
             >
-              Falar sobre um projeto
+              Falar sobre um projeto →
             </Link>
           </RevealOnScroll>
         </aside>
