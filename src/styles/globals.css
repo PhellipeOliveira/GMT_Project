@@ -43,8 +43,8 @@
   --type-hero-leading: clamp(1, 8vw, 1.1);
   --type-hero-brand: clamp(6rem, 15vw, 14rem);
   --type-hero-subtitle: clamp(3rem, 4.5vw, 4.5rem);
-  /* Proporção idêntica ao par hero GMT / subtítulo, aplicada ao par lanterna / footer */
-  --type-footer-subtitle: clamp(3.2rem, 7.92vw, 9.26rem);
+  /* Escala reduzida para caber numa linha com a lanterna GMT acima */
+  --type-footer-subtitle: clamp(0.875rem, 2.65vw, 2.75rem);
 
   /* Secções dual-mode (design_map_services_item / about) */
   --gmt-bg-light: #ebebeb;
@@ -248,6 +248,7 @@ body {
   letter-spacing: 0.05em;
   line-height: 1.2;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--gmt-text);
 }
 
