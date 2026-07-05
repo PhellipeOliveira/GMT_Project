@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAgentConfig } from "@/hooks/useAgentConfig";
 import { useChat } from "@/hooks/useChat";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { cn } from "@/lib/utils";
+import { getAgentLabelForPath } from "@/services/agentMessages";
 import { ChatLauncher } from "@/components/agent/ChatLauncher";
 import { ChatHeader } from "@/components/agent/ChatHeader";
 import { ChatMessages } from "@/components/agent/ChatMessages";
@@ -14,8 +17,11 @@ export function ChatWidget() {
   const { enabled, loaded } = useAgentConfig();
   const { messages, sendMessage, isLoading } = useChat();
   const reduced = useReducedMotion();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
+
+  const contextualLabel = getAgentLabelForPath(pathname);
 
   if (!loaded || !enabled) {
     return null;
@@ -41,6 +47,7 @@ export function ChatWidget() {
               onHoverStart={() => setHovered(true)}
               onHoverEnd={() => setHovered(false)}
               hovered={hovered}
+              label={contextualLabel}
             />
           </motion.div>
         ) : (
@@ -59,7 +66,13 @@ export function ChatWidget() {
             }
             transition={panelTransition}
             style={{ transformOrigin: "bottom right" }}
-            className="pointer-events-auto flex w-[calc(100vw-2rem)] max-w-[min(360px,25vw)] flex-col overflow-hidden rounded-2xl border border-gmt-border bg-gmt-bg shadow-2xl sm:h-[min(480px,60vh)] sm:w-[360px] sm:max-w-[min(360px,25vw)] h-[min(70vh,480px)] max-h-[480px]"
+            className={cn(
+              "pointer-events-auto flex flex-col overflow-hidden rounded-2xl border border-gmt-border bg-gmt-bg shadow-2xl",
+              // Mobile: quase largura total com margens laterais, altura confortável (nunca fullscreen)
+              "w-[calc(100vw-2rem)] max-w-[420px] h-[70dvh] max-h-[560px]",
+              // Desktop: painel compacto e fixo no quadrante inferior direito
+              "sm:h-[480px] sm:max-h-[70vh] sm:w-[360px] sm:max-w-none",
+            )}
           >
             <ChatHeader onClose={() => setOpen(false)} />
             <ChatMessages messages={messages} isLoading={isLoading} />
