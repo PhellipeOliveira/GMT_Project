@@ -26,10 +26,16 @@ export default function HomePage() {
   return (
     <>
       {/* ══ 1 ── HERO ════════════════════════════════════════════════ */}
-      <HeroSection />
+      {/* data-agent-hint: label contextual do launcher por seção (scroll) */}
+      <div data-agent-hint="Olá! Quer conhecer a GMT?">
+        <HeroSection />
+      </div>
 
       {/* ══ 2 ── O QUE FAZEMOS ══════════════════════════════════════ */}
-      <section className="not-prose bg-white px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
+      <section
+        data-agent-hint="Dúvidas sobre os serviços?"
+        className="not-prose bg-white px-5 py-20 text-left md:px-[5vw] md:py-[8vw]"
+      >
         <SectionLabel variant="title" tone="on-light" className="block w-full text-left">
           O que fazemos
         </SectionLabel>
@@ -58,7 +64,10 @@ export default function HomePage() {
       </section>
 
       {/* ══ 3 ── POR QUE A GMT ═══════════════════════════════════════ */}
-      <section className="not-prose bg-gmt-bg-alt px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
+      <section
+        data-agent-hint="Quer saber por que a GMT?"
+        className="not-prose bg-gmt-bg-alt px-5 py-20 text-left md:px-[5vw] md:py-[8vw]"
+      >
         <SectionLabel variant="title" tone="on-light" className="block w-full text-left">
           Por que a GMT
         </SectionLabel>
@@ -87,7 +96,10 @@ export default function HomePage() {
       <ExpandingFrame />
 
       {/* ══ 5 ── TRABALHOS RECENTES ══════════════════════════════════ */}
-      <section className="section-cta px-5 py-20 text-left md:px-[5vw] md:py-[8vw]">
+      <section
+        data-agent-hint="Quer um projeto assim?"
+        className="section-cta px-5 py-20 text-left md:px-[5vw] md:py-[8vw]"
+      >
         <SectionLabel variant="title" tone="on-dark" className="block w-full text-left">
           Trabalhos recentes
         </SectionLabel>

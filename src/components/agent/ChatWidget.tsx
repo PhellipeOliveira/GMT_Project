@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAgentConfig } from "@/hooks/useAgentConfig";
 import { useChat } from "@/hooks/useChat";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSectionAgentHint } from "@/hooks/useSectionAgentHint";
 import { cn } from "@/lib/utils";
 import { getAgentLabelForPath } from "@/services/agentMessages";
 import { ChatLauncher } from "@/components/agent/ChatLauncher";
@@ -21,7 +22,9 @@ export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
 
-  const contextualLabel = getAgentLabelForPath(pathname);
+  const sectionHint = useSectionAgentHint();
+  // A seção visível (scroll) tem prioridade; a rota é o fallback.
+  const contextualLabel = sectionHint ?? getAgentLabelForPath(pathname);
 
   if (!loaded || !enabled) {
     return null;

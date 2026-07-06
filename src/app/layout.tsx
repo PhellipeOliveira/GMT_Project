@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Host_Grotesk } from "next/font/google";
 import "@/styles/globals.css";
-import { Navbar } from "@/components/ui/Navbar";
-import { Footer } from "@/components/ui/Footer";
-import { GMTLightFooter } from "@/components/ui/GMTLightFooter";
-import { SmoothScroll } from "@/components/ui/SmoothScroll";
-import { ChatWidgetLoader } from "@/components/agent/ChatWidgetLoader";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -44,16 +39,7 @@ export default function RootLayout({
       lang="pt-PT"
       className={`${dmSans.variable} ${hostGrotesk.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-gmt-bg text-gmt-text">
-        <SmoothScroll />
-        <Navbar />
-        <main className="prose prose-gmt max-w-none flex-1">
-          {children}
-        </main>
-        <GMTLightFooter />
-        <Footer />
-        <ChatWidgetLoader />
-      </body>
+      <body className="min-h-full bg-gmt-bg text-gmt-text">{children}</body>
     </html>
   );
 }
