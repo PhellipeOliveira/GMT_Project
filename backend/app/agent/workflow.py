@@ -24,6 +24,7 @@ Nós principais:
 from typing import Any, Dict, List, Literal, Optional, TypedDict, Annotated
 from types import SimpleNamespace
 
+import os
 import re
 import json
 
@@ -40,6 +41,7 @@ from app.agent.prompt import (
     PARSER_SYSTEM_PROMPT,
     PLAN_SYSTEM_PROMPT,
     FINALIZER_SYSTEM_PROMPT,
+    CONVERSA_SYSTEM_PROMPT,
     LEAD_REACT_PROMPT,
     ORCAMENTO_REACT_PROMPT,
     REUNIAO_REACT_PROMPT,
@@ -60,18 +62,37 @@ from app.agent.helpers import (
 load_dotenv()
 
 
-# ═══════════════════════════ Modelos LLM ═══════════════════════════
-model = ChatOpenAI(model="gpt-5-nano", output_version="responses/v1",
-                   reasoning={"effort": "low"}, verbosity="medium")
+# ═══════════════════════════ Modelos LLM (config por tarefa via env) ═══════════════════════════
+# Cada papel (DEFAULT, ORCAMENTOS, FINALIZER, PLANNER) pode ter um modelo próprio,
+# permitindo usar modelos mais baratos em tarefas simples e mais robustos nas complexas.
+# Precedência do nome do modelo: LLM_MODEL_<PAPEL> > LLM_MODEL_DEFAULT > default do código.
+# Parâmetros de reasoning/verbosity só se aplicam a modelos gpt-5 (responses API); para
+# outros modelos (ex.: gpt-4o-mini) usa-se LLM_TEMPERATURE_<PAPEL> quando definido.
+def _chat_model(papel: str, default_model: str, default_effort: str, default_verbosity: str) -> ChatOpenAI:
+    name = (
+        os.getenv(f"LLM_MODEL_{papel}")
+        or os.getenv("LLM_MODEL_DEFAULT")
+        or default_model
+    )
+    kwargs: dict = {"model": name}
+    if name.startswith("gpt-5"):
+        kwargs["output_version"] = "responses/v1"
+        kwargs["reasoning"] = {"effort": os.getenv(f"LLM_EFFORT_{papel}", default_effort)}
+        kwargs["verbosity"] = os.getenv(f"LLM_VERBOSITY_{papel}", default_verbosity)
+    else:
+        temp = os.getenv(f"LLM_TEMPERATURE_{papel}")
+        if temp is not None:
+            try:
+                kwargs["temperature"] = float(temp)
+            except ValueError:
+                pass
+    return ChatOpenAI(**kwargs)
 
-orcamentos_model = ChatOpenAI(model="gpt-5-nano", output_version="responses/v1",
-                              reasoning={"effort": "medium"}, verbosity="medium")
 
-finalizer_model = ChatOpenAI(model="gpt-5-nano", output_version="responses/v1",
-                             reasoning={"effort": "low"}, verbosity="low")
-
-planner_model = ChatOpenAI(model="gpt-5-nano", output_version="responses/v1",
-                           reasoning={"effort": "medium"}, verbosity="low")
+model = _chat_model("DEFAULT", "gpt-5-nano", "low", "medium")
+orcamentos_model = _chat_model("ORCAMENTOS", "gpt-5-nano", "medium", "medium")
+finalizer_model = _chat_model("FINALIZER", "gpt-5-nano", "low", "low")
+planner_model = _chat_model("PLANNER", "gpt-5-nano", "medium", "low")
 
 
 # ═══════════════════════════ Intents e constantes ═══════════════════════════
@@ -125,10 +146,12 @@ REQUIRED_SLOTS: Dict[str, List[str]] = {
 
 # Notificações automáticas disparadas após certas ações (efeitos colaterais)
 # intent -> lista de (tipo_confirmacao_lead, tipo_alerta_equipe)
+# reuniao_agendar NÃO está aqui de propósito: a tool `agendar_reuniao` já envia os
+# e-mails detalhados (cliente com .ics + equipe) de forma deduplicada. Deixá-la aqui
+# geraria um segundo e-mail genérico ("GMT — confirmacao reuniao").
 AUTO_NOTIFY = {
     "lead_cadastrar": ("confirmacao_cadastro", "alerta_equipe_cadastro"),
     "orcamento_criar": ("confirmacao_orcamento", "alerta_equipe_orcamento"),
-    "reuniao_agendar": ("confirmacao_reuniao", "alerta_equipe_reuniao"),
     "reuniao_remarcar": ("atualizacao_reuniao", "alerta_equipe_reuniao"),
     "duvida_escalar": (None, "alerta_equipe_escalada"),
 }
@@ -539,9 +562,35 @@ def respond_final(state: AgentState) -> AgentState:
         push_ai_response(ctx, intent, msg, ok=True)
         return {"context": ctx, "messages": AIMessage(content=msg)}
 
-    if intent == "fora_de_escopo":
-        msg = ("Isso está fora do que eu consigo ajudar por aqui 🙂. "
-               "Posso falar sobre os serviços da GMT, gerar um orçamento ou agendar uma reunião. Como posso ajudar?")
+    # Caminho conversacional: sem ações de ferramenta, resposta natural com
+    # captação progressiva de lead e incentivo à reunião (CONVERSA_SYSTEM_PROMPT).
+    if intent in ("conversa_geral", "fora_de_escopo"):
+        user_text = ""
+        for m in reversed(state.get("messages") or []):
+            if isinstance(m, HumanMessage):
+                user_text = extract_text_content(m)
+                break
+        la = state.get("lead_atual") or {}
+        nome = la.get("nome")
+        email = la.get("email")
+        conhecido = (
+            f"Lead conhecido — nome: {nome or '(desconhecido)'}, e-mail: {email or '(desconhecido)'}."
+            if (nome or email)
+            else "Lead ainda não identificado (sem nome/e-mail)."
+        )
+        escopo = "O pedido está FORA do escopo da GMT." if intent == "fora_de_escopo" else ""
+        ctx_msg = "\n".join(p for p in [f"Mensagem do lead: {user_text}", conhecido, escopo] if p)
+        try:
+            conv = finalizer_model.invoke([
+                SystemMessage(content=CONVERSA_SYSTEM_PROMPT),
+                HumanMessage(content=ctx_msg),
+            ])
+            msg = extract_text_content(conv) or ""
+        except Exception:
+            msg = ""
+        if not msg:
+            msg = ("Posso ajudar com os serviços da GMT, um orçamento ou agendar uma reunião. "
+                   "Como posso ajudar?")
         return {"context": ctx, "messages": AIMessage(content=msg)}
 
     user_text = ""

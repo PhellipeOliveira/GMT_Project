@@ -15,6 +15,7 @@ Grupos:
 - Utilidades (resolver_lead, lookups, respond)
 """
 
+import base64
 import logging
 import os
 import re
@@ -104,9 +105,66 @@ def resolve_lead_id_by_ref(cur, ref: str) -> Tuple[Optional[str], List[Dict[str,
         (like, like),
     )
     rows = cur.fetchall() or []
-    if len(rows) == 1:
+    # Preferência por correspondência EXATA de nome/empresa (evita reaproveitar um
+    # lead homônimo por substring). Só cai no LIKE único quando não há exato.
+    ref_lower = ref.lower()
+    exatos = [r for r in rows if (r[1] or "").lower() == ref_lower or (r[3] or "").lower() == ref_lower]
+    if len(exatos) == 1:
+        return exatos[0][0], []
+    if not exatos and len(rows) == 1:
         return rows[0][0], []
-    return None, [{"lead_id": r[0], "nome": r[1], "email": r[2], "empresa": r[3]} for r in rows]
+    base = exatos or rows
+    return None, [{"lead_id": r[0], "nome": r[1], "email": r[2], "empresa": r[3]} for r in base]
+
+
+def upsert_lead_identidade(
+    cur,
+    nome: Optional[str] = None,
+    email: Optional[str] = None,
+    telefone: Optional[str] = None,
+    empresa: Optional[str] = None,
+    origem: str = "chat_site",
+    consentimento_lgpd: bool = False,
+) -> Tuple[Optional[str], bool]:
+    """Resolve/persiste a IDENTIDADE do lead priorizando o E-MAIL como fonte de verdade.
+
+    Ordem de resolução: e-mail -> telefone. NUNCA casa por nome — assim evitamos
+    reaproveitar um lead antigo homônimo (com e-mail desatualizado). Se encontrar,
+    atualiza os campos informados; se não existir, cria (exige nome + email/telefone).
+
+    Retorna (lead_id_str_ou_none, criado_bool). Usa o cursor recebido (mesma transação).
+    """
+    existente_id = None
+    if email:
+        cur.execute("select id from public.leads where lower(email)=lower(%s)", (email,))
+        row = cur.fetchone()
+        existente_id = row[0] if row else None
+    if not existente_id and telefone:
+        cur.execute(
+            "select id from public.leads where regexp_replace(telefone,'[^0-9]','','g')=%s",
+            (normalize_phone(telefone),),
+        )
+        row = cur.fetchone()
+        existente_id = row[0] if row else None
+
+    if existente_id:
+        sets, vals = ["atualizado_em=now()"], []
+        for col, val in (("nome", nome), ("email", email), ("telefone", telefone), ("empresa", empresa)):
+            if val:
+                sets.append(f"{col}=%s")
+                vals.append(val)
+        cur.execute(f"update public.leads set {', '.join(sets)} where id=%s", (*vals, existente_id))
+        return str(existente_id), False
+
+    if not (email or telefone) or not nome:
+        return None, False
+
+    cur.execute(
+        "insert into public.leads (nome, email, telefone, empresa, origem, consentimento_lgpd) "
+        "values (%s,%s,%s,%s,%s,%s) returning id",
+        (nome, email, telefone, empresa, origem, consentimento_lgpd),
+    )
+    return str(cur.fetchone()[0]), True
 
 
 # ═══════════════════════════ LEADS ═══════════════════════════
@@ -119,37 +177,31 @@ def cadastrar_lead(
     origem: str = "chat_site",
     consentimento_lgpd: bool = False,
 ) -> Dict[str, Any]:
-    """Cadastra um lead. Exige nome e pelo menos email OU telefone."""
+    """Cadastra um lead. Exige nome e pelo menos email OU telefone.
+
+    Idempotente: se já existe um lead com o mesmo e-mail (ou telefone), ATUALIZA os
+    campos informados em vez de duplicar — o e-mail é a identidade do lead.
+    """
     if not nome:
         return {"error": {"message": "Campo 'nome' é obrigatório."}}
     if not (email or telefone):
         return {"error": {"message": "Informe pelo menos email ou telefone."}}
     with get_conn() as conn:
         with conn.cursor() as cur:
-            if email:
-                cur.execute("select 1 from public.leads where lower(email)=lower(%s)", (email,))
-                if cur.fetchone():
-                    return {"error": {"message": "Já existe lead com este email."}}
-            if telefone:
-                cur.execute(
-                    "select 1 from public.leads where regexp_replace(telefone,'[^0-9]','','g')=%s",
-                    (normalize_phone(telefone),),
-                )
-                if cur.fetchone():
-                    return {"error": {"message": "Já existe lead com este telefone."}}
-            cur.execute(
-                """
-                insert into public.leads (nome, email, telefone, empresa, origem, consentimento_lgpd)
-                values (%s,%s,%s,%s,%s,%s) returning id
-                """,
-                (nome, email, telefone, empresa, origem, consentimento_lgpd),
+            lead_id, criado = upsert_lead_identidade(
+                cur, nome=nome, email=email, telefone=telefone, empresa=empresa,
+                origem=origem, consentimento_lgpd=consentimento_lgpd,
             )
-            lead_id = cur.fetchone()[0]
-    # psycopg devolve colunas uuid como objetos uuid.UUID; convertemos para str
-    # para garantir que o retorno seja JSON-serializável (o ToolNode do subgrafo
-    # ReAct serializa o dict via json.dumps, e um UUID cru quebraria essa etapa,
-    # impedindo a propagação de tool_result -> lead_atual -> lead_id).
-    return {"message": "Lead cadastrado", "data": {"lead_id": str(lead_id), "nome": nome, "email": email, "empresa": empresa}}
+    # psycopg devolve colunas uuid como objetos uuid.UUID; upsert_lead_identidade já
+    # converte para str para garantir que o retorno seja JSON-serializável (o ToolNode
+    # do subgrafo ReAct serializa o dict via json.dumps).
+    if not lead_id:
+        return {"error": {"message": "Não foi possível cadastrar o lead."}}
+    return {
+        "message": "Lead cadastrado" if criado else "Lead já existente — dados atualizados",
+        "data": {"lead_id": lead_id, "nome": nome, "email": email,
+                 "empresa": empresa, "atualizado": not criado},
+    }
 
 
 @tool
@@ -623,8 +675,23 @@ def verificar_disponibilidade(
 
 
 @tool
-def agendar_reuniao(lead_ref_ou_id: str, data_hora: str, tipo: str = "online", local: Optional[str] = None) -> Dict[str, Any]:
-    """Agenda uma reunião para um lead (tipo: online|presencial)."""
+def agendar_reuniao(
+    lead_ref_ou_id: str,
+    data_hora: str,
+    tipo: str = "online",
+    local: Optional[str] = None,
+    email: Optional[str] = None,
+    nome: Optional[str] = None,
+    telefone: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Agenda uma reunião para um lead (tipo: online|presencial).
+
+    IDENTIDADE POR E-MAIL: se `email` for informado, ele é a fonte de verdade — o lead
+    é resolvido/criado por esse e-mail (corrigindo nome/telefone), e a confirmação vai
+    exatamente para esse endereço. Sem `email`, resolve pelo `lead_ref_ou_id`.
+    Passe `email`/`nome` sempre que o visitante os fornecer, para não reaproveitar um
+    e-mail antigo de um lead homônimo.
+    """
     if tipo not in ("online", "presencial"):
         return {"error": {"message": "tipo inválido (use online|presencial)"}}
     try:
@@ -637,11 +704,22 @@ def agendar_reuniao(lead_ref_ou_id: str, data_hora: str, tipo: str = "online", l
         return {"error": {"message": "Não é possível agendar em data passada."}}
     with get_conn() as conn:
         with conn.cursor() as cur:
-            lead_id, matches = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
+            lead_id = None
+            # E-mail informado → resolve/cria por e-mail (fonte de verdade da identidade).
+            if email or telefone:
+                nome_eff = nome
+                if not nome_eff and lead_ref_ou_id and not is_uuid(lead_ref_ou_id) \
+                        and "@" not in lead_ref_ou_id and len(normalize_phone(lead_ref_ou_id)) < 8:
+                    nome_eff = lead_ref_ou_id
+                lead_id, _ = upsert_lead_identidade(
+                    cur, nome=nome_eff, email=email, telefone=telefone,
+                )
             if not lead_id:
-                if matches:
-                    return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
-                return {"error": {"message": "Lead não encontrado"}}
+                lead_id, matches = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
+                if not lead_id:
+                    if matches:
+                        return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
+                    return {"error": {"message": "Lead não encontrado"}}
             cur.execute(
                 "insert into public.reunioes (lead_id, data_hora, tipo, local) values (%s,%s,%s,%s) returning id",
                 (lead_id, dt, tipo, local),
@@ -700,32 +778,61 @@ def agendar_reuniao(lead_ref_ou_id: str, data_hora: str, tipo: str = "online", l
         data_fmt = dt_local.strftime("%d/%m/%Y às %H:%M")
         linha_local = f"Local: {local}\n" if local else ""
 
+        plataforma = "Google Meet" if tipo == "online" else (local or "a confirmar")
         if lead_email:
             corpo_lead = (
                 f"Olá {lead_nome or ''},\n\n"
-                "Sua reunião com a GMT está confirmada.\n\n"
-                f"Data e hora: {data_fmt} (Europe/Lisbon)\n"
-                f"Tipo: {tipo}\n"
+                "A sua reunião com os especialistas da GMT (Growth Marketing Technology) está confirmada. "
+                "Obrigado pelo seu interesse!\n\n"
+                "DETALHES DA REUNIÃO\n"
+                f"• Data e hora: {data_fmt} (fuso Europe/Lisbon)\n"
+                f"• Duração: até {duracao_min} minutos\n"
+                f"• Formato: {'Online' if tipo == 'online' else 'Presencial'}\n"
+                f"• Plataforma/Local: {plataforma}\n"
                 f"{linha_local}\n"
-                "Para cancelar ou reagendar, responda este e-mail."
+                "O QUE ESPERAR\n"
+                "Vamos perceber a sua necessidade e propor o próximo passo, de forma objetiva. "
+                "Se quiser, traga as suas principais dúvidas e o objetivo do seu projeto.\n\n"
+                "O convite de calendário (.ics) segue em anexo — basta abri-lo para adicionar à sua agenda.\n"
+                "Para remarcar ou cancelar, basta responder a este e-mail.\n\n"
+                "Até breve,\n"
+                "Equipa GMT"
             )
-            enviar_email_confirmacao.func(
-                lead_ref_ou_id=lead_id,
+            ics = _build_ics_reuniao(
+                reuniao_id=str(reuniao_id),
+                nome=lead_nome,
+                email=lead_email,
+                inicio=dt,
+                duracao_min=duracao_min,
+                tipo=tipo,
+                local=local,
+            )
+            _enviar_e_registrar(
+                lead_id=lead_id,
                 tipo="confirmacao_reuniao",
+                destinatario=lead_email,
                 assunto=f"Reunião GMT confirmada — {data_fmt}",
-                mensagem=corpo_lead,
+                corpo=corpo_lead,
                 referencia_id=reuniao_id,
+                attachments=[ics],
             )
 
+        gcal_txt = f"Google Calendar: evento {gcal_event_id}\n" if gcal_event_id else ""
         corpo_equipe = (
-            "Nova reunião agendada.\n\n"
-            f"Lead: {lead_nome or '(sem nome)'}\n"
-            f"E-mail: {lead_email or '(sem e-mail)'}\n"
-            f"Telefone: {lead_telefone or '(sem telefone)'}\n"
-            f"Data e hora: {data_fmt} (Europe/Lisbon)\n"
-            f"Tipo: {tipo}\n"
+            "Nova reunião agendada pelo agente do site.\n\n"
+            "LEAD\n"
+            f"• Nome: {lead_nome or '(sem nome)'}\n"
+            f"• E-mail: {lead_email or '(sem e-mail)'}\n"
+            f"• Telefone: {lead_telefone or '(sem telefone)'}\n\n"
+            "REUNIÃO\n"
+            f"• Data e hora: {data_fmt} (Europe/Lisbon)\n"
+            f"• Duração: até {duracao_min} min\n"
+            f"• Formato: {'Online' if tipo == 'online' else 'Presencial'} ({plataforma})\n"
             f"{linha_local}"
-            f"Reunião ID: {reuniao_id}"
+            f"• Reunião ID: {reuniao_id}\n"
+            f"• Lead ID: {lead_id}\n"
+            f"{gcal_txt}\n"
+            "Próximo passo sugerido: preparar o contacto comercial e confirmar a agenda."
         )
         notificar_equipe_email.func(
             tipo="alerta_equipe_reuniao",
@@ -877,10 +984,14 @@ def _corpo_html(texto: str) -> str:
 
 
 def _enviar_email_resend(
-    destinatario: str, assunto: str, mensagem: str
+    destinatario: str,
+    assunto: str,
+    mensagem: str,
+    attachments: Optional[List[Dict[str, Any]]] = None,
 ) -> Tuple[bool, Optional[str], Optional[str]]:
     """Envia um e-mail via Resend.
 
+    `attachments`: lista opcional de dicts {filename, content(base64), content_type}.
     Retorna (enviado, erro_mensagem, provider_id). Nunca levanta exceção:
     erros da API (domínio não verificado, rate limit etc.) viram (False, msg, None).
     """
@@ -894,20 +1005,70 @@ def _enviar_email_resend(
         import resend
 
         resend.api_key = api_key
-        result = resend.Emails.send(
-            {
-                "from": remetente,
-                "to": [destinatario],
-                "subject": assunto,
-                "html": _corpo_html(mensagem),
-                "text": mensagem,
-            }
-        )
+        payload: Dict[str, Any] = {
+            "from": remetente,
+            "to": [destinatario],
+            "subject": assunto,
+            "html": _corpo_html(mensagem),
+            "text": mensagem,
+        }
+        if attachments:
+            payload["attachments"] = attachments
+        result = resend.Emails.send(payload)
         provider_id = result.get("id") if isinstance(result, dict) else getattr(result, "id", None)
         return True, None, provider_id
     except Exception as e:  # noqa: BLE001 — falha de envio não deve quebrar o agente
         logger.warning("Resend: exceção ao enviar para %s (assunto=%r): %s", destinatario, assunto, e)
         return False, str(e), None
+
+
+def _ics_dt(dt: datetime) -> str:
+    """Formata um datetime em UTC no padrão iCalendar (YYYYMMDDTHHMMSSZ)."""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=ZoneInfo("Europe/Lisbon"))
+    return dt.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
+def _build_ics_reuniao(
+    reuniao_id: str,
+    nome: Optional[str],
+    email: Optional[str],
+    inicio: datetime,
+    duracao_min: int,
+    tipo: str,
+    local: Optional[str],
+) -> Dict[str, Any]:
+    """Monta um anexo .ics (convite de calendário) para o e-mail do lead.
+
+    Contorna a falta de Domain-Wide Delegation: em vez de convidar o lead pela
+    Google Calendar API, anexamos o convite ao e-mail — qualquer cliente de e-mail
+    consegue adicionar o evento à agenda a partir do .ics.
+    """
+    remetente = os.getenv("RESEND_FROM_EMAIL") or "no-reply@gmt.marketing"
+    fim = inicio + timedelta(minutes=int(duracao_min or 60))
+    local_txt = local or ("Online" if tipo == "online" else "A confirmar")
+    linhas = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//GMT//Agente GMT//PT",
+        "CALSCALE:GREGORIAN",
+        "METHOD:REQUEST",
+        "BEGIN:VEVENT",
+        f"UID:{reuniao_id}@gmt",
+        f"DTSTAMP:{_ics_dt(datetime.now(timezone.utc))}",
+        f"DTSTART:{_ics_dt(inicio)}",
+        f"DTEND:{_ics_dt(fim)}",
+        f"SUMMARY:Reunião GMT — {nome or 'Lead'}",
+        f"DESCRIPTION:Reunião {tipo} com a GMT.",
+        f"LOCATION:{local_txt}",
+        f"ORGANIZER;CN=GMT:mailto:{remetente}",
+    ]
+    if email:
+        linhas.append(f"ATTENDEE;CN={nome or email};RSVP=TRUE:mailto:{email}")
+    linhas += ["STATUS:CONFIRMED", "END:VEVENT", "END:VCALENDAR"]
+    conteudo = "\r\n".join(linhas) + "\r\n"
+    b64 = base64.b64encode(conteudo.encode("utf-8")).decode("ascii")
+    return {"filename": "reuniao-gmt.ics", "content": b64, "content_type": "text/calendar"}
 
 
 def _registrar_notificacao(
@@ -930,6 +1091,56 @@ def _registrar_notificacao(
                 (lead_id, tipo, destinatario, assunto, referencia_id, status, erro, enviado),
             )
             return cur.fetchone()[0]
+
+
+def _ja_notificado(tipo: str, referencia_id: Any, destinatario: str) -> bool:
+    """True se já existe notificação 'enviado' para (tipo, referencia_id, destinatario).
+
+    Evita e-mails duplicados quando a mesma ação dispara envio por mais de um caminho
+    (ex.: a tool agendar_reuniao e depois o AUTO_NOTIFY do update_context).
+    Best-effort: qualquer erro de leitura retorna False (não bloqueia o envio).
+    """
+    if not referencia_id:
+        return False
+    try:
+        with get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "select 1 from public.notificacoes "
+                    "where tipo=%s and referencia_id=%s and destinatario=%s "
+                    "and status_envio='enviado' limit 1",
+                    (tipo, str(referencia_id), destinatario),
+                )
+                return cur.fetchone() is not None
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def _enviar_e_registrar(
+    lead_id: Optional[str],
+    tipo: str,
+    destinatario: str,
+    assunto: str,
+    corpo: str,
+    referencia_id: Optional[str],
+    attachments: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
+    """Envia via Resend (com dedup por referencia_id) e registra em notificacoes.
+
+    Ponto único de envio usado pelas tools de e-mail e pelo agendamento, para que
+    a deduplicação e o logging de falha valham para todos os caminhos.
+    """
+    if _ja_notificado(tipo, referencia_id, destinatario):
+        logger.info(
+            "E-mail '%s' já enviado para %s (ref %s) — ignorando duplicata.",
+            tipo, destinatario, referencia_id,
+        )
+        return {"enviado": False, "duplicado": True, "erro": None, "notificacao_id": None}
+    enviado, erro, _ = _enviar_email_resend(destinatario, assunto, corpo, attachments=attachments)
+    if not enviado:
+        logger.warning("E-mail '%s' NÃO enviado para %s: %s", tipo, destinatario, erro)
+    notif_id = _registrar_notificacao(lead_id, tipo, destinatario, assunto, referencia_id, enviado, erro)
+    return {"enviado": enviado, "duplicado": False, "erro": erro, "notificacao_id": notif_id}
 
 
 @tool
@@ -957,21 +1168,21 @@ def enviar_email_confirmacao(
         return {"error": {"message": "Lead sem e-mail para confirmação"}}
 
     corpo = mensagem or assunto
-    enviado, erro, _ = _enviar_email_resend(destinatario, assunto, corpo)
-    if not enviado:
-        logger.warning(
-            "E-mail de confirmação NÃO enviado ao lead %s (%s): %s",
-            lead_id, destinatario, erro,
-        )
-    notif_id = _registrar_notificacao(lead_id, tipo, destinatario, assunto, referencia_id, enviado, erro)
+    res = _enviar_e_registrar(lead_id, tipo, destinatario, assunto, corpo, referencia_id)
+    if res["duplicado"]:
+        return {
+            "message": "E-mail já enviado (ignorado para evitar duplicata)",
+            "data": {"destinatario": destinatario, "tipo": tipo, "enviado": False, "duplicado": True},
+        }
+    enviado = res["enviado"]
     return {
         "message": "E-mail de confirmação enviado" if enviado else "Falha ao enviar e-mail de confirmação",
         "data": {
-            "notificacao_id": notif_id,
+            "notificacao_id": res["notificacao_id"],
             "destinatario": destinatario,
             "tipo": tipo,
             "enviado": enviado,
-            "erro": erro,
+            "erro": res["erro"],
         },
     }
 
@@ -995,18 +1206,21 @@ def notificar_equipe_email(
                 lead_id, _ = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
 
     corpo = mensagem or assunto
-    enviado, erro, _ = _enviar_email_resend(EMAIL_EQUIPE, assunto, corpo)
-    if not enviado:
-        logger.warning("E-mail para a equipe NÃO enviado (%s): %s", EMAIL_EQUIPE, erro)
-    notif_id = _registrar_notificacao(lead_id, tipo, EMAIL_EQUIPE, assunto, referencia_id, enviado, erro)
+    res = _enviar_e_registrar(lead_id, tipo, EMAIL_EQUIPE, assunto, corpo, referencia_id)
+    if res["duplicado"]:
+        return {
+            "message": "Equipe já notificada (ignorado para evitar duplicata)",
+            "data": {"destinatario": EMAIL_EQUIPE, "tipo": tipo, "enviado": False, "duplicado": True},
+        }
+    enviado = res["enviado"]
     return {
         "message": "Equipe notificada" if enviado else "Falha ao notificar equipe",
         "data": {
-            "notificacao_id": notif_id,
+            "notificacao_id": res["notificacao_id"],
             "destinatario": EMAIL_EQUIPE,
             "tipo": tipo,
             "enviado": enviado,
-            "erro": erro,
+            "erro": res["erro"],
         },
     }
 
