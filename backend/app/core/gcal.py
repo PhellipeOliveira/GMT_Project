@@ -4,9 +4,10 @@ Google Calendar — push one-way (visualização, não fonte de verdade).
 A fonte de verdade das reuniões é a tabela `public.reunioes` no Supabase.
 Este helper apenas espelha uma reunião confirmada como evento no Google Calendar.
 
-Autenticação: Service Account (JSON key file), sem OAuth interativo em runtime.
+Autenticação: Service Account, sem OAuth interativo em runtime.
 Variáveis de ambiente:
-- GOOGLE_SERVICE_ACCOUNT_FILE (default: secrets/google_service_account.json)
+- GOOGLE_SERVICE_ACCOUNT_JSON  (conteúdo JSON da chave — preferido em produção/Render)
+- GOOGLE_SERVICE_ACCOUNT_FILE  (caminho do arquivo .json — default: secrets/google_service_account.json)
 - GOOGLE_CALENDAR_ID (default: primary)
 
 Nota operacional: para adicionar `attendees` (convidar o lead), a Service Account
@@ -16,6 +17,7 @@ O chamador (agendar_reuniao) trata qualquer exceção e mantém a reunião confi
 
 from __future__ import annotations
 
+import json
 import os
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
@@ -39,13 +41,43 @@ def _convidar_attendees() -> bool:
     )
 
 
-def _build_service():
-    """Constrói o cliente da Calendar API a partir da Service Account."""
+def _load_credentials():
+    """Carrega as credenciais da Service Account.
+
+    Ordem de resolução (importante para Render/produção, onde muitas vezes não há
+    arquivo em disco):
+    1. GOOGLE_SERVICE_ACCOUNT_JSON — conteúdo JSON da chave, direto na variável.
+    2. GOOGLE_SERVICE_ACCOUNT_FILE — caminho para o arquivo .json (default local).
+
+    Levanta exceção clara se nenhuma fonte válida existir.
+    """
     from google.oauth2 import service_account
-    from googleapiclient.discovery import build
+
+    raw_json = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
+    if raw_json and raw_json.strip():
+        try:
+            info = json.loads(raw_json)
+        except json.JSONDecodeError as e:
+            raise ValueError(
+                "GOOGLE_SERVICE_ACCOUNT_JSON está definido mas não é um JSON válido."
+            ) from e
+        return service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
 
     key_file = os.getenv("GOOGLE_SERVICE_ACCOUNT_FILE", "secrets/google_service_account.json")
-    credentials = service_account.Credentials.from_service_account_file(key_file, scopes=SCOPES)
+    if not os.path.exists(key_file):
+        raise FileNotFoundError(
+            f"Service Account não encontrada: defina GOOGLE_SERVICE_ACCOUNT_JSON "
+            f"ou garanta que GOOGLE_SERVICE_ACCOUNT_FILE aponte para um arquivo existente "
+            f"(atual: '{key_file}')."
+        )
+    return service_account.Credentials.from_service_account_file(key_file, scopes=SCOPES)
+
+
+def _build_service():
+    """Constrói o cliente da Calendar API a partir da Service Account."""
+    from googleapiclient.discovery import build
+
+    credentials = _load_credentials()
     return build("calendar", "v3", credentials=credentials, cache_discovery=False)
 
 

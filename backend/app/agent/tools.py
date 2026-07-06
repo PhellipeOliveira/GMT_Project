@@ -686,7 +686,10 @@ def agendar_reuniao(lead_ref_ou_id: str, data_hora: str, tipo: str = "online", l
                         (gcal_event_id, reuniao_id),
                     )
     except Exception as e:  # noqa: BLE001 — Google é visualização, não fonte de verdade
-        logger.warning("Falha ao criar evento no Google Calendar (reuniao %s): %s", reuniao_id, e)
+        logger.warning(
+            "Falha ao criar evento no Google Calendar (reuniao %s): %s", reuniao_id, e,
+            exc_info=True,
+        )
 
     # E-mails de confirmação (lead + equipe): a reunião JÁ está confirmada acima.
     # Falha de envio é logada e ignorada — nunca derruba o agendamento.
@@ -732,7 +735,10 @@ def agendar_reuniao(lead_ref_ou_id: str, data_hora: str, tipo: str = "online", l
             lead_ref_ou_id=lead_id,
         )
     except Exception as e:  # noqa: BLE001 — e-mail não é fonte de verdade do agendamento
-        logger.warning("Falha ao enviar e-mails de confirmação (reuniao %s): %s", reuniao_id, e)
+        logger.warning(
+            "Falha ao enviar e-mails de confirmação (reuniao %s): %s", reuniao_id, e,
+            exc_info=True,
+        )
 
     return {"message": "Reunião agendada", "data": {
         "reuniao_id": str(reuniao_id), "lead_id": str(lead_id), "data_hora": dt.isoformat(),
@@ -900,6 +906,7 @@ def _enviar_email_resend(
         provider_id = result.get("id") if isinstance(result, dict) else getattr(result, "id", None)
         return True, None, provider_id
     except Exception as e:  # noqa: BLE001 — falha de envio não deve quebrar o agente
+        logger.warning("Resend: exceção ao enviar para %s (assunto=%r): %s", destinatario, assunto, e)
         return False, str(e), None
 
 
@@ -951,6 +958,11 @@ def enviar_email_confirmacao(
 
     corpo = mensagem or assunto
     enviado, erro, _ = _enviar_email_resend(destinatario, assunto, corpo)
+    if not enviado:
+        logger.warning(
+            "E-mail de confirmação NÃO enviado ao lead %s (%s): %s",
+            lead_id, destinatario, erro,
+        )
     notif_id = _registrar_notificacao(lead_id, tipo, destinatario, assunto, referencia_id, enviado, erro)
     return {
         "message": "E-mail de confirmação enviado" if enviado else "Falha ao enviar e-mail de confirmação",
@@ -984,6 +996,8 @@ def notificar_equipe_email(
 
     corpo = mensagem or assunto
     enviado, erro, _ = _enviar_email_resend(EMAIL_EQUIPE, assunto, corpo)
+    if not enviado:
+        logger.warning("E-mail para a equipe NÃO enviado (%s): %s", EMAIL_EQUIPE, erro)
     notif_id = _registrar_notificacao(lead_id, tipo, EMAIL_EQUIPE, assunto, referencia_id, enviado, erro)
     return {
         "message": "Equipe notificada" if enviado else "Falha ao notificar equipe",
