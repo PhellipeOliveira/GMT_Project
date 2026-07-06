@@ -45,9 +45,15 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Agente GMT — Recepção da Landing Page", lifespan=lifespan)
 
 # A landing page (Next.js) consome este backend via fetch.
+_cors_raw = (os.getenv("CORS_ORIGINS") or "").strip()
+if _cors_raw:
+    _cors_origins = [o for o in (d.strip() for d in _cors_raw.split(",")) if o]
+else:
+    _cors_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: restringir ao domínio do site GMT em produção
+    allow_origins=_cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
