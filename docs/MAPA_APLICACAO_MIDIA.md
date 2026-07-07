@@ -23,11 +23,13 @@
 
 O site trata **três tipos** de serviço (`src/data/servicos.ts`). Cada tipo usa **conjuntos diferentes** de mídia:
 
-| Tipo | Quantidade | Thumb listagem (3:2) | Hero Sec0 (`/servicos/[slug]`) | Fundo “Como funciona” (Sec3) |
-|---|---:|---|---|---|
-| **Agente** (`tipo: "agente"`) | 15 | **AG-01…15** (1 por slug) | **AG-01…15** (mesmo thumb, crop no banner) | **AGP-F1…4** (1 por família) |
-| **Pacote** (`tipo: "pacote"`) | 3 | **MKT-01…03** | **MKT-01…03** (mesmo thumb) | **AGP-F3** |
-| **Avulso** (`tipo: "avulso"`) | 6 | **AV-01…06** | **AV-01…06** (mesmo thumb) | **AGP-F3** |
+| Tipo | Quantidade | Thumb listagem (3:2) | Hero Sec0 (`/servicos/[slug]`) |
+|---|---:|---|---|
+| **Agente** (`tipo: "agente"`) | 15 | **AG-01…15** (1 por slug) | **AG-01…15** (mesmo thumb, crop no banner) |
+| **Pacote** (`tipo: "pacote"`) | 3 | **MKT-01…03** | **MKT-01…03** (mesmo thumb) |
+| **Avulso** (`tipo: "avulso"`) | 6 | **AV-01…06** | **AV-01…06** (mesmo thumb) |
+
+> **Como funciona (Jul 2026):** timeline animada sem mídia — ver `ComoFuncionaTimeline.tsx`. IDs **AGP-F*** e **CF-*** retirados.
 
 > **Hero Sec0 (Jul 2026):** todos os serviços usam o **thumb 3:2** via `getServicoHeroId()` → `getServicoThumbId()`. Container `h-[80vh] md:h-[70vh]`, `object-cover`, gradiente `from-black via-black/40 to-black/10`, título branco centrado. Safe zone: **centro 55%**.
 
@@ -78,29 +80,13 @@ O site trata **três tipos** de serviço (`src/data/servicos.ts`). Cada tipo usa
 
 ---
 
-## AGP-F1 … AGP-F4 — Fundos “Como funciona” (legado → activo)
+## ~~AGP-F1 … AGP-F4~~ — Retirados (Jul 2026)
 
 | Campo | Detalhe |
 |---|---|
-| **Proporção** | 2:3 · 1200×1800 |
-| **Ficheiros** | `public/images/AGP-F1.webp` … `AGP-F4.webp` |
-| **Função original (Plano)** | Fundo dos antigos cards de **processo por família** (Sec3) |
-| **Função actual** | Fundo dos **5 cards “Como funciona”** até existirem assets **CF-01…05** |
-| **Mapeamento** | `getComoFuncionaCardId(familia, slotId)` → `getFamiliaProcessBg()` |
-
-### O que são, na prática
-
-Imagens **partilhadas por família visual**, não por agente individual. Todos os agentes F1 veem **AGP-F1** nos 5 cards; F2 veem **AGP-F2**; pacotes e avulsos usam **AGP-F3**.
-
-| Família serviço | ID usado nos 5 cards Sec3 |
-|---|---|
-| F1 (Hospitalidade) | AGP-F1 |
-| F2 (Operação) | AGP-F2 |
-| F3 (Growth) | AGP-F3 |
-| F4 (Inovação) | AGP-F4 |
-| MKT / AV | AGP-F3 |
-
-> **CF-01…05** (futuro): quando produzidos, substituem AGP-F* — um visual institucional **diferente por posição** (col 1–5), igual em todas as páginas. Até lá, **AGP-F*** preenche o slot.
+| **Estado** | **Removidos do site** — secção «Como funciona» passou a timeline sem mídia |
+| **Substituição** | `ComoFuncionaTimeline` (linha + círculos + texto) |
+| **Ficheiros antigos** | `public/images/AGP-F1.webp` … `AGP-F4.webp` — podem ser apagados |
 
 ---
 
@@ -186,9 +172,9 @@ Os restantes thumbs (AG-02…15, MKT-01/03, AV-01…04/06) aparecem no **Accordi
 ## Checklist de verificação no browser
 
 1. **`/servicos`** — strip: AG-01, MKT-02, AV-05 · accordion: 24 linhas com thumb 3:2  
-2. **`/servicos/reservas-whatsapp`** — hero **AG-01** · Sec3 **AGP-F1**  
-3. **`/servicos/pacote-essencial`** — hero **MKT-01** · Sec3 **AGP-F3**  
-4. **`/servicos/inteligencia-artificial`** — hero **AV-05** · Sec3 **AGP-F3**  
+2. **`/servicos/reservas-whatsapp`** — hero **AG-01** · timeline «Como funciona» (sem mídia)  
+3. **`/servicos/pacote-essencial`** — hero **MKT-01** · timeline «Como funciona»  
+4. **`/servicos/inteligencia-artificial`** — hero **AV-05** · timeline «Como funciona»  
 5. **`/` Home Sec2** — SERV-AV-* (7:5), **não** AV-*
 
 ---

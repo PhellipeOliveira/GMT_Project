@@ -37,7 +37,7 @@
 | Transições entre rotas | Não implementado | Baixa |
 | Depoimentos / Blog | Lacuna de conteúdo | Aguardar conteúdo |
 | Cases além do NARA | Lacuna de conteúdo | Aguardar cases |
-| CF-01…05 (Como funciona) | Lacuna — usa AGP-F* fallback | Média |
+| Como funciona (timeline) | Implementado — `ComoFuncionaTimeline`, sem mídia | — |
 
 ---
 
@@ -171,7 +171,7 @@ Consolidado de `PLANO_MESTRE_DE_MIDIA.md` Parte 6 e mapas de distribuição.
 | Lacuna | Páginas afectadas | Impacto | Acção recomendada |
 |---|---|---|---|
 | **Depoimentos de clientes** | Home *(secção removida)* | Alto | Secção Testemunhos removida da Home |
-| **Blog / Latest News** | Home Sec5 | Médio | Secção não existe no GMT; detalhe de serviço tem grid CF-01…05 (mídia institucional) |
+| **Blog / Latest News** | Home Sec5 | Médio | Secção não existe no GMT; detalhe de serviço tem timeline «Como funciona» |
 | **Cases além do NARA** | Home Sec5, Portfolio geral (≈12), Next project | Alto | Manter “Em breve”; não criar cases fictícios |
 | **Métricas numéricas nos counters** | Sobre | — | Implementado: 24 · 15 · 3 (catálogo de serviços) |
 | **Logos de clientes parceiros** | Home Sec4 | Médio | Omitir; foco no NARA |
@@ -191,8 +191,7 @@ Ver tabela completa em `PLANO_MESTRE_DE_MIDIA.md` § Hierarquia da Verdade → M
 
 | ID | Notas |
 |---|---|
-| CF-01…05 | Cards "Como funciona" — ainda sem assets; usa AGP-F* |
-| AGP-F1…F4 | 2:3 — activos como fallback dos cards CF |
+| Como funciona | Timeline animada (`ComoFuncionaTimeline`) — Jul 2026 | ✅ |
 
 ### 4.2 Vídeos ainda como WebP (slots definidos)
 
@@ -242,8 +241,7 @@ Ver tabela completa em `PLANO_MESTRE_DE_MIDIA.md` § Hierarquia da Verdade → M
 ## 6. Priorização sugerida para próximas sprints
 
 ### Sprint A — Impacto visual imediato
-1. Produzir **CF-01…05** (cards Como funciona)
-2. Novos cases → preencher PF-SLOT-*
+1. Novos cases → preencher PF-SLOT-*
 
 ### Sprint B — Fidelidade UX
 3. Formulário com backend real (G-15)

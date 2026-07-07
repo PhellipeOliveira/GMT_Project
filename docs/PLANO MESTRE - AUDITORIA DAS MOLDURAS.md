@@ -79,7 +79,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 | **AG-01** · strip hero `/servicos` | `servicos/page.tsx` | 3:2 | **3:2** (spec, sem `fill`) | **OK** | — |
 | **AG-01..15** · hero Sec0 | `getServicoHeroId()` → thumb | 3:2 asset · banner vh | **OK** | Jul 2026 — padrão AV-05 |
 | **AGH-F1..4** · hero | — | — | — | **Removido** | Substituído por thumbs AG-01…15 |
-| **AGP-F1..4** · Sec3 Como funciona | `getComoFuncionaCardId()` | 2:3 · 1200×1800 | **2:3** (`aspect-[3/4] md:aspect-[2/3]`) | **OK** | Jul 2026 — até CF-* |
+| **AGP-F1..4** · Como funciona | `ComoFuncionaTimeline` | — | **N/A** (sem mídia) | **Removido** | Timeline Jul 2026 |
 
 ---
 
@@ -92,7 +92,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 | **AV-01..06** · hero avulso | idem | 3:2 · banner vh | **OK** | Padrão AV-05 |
 | ~~**AGH-F1..4**~~ | — | 3:1 | — | **Removido** | Thumbs AG por slug |
 | ~~**MKT-04**~~ | — | 3:1 | — | **Removido** | MKT-01…03 por slug |
-| **AGP-F1..4** · Sec3 | `getComoFuncionaCardId()` | 2:3 | **2:3** em card | **OK** | Activo até CF-* |
+| **AGP-F1..4** · Como funciona | — | — | **N/A** | **Removido** | Timeline sem mídia |
 
 **Trecho hero serviço:**
 
@@ -103,15 +103,13 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 
 ---
 
-## Tabela 4.2-C — CF-01..05 (Como funciona)
+## Tabela 4.2-C — Como funciona (timeline)
 
 | Slot | Componente | Ratio esperado | Ratio real | Status | Correção |
 |---|---|---|---|---|---|
-| **CF-01..05** | `servicos/[slug]/page.tsx` Sec3 | 2:3 · 1200×1800 | **3:4** mobile · **2:3** md+ | **Conflito mobile** | Uniformizar: `aspect-[2/3]` em todos os breakpoints **ou** actualizar PLANO/spec para 3:4 mobile |
-
-```188:188:src/app/(site)/servicos/[slug]/page.tsx
-                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-gmt-border md:aspect-[2/3]">
-```
+| **Timeline processo** | `ComoFuncionaTimeline.tsx` | — | **N/A** (sem mídia) | **OK** | Jul 2026 — substituiu CF-01…05 |
+| ~~**CF-01..05**~~ | — | 2:3 | — | **Removido** | Cards retirados |
+| ~~**AGP-F1..4**~~ | — | 2:3 | — | **Removido** | Fallback dos cards retirado |
 
 ---
 
@@ -197,7 +195,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 | Frame expansivo | HER-02…07, ABT-* | 11 | 11 | 0 | 0 |
 | Serviços listagem + hero | AG/MKT/AV thumbs 3:2 | 27 (strip+accordion+hero) | **OK** | 0 | 0 |
 | ~~Serviço hero partilhado~~ | ~~AGH-F*, MKT-04~~ | 5 | — | — | **5 removidos** |
-| Serviço item CF | CF-01..05 | 0 (desktop) | 0 | **5 (mobile 3:4)** | 0 |
+| Serviço item timeline | `ComoFuncionaTimeline` | 0 | 0 | 0 | 0 |
 | Portfolio | PF-01..12 | 10 | 0 | 0 | 3 slots |
 | Globais | GL-* | 2 | 1 (GL-03) | 1 (GL-01) | 1 (GL-04) |
 | Contacto | CON-01 | 0 | 0 | 0 | 1 |

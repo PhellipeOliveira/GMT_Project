@@ -4,11 +4,11 @@
 >
 > **Arquivo principal:** `src/app/(site)/servicos/[slug]/page.tsx`
 >
-> **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (§ 4.2-C), `src/styles/globals.css`, `src/data/media-spec.ts`, `src/lib/media.ts`, `src/data/servicos.ts` + componentes em `src/components/`.
+> **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `src/styles/globals.css`, `src/data/servicos.ts` + componentes em `src/components/`.
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`.
 >
-> **Actualização:** Jul 2026 — hero Sec0: thumb AG/MKT/AV por slug (padrão AV-05); Sec3 AGP-F*; mapa em `docs/MAPA_APLICACAO_MIDIA.md`.
+> **Actualização:** Jul 2026 — hero Sec0: thumb AG/MKT/AV por slug; Sec4 «Como funciona»: timeline `ComoFuncionaTimeline` (sem mídia CF/AGP-F).
 
 ---
 
@@ -20,8 +20,8 @@ As rotas `/servicos/[slug]` são páginas de detalhe de cada serviço da GMT (ag
 |---|---|
 | Rota | `/servicos/[slug]` (dinâmica) |
 | Arquivo | `src/app/(site)/servicos/[slug]/page.tsx` |
-| Componentes | `RevealOnScroll`, `PlaceholderMedia`, ícone `Check` (`lucide-react`), `Link` (`next/link`) |
-| Dados | `servicos`, `getServicoBySlug` (`src/data/servicos.ts`); `getServicoHeroId` (`src/lib/media.ts`); constante `COMO_FUNCIONA_SLOTS` no próprio arquivo |
+| Componentes | `RevealOnScroll`, `ComoFuncionaTimeline`, `PlaceholderMedia`, ícone `Check` (`lucide-react`), `Link` (`next/link`) |
+| Dados | `servicos`, `getServicoBySlug` (`src/data/servicos.ts`); `getServicoHeroId` (`src/lib/media.ts`) |
 | Geração estática | `generateStaticParams()` → **24 páginas** (15 agentes + 3 pacotes + 6 avulsos); `generateMetadata()` (title = `servico.nome`, description = `headline` / `solucao` / `nome`) |
 | 404 | `notFound()` quando o slug não existe |
 | Globais (via `(site)/layout.tsx`) | `Navbar`, `Footer`, `ChatWidgetLoader`, `SmoothScroll` (Lenis) |
@@ -32,7 +32,7 @@ As rotas `/servicos/[slug]` são páginas de detalhe de cada serviço da GMT (ag
 2. O desafio *(condicional — `problema`)*
 3. A solução + benefícios *(condicional)*
 4. O que inclui *(sempre)*
-5. Como funciona — slots CF-01…CF-05 *(sempre; render AGP-F* via `getComoFuncionaCardId`)*
+5. Como funciona — timeline animada *(sempre; `ComoFuncionaTimeline`)*
 6. Para quem é *(sempre — tags ou fallback + CTA contacto)*
 7. Footer global *(via `(site)/layout.tsx`)*
 
@@ -159,7 +159,7 @@ Cruzado com PLANO § 4.2-A (thumbs AG/MKT/AV), § 4.2-B (AGP-F* Sec3).
 | **Dados — `servicos.ts` (por serviço)** | `nome`, `headline`, `problema`, `solucao`, `beneficios[]`, `funcionalidades[]`, `casosDeUso[]`, `familia`, `corPlaceholder`, `tipo` |
 | **Dados — `lib/media.ts`** | ID do hero (`getServicoHeroId`) |
 | **Dados — `servicos.ts`** | `getAdjacentServicos(slug)` — anterior/próximo na ordem global |
-| **Estrutural — fixo no template** | Componente `Kicker` (barra accent + `.type-label`); rótulos (`O desafio`, `A solução`, `Como resolvemos`, `O que inclui`, `Como funciona`, `Para quem é`); constante `COMO_FUNCIONA_SLOTS` (CF-01…05); copy dos botões hero |
+| **Estrutural — fixo no template** | Componente `Kicker`; rótulos de secção; `ComoFuncionaTimeline` (5 etapas); copy dos botões hero |
 | **Condicional** | Sec. O desafio se `problema`; Sec. Solução+benefícios se `mostrarSolucao \|\| beneficios.length`; intro “O que inclui” (solução repetida) só se `tipo === "pacote"`; **Para quem é sempre renderizada** — tags se `casosDeUso.length > 0`, senão parágrafo fallback + CTA |
 
 ### Secção — O desafio
@@ -193,80 +193,48 @@ Tags `.tag-pill` se `casosDeUso.length > 0`; senão parágrafo fallback instituc
 
 ---
 
-## D. Como funciona (Sec. 03)
+## D. Como funciona (Sec. 4)
 
 ### Objetivo
-Grid de **5 cards de mídia**, partilhados por todas as rotas `/servicos/[slug]`. Cada card mostra um passo do método GMT com overlay de título.
+Comunicar **um processo contínuo** em cinco etapas — timeline minimalista (linha + círculos + texto), sem cards nem mídia.
 
-### Mídia activa: AGP-F* (até CF-*)
-
-| Família do serviço | ID de fundo (5 cards) | Proporção | Ficheiro |
-|---|---|---|---|
-| F1 | AGP-F1 | 2:3 · 1200×1800 | `public/images/AGP-F1.webp` |
-| F2 | AGP-F2 | 2:3 | `AGP-F2.webp` |
-| F3 | AGP-F3 | 2:3 | `AGP-F3.webp` |
-| F4 | AGP-F4 | 2:3 | `AGP-F4.webp` |
-| MKT / AV | AGP-F3 | 2:3 | `AGP-F3.webp` |
-
-Resolvido por `getComoFuncionaCardId(servico.familia, slot.id)` (`src/lib/media.ts`). **Os 5 cards da mesma página partilham a mesma imagem** — diferenciação visual futura via **CF-01…05** (1 asset distinto por coluna, institucional).
-
-### Estrutura no código
-
-Constante `COMO_FUNCIONA_SLOTS` em `page.tsx` (títulos + fallback de cor):
-
-| ID | Título (overlay) | Cor fallback mídia |
-|---|---|---|
-| CF-01 | Reunião inicial | `#1E293B` |
-| CF-02 | Proposta personalizada | `#134E4A` |
-| CF-03 | Planeamento estratégico | `#1A3A5F` |
-| CF-04 | Execução & implementação | `#3B0764` |
-| CF-05 | Acompanhamento & otimização | `#0F172A` |
+### Componente
+`src/components/servicos/ComoFuncionaTimeline.tsx` — client component com animação própria (não usa `RevealOnScroll`).
 
 ### Layout
-- Rótulo: `Kicker` "O processo" + `<h2 class="type-section-title">Como funciona</h2>`
-- Grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4`
-- Card: `aspect-[3/4] md:aspect-[2/3] rounded-2xl border border-gmt-border overflow-hidden`
-- Mídia: `PlaceholderMedia` com `id={getComoFuncionaCardId(...)}`, `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
-- **Título sobre o card:** overlay inferior `absolute inset-x-0 bottom-0 p-3`; caixa `rounded-lg bg-white/80 px-3 py-2 backdrop-blur-md text-center` com número mono `01…05` + título (`.type-body`)
 
-### Copy
-Títulos dos 5 passos são **estruturais** (fixos no template). Cada card mostra número de passo + título no overlay inferior.
-
-### Estado actual dos assets
-Até existirem ficheiros em `public/images/CF-*.webp`, o `PlaceholderMedia` exibe fallback de cor. A estrutura está pronta para receber mídias reais — basta produzir e colocar os assets com os IDs correctos.
-
-### Animações
-Cada card: `RevealOnScroll variant="media"` com stagger `delay={i * 0.08}`.
-
----
-
-## E. Relação com mídia e specs
-
-### `src/data/media-spec.ts`
-Entradas **CF-01…CF-05**:
-
-| Campo | Valor |
+| Viewport | Comportamento |
 |---|---|
-| `ratio` | `[2, 3]` |
-| `exportPx` | `{ w: 1200, h: 1800 }` |
-| `container` | `aspect` |
-| `objectFit` | `cover` |
-| `folder` | `images` |
-| `page` | `Serviço Item` |
-| `slot` | `Sec3 — card mídia posição 1…5` |
+| **Desktop (md+)** | Linha horizontal (`neutral-200` → preto), 5 círculos em `grid-cols-5`, texto centrado abaixo de cada círculo |
+| **Mobile** | Linha vertical à esquerda (centrada na coluna dos círculos), texto à direita de cada círculo |
 
-### `docs/PLANO_MESTRE_DE_MIDIA.md` — Tabela **4.2-C**
-Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições no grid (col 1–5) e nota de que **AGP-F*** permanece no inventário como **legado** — a Sec3 activa usa **CF-01…05**.
+### Etapas (fixas em todas as páginas)
+1. Reunião inicial
+2. Proposta personalizada
+3. Planeamento estratégico
+4. Execução & implementação
+5. Acompanhamento & otimização
 
-### Correspondência código ↔ documentação
+### Estilo
+- Apenas preto, branco e cinza suave (`neutral-200`, `neutral-300`)
+- Tipografia `.type-body` · sem cards, bordas de bloco, sombras, ícones ou gradientes
+- Círculos: vazados (`border-neutral-300`) → preenchidos (`bg-black`) na animação
 
-| Posição grid | ID código | ID media-spec | ID PLANO 4.2-C |
-|---|---|---|---|
-| Col 1 | CF-01 | CF-01 | CF-01 |
-| Col 2 | CF-02 | CF-02 | CF-02 |
-| Col 3 | CF-03 | CF-03 | CF-03 |
-| Col 4 | CF-04 | CF-04 | CF-04 |
-| Col 5 | CF-05 | CF-05 | CF-05 |
+### Animação
+- **Gatilho:** `IntersectionObserver` (`threshold: 0.2`) na primeira entrada no viewport
+- **Sequência:** linha avança até cada centro de círculo (10%, 30%, 50%, 70%, 90%) → círculo preenche → texto (`opacity` + `translateY(6px→0)`, 280ms) → segmento final até 100%
+- **Uma vez por visita:** `sessionStorage` key `gmt-como-funciona-timeline`
+- **`prefers-reduced-motion`:** estado final imediato
+
+### Integração no template
+```tsx
+<Kicker>O processo</Kicker>
+<RevealOnScroll as="h2" className="type-section-title">Como funciona</RevealOnScroll>
+<ComoFuncionaTimeline />
+```
+
+### Mídia
+**Não aplicável** — slots **CF-01…05** e **AGP-F1…4** foram **removidos** do código (Jul 2026). Ficheiros órfãos em `public/images/AGP-F*.webp` podem ser apagados.
 
 ---
 
@@ -275,9 +243,9 @@ Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições n
 - **Página enxuta:** sem CTA final de conversão; sem showcase de portfolio (NARA); conversão global via `ChatWidgetLoader` do layout.
 - **Template único:** qualquer alteração em `page.tsx` afecta os 24 slugs.
 - **Hero actualizada:** headline centrada, subtítulo fluido; navegação anterior/próximo em loop na base da hero.
-- **Sec. Como funciona:** 5 slots CF prontos para mídia; placeholders de cor até produção dos assets.
+- **Sec. Como funciona:** timeline animada (`ComoFuncionaTimeline`); sem slots de mídia.
 - **Footer global:** renderizado em `src/app/layout.tsx`, fora do `page.tsx` do serviço.
-- **Documentação alinhada** com o código em `src/app/(site)/servicos/[slug]/page.tsx`, `src/data/media-spec.ts` e `docs/PLANO_MESTRE_DE_MIDIA.md` § 4.2-C.
+- **Documentação alinhada** com `src/app/(site)/servicos/[slug]/page.tsx` e `src/components/servicos/ComoFuncionaTimeline.tsx`.
 
 ---
 
@@ -287,16 +255,15 @@ Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições n
 |---|---|---|
 | Hero overlay | gradiente `from-black via-black/40 to-black/10`; h1 `#ffffff`; headline `text-white` | Sec. Hero |
 | Hero fallback | `servico.corPlaceholder` inline no `<section>` | Sec. Hero |
-| Título card CF | `bg-white/75 backdrop-blur-md text-gmt-text` | Sec. Como funciona |
-| Botões hero (anterior/próximo) | `bg-white/20 border-white/25`, `backdrop-blur-md`, `font-medium text-white` | Sec. Hero |
-| `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper Sec. 01–04 |
+| `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper Sec. 01–05 |
 | `--gmt-text` | `#0a0a0a` | problema (h3), funcionalidades, benefícios |
 | `--gmt-text-muted` | `#575757` | rótulos de secção, solução |
 | `--gmt-accent` | `#2563eb` | ícone `Check` (benefícios) |
 | `--gmt-bg-alt` | `#f5f5f5` | cartões de benefício |
-| `--gmt-border` | `#dcdcdc` | bordas de cartões/listas/slots CF |
+| `--gmt-border` | `#dcdcdc` | bordas de cartões/listas |
 | `.tag-pill` | fundo `rgb(255 255 255 / 0.8)`, texto `#000` | Sec. Para quem é |
-| Cores fallback CF-01…05 | ver tabela Sec. D | slots Como funciona |
+| Botões hero (anterior/próximo) | `bg-white/20 border-white/25`, `backdrop-blur-md`, `font-medium text-white` | Sec. Hero |
+| Timeline Como funciona | linha `neutral-200`/`black`, círculos vazados/preenchidos, `.type-body` | Sec. Como funciona |
 | Cores fallback hero | `servico.corPlaceholder` por serviço | Sec. Hero |
 
 *Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*

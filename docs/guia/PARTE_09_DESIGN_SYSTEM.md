@@ -185,7 +185,6 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 | ID | Slot | Status |
 |---|---|---|
-| CF-01…05 | Cards "Como funciona" (detalhe serviço) | **Lacuna** — usa fallback AGP-F* via `getComoFuncionaCardId` |
 | PF-EB1…3 | Portfolio — slots futuros | **Lacuna** (intencional) |
 
 > **SERV-AV-01…06** estão **produzidos** (`public/images/SERV-AV-*.webp`) e activos na Home.
@@ -221,9 +220,9 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 ### 6.5 Inventário de assets presentes em `public/`
 
-- **`public/images/`:** HER-02..HER-07, ABT-01..ABT-05, CON-01, AGP-F1..F4, **AG-01..AG-15**, MKT-01..MKT-03, AV-01..AV-06, SERV-AV-01..06, PF-01..PF-12, GL-01..GL-04, CF-01..05 (quando produzidos).
+- **`public/images/`:** HER-02..HER-07, ABT-01..ABT-05, CON-01, **AG-01..AG-15**, MKT-01..MKT-03, AV-01..AV-06, SERV-AV-01..06, PF-01..PF-12, GL-01..GL-04. *(AGP-F*, CF-* órfãos — podem ser apagados.)*
 - **`public/videos/`:** vazio (`.gitkeep` apenas).
-- **Resumo:** lacunas activas principais = **CF-01…05** (cards Como funciona) e **PF-EB*** (cases futuros).
+- **Resumo:** lacunas activas principais = **PF-EB*** (cases futuros).
 
 ---
 

@@ -212,7 +212,7 @@ Fonte canónica: `src/data/media-spec.ts` + `PlaceholderMedia`. Usar esta tabela
 | **Frame / hero full-bleed** | thumb **3:2** em container vh | `fill` + gradiente; altura `70–80vh`; cover | `AG/MKT/AV` via `getServicoHeroId` |
 | ~~**Hero 3:1 partilhado**~~ | — | **Removido Jul 2026** | ~~`AGH-F1…4`, `MKT-04`~~ |
 | **Frame expansivo** | `aspect` variável (slideshow) | `ExpandingFrame`; slides com `fill` + cover | `HER-02…05`, `ABT-01…05` |
-| **Card vertical (processo)** | `aspect` · **2:3** · 1200×1800 | Grid com `aspect-[3/4] md:aspect-[2/3]` | `CF-01…05` |
+| **Timeline (processo)** | `ComoFuncionaTimeline` | — | **N/A** | **OK** | Sem mídia — linha + círculos + texto |
 | **Portfolio / case** | `aspect` · 3:4 ou 9:16 | Cards ou galeria com ratio da spec | `PF-01`, `PF-02` |
 | **Textura de secção** | `full-bleed` · 16:9 | Fundo decorativo com opacidade reduzida | `GL-03` (Footer) |
 | **Vídeo (futuro)** | `folder: "videos"` | Mesmas regras de ratio; ficheiro `.webp` por agora | `HER-01` |

@@ -1,4 +1,4 @@
-import type { Familia, Servico } from "@/data/servicos";
+import type { Servico } from "@/data/servicos";
 import { MEDIA_SLOTS } from "@/data/media-spec";
 
 /** Slots em `public/videos/` (WebP por agora; MP4/WebM no futuro). */
@@ -52,15 +52,6 @@ const AVULSO_HOME_CARD_BY_SLUG: Record<string, string> = {
   "analytics-otimizacao": "SERV-AV-06",
 };
 
-const FAMILIA_PROCESS_BG: Partial<Record<Familia, string>> = {
-  F1: "AGP-F1",
-  F2: "AGP-F2",
-  F3: "AGP-F3",
-  F4: "AGP-F4",
-  MKT: "AGP-F3",
-  AV: "AGP-F3",
-};
-
 export const SERVICOS_HERO_THUMBS = ["AG-01", "MKT-02", "AV-05"] as const;
 
 export function hasMediaAsset(id: string): boolean {
@@ -94,11 +85,3 @@ export function getServicoHeroId(servico: Servico): string {
   return getServicoThumbId(servico);
 }
 
-export function getFamiliaProcessBg(familia: Familia): string | undefined {
-  return FAMILIA_PROCESS_BG[familia];
-}
-
-/** Fundo dos 5 cards “Como funciona” até existirem assets CF-01…05. */
-export function getComoFuncionaCardId(familia: Familia, slotId: string): string {
-  return getFamiliaProcessBg(familia) ?? slotId;
-}

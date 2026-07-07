@@ -12,10 +12,18 @@ const STEPS = [
   "Acompanhamento & otimização",
 ] as const;
 
+/** Progresso da linha em cada centro de círculo (5 colunas iguais). */
+const CIRCLE_PROGRESS = [0.1, 0.3, 0.5, 0.7, 0.9] as const;
+
 const SESSION_KEY = "gmt-como-funciona-timeline";
 const LINE_MS = 520;
 const TEXT_MS = 280;
-const STEP_PAUSE_MS = 120;
+const CIRCLE_TEXT_GAP = 150;
+const STEP_PAUSE_MS = 100;
+
+function segmentDuration(from: number, to: number): number {
+  return Math.max(180, Math.round(LINE_MS * ((to - from) / 0.2)));
+}
 
 function wait(ms: number, signal: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
@@ -37,15 +45,30 @@ function wait(ms: number, signal: AbortSignal) {
 
 async function runTimeline(
   signal: AbortSignal,
-  onProgress: (value: number) => void,
-  onStep: (index: number) => void,
+  onSegment: (to: number, durationMs: number) => void,
+  onFill: (index: number) => void,
+  onText: (index: number) => void,
 ) {
+  let from = 0;
+
   for (let i = 0; i < STEPS.length; i++) {
-    onProgress((i + 1) / STEPS.length);
-    await wait(LINE_MS, signal);
-    onStep(i);
+    const to = CIRCLE_PROGRESS[i];
+    const duration = segmentDuration(from, to);
+    onSegment(to, duration);
+    await wait(duration, signal);
+
+    onFill(i);
+    await wait(CIRCLE_TEXT_GAP, signal);
+    onText(i);
     await wait(STEP_PAUSE_MS, signal);
+
+    from = to;
   }
+
+  const tailDuration = segmentDuration(from, 1);
+  onSegment(1, tailDuration);
+  await wait(tailDuration, signal);
+
   sessionStorage.setItem(SESSION_KEY, "1");
 }
 
@@ -107,6 +130,7 @@ export function ComoFuncionaTimeline() {
   const hasStarted = useRef(false);
 
   const [progress, setProgress] = useState(0);
+  const [lineDurationMs, setLineDurationMs] = useState(LINE_MS);
   const [filled, setFilled] = useState(STEPS.map(() => false));
   const [visible, setVisible] = useState(STEPS.map(() => false));
 
@@ -136,13 +160,18 @@ export function ComoFuncionaTimeline() {
 
         runTimeline(
           controller.signal,
-          setProgress,
+          (to, durationMs) => {
+            setLineDurationMs(durationMs);
+            setProgress(to);
+          },
           (index) => {
             setFilled((prev) => {
               const next = [...prev];
               next[index] = true;
               return next;
             });
+          },
+          (index) => {
             setVisible((prev) => {
               const next = [...prev];
               next[index] = true;
@@ -165,7 +194,9 @@ export function ComoFuncionaTimeline() {
   }, [reducedMotion]);
 
   const lineStyle = {
-    transition: reducedMotion ? "none" : `transform ${LINE_MS}ms cubic-bezier(0.4, 0, 0.2, 1)`,
+    transition: reducedMotion
+      ? "none"
+      : `transform ${lineDurationMs}ms cubic-bezier(0.4, 0, 0.2, 1)`,
   };
 
   return (
@@ -199,10 +230,10 @@ export function ComoFuncionaTimeline() {
         </ol>
       </div>
 
-      {/* Mobile — timeline vertical */}
+      {/* Mobile — timeline vertical (linha centrada na coluna dos círculos) */}
       <div className="relative md:hidden">
         <div
-          className="pointer-events-none absolute bottom-3 left-[0.3125rem] top-1 w-px bg-neutral-200"
+          className="pointer-events-none absolute bottom-3 top-1 w-px -translate-x-1/2 bg-neutral-200 left-[0.625rem]"
           aria-hidden
         >
           <div

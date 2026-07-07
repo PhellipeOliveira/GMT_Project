@@ -233,14 +233,15 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 ---
 
-### Secção: Como funciona (5 slots CF-01…CF-05)
+### Secção: Como funciona (timeline)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
 | Kicker | "O processo" | barra + `.type-label` | DM Sans | 14px | 400 |
 | `<h2>` | "Como funciona" | `.type-section-title` | Host Grotesk | clamp(30→46px) | 400 |
-| Título do card (overlay) | Índice + "Reunião inicial" · etc. | `.type-body` + `bg-white/80 backdrop-blur-md` (rodapé do card) | DM Sans | 18px | 400 |
-| Slots mídia | CF-01…CF-05 | `PlaceholderMedia` em card `aspect-[3/4] md:aspect-[2/3]` | — | — | — |
+| Etapa (×5) | "Reunião inicial" · etc. | `.type-body text-balance text-gmt-text` | DM Sans | 18px | 400 |
+
+> Animação própria em `ComoFuncionaTimeline.tsx` — não usa `RevealOnScroll`. Sem mídia.
 
 ---
 

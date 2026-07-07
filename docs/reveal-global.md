@@ -35,7 +35,7 @@ Ambos partilham a **mesma máscara** (`overflow-hidden` + `motion.div`). A únic
 | Home sec. 2+ | Cards «O que fazemos», diferenciais, portfolio row, CTAs |
 | `/sobre` | Intro, manifesto, valores, contadores |
 | `/servicos` | Cabeçalho, thumbs, accordion |
-| `/servicos/[slug]` | Secções de conteúdo, cards «Como funciona» |
+| `/servicos/[slug]` | Secções de conteúdo; timeline «Como funciona» (animação própria) |
 | `/portfolio`, `/portfolio/[slug]` | Listagens, ficha |
 | `/contacto` | Intro, formulário |
 | Componentes | `SectionLabel`, `RevealOnScroll`; thumbs Accordion com `PlaceholderMedia reveal={false}` + wrapper `RevealOnScroll` |

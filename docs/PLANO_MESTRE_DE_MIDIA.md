@@ -69,26 +69,16 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | ~~AGH-F2~~ | ~~Hero família Operação Eficiente~~ | — | — | — | — | 3:1 | 2560×860 | F2 | **Retirado** → AG-01…15 por slug | — | **Removido** |
 | ~~AGH-F3~~ | ~~Hero família Growth & Dados~~ | — | — | — | — | 3:1 | 2560×860 | F3 | **Retirado** → AG-01…15 por slug | — | **Removido** |
 | ~~AGH-F4~~ | ~~Hero família Inovação Sob Medida~~ | — | — | — | — | 3:1 | 2560×860 | F4 | **Retirado** → AG-01…15 por slug | — | **Removido** |
-| AGP-F1 | Imagem de processo — F1 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F1 | Fundo partilhado das 5 etapas (até CF-01…05) | — | Baixa |
-| AGP-F2 | Imagem de processo — F2 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F2 | Fundo partilhado das 5 etapas | — | Baixa |
-| AGP-F3 | Imagem de processo — F3 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F3 | Fundo partilhado (F3, MKT, AV) | — | Baixa |
-| AGP-F4 | Imagem de processo — F4 | Serviço Item | Sec3 Como funciona (5 cards) | background card | imagem | **2:3** | 1200×1800 | F4 | Fundo partilhado das 5 etapas | — | Baixa |
+| AGP-F1 | Imagem de processo — F1 | — | — | — | — | **2:3** | 1200×1800 | F1 | **Retirado** — timeline sem mídia (Jul 2026) | — | **Removido** |
+| AGP-F2 | Imagem de processo — F2 | — | — | — | — | **2:3** | 1200×1800 | F2 | **Retirado** | — | **Removido** |
+| AGP-F3 | Imagem de processo — F3 | — | — | — | — | **2:3** | 1200×1800 | F3 | **Retirado** | — | **Removido** |
+| AGP-F4 | Imagem de processo — F4 | — | — | — | — | **2:3** | 1200×1800 | F4 | **Retirado** | — | **Removido** |
 
 > **Hero Sec0 (`getServicoHeroId`):** container `h-[80vh] md:h-[70vh]`, `object-fit: cover`, fundo fallback `corPlaceholder`, gradiente `bg-gradient-to-t from-black via-black/40 to-black/10`, título branco centrado. **Todos os serviços** usam o **thumb 3:2** do slug (AG/MKT/AV) via `getServicoThumbId()`. Safe zone: **centro 55%**.
 
-**4.2-C · Cards de mídia — Como funciona (5 slots por página de serviço)**
+**4.2-C · Como funciona — timeline (Jul 2026)**
 
-Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um conjunto **CF-01…CF-05** partilhado por todas as rotas `/servicos/[slug]` — substitui os cards de processo genéricos.
-
-| ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| CF-01 | Card mídia — posição 1 | Serviço Item | Sec3 grid col 1 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 1) | — | Média |
-| CF-02 | Card mídia — posição 2 | Serviço Item | Sec3 grid col 2 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 2) | — | Média |
-| CF-03 | Card mídia — posição 3 | Serviço Item | Sec3 grid col 3 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 3) | — | Média |
-| CF-04 | Card mídia — posição 4 | Serviço Item | Sec3 grid col 4 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 4) | — | Média |
-| CF-05 | Card mídia — posição 5 | Serviço Item | Sec3 grid col 5 | card | imagem | **2:3** | 1200×1800 | Institucional | Visual do passo / método GMT (slot 5) | — | Média |
-
-> **Nota:** até existirem assets **CF-01…05** em `public/images/`, a Sec3 usa **AGP-F1…4** via `getComoFuncionaCardId()` — um fundo por família nos 5 cards. Títulos dos passos (Reunião inicial… Acompanhamento & otimização) são overlay fixo com `bg-white/75 backdrop-blur-md`. Quando CF-* forem produzidos, passam a substituir AGP-F* (visual institucional distinto por coluna).
+Secção **sem mídia**. Componente `ComoFuncionaTimeline` — linha + 5 círculos + texto. IDs **CF-01…05** e **AGP-F1…4** removidos de `media-spec.ts` e `src/lib/media.ts`. Ficheiros `public/images/AGP-F*.webp` são órfãos (podem ser apagados).
 
 ### Tabela 4.3 — Marketing Digital (3 pacotes)
 
