@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, type ElementType, type ReactNode } from "react";
+import { useId, useState, type ElementType, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
@@ -31,13 +31,12 @@ interface RevealOnScrollProps {
 function useChainedDelay(extraDelay: number) {
   const sequence = useRevealSequence();
   const id = useId();
-  const indexRef = useRef<number | null>(null);
+  // Regista o índice uma única vez (lazy init). `register` é idempotente por id,
+  // logo mantém-se estável entre renders — sem aceder a refs durante o render.
+  const [index] = useState<number | null>(() =>
+    sequence ? sequence.register(id) : null,
+  );
 
-  if (sequence && indexRef.current === null) {
-    indexRef.current = sequence.register(id);
-  }
-
-  const index = indexRef.current;
   const chainDelay = sequence && index !== null ? sequence.getDelay(index) : 0;
 
   return chainDelay + extraDelay;

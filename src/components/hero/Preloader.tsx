@@ -1,209 +1,150 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { SplitText } from "gsap/SplitText";
 import {
   SCROLL_LOCK_EVENT,
   SCROLL_UNLOCK_EVENT,
 } from "@/components/ui/SmoothScroll";
 
-/** Corre apenas uma vez por sessão. */
 const SESSION_KEY = "gmt:preloaded";
+const SUBTITLE = "Growth Marketing Technology";
 
-/** useLayoutEffect no cliente, useEffect no servidor (evita warning de SSR). */
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : () => {};
+/** Split manual em spans (evita dependência de SplitText). */
+function chars(text: string) {
+  return text.split("").map((c, i) => ({
+    ch: c === " " ? "\u00A0" : c,
+    key: `${c}-${i}`,
+  }));
+}
 
-/**
- * Overlay de introdução da Home.
- *
- * Abordagem (A): o preloader é totalmente auto-contido e anima a SUA cópia do
- * título, posicionada exactamente sobre o título real da hero (mesma geometria:
- * 100dvh full screen, centrado, mesmas classes tipográficas). No fim faz
- * fade-out do overlay revelando o título real idêntico por baixo → sem salto
- * nem duplo título.
- *
- * Sequência (~4s, premium/legível):
- *   1. 4 divs geométricas full-screen (~1,8s, power4.inOut) terminando a preto.
- *   2. Subtítulo letra-a-letra (SplitText): cada letra vem de MUITO longe
- *      (x ±600, y ±400) e desliza até ao sítio — vê-se claramente a chegar.
- *   3. "GMT" com impacto: scale ~8 → overshoot 1.12 → assenta em 1 (batida).
- *   4. Fade-out do overlay → hero visível.
- *
- * prefers-reduced-motion: não renderiza nada, não bloqueia scroll.
- */
 export function Preloader() {
-  // Estado inicial só depende de sessionStorage (consistente SSR/hidratação e
-  // sem flash em navegação client-side quando já correu).
-  const [active, setActive] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true;
-    return sessionStorage.getItem(SESSION_KEY) !== "1";
-  });
+  const rootRef = useRef<HTMLDivElement>(null);
+  // "pending" cobre o 1º paint (evita flash da hero); depois corre ou termina.
+  const [phase, setPhase] = useState<"pending" | "run" | "done">("pending");
 
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const introBrandRef = useRef<HTMLHeadingElement>(null);
-  const brandWrapRef = useRef<HTMLDivElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const panel1Ref = useRef<HTMLDivElement>(null);
-  const panel2Ref = useRef<HTMLDivElement>(null);
-  const panel3Ref = useRef<HTMLDivElement>(null);
-  const panel4Ref = useRef<HTMLDivElement>(null);
-
-  useIsomorphicLayoutEffect(() => {
-    if (!active) return;
-
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (prefersReduced) {
-      setActive(false);
+  useEffect(() => {
+    // Decisão só no cliente: mantém "pending" no SSR e no 1º render do cliente
+    // (mesmo markup → sem mismatch de hidratação nem flash da hero). Por isso o
+    // setState síncrono aqui é intencional (não é um efeito cascata evitável).
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const seen = sessionStorage.getItem(SESSION_KEY);
+    if (reduced || seen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPhase("done");
       return;
     }
+    setPhase("run");
+  }, []);
 
-    gsap.registerPlugin(SplitText);
-    sessionStorage.setItem(SESSION_KEY, "1");
+  useEffect(() => {
+    if (phase !== "run") return;
+    const root = rootRef.current;
+    if (!root) return;
 
-    // ── Bloquear scroll ──────────────────────────────────────────────────────
-    const previousOverflow = document.body.style.overflow;
-    window.scrollTo(0, 0);
+    // Bloquear scroll (nativo + Lenis, via evento que o SmoothScroll escuta em window)
+    const html = document.documentElement;
+    const prevOverflow = html.style.overflow;
+    html.style.overflow = "hidden";
     window.__gmtScrollLocked = true;
-    document.body.style.overflow = "hidden";
     window.dispatchEvent(new Event(SCROLL_LOCK_EVENT));
 
-    const unlockScroll = () => {
+    const unlock = () => {
+      html.style.overflow = prevOverflow;
       window.__gmtScrollLocked = false;
-      document.body.style.overflow = previousOverflow;
       window.dispatchEvent(new Event(SCROLL_UNLOCK_EVENT));
+      sessionStorage.setItem(SESSION_KEY, "1");
+      setPhase("done");
     };
 
-    let split: SplitText | null = null;
-
     const ctx = gsap.context(() => {
-      // Estados iniciais (coincidem com os transforms inline → sem flash SSR).
-      gsap.set(panel1Ref.current, { yPercent: 100 });
-      gsap.set(panel2Ref.current, { xPercent: 100 });
-      gsap.set(panel3Ref.current, { xPercent: -100 });
-      gsap.set(panel4Ref.current, { yPercent: -100 });
-      gsap.set([subtitleRef.current, brandWrapRef.current], { autoAlpha: 0 });
+      const q = gsap.utils.selector(root);
+      const p1 = q(".pl-p1"); // branco — sobe (baixo→cima)
+      const p2 = q(".pl-p2"); // preto  — entra da direita
+      const p3 = q(".pl-p3"); // branco — entra da esquerda
+      const p4 = q(".pl-p4"); // preto  — desce (cima→baixo)
+      const subChars = q(".pl-sub span");
+      const gmtWrap = q(".pl-gmt-wrap");
 
-      split = new SplitText(subtitleRef.current, { type: "chars" });
+      // Estados iniciais (fora do ecrã)
+      gsap.set(p1, { yPercent: 100 });
+      gsap.set(p2, { xPercent: 100 });
+      gsap.set(p3, { xPercent: -100 });
+      gsap.set(p4, { yPercent: -100 });
+      gsap.set(subChars, { opacity: 0 });
+      gsap.set(gmtWrap, { opacity: 0, scale: 8, filter: "blur(14px)" });
 
-      const tl = gsap.timeline({
-        defaults: { ease: "power4.inOut" },
-        onComplete: () => {
-          unlockScroll();
-          setActive(false);
-        },
-      });
+      const tl = gsap.timeline({ onComplete: unlock });
 
-      // ── 1) Divs geométricas — lentas e legíveis (~1,8s, overlap ~0.15s) ─────
-      // branco sobe → preto entra (dir→esq) → branco sai (esq→dir) → preto desce.
-      tl.to(panel1Ref.current, { yPercent: 0, duration: 0.6 }, 0.0)
-        .to(panel2Ref.current, { xPercent: 0, duration: 0.6 }, 0.45)
-        .to(panel3Ref.current, { xPercent: 0, duration: 0.6 }, 0.9)
-        .to(panel4Ref.current, { yPercent: 0, duration: 0.6 }, 1.35);
-
-      // ── 2) Subtítulo letra-a-letra: vindo de MUITO longe, deslize puro ─────
-      tl.set(subtitleRef.current, { autoAlpha: 1 }, ">-0.05");
-      tl.from(
-        split.chars,
-        {
-          x: () => gsap.utils.random(-600, 600),
-          y: () => gsap.utils.random(-400, 400),
-          opacity: 0,
-          duration: 0.6,
-          ease: "power3.out",
-          stagger: 0.035,
-        },
-        "<",
-      );
-
-      // ── 3) "GMT" — impacto: da frente do monitor, overshoot 1.12 → 1 ───────
-      tl.set(brandWrapRef.current, { autoAlpha: 1 }, ">-0.05");
-      tl.fromTo(
-        brandWrapRef.current,
-        { scale: 8, filter: "blur(10px)" },
-        {
-          scale: 1.12,
-          filter: "blur(0px)",
-          duration: 0.6,
-          ease: "power3.out",
-        },
-        "<",
-      ).to(brandWrapRef.current, {
-        scale: 1,
-        duration: 0.32,
-        ease: "back.out(3)",
-      });
-
-      // ── 4) Fade-out do overlay → revela a hero real idêntica por baixo ─────
-      tl.to(overlayRef.current, { autoAlpha: 0, duration: 0.4 }, ">-0.03");
-    }, overlayRef);
+      // 0) Sem GMT inicial: os painéis varrem quase logo (respiro mínimo)
+      tl.to(p1, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, 0.2)
+        .to(p2, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
+        .to(p3, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
+        .to(p4, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
+        // 1) Subtítulo letra a letra, de longe e aleatório
+        .from(
+          subChars,
+          {
+            x: () => gsap.utils.random(-600, 600),
+            y: () => gsap.utils.random(-400, 400),
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.035,
+            ease: "power3.out",
+          },
+          "+=0.15"
+        )
+        .to(subChars, { opacity: 1, duration: 0.01 }, "<")
+        // 2) GMT com impacto (vem da frente, overshoot)
+        .to(
+          gmtWrap,
+          {
+            opacity: 1,
+            scale: 1,
+            filter: "blur(0px)",
+            duration: 0.9,
+            ease: "back.out(3)",
+          },
+          "+=0.1"
+        )
+        // 3) Fade-out do overlay → revela a hero real por baixo
+        .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.45");
+    }, root);
 
     return () => {
       ctx.revert();
-      split?.revert();
-      unlockScroll();
+      html.style.overflow = prevOverflow;
+      window.__gmtScrollLocked = false;
+      window.dispatchEvent(new Event(SCROLL_UNLOCK_EVENT));
     };
-  }, [active]);
+  }, [phase]);
 
-  if (!active) return null;
+  if (phase === "done") return null;
 
   return (
     <div
-      ref={overlayRef}
+      ref={rootRef}
       className="fixed inset-0 z-[9999] overflow-hidden bg-black"
       aria-hidden
     >
-      {/* GMT inicial (tapado pelas divs) — z abaixo dos painéis */}
-      <div className="preloader-stage z-10">
-        <h1
-          ref={introBrandRef}
-          className="gmt-brand gmt-brand--hero text-center text-white"
-        >
-          GMT
-        </h1>
-      </div>
+      {/* Painéis geométricos (cada um por cima do anterior) */}
+      <div className="pl-p1 absolute inset-0 z-[20] bg-white" />
+      <div className="pl-p2 absolute inset-0 z-[30] bg-black" />
+      <div className="pl-p3 absolute inset-0 z-[40] bg-white" />
+      <div className="pl-p4 absolute inset-0 z-[50] bg-black" />
 
-      {/* 4 painéis geométricos — estado inicial inline evita flash no 1º paint */}
-      <div
-        ref={panel1Ref}
-        className="preloader-panel z-20 bg-white"
-        style={{ transform: "translateY(100%)" }}
-      />
-      <div
-        ref={panel2Ref}
-        className="preloader-panel z-30 bg-black"
-        style={{ transform: "translateX(100%)" }}
-      />
-      <div
-        ref={panel3Ref}
-        className="preloader-panel z-40 bg-white"
-        style={{ transform: "translateX(-100%)" }}
-      />
-      <div
-        ref={panel4Ref}
-        className="preloader-panel z-50 bg-black"
-        style={{ transform: "translateY(-100%)" }}
-      />
-
-      {/* Título final animado — mesma geometria/classe da hero real (z acima) */}
-      <div className="preloader-stage z-[60]">
-        <div className="flex flex-col items-center gap-6">
-          <div ref={brandWrapRef} style={{ opacity: 0 }}>
-            <h1 className="gmt-brand gmt-brand--hero text-center text-white">
-              GMT
-            </h1>
-          </div>
-          <p
-            ref={subtitleRef}
-            className="type-hero-subtitle select-none text-center text-white"
-            style={{ opacity: 0 }}
-          >
-            Growth Marketing Technology
-          </p>
+      {/* Título final do preloader (por cima de tudo) */}
+      <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center gap-6 px-4">
+        <div className="pl-gmt-wrap inline-block" style={{ transformOrigin: "center" }}>
+          <h1 className="gmt-brand gmt-brand--hero text-center text-white">GMT</h1>
         </div>
+        <p className="pl-sub type-hero-subtitle text-center text-white">
+          {chars(SUBTITLE).map(({ ch, key }) => (
+            <span key={key} className="inline-block" style={{ willChange: "transform" }}>
+              {ch}
+            </span>
+          ))}
+        </p>
       </div>
     </div>
   );

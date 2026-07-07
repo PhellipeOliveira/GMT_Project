@@ -26,6 +26,8 @@ function useCountUp(
 
   useEffect(() => {
     if (!active) {
+      // Reset intencional do contador quando sai de vista (comportamento mantido).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValue(0);
       return;
     }
