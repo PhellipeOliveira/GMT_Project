@@ -57,76 +57,99 @@ export function Preloader() {
       setPhase("done");
     };
 
-    const ctx = gsap.context(() => {
-      const q = gsap.utils.selector(root);
-      const p1 = q(".pl-p1"); // branco — sobe (baixo→cima)
-      const p2 = q(".pl-p2"); // preto  — entra da direita
-      const p3 = q(".pl-p3"); // branco — entra da esquerda
-      const p4 = q(".pl-p4"); // preto  — desce (cima→baixo)
-      const subChars = q(".pl-sub span");
-      const gmtWrap = q(".pl-gmt-wrap");
+    let ctx: ReturnType<typeof gsap.context> | null = null;
+    let cancelled = false;
 
-      // Estados iniciais (fora do ecrã)
-      gsap.set(p1, { yPercent: 100 });
-      gsap.set(p2, { xPercent: 100 });
-      gsap.set(p3, { xPercent: -100 });
-      gsap.set(p4, { yPercent: -100 });
-      // Letras invisíveis mas NO lugar (x:0,y:0) e brancas — nada espalhado
-      // nem cinza antes da animação começar.
-      gsap.set(subChars, { opacity: 0, x: 0, y: 0, color: "#ffffff" });
-      gsap.set(gmtWrap, { opacity: 0, scale: 8, filter: "blur(14px)" });
+    const build = () => {
+      if (cancelled || !rootRef.current) return;
 
-      const tl = gsap.timeline({ onComplete: unlock });
+      ctx = gsap.context(() => {
+        const q = gsap.utils.selector(root);
+        const p1 = q(".pl-p1"); // branco — sobe (baixo→cima)
+        const p2 = q(".pl-p2"); // preto  — entra da direita
+        const p3 = q(".pl-p3"); // branco — entra da esquerda
+        const p4 = q(".pl-p4"); // preto  — desce (cima→baixo)
+        const subChars = q(".pl-sub span");
+        const gmtWrap = q(".pl-gmt-wrap");
 
-      // 0) Sem GMT inicial: os painéis varrem quase logo (respiro mínimo)
-      tl.to(p1, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, 0.2)
-        .to(p2, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
-        .to(p3, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
-        .to(p4, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
-        // 1) Subtítulo formado letra a letra: cada letra vem de fora do ecrã
-        //    (posição aleatória) e desliza até ao lugar final. fromTo com
-        //    opacity 0→1 e cor branca explícita (inline) → nunca cinza, nunca
-        //    pisca, nunca aparece tudo de uma vez.
-        .fromTo(
-          subChars,
-          {
-            x: () => gsap.utils.random(-700, 700),
-            y: () => gsap.utils.random(-500, 500),
-            opacity: 0,
-            color: "#ffffff",
-          },
-          {
-            x: 0,
-            y: 0,
-            opacity: 1,
-            color: "#ffffff",
-            duration: 0.75,
-            stagger: 0.035,
-            ease: "power3.out",
-            clearProps: "transform",
-          },
-          "+=0.12"
-        )
-        // 2) GMT por último, com impacto: grande → 1.12 → assenta em 1
-        .fromTo(
-          gmtWrap,
-          { opacity: 0, scale: 8, filter: "blur(14px)" },
-          {
-            opacity: 1,
-            scale: 1.12,
-            filter: "blur(0px)",
-            duration: 0.75,
-            ease: "power4.out",
-          },
-          "+=0.1"
-        )
-        .to(gmtWrap, { scale: 1, duration: 0.22, ease: "back.out(2)" })
-        // 3) Fade-out do overlay → revela a hero real por baixo (só no fim)
-        .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.4");
-    }, root);
+        // Estados iniciais (fora do ecrã)
+        gsap.set(p1, { yPercent: 100 });
+        gsap.set(p2, { xPercent: 100 });
+        gsap.set(p3, { xPercent: -100 });
+        gsap.set(p4, { yPercent: -100 });
+        // Letras invisíveis mas NO lugar (x:0,y:0) e brancas — nada espalhado
+        // nem cinza antes da animação começar.
+        gsap.set(subChars, { opacity: 0, x: 0, y: 0, color: "#ffffff" });
+        // GMT escala a partir do próprio centro; nunca anima y/top/margin.
+        gsap.set(gmtWrap, {
+          opacity: 0,
+          scale: 5.5,
+          filter: "blur(10px)",
+          transformOrigin: "center center",
+        });
+
+        const tl = gsap.timeline({ onComplete: unlock });
+
+        // 0) Sem GMT inicial: os painéis varrem quase logo (respiro mínimo)
+        tl.to(p1, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, 0.2)
+          .to(p2, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
+          .to(p3, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
+          .to(p4, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
+          // 1) Subtítulo formado letra a letra: cada letra vem de fora do ecrã
+          //    (posição aleatória) e desliza até ao lugar final. Só x/y/opacity
+          //    nos spans — o <p> nunca é animado, logo o subtítulo fica fixo.
+          .fromTo(
+            subChars,
+            {
+              x: () => gsap.utils.random(-700, 700),
+              y: () => gsap.utils.random(-500, 500),
+              opacity: 0,
+              color: "#ffffff",
+            },
+            {
+              x: 0,
+              y: 0,
+              opacity: 1,
+              color: "#ffffff",
+              duration: 0.75,
+              stagger: 0.035,
+              ease: "power3.out",
+            },
+            "+=0.12"
+          )
+          // 2) GMT por último, com IMPACTO: só scale/opacity/filter (sem y).
+          //    5.5 → 1.14 (overshoot) → 1, a partir do centro.
+          .fromTo(
+            gmtWrap,
+            { opacity: 0, scale: 5.5, filter: "blur(10px)" },
+            {
+              opacity: 1,
+              scale: 1.14,
+              filter: "blur(0px)",
+              duration: 0.72,
+              ease: "power4.out",
+            },
+            "+=0.1"
+          )
+          .to(gmtWrap, { scale: 1, duration: 0.22, ease: "back.out(2.8)" })
+          // 3) Fade-out do overlay → revela a hero real por baixo (só no fim)
+          .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.4");
+      }, root);
+    };
+
+    // Esperar as fontes antes de animar: o GMT usa Host Grotesk e o subtítulo
+    // DM Sans; animar antes de carregarem provoca reflow (o subtítulo saltava
+    // quando o GMT — Host Grotesk — assentava). Com o flex-col a coincidir com
+    // a Hero real, esperar as fontes garante posições estáveis e sem salto.
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(build);
+    } else {
+      build();
+    }
 
     return () => {
-      ctx.revert();
+      cancelled = true;
+      ctx?.revert();
       html.style.overflow = prevOverflow;
       window.__gmtScrollLocked = false;
       window.dispatchEvent(new Event(SCROLL_UNLOCK_EVENT));
@@ -151,7 +174,7 @@ export function Preloader() {
       <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center gap-6 px-4">
         <div
           className="pl-gmt-wrap inline-block"
-          style={{ opacity: 0, transformOrigin: "center" }}
+          style={{ opacity: 0, transformOrigin: "center center" }}
         >
           <h1 className="gmt-brand gmt-brand--hero text-center text-white">GMT</h1>
         </div>
