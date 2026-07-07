@@ -223,6 +223,21 @@ body {
   line-height: 0.85;
 }
 
+/* GMT Lantern — respiro extra só para cima (+7% da altura da secção). */
+.gmt-lantern-section {
+  --gmt-lantern-pad-y: 0.75rem;
+  --gmt-lantern-text-h: clamp(5.44rem, 22.44vw, 24.48rem);
+  --gmt-lantern-total-h: calc(var(--gmt-lantern-pad-y) * 2 + var(--gmt-lantern-text-h));
+  padding-bottom: var(--gmt-lantern-pad-y);
+  padding-top: calc(var(--gmt-lantern-pad-y) + var(--gmt-lantern-total-h) * 0.07);
+}
+
+@media (min-width: 768px) {
+  .gmt-lantern-section {
+    --gmt-lantern-pad-y: 1rem;
+  }
+}
+
 .logo-gmt--on-light {
   color: #0a0a0a;
 }

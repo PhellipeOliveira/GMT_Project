@@ -58,22 +58,6 @@ export default function ContactoPage() {
           </div>
         </div>
       </section>
-
-      <section className="section-cta px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
-        <RevealSequence>
-          <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
-            Preferimos falar pessoalmente?
-          </RevealOnScroll>
-          <RevealOnScroll as="p" className="type-body mt-4 text-gmt-muted">
-            Agende uma reunião gratuita — respondemos em 24 horas.
-          </RevealOnScroll>
-          <RevealOnScroll variant="media">
-            <a href="tel:+351913628211" className="btn-submit mt-8">
-              Ligar agora
-            </a>
-          </RevealOnScroll>
-        </RevealSequence>
-      </section>
     </>
   );
 }

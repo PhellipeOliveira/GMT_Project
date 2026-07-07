@@ -11,6 +11,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
+      data-nav-tone="dark"
       className="hero-fullscreen not-prose relative flex items-center justify-center overflow-hidden bg-black [--gmt-text:#ffffff]"
     >
       <div className="relative z-10">

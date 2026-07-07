@@ -66,6 +66,7 @@ export default async function ServicoItemPage({
     <>
       {/* ===== Sec 0 — Hero (banner · thumb AG/MKT/AV + gradiente + título branco) ===== */}
       <section
+        data-nav-tone="dark"
         className="not-prose relative h-[80vh] w-full overflow-hidden md:h-[70vh]"
         style={{ backgroundColor: servico.corPlaceholder }}
       >

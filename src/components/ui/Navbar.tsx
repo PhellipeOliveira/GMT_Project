@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useScroll, useMotionValueEvent } from "framer-motion";
 import { GmtLogo } from "@/components/ui/GmtLogo";
+import { useNavTone } from "@/hooks/useNavTone";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -15,44 +15,30 @@ const NAV_LINKS = [
   { href: "/contacto", label: "Contacto" },
 ];
 
-/** Rotas cujo hero inicial tem fundo escuro — navbar começa no modo dark. */
-function isHeroPageDark(pathname: string): boolean {
-  if (pathname === "/") return true;
-  if (pathname.startsWith("/servicos/") && pathname !== "/servicos") return true;
-  return false;
-}
-
 export function Navbar() {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const overDark = useNavTone();
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 60);
   });
 
-  /**
-   * pillDark: true  → hero escuro em ecrã → pill dark-glass, texto branco
-   * pillDark: false → secção clara ou após scroll → pill light-glass, texto escuro
-   */
-  const pillDark = isHeroPageDark(pathname) && !scrolled;
+  /** Fundo escuro por baixo da navbar → pill/hamburger claros; caso contrário, escuros. */
+  const pillDark = overDark;
 
-  /**
-   * Logo glass: visível sempre em páginas de fundo claro.
-   * Na Home (hero escuro), só aparece após scroll (comportamento original).
-   */
-  const logoGlassVisible = scrolled || !isHeroPageDark(pathname);
+  /** Logo glass: no topo do hero escuro fica só o texto branco; ao rolar ou em fundo claro, glass. */
+  const logoGlassVisible = scrolled || !overDark;
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <div className="relative flex h-16 items-center px-5 md:h-20 md:px-[3vw]">
 
-        {/* ── Logo GMT — esquerda, sempre branca ────────────────────── */}
+        {/* ── Logo GMT — esquerda ───────────────────────────────────── */}
         <div className="pointer-events-auto z-10">
           <Link href="/" onClick={() => setOpen(false)} aria-label="GMT — início">
             <div className="relative">
-              {/* Container glass — sempre visível em páginas claras; aparece no scroll na Home */}
               <div
                 className={cn(
                   "absolute inset-0 rounded-full bg-black/55 backdrop-blur-md transition-opacity duration-500",
@@ -60,13 +46,13 @@ export function Navbar() {
                 )}
               />
               <div className="relative px-5 py-2.5">
-                <GmtLogo tone="on-dark" />
+                <GmtLogo tone={overDark ? "on-dark" : "on-light"} />
               </div>
             </div>
           </Link>
         </div>
 
-        {/* ── Pill de navegação — centrado, só desktop ───────────────── */}
+        {/* ── Pill de navegação — centrado, tablet/desktop ──────────── */}
         <div className="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
           <nav
             className={cn(
@@ -93,17 +79,17 @@ export function Navbar() {
           </nav>
         </div>
 
-        {/* ── Hamburger mobile — direita ─────────────────────────────── */}
+        {/* ── Hamburger mobile ──────────────────────────────────────── */}
         <button
           type="button"
           aria-label={open ? "Fechar menu" : "Abrir menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
           className={cn(
-            "pointer-events-auto ml-auto flex h-10 w-10 items-center justify-center rounded-lg backdrop-blur-md transition-all duration-300 md:hidden",
+            "pointer-events-auto ml-auto flex h-10 w-10 items-center justify-center rounded-lg border backdrop-blur-md transition-all duration-300 md:hidden",
             pillDark
-              ? "bg-white/10 text-white"
-              : "bg-black/8 text-gmt-text",
+              ? "border-white/20 bg-white/10 text-white"
+              : "border-black/8 bg-white/88 text-gmt-text shadow-sm",
           )}
         >
           {open ? <X size={20} /> : <Menu size={20} />}
@@ -112,13 +98,25 @@ export function Navbar() {
 
       {/* ── Menu mobile ────────────────────────────────────────────── */}
       {open && (
-        <div className="pointer-events-auto border-t border-white/10 bg-black/90 px-5 py-6 backdrop-blur-xl md:hidden">
+        <div
+          className={cn(
+            "pointer-events-auto border-t px-5 py-6 backdrop-blur-xl md:hidden",
+            pillDark
+              ? "border-white/10 bg-black/90"
+              : "border-black/10 bg-white/95",
+          )}
+        >
           <ul className="flex flex-col gap-5">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="type-body text-white/70 transition-colors hover:text-white"
+                  className={cn(
+                    "type-body transition-colors",
+                    pillDark
+                      ? "text-white/70 hover:text-white"
+                      : "text-gmt-muted hover:text-gmt-text",
+                  )}
                   onClick={() => setOpen(false)}
                 >
                   {link.label}

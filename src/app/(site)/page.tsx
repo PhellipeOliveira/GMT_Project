@@ -102,6 +102,7 @@ export default function HomePage() {
       {/* ══ 5 ── TRABALHOS RECENTES ══════════════════════════════════ */}
       <section
         data-agent-hint="Quer um projeto assim?"
+        data-nav-tone="dark"
         className="section-cta px-5 py-20 text-left md:px-[5vw] md:py-[8vw]"
       >
         <SectionLabel variant="title" tone="on-dark" className="block w-full text-left">

@@ -20,7 +20,7 @@ def build_model():
         model=os.getenv("DUVIDA_LLM_MODEL", "gpt-5-nano"),
         output_version="responses/v1",
         reasoning={"effort": "high"},
-        verbosity="medium",
+        verbosity="low",
     )
 
 

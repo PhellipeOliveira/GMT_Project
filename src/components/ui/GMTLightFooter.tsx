@@ -23,6 +23,9 @@ import { useRef, useEffect } from "react";
  *  - maskImage atualiza instantaneamente via CSS variable
  *
  * Mobile/touch: iluminação estática centrada (fallback elegante)
+ *
+ * Espaçamento: `.gmt-lantern-section` acrescenta 7% da altura total só em
+ * padding-top (respiro face à secção anterior); texto e padding-bottom intactos.
  */
 export function GMTLightFooter() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -87,7 +90,7 @@ export function GMTLightFooter() {
     <section
       ref={containerRef}
       aria-label="GMT"
-      className="not-prose relative overflow-hidden bg-black py-3 md:py-4"
+      className="gmt-lantern-section not-prose relative overflow-hidden bg-black"
     >
       {/* Ambas as camadas partilham o mesmo contentor centrado — alinhamento idêntico */}
       <div className="relative flex w-full items-center justify-center">

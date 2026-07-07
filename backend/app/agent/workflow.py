@@ -89,8 +89,8 @@ def _chat_model(papel: str, default_model: str, default_effort: str, default_ver
     return ChatOpenAI(**kwargs)
 
 
-model = _chat_model("DEFAULT", "gpt-5-nano", "low", "medium")
-orcamentos_model = _chat_model("ORCAMENTOS", "gpt-5-nano", "medium", "medium")
+model = _chat_model("DEFAULT", "gpt-5-nano", "low", "low")
+orcamentos_model = _chat_model("ORCAMENTOS", "gpt-5-nano", "medium", "low")
 finalizer_model = _chat_model("FINALIZER", "gpt-5-nano", "low", "low")
 planner_model = _chat_model("PLANNER", "gpt-5-nano", "medium", "low")
 

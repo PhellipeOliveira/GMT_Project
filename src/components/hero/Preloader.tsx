@@ -6,10 +6,6 @@ import {
   SCROLL_LOCK_EVENT,
   SCROLL_UNLOCK_EVENT,
 } from "@/components/ui/SmoothScroll";
-import {
-  HeroSubtitleChars,
-  HeroTitleStage,
-} from "@/components/hero/HeroTitleStage";
 
 const SESSION_KEY = "gmt:preloaded";
 const SUBTITLE = "Growth Marketing Technology";
@@ -22,15 +18,32 @@ function chars(text: string) {
   }));
 }
 
+/** Espera fontes + layout estável (incl. barra de URL mobile) antes de medir. */
+function whenLayoutReady(cb: () => void) {
+  const run = () => requestAnimationFrame(() => requestAnimationFrame(cb));
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(run);
+  } else {
+    run();
+  }
+}
+
+/** Magnitudes de voo das letras proporcionais ao viewport (mobile/tablet/desktop). */
+function letterFlyRange() {
+  const w = window.innerWidth;
+  const h = window.visualViewport?.height ?? window.innerHeight;
+  return {
+    x: Math.min(w * 0.45, 700),
+    y: Math.min(h * 0.3, 500),
+  };
+}
+
 export function Preloader() {
   const rootRef = useRef<HTMLDivElement>(null);
   // "pending" cobre o 1º paint (evita flash da hero); depois corre ou termina.
   const [phase, setPhase] = useState<"pending" | "run" | "done">("pending");
 
   useEffect(() => {
-    // Decisão só no cliente: mantém "pending" no SSR e no 1º render do cliente
-    // (mesmo markup → sem mismatch de hidratação nem flash da hero). Por isso o
-    // setState síncrono aqui é intencional (não é um efeito cascata evitável).
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const seen = sessionStorage.getItem(SESSION_KEY);
     if (reduced || seen) {
@@ -46,7 +59,6 @@ export function Preloader() {
     const root = rootRef.current;
     if (!root) return;
 
-    // Bloquear scroll (nativo + Lenis, via evento que o SmoothScroll escuta em window)
     const html = document.documentElement;
     const prevOverflow = html.style.overflow;
     html.style.overflow = "hidden";
@@ -67,25 +79,69 @@ export function Preloader() {
     const build = () => {
       if (cancelled || !rootRef.current) return;
 
+      // Elementos reais já no DOM (por baixo do overlay) — fonte da verdade.
+      const realTitle = document.querySelector<HTMLElement>(
+        ".gmt-brand--hero:not(.preloader-title)",
+      );
+      const realSub = document.querySelector<HTMLElement>(
+        ".type-hero-subtitle:not(.preloader-sub)",
+      );
+
+      if (!realTitle || !realSub) {
+        unlock();
+        return;
+      }
+
+      const tBounds = realTitle.getBoundingClientRect();
+      const sBounds = realSub.getBoundingClientRect();
+
       ctx = gsap.context(() => {
         const q = gsap.utils.selector(root);
-        const p1 = q(".pl-p1"); // branco — sobe (baixo→cima)
-        const p2 = q(".pl-p2"); // preto  — entra da direita
-        const p3 = q(".pl-p3"); // branco — entra da esquerda
-        const p4 = q(".pl-p4"); // preto  — desce (cima→baixo)
-        const subChars = q(".pl-sub-chars span");
+        const p1 = q(".pl-p1");
+        const p2 = q(".pl-p2");
+        const p3 = q(".pl-p3");
+        const p4 = q(".pl-p4");
+        const plGmtPosition = q(".pl-gmt-position")[0] as HTMLElement | undefined;
+        const plSub = q(".pl-sub")[0] as HTMLElement | undefined;
+        const subChars = q(".pl-sub span");
         const gmtWrap = q(".pl-gmt-wrap");
 
-        // Estados iniciais (fora do ecrã)
+        if (!plGmtPosition || !plSub) {
+          unlock();
+          return;
+        }
+
+        // Posicionamento pixel-perfect: lê a Hero real, aplica no overlay
+        // fixed (coordenadas viewport = top/left dentro do fixed inset-0).
+        // Sem flex — só absolute + rect medido.
+        gsap.set(plGmtPosition, {
+          position: "absolute",
+          top: tBounds.top,
+          left: tBounds.left,
+          width: tBounds.width,
+          height: tBounds.height,
+          margin: 0,
+          x: 0,
+          y: 0,
+        });
+        gsap.set(plSub, {
+          position: "absolute",
+          top: sBounds.top,
+          left: sBounds.left,
+          width: sBounds.width,
+          height: sBounds.height,
+          margin: 0,
+          x: 0,
+          y: 0,
+        });
+
+        const fly = letterFlyRange();
+
         gsap.set(p1, { yPercent: 100 });
         gsap.set(p2, { xPercent: 100 });
         gsap.set(p3, { xPercent: -100 });
         gsap.set(p4, { yPercent: -100 });
-        // Letras invisíveis mas NO lugar (x:0,y:0) e brancas — nada espalhado
-        // nem cinza antes da animação começar.
         gsap.set(subChars, { opacity: 0, x: 0, y: 0, color: "#ffffff" });
-        // GMT: scale só no wrapper interno — o slot (.hero-gmt-slot) mantém o
-        // lugar final no flex; nunca anima y/top/margin.
         gsap.set(gmtWrap, {
           opacity: 0,
           scale: 5.5,
@@ -95,18 +151,15 @@ export function Preloader() {
 
         const tl = gsap.timeline({ onComplete: unlock });
 
-        // 0) Sem GMT inicial: os painéis varrem quase logo (respiro mínimo)
         tl.to(p1, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, 0.2)
           .to(p2, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
           .to(p3, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
           .to(p4, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
-          // 1) Subtítulo formado letra a letra: só x/y/opacity nos spans; o
-          //    <p> (e o ghost text) reservam a caixa final desde o início.
           .fromTo(
             subChars,
             {
-              x: () => gsap.utils.random(-700, 700),
-              y: () => gsap.utils.random(-500, 500),
+              x: () => gsap.utils.random(-fly.x, fly.x),
+              y: () => gsap.utils.random(-fly.y, fly.y),
               opacity: 0,
               color: "#ffffff",
             },
@@ -119,10 +172,8 @@ export function Preloader() {
               stagger: 0.035,
               ease: "power3.out",
             },
-            "+=0.12"
+            "+=0.12",
           )
-          // 2) GMT por último, com IMPACTO: só scale/opacity/filter no wrapper
-          //    interno. Sequência: 5.5 → 1.16 → 0.98 → 1 (repouso = CSS do h1).
           .fromTo(
             gmtWrap,
             { opacity: 0, scale: 5.5, filter: "blur(10px)" },
@@ -133,22 +184,15 @@ export function Preloader() {
               duration: 0.68,
               ease: "power4.out",
             },
-            "+=0.12"
+            "+=0.12",
           )
           .to(gmtWrap, { scale: 0.98, duration: 0.12, ease: "power2.out" })
           .to(gmtWrap, { scale: 1, duration: 0.18, ease: "back.out(2.8)" })
-          // 3) Fade-out do overlay → revela a hero real por baixo (só no fim)
           .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.4");
       }, root);
     };
 
-    // Esperar as fontes antes de animar: métricas estáveis (Host Grotesk + DM
-    // Sans) → o bloco flex não reflowa a meio da timeline.
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(build);
-    } else {
-      build();
-    }
+    whenLayoutReady(build);
 
     return () => {
       cancelled = true;
@@ -161,40 +205,41 @@ export function Preloader() {
 
   if (phase === "done") return null;
 
-  const subtitleChars = chars(SUBTITLE);
-
   return (
     <div
       ref={rootRef}
       className="fixed inset-0 z-[9999] overflow-hidden bg-black [--gmt-text:#ffffff]"
       aria-hidden
     >
-      {/* Painéis geométricos (cada um por cima do anterior) */}
       <div className="pl-p1 absolute inset-0 z-[20] bg-white" />
       <div className="pl-p2 absolute inset-0 z-[30] bg-black" />
       <div className="pl-p3 absolute inset-0 z-[40] bg-white" />
       <div className="pl-p4 absolute inset-0 z-[50] bg-black" />
 
-      {/* Palco de título — mesma cadeia que HeroSection > div.z-10 > HeroTitle */}
-      <div className="absolute inset-0 z-[60] flex items-center justify-center pointer-events-none">
-        <div className="relative z-10">
-          <HeroTitleStage
-            gmtAnimClassName="pl-gmt-wrap"
-            gmtAnimStyle={{ opacity: 0 }}
-            subtitleClassName="pl-sub"
-            subtitleContent={
-              <HeroSubtitleChars
-                text={SUBTITLE}
-                chars={subtitleChars}
-                charStyle={{
-                  opacity: 0,
-                  color: "#ffffff",
-                  willChange: "transform, opacity",
-                }}
-              />
-            }
-          />
+      {/* Texto final: sem flex — posição definida por getBoundingClientRect() */}
+      <div className="absolute inset-0 z-[60] pointer-events-none">
+        <div className="pl-gmt-position">
+          <div
+            className="pl-gmt-wrap flex h-full w-full items-center justify-center"
+            style={{ opacity: 0, transformOrigin: "center center" }}
+          >
+            <h1 className="preloader-title hero-line gmt-brand gmt-brand--hero text-center text-white">
+              GMT
+            </h1>
+          </div>
         </div>
+
+        <p className="pl-sub preloader-sub hero-line type-hero-subtitle select-none text-center text-white">
+          {chars(SUBTITLE).map(({ ch, key }) => (
+            <span
+              key={key}
+              className="inline-block text-white"
+              style={{ opacity: 0, color: "#ffffff", willChange: "transform, opacity" }}
+            >
+              {ch}
+            </span>
+          ))}
+        </p>
       </div>
     </div>
   );
