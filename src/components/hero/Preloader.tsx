@@ -101,28 +101,25 @@ export function Preloader() {
         const p2 = q(".pl-p2");
         const p3 = q(".pl-p3");
         const p4 = q(".pl-p4");
-        const plGmtPosition = q(".pl-gmt-position")[0] as HTMLElement | undefined;
         const plSub = q(".pl-sub")[0] as HTMLElement | undefined;
         const subChars = q(".pl-sub span");
-        const gmtWrap = q(".pl-gmt-wrap");
+        const gmtWrap = q(".pl-gmt-wrap")[0] as HTMLElement | undefined;
 
-        if (!plGmtPosition || !plSub) {
+        if (!plSub || !gmtWrap) {
           unlock();
           return;
         }
 
-        // Posicionamento pixel-perfect: lê a Hero real, aplica no overlay
-        // fixed. Flex no container medido centra o GMT verticalmente na caixa
-        // (evita alinhamento por topo/baseline do inline-block).
-        gsap.set(plGmtPosition, {
+        // DOM Twins: o <h1> do preloader é clone literal do <h1> real. Aplicamos
+        // o rect medido DIRECTAMENTE no h1 (sem wrappers/flex) — igual ao <p> do
+        // subtítulo, que alinha na perfeição. Assim as letras assentam nos mesmos
+        // píxeis (a baseline da fonte não é distorcida por divs intermédias).
+        gsap.set(gmtWrap, {
           position: "absolute",
           top: tBounds.top,
           left: tBounds.left,
           width: tBounds.width,
           height: tBounds.height,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           margin: 0,
           x: 0,
           y: 0,
@@ -190,7 +187,15 @@ export function Preloader() {
             "+=0.12",
           )
           .to(gmtWrap, { scale: 0.98, duration: 0.12, ease: "power2.out" })
-          .to(gmtWrap, { scale: 1, duration: 0.18, ease: "back.out(2.8)" })
+          // Repouso = scaleX 1.03 / scaleY 1: como o GSAP passa a controlar o
+          // transform do próprio h1, replicamos aqui o scaleX(1.03) que o
+          // .gmt-brand real aplica por CSS → gémeos idênticos ao píxel.
+          .to(gmtWrap, {
+            scaleX: 1.03,
+            scaleY: 1,
+            duration: 0.18,
+            ease: "back.out(2.8)",
+          })
           .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.4");
       }, root);
     };
@@ -219,19 +224,16 @@ export function Preloader() {
       <div className="pl-p3 absolute inset-0 z-[40] bg-white" />
       <div className="pl-p4 absolute inset-0 z-[50] bg-black" />
 
-      {/* Texto final: posição via getBoundingClientRect(); flex (aplicado por
-          GSAP em .pl-gmt-position) centra o GMT verticalmente na caixa medida. */}
+      {/* Texto final (DOM Twins): h1 e p soltos, posição via
+          getBoundingClientRect() aplicada DIRECTAMENTE no elemento — sem
+          wrappers/flex que distorçam a baseline da fonte. */}
       <div className="absolute inset-0 z-[60] pointer-events-none">
-        <div className="pl-gmt-position">
-          <div
-            className="pl-gmt-wrap inline-block"
-            style={{ opacity: 0, transformOrigin: "center center" }}
-          >
-            <h1 className="preloader-title hero-line gmt-brand gmt-brand--hero m-0 p-0 text-center leading-none text-white">
-              GMT
-            </h1>
-          </div>
-        </div>
+        <h1
+          className="pl-gmt-wrap preloader-title hero-line gmt-brand gmt-brand--hero m-0 p-0 text-center leading-none text-white"
+          style={{ opacity: 0, transformOrigin: "center center", willChange: "transform, opacity" }}
+        >
+          GMT
+        </h1>
 
         <p className="pl-sub preloader-sub hero-line type-hero-subtitle select-none text-center text-white">
           {chars(SUBTITLE).map(({ ch, key }) => (
