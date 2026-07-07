@@ -8,7 +8,7 @@ export function Footer() {
   return (
     <footer className="section-footer relative w-full overflow-hidden bg-black">
       <div className="relative z-10 mx-auto px-5 py-20 md:px-[5vw] md:py-28">
-        <p className="type-footer-subtitle mb-16 text-center text-white md:mb-24">
+        <p className="type-footer-subtitle mx-auto mb-16 max-w-full text-center text-white md:mb-24">
           Growth Marketing Technology
         </p>
 

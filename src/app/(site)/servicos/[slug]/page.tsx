@@ -4,17 +4,9 @@ import { notFound } from "next/navigation";
 import { Check } from "lucide-react";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { ComoFuncionaTimeline } from "@/components/servicos/ComoFuncionaTimeline";
 import { servicos, getServicoBySlug, getAdjacentServicos } from "@/data/servicos";
-import { getComoFuncionaCardId, getServicoHeroId } from "@/lib/media";
-
-/** Slots de mídia da Sec3 — Como funciona (ver `docs/PLANO_MESTRE_DE_MIDIA.md` § CF-01…05). */
-const COMO_FUNCIONA_SLOTS = [
-  { id: "CF-01", titulo: "Reunião inicial", descricao: "card mídia posição 1", cor: "#1E293B" },
-  { id: "CF-02", titulo: "Proposta personalizada", descricao: "card mídia posição 2", cor: "#134E4A" },
-  { id: "CF-03", titulo: "Planeamento estratégico", descricao: "card mídia posição 3", cor: "#1A3A5F" },
-  { id: "CF-04", titulo: "Execução & implementação", descricao: "card mídia posição 4", cor: "#3B0764" },
-  { id: "CF-05", titulo: "Acompanhamento & otimização", descricao: "card mídia posição 5", cor: "#0F172A" },
-] as const;
+import { getServicoHeroId } from "@/lib/media";
 
 const HERO_NAV_LINK =
   "type-label inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md transition-colors hover:bg-white/30";
@@ -205,37 +197,14 @@ export default async function ServicoItemPage({
           </div>
         </section>
 
-        {/* ===== Sec 4 — Como funciona (5 slots CF-01…05) ===== */}
+        {/* ===== Sec 4 — Como funciona (timeline) ===== */}
         <section className="px-5 pt-16 md:px-[5vw] md:pt-[6vw]">
           <div className="mx-auto max-w-6xl border-t border-gmt-border pt-16 md:pt-[5vw]">
             <Kicker>O processo</Kicker>
             <RevealOnScroll as="h2" className="type-section-title">
               Como funciona
             </RevealOnScroll>
-            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              {COMO_FUNCIONA_SLOTS.map((slot, i) => (
-                <RevealOnScroll key={slot.id} variant="media" delay={i * 0.08}>
-                  <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-gmt-border md:aspect-[2/3]">
-                    <PlaceholderMedia
-                      id={getComoFuncionaCardId(servico.familia, slot.id)}
-                      descricao={slot.descricao}
-                      cor={slot.cor}
-                      fill
-                      sizes="(max-width: 1024px) 50vw, 20vw"
-                      reveal={false}
-                    />
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3">
-                      <span className="type-body block rounded-lg bg-white/80 px-3 py-2 text-center text-gmt-text backdrop-blur-md">
-                        <span className="mr-1.5 font-mono text-xs text-gmt-muted">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        {slot.titulo}
-                      </span>
-                    </div>
-                  </div>
-                </RevealOnScroll>
-              ))}
-            </div>
+            <ComoFuncionaTimeline />
           </div>
         </section>
 

@@ -25,10 +25,10 @@ export function Navbar() {
     setScrolled(latest > 60);
   });
 
-  /** Fundo escuro por baixo da navbar → pill/hamburger claros; caso contrário, escuros. */
+  /** Mobile/tablet: adapta pill e menu ao fundo por baixo. Desktop: sempre escuro. */
   const pillDark = overDark;
 
-  /** Logo glass: no topo do hero escuro fica só o texto branco; ao rolar ou em fundo claro, glass. */
+  /** Logo: texto sempre branco; glass escuro quando o fundo claro exige contraste. */
   const logoGlassVisible = scrolled || !overDark;
 
   return (
@@ -46,32 +46,25 @@ export function Navbar() {
                 )}
               />
               <div className="relative px-5 py-2.5">
-                <GmtLogo tone={overDark ? "on-dark" : "on-light"} />
+                <GmtLogo tone="on-dark" />
               </div>
             </div>
           </Link>
         </div>
 
-        {/* ── Pill de navegação — centrado, tablet/desktop ──────────── */}
+        {/* ── Pill de navegação — centrado, tablet/desktop (sempre escuro) ─ */}
         <div className="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
           <nav
             className={cn(
               "pointer-events-auto flex items-center gap-7 rounded-full border px-7 py-2.5 backdrop-blur-md transition-all duration-500",
-              pillDark
-                ? "border-white/20 bg-black/30"
-                : "border-black/8 bg-white/88 shadow-sm",
+              "border-white/20 bg-black/30",
             )}
           >
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={cn(
-                  "type-label transition-colors duration-300",
-                  pillDark
-                    ? "text-white/70 hover:text-white"
-                    : "text-gmt-muted hover:text-gmt-text",
-                )}
+                className="type-label text-white/70 transition-colors duration-300 hover:text-white"
               >
                 {link.label}
               </Link>

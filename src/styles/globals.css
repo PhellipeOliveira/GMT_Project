@@ -263,10 +263,16 @@ body {
   font-size: var(--type-footer-subtitle);
   font-weight: 400;
   letter-spacing: 0.05em;
-  line-height: 1.2;
+  line-height: 1.25;
   text-transform: uppercase;
-  white-space: nowrap;
+  text-wrap: balance;
   color: var(--gmt-text);
+}
+
+@media (max-width: 767px) {
+  .type-footer-subtitle {
+    font-size: clamp(1.125rem, 3.6vw, 1.625rem);
+  }
 }
 
 .type-medium {
