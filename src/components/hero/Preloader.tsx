@@ -118,20 +118,29 @@ export function Preloader() {
             "+=0.12"
           )
           // 2) GMT por último, com IMPACTO: só scale/opacity/filter (sem y).
-          //    5.5 → 1.14 (overshoot) → 1, a partir do centro.
+          //    Sequência explícita: 5.5 → 1.16 (overshoot) → 0.98 (recuo) →
+          //    assenta. Escala a partir do próprio centro; nunca move em y.
           .fromTo(
             gmtWrap,
             { opacity: 0, scale: 5.5, filter: "blur(10px)" },
             {
               opacity: 1,
-              scale: 1.14,
+              scale: 1.16,
               filter: "blur(0px)",
-              duration: 0.72,
+              duration: 0.68,
               ease: "power4.out",
             },
-            "+=0.1"
+            "+=0.12"
           )
-          .to(gmtWrap, { scale: 1, duration: 0.22, ease: "back.out(2.8)" })
+          .to(gmtWrap, { scale: 0.98, duration: 0.12, ease: "power2.out" })
+          // Repouso em scaleX 1.03 / scaleY 1 = exactamente o .gmt-brand em
+          // repouso (CSS), para coincidir ao pixel com o <h1> da Hero real.
+          .to(gmtWrap, {
+            scaleX: 1.03,
+            scaleY: 1,
+            duration: 0.18,
+            ease: "back.out(2.8)",
+          })
           // 3) Fade-out do overlay → revela a hero real por baixo (só no fim)
           .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.4");
       }, root);
@@ -170,25 +179,35 @@ export function Preloader() {
       <div className="pl-p3 absolute inset-0 z-[40] bg-white" />
       <div className="pl-p4 absolute inset-0 z-[50] bg-black" />
 
-      {/* Título final do preloader (por cima de tudo) */}
-      <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center gap-6 px-4">
-        <div
-          className="pl-gmt-wrap inline-block"
-          style={{ opacity: 0, transformOrigin: "center center" }}
-        >
-          <h1 className="gmt-brand gmt-brand--hero text-center text-white">GMT</h1>
+      {/* Título final do preloader — geometria IDÊNTICA a
+          HeroSection > HeroTitle: o container externo centra (flex items-center
+          justify-center, como a <section>) e o interno é o MESMO bloco
+          `flex flex-col items-center gap-6` com as MESMAS classes (hero-line,
+          gmt-brand--hero, type-hero-subtitle). O <h1> é filho DIRECTO do flex
+          (sem wrapper), tal como na Hero real → sem diferença de layout nem
+          salto no fade-out. O GSAP anima o próprio <h1> (.pl-gmt-wrap): como a
+          centralização é do flex (não há translate no elemento), o scale nunca
+          colide com o posicionamento. */}
+      <div className="absolute inset-0 z-[60] flex items-center justify-center pointer-events-none">
+        <div className="flex flex-col items-center gap-6">
+          <h1
+            className="pl-gmt-wrap hero-line gmt-brand gmt-brand--hero text-center text-white"
+            style={{ opacity: 0, transformOrigin: "center center" }}
+          >
+            GMT
+          </h1>
+          <p className="pl-sub hero-line type-hero-subtitle select-none text-center text-white">
+            {chars(SUBTITLE).map(({ ch, key }) => (
+              <span
+                key={key}
+                className="inline-block text-white"
+                style={{ opacity: 0, color: "#ffffff", willChange: "transform, opacity" }}
+              >
+                {ch}
+              </span>
+            ))}
+          </p>
         </div>
-        <p className="pl-sub type-hero-subtitle text-center text-white">
-          {chars(SUBTITLE).map(({ ch, key }) => (
-            <span
-              key={key}
-              className="inline-block text-white"
-              style={{ opacity: 0, color: "#ffffff", willChange: "transform, opacity" }}
-            >
-              {ch}
-            </span>
-          ))}
-        </p>
       </div>
     </div>
   );
