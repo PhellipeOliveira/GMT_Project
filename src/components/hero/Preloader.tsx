@@ -112,14 +112,17 @@ export function Preloader() {
         }
 
         // Posicionamento pixel-perfect: lê a Hero real, aplica no overlay
-        // fixed (coordenadas viewport = top/left dentro do fixed inset-0).
-        // Sem flex — só absolute + rect medido.
+        // fixed. Flex no container medido centra o GMT verticalmente na caixa
+        // (evita alinhamento por topo/baseline do inline-block).
         gsap.set(plGmtPosition, {
           position: "absolute",
           top: tBounds.top,
           left: tBounds.left,
           width: tBounds.width,
           height: tBounds.height,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           margin: 0,
           x: 0,
           y: 0,
@@ -220,7 +223,7 @@ export function Preloader() {
       <div className="absolute inset-0 z-[60] pointer-events-none">
         <div className="pl-gmt-position">
           <div
-            className="pl-gmt-wrap flex h-full w-full items-center justify-center"
+            className="pl-gmt-wrap inline-block"
             style={{ opacity: 0, transformOrigin: "center center" }}
           >
             <h1 className="preloader-title hero-line gmt-brand gmt-brand--hero text-center text-white">
