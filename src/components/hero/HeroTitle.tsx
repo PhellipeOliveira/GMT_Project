@@ -73,7 +73,7 @@ export function HeroTitle() {
     >
       <h1
         ref={brandRef}
-        className="hero-line gmt-brand gmt-brand--hero text-center text-white"
+        className="hero-line gmt-brand gmt-brand--hero m-0 p-0 text-center leading-none text-white"
       >
         GMT
       </h1>

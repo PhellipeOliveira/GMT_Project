@@ -219,14 +219,15 @@ export function Preloader() {
       <div className="pl-p3 absolute inset-0 z-[40] bg-white" />
       <div className="pl-p4 absolute inset-0 z-[50] bg-black" />
 
-      {/* Texto final: sem flex — posição definida por getBoundingClientRect() */}
+      {/* Texto final: posição via getBoundingClientRect(); flex (aplicado por
+          GSAP em .pl-gmt-position) centra o GMT verticalmente na caixa medida. */}
       <div className="absolute inset-0 z-[60] pointer-events-none">
         <div className="pl-gmt-position">
           <div
             className="pl-gmt-wrap inline-block"
             style={{ opacity: 0, transformOrigin: "center center" }}
           >
-            <h1 className="preloader-title hero-line gmt-brand gmt-brand--hero text-center text-white">
+            <h1 className="preloader-title hero-line gmt-brand gmt-brand--hero m-0 p-0 text-center leading-none text-white">
               GMT
             </h1>
           </div>
