@@ -71,7 +71,9 @@ export function Preloader() {
       gsap.set(p2, { xPercent: 100 });
       gsap.set(p3, { xPercent: -100 });
       gsap.set(p4, { yPercent: -100 });
-      gsap.set(subChars, { opacity: 0 });
+      // Letras invisíveis mas NO lugar (x:0,y:0) e brancas — nada espalhado
+      // nem cinza antes da animação começar.
+      gsap.set(subChars, { opacity: 0, x: 0, y: 0, color: "#ffffff" });
       gsap.set(gmtWrap, { opacity: 0, scale: 8, filter: "blur(14px)" });
 
       const tl = gsap.timeline({ onComplete: unlock });
@@ -81,34 +83,46 @@ export function Preloader() {
         .to(p2, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
         .to(p3, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
         .to(p4, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
-        // 1) Subtítulo letra a letra, de longe e aleatório
-        .from(
+        // 1) Subtítulo formado letra a letra: cada letra vem de fora do ecrã
+        //    (posição aleatória) e desliza até ao lugar final. fromTo com
+        //    opacity 0→1 e cor branca explícita (inline) → nunca cinza, nunca
+        //    pisca, nunca aparece tudo de uma vez.
+        .fromTo(
           subChars,
           {
-            x: () => gsap.utils.random(-600, 600),
-            y: () => gsap.utils.random(-400, 400),
+            x: () => gsap.utils.random(-700, 700),
+            y: () => gsap.utils.random(-500, 500),
             opacity: 0,
-            duration: 0.6,
+            color: "#ffffff",
+          },
+          {
+            x: 0,
+            y: 0,
+            opacity: 1,
+            color: "#ffffff",
+            duration: 0.75,
             stagger: 0.035,
             ease: "power3.out",
+            clearProps: "transform",
           },
-          "+=0.15"
+          "+=0.12"
         )
-        .to(subChars, { opacity: 1, duration: 0.01 }, "<")
-        // 2) GMT com impacto (vem da frente, overshoot)
-        .to(
+        // 2) GMT por último, com impacto: grande → 1.12 → assenta em 1
+        .fromTo(
           gmtWrap,
+          { opacity: 0, scale: 8, filter: "blur(14px)" },
           {
             opacity: 1,
-            scale: 1,
+            scale: 1.12,
             filter: "blur(0px)",
-            duration: 0.9,
-            ease: "back.out(3)",
+            duration: 0.75,
+            ease: "power4.out",
           },
           "+=0.1"
         )
-        // 3) Fade-out do overlay → revela a hero real por baixo
-        .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.45");
+        .to(gmtWrap, { scale: 1, duration: 0.22, ease: "back.out(2)" })
+        // 3) Fade-out do overlay → revela a hero real por baixo (só no fim)
+        .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.4");
     }, root);
 
     return () => {
@@ -124,7 +138,7 @@ export function Preloader() {
   return (
     <div
       ref={rootRef}
-      className="fixed inset-0 z-[9999] overflow-hidden bg-black"
+      className="fixed inset-0 z-[9999] overflow-hidden bg-black [--gmt-text:#ffffff]"
       aria-hidden
     >
       {/* Painéis geométricos (cada um por cima do anterior) */}
@@ -135,12 +149,19 @@ export function Preloader() {
 
       {/* Título final do preloader (por cima de tudo) */}
       <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center gap-6 px-4">
-        <div className="pl-gmt-wrap inline-block" style={{ transformOrigin: "center" }}>
+        <div
+          className="pl-gmt-wrap inline-block"
+          style={{ opacity: 0, transformOrigin: "center" }}
+        >
           <h1 className="gmt-brand gmt-brand--hero text-center text-white">GMT</h1>
         </div>
         <p className="pl-sub type-hero-subtitle text-center text-white">
           {chars(SUBTITLE).map(({ ch, key }) => (
-            <span key={key} className="inline-block" style={{ willChange: "transform" }}>
+            <span
+              key={key}
+              className="inline-block text-white"
+              style={{ opacity: 0, color: "#ffffff", willChange: "transform, opacity" }}
+            >
               {ch}
             </span>
           ))}
