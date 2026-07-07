@@ -2,7 +2,7 @@
 
 Este documento descreve como o repositório define, nomeia e aplica cores no website GMT. Use-o como referência ao propor uma nova paleta, pedir alterações a um agente de IA ou implementar mudanças manualmente.
 
-**Última actualização:** Junho 2026 — tema claro global + CTA final escuro em todas as páginas.
+**Última actualização:** Jul 2026 — tema claro global; `.section-cta` só em Home e Sobre; footer `#000`.
 
 ---
 
@@ -21,44 +21,34 @@ Este documento descreve como o repositório define, nomeia e aplica cores no web
 
 ## Ritmo visual das páginas
 
-Todas as rotas seguem o mesmo padrão de contraste:
+Todas as rotas usam fundo claro no conteúdo principal. Apenas **Home** e **Sobre** terminam com `.section-cta` (faixa preta) antes do GMT Lantern.
 
 ```
 ┌─────────────────────────────────────┐
 │  Secções de conteúdo                │  fundo branco (#ffffff)
 │  texto preto (#0a0a0a)              │  muted #575757
-│  cartões / inputs → #f5f5f5         │
 ├─────────────────────────────────────┤
-│  .section-cta (ÚLTIMO contentor)    │  fundo preto (#000000)
-│  texto branco (#ffffff)             │  muted #94a3b8
-│  botão → .btn-submit                │
+│  .section-cta (Home Sec5, Sobre)    │  fundo preto (#000000) — opcional
 ├─────────────────────────────────────┤
-│  .section-footer (global)           │  fundo #101010
-│  texto branco                       │
+│  GMT Lantern + .section-footer      │  fundo #000000
 └─────────────────────────────────────┘
 ```
 
-**Regra obrigatória:** o **último `<section>` de conteúdo** de cada página deve usar a classe `section-cta`. Nunca terminar uma página com fundo branco antes do footer.
+**Regra:** `.section-cta` aplica-se apenas onde o código a usa — **`/`** e **`/sobre`**. As restantes rotas terminam em fundo claro.
 
-Páginas com `section-cta` implementado:
-
-| Rota | Ficheiro |
-|------|----------|
-| `/` | `src/app/page.tsx` |
-| `/sobre` | `src/app/sobre/page.tsx` |
-| `/servicos` | `src/app/servicos/page.tsx` |
-| `/servicos/[slug]` | `src/app/servicos/[slug]/page.tsx` |
-| `/portfolio` | `src/app/portfolio/page.tsx` |
-| `/portfolio/[slug]` | `src/app/portfolio/[slug]/page.tsx` |
-| `/contacto` | `src/app/contacto/page.tsx` |
+| Rota | `.section-cta` no último contentor |
+|------|-----------------------------------|
+| `/` | Sim (Trabalhos recentes) |
+| `/sobre` | Sim (manifesto + valores) |
+| `/servicos`, `/servicos/[slug]`, `/portfolio`, `/portfolio/[slug]`, `/contacto` | Não |
 
 ### Exemplo de markup
 
 ```tsx
 <section className="section-cta px-5 py-20 text-center md:px-[5vw] md:py-[8vw]">
-  <RevealText as="h2" className="type-h3 mx-auto max-w-2xl">
+  <RevealOnScroll as="h2" className="type-h3 mx-auto max-w-2xl">
     Título do CTA
-  </RevealText>
+  </RevealOnScroll>
   <p className="type-body mt-4 text-gmt-muted">Subtítulo</p>
   <Link href="/contacto" className="btn-submit mt-8">
     Agendar reunião
@@ -127,7 +117,7 @@ Usados por classes que redefinem o contexto local:
 | *(padrão / `:root`)* | `#ffffff` | `#0a0a0a` | Maioria das secções |
 | `.section-light` | `#ffffff` | `#0a0a0a` | Wrapper explícito (Serviços, Sobre Sec. 01) — equivalente ao padrão |
 | `.section-cta` | `#000000` | `#ffffff` | **Último contentor de cada página** |
-| `.section-footer` | `#101010` | `#ffffff` | Footer global em `Footer.tsx` |
+| `.section-footer` | `#000000` | `#ffffff` | Footer global em `Footer.tsx` (`bg-black`) |
 
 ### Excepções com fundo escuro fora do CTA
 
@@ -142,7 +132,7 @@ Usados por classes que redefinem o contexto local:
 
 ## Prose e body
 
-O `main` em `layout.tsx` usa `prose prose-gmt` (tema **claro**, não `prose-invert`):
+O `main` em `src/app/(site)/layout.tsx` usa `prose prose-gmt`:
 
 ```tsx
 <main className="prose prose-gmt max-w-none flex-1">
@@ -228,7 +218,7 @@ Modificadores: `bg-gmt-bg/70`, `border-gmt-accent/50`.
 ## Checklist rápido
 
 - [ ] Valores em `:root` de `globals.css`
-- [ ] `.section-cta` no último contentor de **todas** as páginas
+- [ ] `.section-cta` em **Home** e **Sobre** (onde o código a usa)
 - [ ] Texto branco automático dentro de `.section-cta` (via tokens locais)
 - [ ] `.section-footer` intacto
 - [ ] Heroes com imagem: texto branco explícito onde há gradiente escuro
@@ -241,6 +231,7 @@ Modificadores: `bg-gmt-bg/70`, `border-gmt-accent/50`.
 | Ficheiro | Papel |
 |----------|-------|
 | `src/styles/globals.css` | **Fonte de verdade** da paleta UI |
-| `src/app/layout.tsx` | `bg-gmt-bg text-gmt-text` no body |
+| `src/app/layout.tsx` | fonts, metadata, body |
+| `src/app/(site)/layout.tsx` | `bg-gmt-bg text-gmt-text`, chrome global |
 | `docs/TIPOGRAFIA.md` | Escala de tamanhos (complementar) |
 | `docs/referencias/site_json/design_map_*.json` | Auditoria lessestudio — nomenclatura diferente |

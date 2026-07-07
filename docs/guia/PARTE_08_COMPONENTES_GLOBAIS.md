@@ -6,26 +6,28 @@
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
 >
-> **Extração:** 28 Jun 2026 · **Compactação global (Jun 2026):** Footer Navigation −20%; GMT Lantern −15% (padding vertical).
+> **Extração:** Jul 2026 · Footer redesenhado; GMT Lantern via `.gmt-lantern-section`; chat widget global.
 
 ---
 
 ## Montagem no layout
 
-Em `src/app/layout.tsx`, dentro de `<body className="flex min-h-full flex-col bg-gmt-bg text-gmt-text">`:
+**Root** (`src/app/layout.tsx`): fontes, metadata, `<body>`.
+
+**Site** (`src/app/(site)/layout.tsx`):
 
 ```
-<SmoothScroll />        → inicializa Lenis (sem UI)
-<Navbar />              → cabeçalho fixo
+<SmoothScroll />
+<Navbar />
 <main class="prose prose-gmt max-w-none flex-1">{children}</main>
-<GMTLightFooter />      → Lanterna GMT (global — transição visual)
-<Footer />              → rodapé com grid de links (Footer Navigation)
-<FloatingCTA />         → botão flutuante "Agendar reunião"
+<GMTLightFooter />
+<Footer />
+<ChatWidgetLoader />
 ```
 
-> **Ordem visual:** conteúdo da página → **GMT Lantern** (faixa slim preta) → **Footer Navigation** (links + copyright). Sem gap entre lantern e footer — contacto directo. A lanterna cria **respiro** entre o `<main>` e a navegação do rodapé, com alturas compactas para não dominar o viewport.
+> Ordem visual: conteúdo → GMT Lantern → Footer → Chat launcher (canto inferior direito).
 
-Fontes globais (`layout.tsx`): **DM Sans** (`--font-dmsans`, pesos 400/500) e **Host Grotesk** (`--font-hostgrotesk`, pesos 300/400/500/600/700/800), aplicadas via `--font-sans`/`--font-display`. Favicon/apple-icon = `/images/GL-02.webp`.
+Favicon: `src/app/icon.svg` (App Router — sem `metadata.icons`). Fontes: DM Sans + Host Grotesk.
 
 ---
 
@@ -36,9 +38,9 @@ Cabeçalho fixo global: logo (esquerda), pill de navegação central (desktop), 
 
 ### 2. Copy / Textos
 
-| Campo | Logo | Links de navegação | Link CTA (menu mobile) |
-|---|---|---|---|
-| Conteúdo | `GMT` (via `GmtLogo`) | `Sobre` · `Serviços` · `Portfolio` · `Contacto` (array `NAV_LINKS`) | `Agendar reunião →` |
+| Campo | Logo | Links de navegação |
+|---|---|---|
+| Conteúdo | `GMT` (via `GmtLogo`) | `Sobre` · `Serviços` · `Portfolio` · `Contacto` (array `NAV_LINKS`) |
 | Elemento HTML | `span` (em `Link`) | `a` (Link) | `a` (Link) |
 | Classe | `.gmt-brand` + `.gmt-brand--navbar` | `.type-label` | `.type-label` |
 | Família | Host Grotesk | DM Sans | DM Sans |
@@ -58,12 +60,12 @@ Logo é **texto** (`GmtLogo`), não imagem. `GL-01` (logo 7:2) está produzido e
 Ícones: `Menu` / `X` (`lucide-react`, `size 20`) no hamburger.
 
 ### 4. Botões / CTAs
-- **Logo**: `Link` para `/` com container glass `bg-black/55 backdrop-blur-md rounded-lg` (`px-3 py-2`); glass com `opacity` 0→1 controlada por `logoGlassVisible`.
-- **Hamburger** (`<button>`, `<md`): `h-10 w-10 rounded-lg backdrop-blur-md`. Pill escuro → `bg-white/10 text-white`; pill claro → `bg-black/8 text-gmt-text`.
-- **Pill de navegação** (`<nav>`, desktop): `rounded-full border px-7 py-2.5 backdrop-blur-md`. Escuro → `border-white/20 bg-black/30`; claro → `border-black/8 bg-white/88 shadow-sm`.
-- **CTA mobile** "Agendar reunião →": `rounded-full border border-white/30 px-5 py-2.5 text-white/80`, hover `border-white/60 text-white`.
+- **Logo**: `Link` para `/` com container glass `bg-black/55 backdrop-blur-md rounded-full` (`px-5 py-2.5`).
+- **Hamburger** (`<button>`, `<md`): pill escuro/claro conforme `overDark`.
+- **Pill de navegação** (`<nav>`, desktop): `rounded-full border px-7 py-2.5 backdrop-blur-md`.
+- **Menu mobile:** apenas `NAV_LINKS` — **sem** CTA "Agendar reunião".
 
-> O CTA "Agendar reunião" foi **removido da navbar desktop** e substituído pelo `FloatingCTA` global (existe apenas dentro do menu mobile aberto).
+> Conversão global via `ChatWidgetLoader` / `ChatLauncher` (canto inferior direito).
 
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
@@ -73,10 +75,10 @@ Logo é **texto** (`GmtLogo`), não imagem. `GL-01` (logo 7:2) está produzido e
 | Glass do logo | CSS | scroll / tipo de página | `transition-opacity 500ms` |
 | Menu mobile | render condicional (`open`) | on-click | aparece/desaparece (sem transição declarada) |
 
-Lógica de tema:
-- `isHeroPageDark(pathname)` = `true` em `/` e `/servicos/[slug]` (heroes escuros).
-- `pillDark = isHeroPageDark && !scrolled`.
-- `logoGlassVisible = scrolled || !isHeroPageDark` (na Home só aparece após scroll).
+Lógica de tema (`useNavTone`):
+- Lê `[data-nav-tone="dark"]` nas secções sob a navbar.
+- `pillDark = overDark` (não depende de scroll).
+- `logoGlassVisible = scrolled || !overDark`.
 
 ### 6. Responsividade
 - **Desktop (`md+`):** pill central visível (`hidden ... md:flex`); altura `h-20`, `px-[3vw]`.
@@ -87,113 +89,54 @@ Lógica de tema:
 
 ---
 
-# Componente: FloatingCTA (`src/components/ui/FloatingCTA.tsx`)
+# Componente: ChatWidgetLoader (`src/components/agent/ChatWidgetLoader.tsx`)
 
 ### 1. Objetivo
-Botão flutuante global "Agendar reunião" que aparece após sair do hero e some perto do footer.
+Carrega dinamicamente o `ChatWidget` (agente IA) no canto inferior direito. Substitui o antigo `FloatingCTA`.
 
-### 2. Copy / Textos
+### 2. Comportamento
+- `dynamic()` com `ssr: false` — só no cliente.
+- `ChatLauncher` com label contextual (`data-agent-hint` por secção ou fallback por rota).
+- Painel de chat expansível (`ChatHeader`, `ChatMessages`, `ChatInput`).
+- Posição: `fixed bottom-4 right-4 z-[70]`.
+- Renderiza `null` se agente desactivado (`useAgentConfig`).
 
-| Campo | Botão |
-|---|---|
-| Conteúdo | `Agendar reunião` + ícone `ArrowRight` |
-| Elemento HTML | `a` (Link) |
-| Classe | utilitárias inline `text-sm font-medium tracking-wide` |
-| Família | DM Sans (`--font-sans`, herdada) |
-| Tamanho | `text-sm` = 14px (0.875rem) |
-| Peso | 500 (`font-medium`) |
-| Cor da fonte | `#ffffff` (`text-white`) |
-| `letter-spacing` | `tracking-wide` (0.025em) |
-| `text-transform` | none |
-
-### 3. Imagens / mídia
-Nenhuma. Ícone `ArrowRight` (`lucide-react`, `size 14`). **Não identificado no projeto** (sem criativo).
-
-### 4. Botões / CTAs
-"Agendar reunião" (link `/contacto`):
-- Fundo `rgba(0,0,0,0.8)` (`bg-black/80`) · Texto `#ffffff` · `backdrop-blur-md` · `rounded-full` · `px-6 py-3.5`.
-- Hover: `bg-black` (`#000000`) + ícone `ArrowRight` com `translate-x-0.5`.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Entrada/saída | Framer Motion (`AnimatePresence`) | scroll (threshold) | `0.35s`, ease `[0.16,1,0.3,1]`, `opacity 0↔1` + `y 14↔0` |
-| Ícone | CSS | on-hover | `translate-x-0.5`, 300ms |
-
-Lógica de visibilidade (listener de `scroll`): `pastHero = scrollY > viewportHeight * 0.8`; `nearFooter = scrollY + viewportHeight >= pageHeight - 220`; **visível** = `pastHero && !nearFooter`.
-
-### 6. Responsividade
-Posição fixa idêntica em todos os tamanhos: `fixed bottom-8 left-1/2 z-[60] -translate-x-1/2`. Wrapper `pointer-events-none`; o `Link` restaura `pointer-events-auto`.
-
-### 7. Arquivos relacionados
-`src/components/ui/FloatingCTA.tsx`.
+### 3. Arquivos relacionados
+`src/components/agent/ChatWidgetLoader.tsx`, `ChatWidget.tsx`, `ChatLauncher.tsx`, hooks `useAgentConfig`, `useChat`, `useSectionAgentHint`.
 
 ---
 
 # Componente: Footer (`src/components/ui/Footer.tsx`)
 
 ### 1. Objetivo
-Rodapé global: logo, grid de 3 colunas de navegação (gerado a partir dos dados) e barra de copyright. Inclui textura de fundo.
+Rodapé global: subtítulo institucional centrado, grid de 3 colunas de navegação e copyright. Fundo preto sólido — **sem logo textual nem textura GL-03**.
 
 ### 2. Copy / Textos
 
-| Campo | Logo | Título de coluna | Links | Copyright |
+| Campo | Subtítulo | Título de coluna | Links | Copyright |
 |---|---|---|---|---|
-| Conteúdo | `GMT` (via `GmtLogo asLink`) | `Automação & IA` · `Marketing Digital` · `Empresa` | nomes dos serviços/páginas | `© 2026 Growth Marketing Technology · Lisboa, Portugal` |
-| Elemento HTML | `span` (em Link) | `h3` | `a` (Link) | `p` |
-| Classe | `.gmt-brand` + `.gmt-brand--navbar` | `.type-label` | `.type-body` | `.type-label normal-case tracking-normal` |
-| Família | Host Grotesk | DM Sans | DM Sans | DM Sans |
-| Tamanho | `clamp(18px,2.8vw,28px)` | 14px | 18px | 14px |
-| Peso | **800** | 400 | 400 | 400 |
-| Cor da fonte | `#ffffff` (`logo-gmt--on-dark`) | `rgba(182,182,182,0.8)` (`text-gmt-muted` na `.section-footer`) | `text-gmt-muted` → hover `#ffffff` (`text-gmt-text`) | `rgba(182,182,182,0.8)` (`text-gmt-muted`) |
-| `letter-spacing` | **0.02em** | 0.1em | — | normal (`tracking-normal`) |
-| `text-transform` | uppercase | uppercase | none | `normal-case` |
+| Conteúdo | `Growth Marketing Technology` | `Automação & IA` · `Marketing Digital` · `Empresa` | nomes dos serviços/páginas | `© 2026 Growth Marketing Technology · Lisboa, Portugal` |
+| Elemento HTML | `p` | `h3` | `a` (Link) | `p` |
+| Classe | `.type-footer-subtitle` | `.type-label` | `.type-body text-white` | `.type-label normal-case` |
+| Cor | `#ffffff` | `#ffffff` | `#ffffff` hover `white/75` | `#ffffff` |
 
-Conteúdo das colunas:
-- **Automação & IA** — os 15 `agentes` (links `/servicos/{slug}`).
-- **Marketing Digital** — os 3 `pacotes` + `Todos os serviços` (`/servicos`).
-- **Empresa** — `Sobre` · `Portfolio` · `Contacto`.
+### 3. Layout e espaçamento
 
-### 3. Layout e espaçamento (Footer Navigation)
-
-| Propriedade | Valor no código | Notas |
-|---|---|---|
-| Padding topo secção | `pt-[8vw]` | **−20%** vs. `pt-[10vw]` |
-| Padding interno | `py-[3.2rem]` | **−20%** vs. `py-16` (4rem) |
-| Padding horizontal | `px-5` · `md:px-[5vw]` | Inalterado |
-| Logo → grid | `mb-[2.4rem]` | **−20%** vs. `mb-12` |
-| Gap colunas | `gap-[2.4rem]` | **−20%** vs. `gap-12` |
-| Título coluna → links | `mb-4` | **−20%** vs. `mb-5` |
-| Grid → copyright | `mt-[2.4rem] pt-[1.6rem]` | **−20%** vs. `mt-12 pt-8` |
-| Fundo | `.section-footer` · `#101010` | Textura `GL-03` a 15% opacidade |
-
-> **Respiro visual:** o footer ocupa só a altura necessária ao conteúdo textual — evitar bloco preto alto demais. Tipografia e tokens **inalterados**.
+| Propriedade | Valor no código |
+|---|---|
+| Padding | `py-20 md:py-28`, `px-5 md:px-[5vw]` |
+| Subtítulo → grid | `mb-16 md:mb-24` |
+| Grid | `grid-cols-1 md:grid-cols-3`, `gap-[2.4rem]` |
+| Fundo | `bg-black` (`.section-footer`) |
 
 ### 4. Imagens / mídia
-Cruzado com PLANO Tabela 4.6.
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| GL-03 | Textura de secção (fundo do footer) | 16:9 | 2560×1440 | `public/images/GL-03.webp` | **Produzido** |
-
-> Render via `PlaceholderMedia` `id="GL-03"`, `opacity-15`, `pointer-events-none absolute inset-0`, `sizes="100vw"`. Cor de fallback `#101010`.
+Nenhuma renderizada. `GL-03.webp` existe no inventário mas **não é usado** pelo Footer actual.
 
 ### 5. Botões / CTAs
-Sem botões — apenas links de texto (`.type-body`, hover para `#ffffff`). Logo é `Link` para `/`.
+Links de texto apenas.
 
-### 6. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Cor dos links | CSS | on-hover | `transition-colors 300ms` |
-
-Sem reveal on-scroll neste componente.
-
-### 7. Responsividade
-- **Desktop (`md+`):** grid `md:grid-cols-3`; `px-[5vw]`; padding interno `py-[3.2rem]`.
-- **Mobile:** grid `grid-cols-1`; `px-5`; padding topo secção `pt-[8vw]`.
-
-### 8. Arquivos relacionados
-`src/components/ui/Footer.tsx`, `src/components/ui/GmtLogo.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/servicos.ts` (`agentes`, `pacotes`), classe `.section-footer` em `src/styles/globals.css`.
+### 6. Arquivos relacionados
+`src/components/ui/Footer.tsx`, `src/data/servicos.ts`, `.section-footer` e `.type-footer-subtitle` em `globals.css`.
 
 ---
 
@@ -206,14 +149,16 @@ Faixa decorativa de branding **global**: "GMT" gigante revelado por foco de luz 
 | Campo | Detalhe |
 |---|---|
 | Componente | `GMTLightFooter` (`src/components/ui/GMTLightFooter.tsx`) |
-| Onde renderiza | `src/app/layout.tsx` — **antes** de `<Footer />` |
+| Onde renderiza | `src/app/(site)/layout.tsx` — **antes** de `<Footer />` |
 | Escopo | **Global** (todas as rotas com Footer Navigation) |
 | Papel | Transição visual / branding — independente do `<main>` |
 
 ### 3. Layout e espaçamento
 | Propriedade | Valor no código | Notas |
 |---|---|---|
-| Padding vertical | `py-[2.04rem]` mobile · `md:py-[3.4rem]` desktop | **−15%** vs. `py-[2.4rem]` / `md:py-16` — faixa mais slim; tipografia GMT **inalterada** |
+| Padding | `.gmt-lantern-section` — `--gmt-lantern-pad-y: 0.75rem` (mobile) / `1rem` (md); padding-top extra 7% da altura total |
+| Máscara | `circle 16vw` centrada no cursor (`--mx` / `--my`) |
+| Tipografia | `.gmt-brand--footer` — `clamp(6.4rem, 26.4vw, 28.8rem)` |
 | Fundo | `bg-black` (`#000000`) | Contínuo com Footer Navigation |
 | Overflow | `overflow-hidden` | Texto gigante cortado nas bordas |
 | Alinhamento texto | `flex items-center justify-center` | Base e reveal partilham o mesmo contentor centrado |
@@ -288,19 +233,15 @@ Fonte canónica: `src/data/media-spec.ts` + `PlaceholderMedia`. Usar esta tabela
 # Componente: SectionLabel (`src/components/ui/SectionLabel.tsx`)
 
 ### 1. Objetivo
-Rótulo discreto de secção (topo esquerdo), usado na Home para "O que fazemos", "Por que a GMT" e "Trabalhos recentes".
+Rótulo de secção com duas variantes: `eyebrow` (discreto) ou `title` (título de secção).
 
 ### 2. Copy / Textos
-| Campo | Valor |
-|---|---|
-| Classe | `.section-label` + `.section-label--on-light` ou `--on-dark` |
-| Família | DM Sans |
-| Tamanho | **12px** (`--type-section-label`) |
-| Peso | 500 |
-| `letter-spacing` | 0.14em |
-| `text-transform` | uppercase |
-| Cor (`on-light`) | `#575757` (`--gmt-text-muted`) |
-| Cor (`on-dark`) | `rgba(255,255,255,0.55)` |
+| Prop | `variant="eyebrow"` (default) | `variant="title"` |
+|---|---|---|
+| Elemento | `<p>` | `<h2>` |
+| Classe | `.section-label` + `--on-light`/`--on-dark` | `.type-section-title` |
+| Tamanho | **13px** (`--type-section-label`) | `clamp(30px,4vw,46px)` |
+| Uso actual | raro (eyebrow) | Home, Contacto, Portfolio (`SectionLabel variant="title"`) |
 
 Envolve `RevealOnScroll` para animação on-scroll.
 
@@ -377,29 +318,30 @@ Nenhuma própria.
 Nenhum.
 
 ### 5. Animações
-Constantes: `REVEAL_DURATION = 2.1s`, ease `REVEAL_EASE_OUT = [0.22,1,0.36,1]`, `REVEAL_LINE_GAP = 0.06s`, `REVEAL_TEXT_Y = 32`, `REVEAL_MEDIA_Y = 24`. Viewport `{ once: true, margin: "-8% 0px" }`.
+Constantes: `REVEAL_DURATION = 2.0s`, ease `REVEAL_EASE_OUT = [0.25,1,0.35,1]`, `REVEAL_TEXT_Y = 28`, `REVEAL_MEDIA_Y = 20`. Viewport `{ once: true, margin: "-4% 0px" }`.
 
 | Variante | Gatilho | Efeito |
 |---|---|---|
-| `text` (string) | on-scroll (entra no viewport) | divide em linhas visuais (`splitTextIntoLines`) e revela **sequencialmente** linha-a-linha: cada linha só inicia após a anterior terminar (`delay + i * (REVEAL_DURATION + REVEAL_LINE_GAP)`), máscara `overflow-hidden`, `y 32→0` + `opacity 0→1` |
-| `media` | on-scroll | bloco único `y 24→0` + `opacity 0→1` |
+| `text` | on-scroll | bloco único `y 28→0` + `opacity 0→1` |
+| `media` | on-scroll | bloco único `y 20→0` + `opacity 0→1` |
 
-**Excepção:** `HeroTitle` (Home) usa animação própria letra-a-letra — não passa por este componente.
-
-Respeita `prefers-reduced-motion` (render estático via `useReducedMotion`).
-
-### 6. Responsividade
-Independente de breakpoint (baseado em viewport intersection). A medição de linhas usa `ResizeObserver` (re-divide ao redimensionar).
+**Excepção:** intro da Home via `Preloader` (GSAP) + scroll em `HeroTitle` — não usa reveal linha-a-linha.
 
 ### 7. Arquivos relacionados
-`src/components/ui/RevealOnScroll.tsx`, `src/lib/split-text-lines.ts`, `src/hooks/useReducedMotion.ts`, `src/lib/utils.ts`.
+`src/components/ui/RevealOnScroll.tsx`, `src/hooks/useReducedMotion.ts`, `src/lib/utils.ts`.
 
 ---
 
 # Componente: HeroTitle (`src/components/hero/HeroTitle.tsx`)
 
 ### 1. Objetivo
-Título animado da Home — marca "GMT" + subtítulo, revelados letra-a-letra, com blink ao regressar. Envolvido por `HeroSection.tsx` (`bg-black`, `h-screen`, `[--gmt-text:#ffffff]`).
+Título da Home — marca "GMT" + subtítulo + barra "Apresentamos". Envolvido por `HeroSection` (`bg-black`, `hero-fullscreen` = `100dvh`).
+
+### 5. Animações
+| O que anima | Biblioteca | Gatilho | Efeito |
+|---|---|---|---|
+| Intro (1ª visita) | GSAP (`Preloader`) | on-load | overlay de entrada |
+| Deslize no scroll | GSAP ScrollTrigger | on-scroll | `xPercent` ±38; barra `#hero-bar` muda cor |
 
 ### 2. Copy / Textos
 
@@ -498,14 +440,15 @@ Global, sem variação por breakpoint.
 | `.gmt-brand--hero` | `clamp(96px,15vw,224px)` | `HeroTitle` |
 | `.gmt-brand--navbar` | `clamp(18px,2.8vw,28px)` | `GmtLogo` (Navbar + Footer) |
 | `.gmt-brand--footer` | `clamp(8rem,33vw,36rem)`, `lh 0.85` | `GMTLightFooter` |
-| `.section-label` | DM Sans **12px**, 500, `ls 0.14em`, uppercase | `SectionLabel` (Home) |
+| `.section-label` | DM Sans **13px**, 500, eyebrow | `SectionLabel variant="eyebrow"` |
+| `.type-section-title` | Host Grotesk fluido | `SectionLabel variant="title"` |
 | `.logo-gmt--on-light` / `--on-dark` | `#0a0a0a` / `#ffffff` | `GmtLogo` |
 | `.type-label` | DM Sans 14px, 400, `ls 0.1em`, uppercase | Navbar (links), Footer (títulos/copyright) |
 | `.type-body` | DM Sans 18px, 400, `lh 1.5` | Footer (links) |
 | `.section-footer` | bg `#101010`, text `#ffffff`, muted `rgba(182,182,182,0.8)`, border `#242424` | Footer |
 | `--gmt-text` / `--gmt-text-muted` | `#0a0a0a` / `#575757` | navbar pill claro |
 | `--ease` / `--color-transition` | `cubic-bezier(0.65,0.05,0.1,1)` / `1s` | transição de cor do logo |
-| `FloatingCTA` (inline) | bg `rgba(0,0,0,0.8)` → `#000`, text `#ffffff` | FloatingCTA |
+| `ChatWidgetLoader` (inline) | bg `rgba(0,0,0,0.8)` → `#000`, text `#ffffff` | ChatWidgetLoader |
 
 > `src/styles/tokens.css` existe mas define tokens legados (`--color-*`, `--font-geist-*`) **não usados** por estes componentes — a fonte de verdade é `globals.css`.
 

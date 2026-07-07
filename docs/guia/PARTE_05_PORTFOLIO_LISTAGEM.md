@@ -2,13 +2,13 @@
 
 > Documentação completa da página de listagem de Portfolio para edições e decisões de design/desenvolvimento.
 >
-> **Arquivo principal:** `src/app/portfolio/page.tsx`
+> **Arquivo principal:** `src/app/(site)/portfolio/page.tsx`
 >
 > **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/styles/globals.css`, `src/styles/tokens.css`, `src/data/media-spec.ts`, `src/data/portfolio.ts` + componentes em `src/components/`.
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores de fonte extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
 >
-> **Extração:** 28 Jun 2026 · **Actualização:** Jul 2026 — apenas case NARA; hero thumb em modo single-case (2×2 / largura total da coluna direita); slots "em breve" e CTA final removidos do template activo.
+> **Extração:** Jul 2026 — apenas case NARA; cabeçalho intro + lista vertical (sem grid hero); CTA final removido.
 
 ---
 
@@ -17,18 +17,18 @@
 | Campo | Detalhe |
 |---|---|
 | Rota | `/portfolio` |
-| Arquivo | `src/app/portfolio/page.tsx` |
-| Componentes | `RevealOnScroll`, `RevealSequence`, `PlaceholderMedia` |
+| Arquivo | `src/app/(site)/portfolio/page.tsx` |
+| Componentes | `RevealOnScroll`, `RevealSequence`, `SectionLabel`, `PlaceholderMedia` |
 | Dados | `portfolio` (`src/data/portfolio.ts`) — **1 case real (NARA)** |
 | Metadata | `title: "Portfolio"`; `description` sobre o case NARA |
-| Globais (via `layout.tsx`) | `Navbar`, `GMTLightFooter`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `(site)/layout.tsx`) | `Navbar`, `GMTLightFooter`, `Footer`, `ChatWidgetLoader`, `SmoothScroll` (Lenis) |
 
 **Ordem das seções:**
 
-1. Seção 01 — Cabeçalho + grid de thumbnails
+1. Seção 01 — Cabeçalho (intro)
 2. Seção 02 — Lista de projetos
 
-> A página **não** usa o wrapper `.section-light`; as duas secções ficam sobre o fundo padrão (`--gmt-bg` = `#ffffff`). **Sem CTA final** — conversão global via `FloatingCTA` do layout. A página termina na lista de projetos; em seguida vêm `GMTLightFooter` + Footer Navigation.
+> A página **não** usa o wrapper `.section-light`; as duas secções ficam sobre o fundo padrão (`--gmt-bg` = `#ffffff`). **Sem grid hero de thumbnails** na Sec. 01 — thumbs `PF-02` aparecem apenas na lista (Sec. 02). **Sem CTA final** — conversão global via `ChatWidgetLoader`.
 
 **Removido do template (não documentar como activo):**
 
@@ -39,66 +39,42 @@
 
 ---
 
-# Seção 01 — Cabeçalho + grid de thumbnails
+# Seção 01 — Cabeçalho (intro)
 
 ### 1. Objetivo
-Apresentar o título da página + tagline sobre o NARA (esquerda) e thumbnail(s) do(s) case(s) em `portfolio` (direita).
+Apresentar o título da página + tagline sobre o NARA. **Sem mídia** nesta secção.
 
 ### 2. Copy / Textos
 
 | Campo | Label | `<h1>` | `<p>` tagline |
 |---|---|---|---|
-| Conteúdo | `Trabalho recente` | `Portfolio` | `Criámos integralmente o NARA — uma plataforma tecnológica que atende profissionais em vários países. Do branding e website a chatbots inteligentes e campanhas publicitárias, todo o ecossistema digital foi desenvolvido pela agência.` |
-| Elemento HTML | `p` | `h1` | `p` |
-| Classe | `.type-label` | `.type-h2` | `.type-body-lg` |
-| Família | DM Sans | Host Grotesk | DM Sans |
-| Tamanho | 14px | `clamp(42px,6vw,72px)` | 21px |
+| Conteúdo | `Trabalho recente` | `Portfolio` | tagline institucional sobre o NARA |
+| Elemento HTML | `h2` | `h1` | `p` |
+| Classe | `.type-section-title` | `.type-h2` | `.type-body-lg` |
+| Família | Host Grotesk | Host Grotesk | DM Sans |
+| Tamanho | `clamp(30px,4vw,46px)` | `clamp(42px,6vw,72px)` | 21px |
 | Peso | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` | `#575757` (`text-gmt-muted`) |
-| `letter-spacing` | 0.1em | — | — |
-| `text-transform` | uppercase | none | none |
+| Cor da fonte | `#0a0a0a` | `#0a0a0a` | `#575757` (`text-gmt-muted`) |
 
-Intro encadeada via `RevealSequence`.
+Label via `SectionLabel variant="title"`. Intro encadeada via `RevealSequence`.
 
 ### 3. Imagens / mídia
-Uma thumbnail por entrada em `portfolio` (actualmente só NARA). Id fixo `PF-02` no código. Render `rounded-lg`, `reveal={false}`. Cruzado com PLANO Tabela 4.5.
-
-| ID | Slot | Proporção | Export | Arquivo actual | Status |
-|---|---|---|---|---|---|
-| PF-02 | Grid hero — thumb do case (NARA) | **9:16** | 1080×1920 | `public/images/PF-02.webp` | **Produzido** |
-
-> Cor de fallback NARA: `c.corPlaceholder` = `#134E4A`.
-
-**Layout do grid hero (Sec. 01, coluna direita):**
-
-| Casos em `portfolio` | Grelha | Thumb | Largura efectiva (desktop) |
-|---|---|---|---|
-| **1** (actual) | `grid-cols-2` | `col-span-2 row-span-2` | **100% da coluna direita** (`md:w-1/2` ≈ 45vw) |
-| **2+** | `grid-cols-2 md:grid-cols-4` | 1 célula por case | ~¼ da coluna direita por thumb (~12vw) |
-
-> **Proporção do asset:** inalterada — **9:16** (1080×1920). Só muda o **tamanho do frame** no browser; o export e a spec (`media-spec.ts`) mantêm-se.
-
-> **Modo single-case:** activado quando `portfolio.length === 1`. O thumb ocupa a grelha 2×2 inteira (= largura total da coluna direita). Ao adicionar novos cases em `portfolio.ts`, o layout regressa automaticamente ao mosaico 4 colunas.
+Nenhuma nesta secção.
 
 ### 4. Botões / CTAs
-Nenhum (thumbnails desta secção não são clicáveis).
+Nenhum.
 
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Label, h1, tagline | Framer Motion (`RevealOnScroll` + `RevealSequence`) | on-scroll | encadeamento sequencial |
-| Cada thumbnail | Framer Motion (`RevealOnScroll` `variant="media"`) | on-scroll | stagger `delay = i * 0.08` |
-| Imagem (quando há asset) | CSS (`.media-zoom`) | on-hover | `scale(1.03)`, 400ms |
+| Label, h1, tagline | `RevealOnScroll` + `RevealSequence` | on-scroll | bloco único encadeado, `2.0s` |
 
 ### 6. Responsividade
-- **Desktop:** cabeçalho `flex-row` (cada bloco `md:w-1/2`); `pt-[11vw]`, `px-[5vw]`, `gap-[5vw]`.
-  - **1 case:** grelha `grid-cols-2`; thumb `col-span-2 row-span-2` → largura total da coluna direita; `sizes` ≈ `45vw`.
-  - **2+ cases:** grelha `md:grid-cols-4`; 1 célula por thumb; `sizes` ≈ `12vw`.
-- **Tablet:** igual ao desktop para o grid hero.
-- **Mobile:** `flex-col`; grelha `grid-cols-2`; com 1 case o thumb faz `col-span-2` (largura total); `pt-28`, `px-5`, `gap-10`.
+- **Desktop:** `pt-[11vw]`, `px-[5vw]`.
+- **Mobile:** `pt-28`, `px-5`.
 
 ### 7. Arquivos relacionados
-`src/app/portfolio/page.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`, `src/data/media-spec.ts`.
+`src/app/(site)/portfolio/page.tsx`, `src/components/ui/SectionLabel.tsx`, `src/components/ui/RevealOnScroll.tsx`.
 
 ---
 
@@ -122,7 +98,7 @@ Lista vertical numerada dos projetos publicados — actualmente **apenas NARA** 
 Tags NARA: `Branding`, `Website`, `Chatbots`, `Campanhas`.
 
 ### 3. Imagens / mídia
-Thumb por linha. Render `w-20 md:w-28`, `rounded-md`, `reveal={false}`.
+Thumb por linha. Frame 9:16 explícito: `h-[calc(5rem*16/9)] w-20` / `md:h-[calc(7rem*16/9)] md:w-28` + `PlaceholderMedia fill`, `rounded-md`, `reveal={false}`.
 
 | ID | Slot | Proporção | Export | Arquivo actual | Status |
 |---|---|---|---|---|---|
@@ -146,7 +122,7 @@ Thumb por linha. Render `w-20 md:w-28`, `rounded-md`, `reveal={false}`.
 - **Tablet/Mobile:** linha `py-16`; thumb `w-20`; `mt-20`, `px-5`, `gap-5`.
 
 ### 7. Arquivos relacionados
-`src/app/portfolio/page.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`, classes `.type-h3`/`.tag-pill` em `src/styles/globals.css`.
+`src/app/(site)/portfolio/page.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/portfolio.ts`, classes `.type-h3`/`.tag-pill` em `src/styles/globals.css`.
 
 ---
 

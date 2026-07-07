@@ -2,13 +2,13 @@
 
 > Documentação completa da página Sobre para edições e decisões de design/desenvolvimento.
 >
-> **Arquivo principal:** `src/app/sobre/page.tsx`
+> **Arquivo principal:** `src/app/(site)/sobre/page.tsx`
 >
 > **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/styles/globals.css`, `src/data/media-spec.ts`, `src/data/diferenciais.ts` + componentes em `src/components/`.
 >
 > **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores de fonte extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
 >
-> **Extração:** Jul 2026 (frame expansivo documentado; ABT-01…05 unificados em 4:3).
+> **Extração:** Jul 2026 (frame expansivo 35%→75%; manifesto + valores num bloco `.section-cta`).
 
 ---
 
@@ -17,22 +17,21 @@
 | Campo | Detalhe |
 |---|---|
 | Rota | `/sobre` |
-| Arquivo | `src/app/sobre/page.tsx` |
-| Componentes | `RevealOnScroll`, `ExpandingFrame`, `AboutCounterGrid`, `SectionLabel`, `PlaceholderMedia` (dentro de `ExpandingFrame`) |
-| Dados | `ABOUT_SLIDESHOW` em `page.tsx`; contadores em `AboutCounterGrid.tsx`; `DIFERENCIAIS` + `ICONES_DIFERENCIAIS` em `src/data/diferenciais.ts` (partilhado com a Home) |
+| Arquivo | `src/app/(site)/sobre/page.tsx` |
+| Componentes | `RevealOnScroll`, `RevealSequence`, `ExpandingFrame`, `AboutCounterGrid`, ícones `lucide-react` |
+| Dados | `ABOUT_SLIDESHOW` em `page.tsx`; contadores em `AboutCounterGrid.tsx`; `DIFERENCIAIS` + `ICONES_DIFERENCIAIS` em `src/data/diferenciais.ts` |
 | Metadata | `title: "Sobre"`; `description` institucional |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `(site)/layout.tsx`) | `Navbar`, `Footer`, `ChatWidgetLoader`, `SmoothScroll` (Lenis) |
 
 **Ordem das seções:**
 
 1. Seção 01 — Introdução + Contadores
 2. Seção 02 — Slideshow expansivo no scroll (branco → preto)
-3. Seção 03 — Manifesto (texto isolado, fundo preto)
-4. Seção 04 — Nossos valores (fundo preto)
+3. Seção 03 — Manifesto + Valores (bloco preto contínuo, `.section-cta`)
 
-> **Removido:** Seção CTA final ("Pronto para começar?") — conversão coberta pelo `FloatingCTA` global.
+> **Removido:** Seção CTA final ("Pronto para começar?"); secção separada "Nossos valores" com `SectionLabel`. Conversão via `ChatWidgetLoader` global.
 >
-> Apenas a **Seção 01** está dentro de `<div className="section-light">`. As Seções 02–04 ficam fora desse wrapper. A **Seção 04** usa `.section-cta` (último contentor da página, fundo `#000000`).
+> Apenas a **Seção 01** está dentro de `<div className="section-light">`. As Seções 02–03 ficam fora desse wrapper.
 
 ---
 
@@ -42,15 +41,14 @@ O sistema de entrada global vive em `src/components/ui/RevealOnScroll.tsx`:
 
 | Constante | Valor | Uso |
 |---|---|---|
-| `REVEAL_DURATION` | `2.1s` | Duração de cada linha ou bloco |
-| `REVEAL_EASE_OUT` | `[0.22, 1, 0.36, 1]` | Easing suavizado |
-| `REVEAL_LINE_GAP` | `0.06s` | Pausa entre o fim de uma linha e o início da seguinte |
-| `REVEAL_TEXT_Y` | `32px` | Deslocamento vertical de textos |
-| `REVEAL_MEDIA_Y` | `24px` | Deslocamento vertical de cards/mídia |
+| `REVEAL_DURATION` | `2.0s` | Duração de cada bloco |
+| `REVEAL_EASE_OUT` | `[0.25, 1, 0.35, 1]` | Easing suavizado |
+| `REVEAL_BLOCK_GAP` | `0s` | Stagger entre blocos em `RevealSequence` |
+| `REVEAL_TEXT_Y` | `28px` | Deslocamento vertical de textos |
+| `REVEAL_MEDIA_Y` | `20px` | Deslocamento vertical de cards/mídia |
 
-- **Textos** (`children` string): entrada **linha por linha** via `splitTextIntoLines`; cada linha só começa após a anterior terminar (`delay + i * (REVEAL_DURATION + REVEAL_LINE_GAP)`).
-- **Cards e imagens** (`variant="media"`): reveal de bloco único, mais suave (`y 24→0` + `opacity 0→1`).
-- **Hero da Home** (`HeroTitle`): efeito próprio letra-a-letra — **não** usa `RevealOnScroll`.
+- **Textos e mídia:** reveal de **bloco único** (`y` + `opacity`); viewport margin `-4%`.
+- **Hero da Home:** animação própria via `Preloader` (GSAP) + scroll em `HeroTitle` — **não** usa `RevealOnScroll` para intro.
 - **`prefers-reduced-motion`:** render estático via `useReducedMotion`.
 
 ---
@@ -89,7 +87,7 @@ Nenhum.
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Label, h1, p | `RevealOnScroll` | on-scroll | texto linha-a-linha, `2.1s`, ease `[0.22,1,0.36,1]`; p com `delay 0.08` |
+| Label, h1, p | `RevealOnScroll` + `RevealSequence` | on-scroll | bloco único, `2.0s` |
 | Cada card contador | `RevealOnScroll` `variant="media"` | on-scroll | `y 24→0`, stagger `delay = i*0.1` |
 | Números dos contadores | `useCountUp` em `AboutCounterGrid` | `useInView` | de `0` até o valor final em `1800ms`, ease cúbico; início sincronizado com `revealDelay * 1000` |
 
@@ -98,7 +96,7 @@ Nenhum.
 - **Mobile:** `flex-col`, `pt-28`, `px-5`, `gap-12`; valor `text-5xl`. Card largo `col-span-2`.
 
 ### 7. Arquivos relacionados
-`src/app/sobre/page.tsx`, `src/components/about/AboutCounterGrid.tsx`, `src/components/ui/RevealOnScroll.tsx`, classes `.type-label`/`.type-h2`/`.type-body-lg` em `src/styles/globals.css`.
+`src/app/(site)/sobre/page.tsx`, `src/components/about/AboutCounterGrid.tsx`, `src/components/ui/RevealOnScroll.tsx`, classes `.type-label`/`.type-h2`/`.type-body-lg` em `src/styles/globals.css`.
 
 ---
 
@@ -132,9 +130,9 @@ Componente: `ExpandingFrame` com array `ABOUT_SLIDESHOW` em `sobre/page.tsx`. Cr
 |---|---|
 | **Grupo** | Os 5 IDs partilham o mesmo `ExpandingFrame` — slideshow interno, não backgrounds independentes |
 | **Produção** | Todos os slides: **16:9 · 2560×1440** — mesmo padrão que o frame pai |
-| **Frame pai** | `aspect-video` (16:9); largura animada **35% → 90%** |
+| **Frame pai** | `aspect-video` (16:9); largura animada **35% → 75%** |
 | **Estado inicial** | **35% largura** (16:9), centrado — **não** é o tamanho isolado do asset |
-| **Expansão máxima** | **90% largura** (16:9); depois o scroll **continua** pela secção |
+| **Expansão máxima** | **75% largura** (16:9); depois o scroll **continua** pela secção |
 | **Render** | `PlaceholderMedia` com `fill`, `reveal={false}`, `object-cover` dentro do frame 16:9 |
 | **Ratio visível** | Frame pai e asset **ambos 16:9** — encaixe sem distorção |
 | **Safe zone** | Compor assunto no **centro 55–60%** |
@@ -145,8 +143,8 @@ Componente: `ExpandingFrame` com array `ABOUT_SLIDESHOW` em `sobre/page.tsx`. Cr
 
 - `SECTION_VH = 250`; `SCALE_START ≈ 0.4`.
 - **Frame pai inicial:** **35% largura** (16:9 via `aspect-video`), centrado.
-- Expansão do frame pai: **35% → 90% largura**, mantendo 16:9; `border-radius 16px→0`.
-- Após **90%**, scroll continua pelo resto da secção (`250vh`).
+- Expansão do frame pai: **35% → 75% largura**, mantendo 16:9; `border-radius 16px→0`.
+- Após **75%**, scroll continua pelo resto da secção (`250vh`).
 - Fundo: `#ffffff → #000000` no início da expansão (`SCALE_START` a `SCALE_START + 0.12`).
 - Slideshow interno: intervalo `700ms` (prop `slideIntervalMs`).
 
@@ -156,97 +154,70 @@ Nenhum.
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Efeito |
 |---|---|---|---|
-| **Frame pai** (tamanho) | Framer Motion `useScroll` + `useTransform` | scroll da secção | **35% → 90% largura**, 16:9 (`aspect-video`) |
+| **Frame pai** (tamanho) | Framer Motion `useScroll` + `useTransform` | scroll da secção | **35% → 75% largura**, 16:9 (`aspect-video`) |
 | Transição de slides | CSS `transition-opacity duration-500` | `setInterval` 700ms | crossfade entre frames do conjunto |
 | Mídia individual | — | — | `fill` + `object-cover`; `reveal={false}` |
 
 ### 6. Responsividade
 - **Todos:** secção com altura `250vh`; sticky `h-screen` durante a expansão.
-- **Frame pai** inicia a **35% largura** (16:9); expande até **90%**; scroll continua depois.
+- **Frame pai** inicia a **35% largura** (16:9); expande até **75%**; scroll continua depois.
 - Slides internos acompanham o crescimento do frame pai.
 
 ### 7. Arquivos relacionados
-`src/app/sobre/page.tsx`, `src/components/ui/ExpandingFrame.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`.
+`src/app/(site)/sobre/page.tsx`, `src/components/ui/ExpandingFrame.tsx`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`.
 
 ---
 
-# Seção 03 — Manifesto
+# Seção 03 — Manifesto + Valores
 
 ### 1. Objetivo
-Momento de respiro institucional: citação centralizada em fundo preto sólido, **sem imagem**.
+Bloco preto contínuo (`.section-cta`): manifesto institucional centrado + grelha de 6 diferenciais com ícones.
 
 ### 2. Copy / Textos
+
+**Manifesto:**
 
 | Campo | `<p>` citação |
 |---|---|
 | Conteúdo | `O nosso compromisso é simples. Ajudar o seu negócio a crescer online com soluções profissionais eficazes e acessíveis.` |
 | Elemento HTML | `p` |
-| Classe | `.type-h3` + `text-white` |
+| Classe | `.type-manifesto` + `!text-white` |
 | Família | Host Grotesk |
-| Tamanho | 36px |
+| Tamanho | `clamp(2.125rem, 5vw, 4rem)` |
 | Peso | 400 |
 | Cor da fonte | `#ffffff` |
-| `text-transform` | none (sem itálico no código) |
 
-### 3. Imagens / mídia
-Nenhuma. A imagem que antes acompanhava o manifesto (`ABT-02`) integra o slideshow da Secção 02.
+**Valores** (grelha `sm:grid-cols-2`, centrada):
 
-### 4. Botões / CTAs
-Nenhum.
+| Campo | Item |
+|---|---|
+| Conteúdo | 6 strings de `DIFERENCIAIS` |
+| Elemento HTML | `p` + ícone `lucide-react` |
+| Classe | `.type-body-lg` + `text-white` |
+| Ícones | `size={30}`, `text-white` |
 
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Citação | `RevealOnScroll` | on-scroll | texto linha-a-linha, `2.1s` |
+**Lista:** Experiência comprovada · Técnica + criatividade · Tecnologia de ponta · Acompanhamento próximo · Foco em pequenas empresas · Resultados mensuráveis.
 
-### 6. Responsividade
-- **Todos:** `py-16 md:py-16`, `px-5 md:px-[5vw]`, texto `max-w-3xl` centrado.
-- Secção mais compacta que o antigo fullscreen com imagem.
-
-### 7. Arquivos relacionados
-`src/app/sobre/page.tsx`, `src/components/ui/RevealOnScroll.tsx`.
-
----
-
-# Seção 04 — Nossos valores
-
-### 1. Objetivo
-Listar os 6 diferenciais da agência (mesma lista da Home) em fundo escuro, com ícones apenas na segunda coluna.
-
-### 2. Copy / Textos
-
-| Campo | Label | Item |
-|---|---|---|
-| Conteúdo | `Nossos valores` (`SectionLabel`) | 6 strings de `DIFERENCIAIS` em `src/data/diferenciais.ts` |
-| Elemento HTML | `p` (via `SectionLabel`) | `p` + ícone `lucide-react` |
-| Classe | `.section-label` + `.section-label--on-dark` | `.type-body-lg` + `text-white` |
-| Família | DM Sans | DM Sans |
-| Tamanho | 14px | 21px |
-| Peso | 400 | 400 |
-| Cor da fonte | `#ffffff` (contexto `.section-cta`) | `#ffffff` (`text-white` explícito) |
-
-**Lista** (partilhada com Home Secção 03): Experiência comprovada · Técnica + criatividade · Tecnologia de ponta · Acompanhamento próximo · Foco em pequenas empresas · Resultados mensuráveis.
-
-**Ícones** (`ICONES_DIFERENCIAIS`): Trophy · Layers · Zap · Users · Target · TrendingUp (`size={22}`, `text-white`).
+> **Sem** `SectionLabel` "Nossos valores". **Sem** coluna vazia à esquerda.
 
 ### 3. Imagens / mídia
 Nenhuma.
 
 ### 4. Botões / CTAs
-Nenhum nesta seção. Conversão via `FloatingCTA` global.
+Nenhum. Conversão via `ChatWidgetLoader` global.
 
 ### 5. Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| Label | `RevealOnScroll` (via `SectionLabel`) | on-scroll | bloco de texto |
-| Cada item (ícone + texto) | `RevealOnScroll` `variant="media"` | on-scroll | stagger `delay = i*0.06` |
+| Manifesto | `RevealOnScroll` | on-scroll | bloco único, `2.0s` |
+| Cada valor | `RevealOnScroll` `variant="media"` | on-scroll | stagger `delay = i*0.06` |
 
 ### 6. Responsividade
-- **Desktop:** `flex-row` — coluna 1 vazia `md:w-1/2` (`hidden md:block`); lista `md:w-1/2`; `py-[10vw]`, `px-[5vw]`, `gap-[5vw]`.
-- **Mobile:** coluna única (lista ocupa largura total); `py-24`, `px-5`.
+- **Desktop:** `py-[6vw]`, `px-[5vw]`; grelha `sm:grid-cols-2`, `max-w-5xl` centrado.
+- **Mobile:** `px-5`; coluna única.
 
 ### 7. Arquivos relacionados
-`src/app/sobre/page.tsx`, `src/data/diferenciais.ts`, `src/components/ui/SectionLabel.tsx`, `src/components/ui/RevealOnScroll.tsx`.
+`src/app/(site)/sobre/page.tsx`, `src/data/diferenciais.ts`, `src/components/ui/RevealOnScroll.tsx`.
 
 ---
 
@@ -257,8 +228,7 @@ Nenhum nesta seção. Conversão via `FloatingCTA` global.
 | `.section-light` | bg `#ffffff`, text `#0a0a0a`, muted `#575757`, border `#dcdcdc` | wrapper da Secção 01 |
 | `--gmt-bg-alt` | `#f5f5f5` | cartões dos contadores (`bg-gmt-bg-alt`) |
 | `--gmt-border` | `#dcdcdc` | bordas dos contadores |
-| `bg-black` | `#000000` | Secção 03 (manifesto) |
-| `.section-cta` | bg `#000000`, text `#ffffff`, muted `#94a3b8` | Secção 04 (valores) — **último contentor da página** |
+| `.section-cta` | bg `#000000`, text `#ffffff`, muted `#94a3b8` | Secção 03 (manifesto + valores) |
 | fallback slideshow | cores por frame em `ABOUT_SLIDESHOW` | Secção 02 (`ExpandingFrame`) |
 
 > `src/styles/tokens.css` define tokens legados **não usados** pela página Sobre — a fonte de verdade é `globals.css`.

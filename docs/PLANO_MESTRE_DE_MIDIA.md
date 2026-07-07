@@ -15,9 +15,9 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| HER-01 | Hero principal do site | Home | Sec0 — hero background | background | imagem | 16:9 | 2560×1440 | Institucional/IA | Posicionar GMT como automação+IA que gera crescimento | — | Alta |
+| HER-01 | Hero legado (órfão) | Home | Só `HeroSlider` — **não renderizado** na Home activa | background | imagem | 16:9 | 2560×1440 | Institucional | — | — | Baixa |
 
-> **HER-01 — container:** secção `h-[45vw]` (**−20%** vs 16:9 full-bleed `56.25vw`); wrapper interno `aspect-video` (16:9) centrado — imagem encaixa sem distorção (`fill` + `object-cover`). Largura visível da mídia ≈ **80vw**.
+> **HER-01:** asset em `public/images/HER-01.webp`; hero activa é **fullscreen preto** (`HeroSection` + `Preloader`) — sem imagem de fundo.
 | HER-02 | Slide expansivo — frame 1 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 1 do frame expansivo (grupo HER-02…07) | — | Média |
 | HER-03 | Slide expansivo — frame 2 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 2 do frame expansivo (grupo HER-02…07) | — | Média |
 | HER-04 | Slide expansivo — frame 3 | Home | Sec4 — ExpandingFrame (conjunto) | slide | imagem | **16:9** | 2560×1440 | Institucional | Slide 3 do frame expansivo (grupo HER-02…07) | — | Média |
@@ -142,9 +142,9 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 |---|---|
 | **Conjunto único** | HER-02…07 (Home) e ABT-01…05 (Sobre) são grupos de slides do mesmo `ExpandingFrame` |
 | **Proporção** | **16:9 · 2560×1440** — frame pai **e** assets do mesmo grupo produzidos em **16:9** |
-| **Frame pai** | `aspect-video` (16:9) — moldura e imagens alinhadas; largura animada **35% → 90%** |
+| **Frame pai** | `aspect-video` (16:9) — moldura e imagens alinhadas; largura animada **35% → 75%** |
 | **Estado inicial** | **35% de largura** (16:9) — refere-se ao **bloco pai**, não ao tamanho isolado da imagem |
-| **Expansão máxima** | **90% de largura** (16:9); depois o scroll **continua** pela secção (`250vh`) |
+| **Expansão máxima** | **75% de largura** (16:9); depois o scroll **continua** pela secção (`250vh`) |
 | **Render das imagens** | `PlaceholderMedia` com `fill` + `object-cover` dentro do frame 16:9 |
 | **Safe zone** | Compor assunto no **centro 55–60%** |
 
@@ -173,10 +173,10 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 
 1. Secção com altura `250vh`; container interno `sticky top-0` (`h-screen`).
 2. Progress `0 → SCALE_START` (~0,4): frame sobe ao centro **sem crescer**.
-3. Progress `SCALE_START → 1`: frame expande de **35% → 90% largura**, mantendo **16:9** (`aspect-video`); `border-radius 16px → 0`.
+3. Progress `SCALE_START → 1`: frame expande de **35% → 75% largura**, mantendo **16:9** (`aspect-video`); `border-radius 16px → 0`.
 4. Fundo da secção: `#ffffff → #000000` no início da expansão (`SCALE_START` a `SCALE_START + 0,12`).
 5. Slideshow interno cicla independentemente do scroll (intervalo 700 ms).
-6. Após atingir **90%**, o utilizador **continua a scrollar** pelo resto da secção até entrar na seguinte.
+6. Após atingir **75%**, o utilizador **continua a scrollar** pelo resto da secção até entrar na seguinte.
 
 > **Nota:** HER-02…07 **não** existem como secções separadas na Home. ABT-01…05 **não** são backgrounds independentes na Sobre. Todos só são renderizados dentro do `ExpandingFrame`.
 
@@ -188,7 +188,7 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 | PF-02 | Thumb NARA (catálogo) | Portfolio Geral | grid hero + lista | thumbnail | imagem | **9:16** | 1080×1920 | Institucional | Hero Sec.01: largura total coluna direita se 1 case; lista Sec.02: `w-20 md:w-28` | — | Alta |
 | PF-03 | Galeria NARA — capa | Portfolio Item | Sec0 galeria (1ª) | background | imagem | 16:9 | 2560×1440 | Institucional | Abrir o case com impacto | — | Alta |
 | PF-04..12 | Galeria NARA — telas (×9) | Portfolio Item | Sec0 galeria | imagem | imagem | 4:3 | 1600×1200 | Institucional | Branding/website/chatbots/campanhas do NARA | — | Média |
-| PF-SLOT-H | Slots de portfólio Home (2 vazios) | Home | Sec3 cards | card | imagem | 3:4 | 1200×1600 | — | **Lacuna**: aguardam novos cases | — | Baixa |
+| PF-SLOT-H | Slots "em breve" Home | Home | — | — | — | — | — | — | **Removido** do template (só NARA) | — | — |
 | PF-SLOT-G | Slots de catálogo (≈12 vazios) | Portfolio Geral | grid/lista | thumbnail | imagem | **9:16** | 1080×1920 | — | **Lacuna**: aguardam novos cases | — | Baixa |
 | PF-SLOT-N | Next project (2) | Portfolio Item | Sec1 | thumbnail | imagem | **9:16** | 1080×1920 | — | **Lacuna**: navegação entre cases | — | Baixa |
 
@@ -197,7 +197,7 @@ Container no código: `aspect-[3/4] md:aspect-[2/3]`, grid `lg:grid-cols-5`. Um 
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | GL-01 | Logo GMT (claro/escuro) | Todas | navbar/footer | logo | imagem (SVG) | 7:2 | 1400×400 | Institucional | Identidade persistente | — | Alta |
-| GL-02 | Favicon / app icons | Todas | metadata | logo | imagem | 1:1 | 512×512 | Institucional | Marca em aba/PWA | — | Alta |
+| GL-02 | Favicon legado (webp) | — | — | logo | imagem | 1:1 | 512×512 | Institucional | **Não usado** — favicon activo: `src/app/icon.svg` | — | — |
 | GL-03 | Background de seção (textura/gradiente) | Todas | divisores | background | imagem | 16:9 | 2560×1440 | Institucional | Ritmo visual entre seções | — | Baixa |
 | GL-04 | Moldura de avatar de depoimento | Home | Sec4 testimonials | thumbnail | imagem | 1:1 | 400×400 | Institucional | Slot de cliente (**lacuna de conteúdo**) | — | Baixa |
 | GL-05 | Ícones de UI (setas, serviços) | Todas | UI | logo/ícone | — (lucide-react) | — | vetor | Institucional | Sem produção externa | — | Baixa |

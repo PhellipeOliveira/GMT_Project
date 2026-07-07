@@ -2,13 +2,13 @@
 
 > Documentação completa da página Contacto para edições e decisões de design/desenvolvimento.
 >
-> **Arquivo principal:** `src/app/contacto/page.tsx`
+> **Arquivo principal:** `src/app/(site)/contacto/page.tsx`
 >
-> **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/styles/globals.css`, `src/styles/tokens.css`, `src/data/media-spec.ts` + componentes em `src/components/`.
+> **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/styles/globals.css`, `src/data/media-spec.ts` + componentes em `src/components/`.
 >
-> **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`. Cores de fonte extraídas dos componentes/`globals.css`. IDs de mídia cruzados com a PARTE 4 do Plano Mestre.
+> **Regra:** nada inventado. Onde a informação não existe no código: `"Não identificado no projeto"`.
 >
-> **Extração:** 28 Jun 2026.
+> **Última actualização:** Jul 2026 (layout intro + form split; sem canais com ícones nem CTA final).
 
 ---
 
@@ -17,164 +17,119 @@
 | Campo | Detalhe |
 |---|---|
 | Rota | `/contacto` |
-| Arquivo | `src/app/contacto/page.tsx` |
-| Componentes | `RevealOnScroll`, `ContactForm` (`src/components/ui/ContactForm.tsx`), ícones `Mail`, `Phone`, `Link2`, `MapPin` (`lucide-react`) |
-| Dados | array `CANAIS` no próprio arquivo; arrays `SERVICOS_INTERESSE` e `CAMPOS` em `ContactForm.tsx` |
-| Metadata | `title: "Contacto"`; `description` com email/WhatsApp/LinkedIn + Lisboa |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Arquivo | `src/app/(site)/contacto/page.tsx` |
+| Componentes | `SectionLabel`, `RevealOnScroll`, `RevealSequence`, `ContactForm` |
+| Dados | arrays `SERVICOS_INTERESSE` e campos em `ContactForm.tsx` |
+| Metadata | `title: "Contacto"`; `description` sobre reunião gratuita |
+| Globais (via `(site)/layout.tsx`) | `Navbar`, `Footer`, `ChatWidgetLoader`, `SmoothScroll` (Lenis) |
 
 **Ordem das seções:**
 
-1. Seção 01 — Cabeçalho + canais + formulário (split)
-2. Seção 02 — CTA final
+1. Seção 01 — Cabeçalho (intro)
+2. Seção 02 — Formulário (split: copy sticky + form)
 
-> A página é **puramente tipográfica** (sem assets de imagem). O PLANO prevê fundo decorativo opcional `CON-01`, mas **não é renderizado** — ver Seção 01 ▸ mídia.
+> A página é **puramente tipográfica** (sem assets de imagem). O PLANO prevê fundo decorativo opcional `CON-01`, mas **não é renderizado**.
+
+**Removido do template (não documentar como activo):**
+
+- Array `CANAIS` com ícones (`Mail`, `Phone`, `Link2`, `MapPin`)
+- Secção CTA final "Preferimos falar pessoalmente?" + botão "Ligar agora"
 
 ---
 
-# Seção 01 — Cabeçalho + canais + formulário (split)
+# Seção 01 — Cabeçalho (intro)
 
 ### 1. Objetivo
-Layout split: à esquerda o cabeçalho + canais de contacto; à direita o formulário. Conversão direta + pré-qualificação.
+Título e descrição da página de contacto.
 
 ### 2. Copy / Textos
 
-**Coluna esquerda — cabeçalho e canais:**
+| Campo | Label | `<h1>` | `<p>` |
+|---|---|---|---|
+| Conteúdo | `Contacto` | `Vamos conversar` | texto sobre reunião gratuita |
+| Elemento HTML | `h2` | `h1` | `p` |
+| Classe | `.type-section-title` | `.type-h2` | `.type-body-lg` |
+| Família | Host Grotesk | Host Grotesk | DM Sans |
+| Tamanho | `clamp(30px,4vw,46px)` | `clamp(42px,6vw,72px)` | 21px |
+| Cor | `#0a0a0a` | `#0a0a0a` | `#575757` (`text-gmt-muted`) |
 
-| Campo | Label | `<h1>` | `<p>` | Canal label | Canal valor |
-|---|---|---|---|---|---|
-| Conteúdo | `Contacto` | `Vamos conversar` | `Agende uma reunião gratuita e sem compromisso. Conte-nos sobre o seu negócio e desenhamos o plano certo para si.` | `Email` · `WhatsApp / Telefone` · `LinkedIn` · `Localização` | (ver lista abaixo) |
-| Elemento HTML | `p` | `h1` | `p` | `span` | `span` |
-| Classe | `.type-label` | `.type-h2` | `.type-body-lg` | `.type-label` | `.type-body` |
-| Família | DM Sans | Host Grotesk | DM Sans | DM Sans | DM Sans |
-| Tamanho | 14px | `clamp(42px,6vw,72px)` | 21px | 14px | 18px |
-| Peso | 400 | 400 | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `var(--gmt-text)` = `#0a0a0a` | `#575757` (`text-gmt-muted`) | `#575757` (`text-gmt-muted`) | `#0a0a0a` (`text-gmt-text`) |
-| `letter-spacing` | 0.1em | — | — | 0.1em | — |
-| `text-transform` | uppercase | none | none | uppercase | none |
-
-Canais (array `CANAIS`):
-- **Email** — `contato@phellipeoliveira.org` (`mailto:contato@phellipeoliveira.org`)
-- **WhatsApp / Telefone** — `+351 913 628 211` (`tel:+351913628211`)
-- **LinkedIn** — `linkedin.com/in/phellipeoliveira-org` (`https://linkedin.com/in/phellipeoliveira-org/`, `target="_blank"`, `rel="noopener noreferrer"`)
-- **Localização** — `Lisboa, Portugal` (sem link — `href: undefined`)
-
-**Coluna direita — formulário (`ContactForm.tsx`):**
-
-| Campo | Labels de input | Texto digitado | `<h3>` checkboxes | Opções de checkbox | Label do textarea |
-|---|---|---|---|---|---|
-| Conteúdo | `Nome *` · `Email *` · `Telefone` · `Empresa` | (input do utilizador) | `Serviços de interesse` | (8 opções, ver abaixo) | `Conte-nos sobre o seu projeto *` |
-| Elemento HTML | `label` | `input` | `h3` | `span` (em `button`) | `label` |
-| Classe | `.type-body` (flutuante) | `.input-gmt` + `.type-body` | `.type-label` | `.type-body` | `.type-body` (flutuante) |
-| Família | DM Sans | DM Sans | DM Sans | DM Sans | DM Sans |
-| Tamanho | 18px → `14px` (flutuante ativa) | 18px | 14px | 18px | 18px → `14px` (flutuante) |
-| Peso | 400 | 400 | 400 | 400 | 400 |
-| Cor da fonte | `#575757` (`text-gmt-muted`) | `#0a0a0a` (`text-gmt-text`) | `#575757` (`text-gmt-muted`) | inativo `#575757` (`text-gmt-muted opacity-70`) / ativo `#0a0a0a` (`text-gmt-text`) | `#575757` (`text-gmt-muted`) |
-| `letter-spacing` | — | — | 0.1em | — | — |
-| `text-transform` | none | none | uppercase | none | none |
-
-Opções de "Serviços de interesse" (array `SERVICOS_INTERESSE`): Automação & IA · Criação de Conteúdo · Publicidade Digital · Branding & Estratégia · Websites · Inteligência Artificial · Analytics & Otimização · Pacotes de Marketing.
-
-> Inputs com `placeholder=" "` + label flutuante via peer-selector (`peer-focus`/`peer-[:not(:placeholder-shown)]` → `top-2` e `text-[14px]`). Existe um campo **honeypot** oculto `_hp_website` (anti-spam, `className="hidden"`).
+Label via `SectionLabel variant="title"`. Encadeado com `RevealSequence`.
 
 ### 3. Imagens / mídia
-Nenhuma imagem renderizada. A página é puramente tipográfica.
-
-| ID | Slot | Proporção | Export | Arquivo atual | Status |
-|---|---|---|---|---|---|
-| CON-01 | Fundo decorativo (Contacto) — bg da seção | 16:9 | 2560×1440 | `public/images/CON-01.webp` (existe) | **Lacuna de uso** — asset existe mas **não é referenciado** em `contacto/page.tsx` (slot decorativo OPCIONAL no PLANO Tabela 4.1) |
-
-> Ícones dos canais: `Mail`, `Phone`, `Link2`, `MapPin` (`lucide-react`, `size 18`, `strokeWidth 1.5`, cor `text-gmt-text` = `#0a0a0a`) em caixa `border-gmt-border p-2.5`. Vetor (= `GL-05` na PARTE 4) → **Produzido**. Nota: usa-se `Link2` para LinkedIn porque `Linkedin` não existe nesta versão de `lucide-react`.
+Nenhuma.
 
 ### 4. Botões / CTAs
+Nenhum.
 
-**Canais de contacto** — `<a>` (quando há `href`), wrapper `hover:opacity-80`. Sem fundo; cor texto conforme tabela acima.
-
-**Formulário (`ContactForm.tsx`):**
-- **Checkboxes "Serviços de interesse"** (8 `<button type="button">` toggle, `aria-pressed`): círculo `size-6 rounded-full border`. Inativo: `border-gmt-border` (sem preenchimento). Ativo: `border-gmt-accent bg-gmt-accent text-white` (`#2563eb` fundo, `#ffffff` ícone `Check` size 12). Wrapper `opacity-80 → hover:opacity-100`.
-- **Botão submit** — `Enviar mensagem` → classe `.btn-submit` (`group`).
-  - Fundo `rgb(255 255 255 / 0.7)` · Texto `#000` · `border-radius 9999px` · `padding 0.75rem 2rem` · DM Sans 18px peso 500.
-  - Hover: `bg rgb(255 255 255 / 0.85)` + `scale(1.02)`. Disabled: `opacity 0.6`.
-  - Estado `submitting`: ícone `Loader2` (animação `animate-spin`) + texto `A enviar…`. Estado normal: texto + seta `→` (`group-hover:translate-x-1`).
-- **Estado de sucesso** (substitui o form): `<h3>` `Mensagem enviada` (`.type-h3`, `#0a0a0a`) + `<p>` `Obrigado pelo contacto. Responderemos em breve.` (`.type-body`, `#575757`).
-
-> Submissão é **estática** (`console.log`, sem backend). Validação nativa via `form.checkValidity()`.
-
-### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| Cabeçalho, canais, form | Framer Motion (`RevealOnScroll`) | on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; canais com stagger `delay = i*0.08`; form `delay 0.08` |
-| Labels flutuantes | CSS (peer-selector) | on-focus / preenchido | `transition-all 200ms` (sobe + `14px`) |
-| Checkbox (círculo) | CSS | on-click | `transition-colors 300ms` |
-| Validação falhada | CSS keyframe `.form-shake` | on-submit inválido | `0.4s` (translateX ±4px) |
-| Durante envio | CSS `.form-fade-out--hidden` | submitting | `opacity 0.3`, `pointer-events none` |
-| Sucesso | CSS `.form-success` (`@keyframes form-fade-in`) | on-success | `0.5s` fade-in + `translateY 8px→0` |
-| Ícone `Loader2` | CSS (`animate-spin`) | submitting | rotação contínua |
-
-### 6. Responsividade
-- **Desktop:** `flex-row`; coluna info `md:w-2/5`, coluna form `md:w-3/5`; `md:min-h-[70vh]`; campos do form `md:grid-cols-2`; checkboxes `md:grid-cols-2`; `pt-[6vw]`, `px-[5vw]`, `gap-[5vw]`.
-- **Tablet:** mantém grids `md:grid-cols-2` a partir de `md`.
-- **Mobile:** `flex-col`; campos e checkboxes `grid-cols-1`; `pt-28`, `pb-16`, `px-5`, `gap-12`.
-
-### 7. Arquivos relacionados
-`src/app/contacto/page.tsx`, `src/components/ui/ContactForm.tsx`, `src/components/ui/RevealOnScroll.tsx`, classes `.input-gmt`/`.btn-submit`/`.form-shake`/`.form-success`/`.form-fade-out*` em `src/styles/globals.css`.
+### 5. Arquivos relacionados
+`src/app/(site)/contacto/page.tsx`, `src/components/ui/SectionLabel.tsx`.
 
 ---
 
-# Seção 02 — CTA final
+# Seção 02 — Formulário (split)
 
 ### 1. Objetivo
-Conversão alternativa por telefone (faixa preta `.section-cta`, centrada).
+Layout split: coluna esquerda com copy sticky + link telefone; coluna direita com `ContactForm`.
 
 ### 2. Copy / Textos
 
-| Campo | `<h2>` | `<p>` |
-|---|---|---|
-| Conteúdo | `Preferimos falar pessoalmente?` | `Agende uma reunião gratuita — respondemos em 24 horas.` |
-| Elemento HTML | `h2` | `p` |
-| Classe | `.type-h3` | `.type-body` |
-| Família | Host Grotesk | DM Sans |
-| Tamanho | 36px | 18px |
-| Peso | 400 | 400 |
-| Cor da fonte | `#ffffff` (em `.section-cta`, regra `:where(.type-h3) → var(--gmt-text)` = `#ffffff`) | `#94a3b8` (`text-gmt-muted` redefinido na `.section-cta`) |
-| `letter-spacing` | — | — |
-| `text-transform` | none | none |
+**Coluna esquerda (sticky `md:top-28`):**
+
+| Campo | Label | `<p>` | Link telefone |
+|---|---|---|---|
+| Conteúdo | `Conte-nos o essencial` | texto sobre preencher formulário | `Prefere ligar? +351 913 628 211` |
+| Classe | `.type-section-title` | `.type-body-lg` | `.type-label` + underline hover |
+| Link | — | — | `tel:+351913628211` |
+
+**Coluna direita — `ContactForm.tsx`:**
+
+| Campo | Labels | Checkboxes | Textarea |
+|---|---|---|---|
+| Conteúdo | `Nome *` · `Email *` · `Telefone` · `Empresa` | `Serviços de interesse` (8 opções) | `Conte-nos sobre o seu projeto *` |
+| Classe | `.type-body` (label flutuante) | `.type-label` + `.type-body` | idem |
+| Honeypot | `_hp_website` (oculto, anti-spam) | — | — |
+
+Opções de interesse: Automação & IA · Criação de Conteúdo · Publicidade Digital · Branding & Estratégia · Websites · Inteligência Artificial · Analytics & Otimização · Pacotes de Marketing.
 
 ### 3. Imagens / mídia
-Nenhuma. **Não identificado no projeto**.
+
+| ID | Slot | Status |
+|---|---|---|
+| CON-01 | Fundo decorativo (opcional no PLANO) | **Lacuna de uso** — asset existe mas não referenciado |
 
 ### 4. Botões / CTAs
-"Ligar agora" — classe `.btn-submit` (link `tel:+351913628211`).
-- Fundo `rgb(255 255 255 / 0.7)` · Texto `#000` · `border-radius 9999px` · `padding 0.75rem 2rem` · DM Sans 18px peso 500.
-- Hover: `bg rgb(255 255 255 / 0.85)` + `scale(1.02)`.
+
+**Formulário:**
+- Checkboxes toggle (`aria-pressed`): círculo `rounded-full border`; ativo `border-gmt-accent bg-gmt-accent`
+- Submit `Enviar mensagem` → `.btn-submit` (fundo branco translúcido, texto preto, `rounded-full`)
+- Estado sucesso: `Mensagem enviada` + `Obrigado pelo contacto…`
+- Submissão **estática** (`console.log`, sem backend)
 
 ### 5. Animações
-| O que anima | Biblioteca | Gatilho | Duração / efeito |
-|---|---|---|---|
-| h2, p e botão | Framer Motion (`RevealOnScroll`) | on-scroll | stagger (`delay 0.08`/`0.16`) |
+| O que anima | Biblioteca | Gatilho |
+|---|---|---|
+| Copy esquerda | `RevealSequence` | on-scroll |
+| Formulário | `RevealOnScroll variant="media"` | on-scroll |
+| Labels flutuantes | CSS peer-selector | focus / preenchido |
 
 ### 6. Responsividade
-- **Todos:** centrado, h2 `max-w-2xl`.
-- **Desktop:** `px-[5vw] py-[8vw]`. **Mobile:** `px-5 py-20`.
+- **Desktop:** `grid md:grid-cols-[0.8fr_1.2fr]`; coluna esquerda sticky.
+- **Mobile:** coluna única; `px-5`, `py-12`.
 
 ### 7. Arquivos relacionados
-`src/app/contacto/page.tsx`, classes `.btn-submit` e `.section-cta` em `src/styles/globals.css`.
+`src/app/(site)/contacto/page.tsx`, `src/components/ui/ContactForm.tsx`, `src/styles/globals.css`.
 
 ---
 
-## Apêndice — tokens e cores usados no Contacto (de `globals.css`)
+## Apêndice — tokens usados no Contacto
 
-| Token / Contexto | Valor | Onde aparece |
+| Token | Valor | Onde |
 |---|---|---|
-| `--gmt-bg` | `#ffffff` | fundo da Seção 01 |
-| `--gmt-bg-alt` | `#f5f5f5` | fundo dos inputs/textarea (`bg-gmt-bg-alt`) |
-| `--gmt-text` | `#0a0a0a` | h1, valores dos canais, texto digitado, opção ativa |
-| `--gmt-text-muted` | `#575757` | labels, descrição, rótulos de canal, labels do form |
-| `--gmt-border` | `#dcdcdc` | bordas de inputs, caixas de ícone, checkbox inativo |
-| `--gmt-accent` | `#2563eb` | foco dos inputs (`focus:border-gmt-accent`), checkbox ativo |
-| `.btn-submit` | fundo `rgb(255 255 255 / 0.7)`, texto `#000` | botão "Enviar mensagem" e "Ligar agora" |
-| `.section-cta` | bg `#000000`, text `#ffffff`, muted `#94a3b8` | Seção 02 |
+| `--gmt-bg` | `#ffffff` | fundo |
+| `--gmt-text` | `#0a0a0a` | títulos, inputs |
+| `--gmt-text-muted` | `#575757` | descrições, labels |
+| `--gmt-border` | `#dcdcdc` | bordas, separador `border-t` |
+| `--gmt-accent` | `#2563eb` | foco, checkbox ativo |
+| `.btn-submit` | fundo `rgb(255 255 255 / 0.7)`, texto `#000` | botão enviar |
 
-> `src/styles/tokens.css` existe mas define tokens legados (`--color-*`, `--font-geist-*`) **não usados** por esta página — a fonte de verdade é `globals.css`.
-
-*Documento gerado a partir do código do repositório e das fontes de verdade indicadas. Nenhuma informação foi inventada.*
+*Documento gerado a partir do código do repositório. Nenhuma informação foi inventada.*

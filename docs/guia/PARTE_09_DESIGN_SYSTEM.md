@@ -28,7 +28,7 @@ Outros pesos definidos em `@theme inline`: `--font-weight-normal: 400`, `--font-
 - Peso **800** (`--font-weight-brand`) é usado exclusivamente pela marca GMT (`.gmt-brand`).
 - Host Grotesk **300** é usado só em `.type-category`.
 - `LaCerchia` (serif decorativa citada nos design maps) **não está ativa** no projeto.
-- Favicon / apple-icon: `/images/GL-02.webp` (definido em `metadata.icons`).
+- Favicon: `src/app/icon.svg` (App Router — círculo preto + "GMT").
 
 ---
 
@@ -39,7 +39,10 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Token | Valor (código) | px em 1440px | Classe | Família · peso · extras |
 |---|---|---|---|---|
 | `--type-label` | `14px` | 14 | `.type-label` | DM Sans · 400 · uppercase · `ls 0.1em` · `lh 1.25` |
-| `--type-section-label` | `12px` | 12 | `.section-label` | DM Sans · 500 · uppercase · `ls 0.14em` · `lh 1` |
+| `--type-section-label` | `13px` | 13 | `.section-label` | DM Sans · 500 · uppercase · `ls 0.14em` |
+| `--type-section-title` | `clamp(30px,4vw,46px)` | ~46 | `.type-section-title` | Host Grotesk · 400 · títulos de secção |
+| `--type-manifesto` | `clamp(2.125rem,5vw,4rem)` | ~64 | `.type-manifesto` | Host Grotesk · 400 |
+| `--type-footer-subtitle` | `clamp(1.5rem,4.15vw,5rem)` | ~60 | `.type-footer-subtitle` | Host Grotesk · 400 |
 | `--type-body` | `18px` | 18 | `.type-body` | DM Sans · 400 · `lh 1.5` |
 | `--type-body-lg` | `21px` | 21 | `.type-body-lg` | DM Sans · 400 · `lh 1.55` |
 | `--type-h3` | `36px` | 36 | `.type-h3` | Host Grotesk · 400 · `lh 1.2` · cor `--gmt-text` |
@@ -50,7 +53,7 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | `--type-hero-subtitle` | `clamp(3rem,4.5vw,4.5rem)` ≡ `clamp(48px,4.5vw,72px)` | ~65 (4.5vw=64.8) | `.type-hero-subtitle` | DM Sans · 400 · uppercase · `ls 0.05em` · `lh 1.2` · `nowrap` |
 | *(ad hoc)* | `clamp(36px,5vw,48px)` | 48 (5vw=72 → cap 48) | `.type-category` | Host Grotesk · **300** · uppercase · `ls 0.1em` · `lh 1.1` · cor `--gmt-text` |
 | *(ad hoc)* | `clamp(1.125rem,2.8vw,1.75rem)` ≡ `clamp(18px,2.8vw,28px)` | 28 (2.8vw=40 → cap 28) | `.gmt-brand--navbar` | Host Grotesk · **800** · uppercase · `ls 0.02em` · `scaleX(1.03)` · `lh 1` |
-| *(ad hoc)* | `clamp(8rem,33vw,36rem)` | ~475 (33vw=475) | `.gmt-brand--footer` | Host Grotesk · **800** · uppercase · `ls 0.02em` · `scaleX(1.03)` · `lh 0.85` |
+| *(ad hoc)* | `clamp(6.4rem,26.4vw,28.8rem)` | ~380 | `.gmt-brand--footer` | Host Grotesk · **800** · `lh 0.85` |
 | — | `font-weight: 800` | — | `.gmt-brand` (base) | identidade GMT partilhada (navbar, hero, lanterna) |
 | — | `font-weight: 500` | — | `.type-medium` | modificador de peso |
 
@@ -121,8 +124,8 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Gradiente hero slider (órfão) | `from-gmt-bg/80 to-transparent` | `HeroSlider` |
 | Glass navbar (logo) | `bg-black/55 backdrop-blur-md` | `Navbar` |
 | Glass pill (escuro/claro) | `bg-black/30` / `bg-white/88` | `Navbar` |
-| Glass FloatingCTA | `bg-black/80 backdrop-blur-md` → hover `bg-black` | `FloatingCTA` |
-| Textura do footer | `GL-03` com `opacity-15` | `Footer` |
+| Glass ChatWidgetLoader | `bg-black/80 backdrop-blur-md` → hover `bg-black` | `ChatWidgetLoader` |
+| Textura do footer | `GL-03` | **Não usado** — Footer actual é `bg-black` sem textura |
 
 ### 3.6 Tokens legados (`tokens.css` — NÃO usados)
 
@@ -139,11 +142,10 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | `.btn-nav--on-light` | `color-mix(#000 8%)` | `--gmt-text-on-light` | igual | igual | igual | bg `#000 14%` |
 | `.tag-pill` | `rgb(255 255 255 / 0.8)` | `#000` | `0.5vw` | `0.4vw 1vw` | DM Sans `clamp(13px,0.9vw,15px)` / 400 | — (sem hover) |
 | "Ver todos os serviços" (Home, inline) | `#000000` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | `bg-black/80` |
-| "← Ver todos os serviços" (detalhe serviço, hero) | `rgb(255 255 255 / 0.2)` + borda `white/25` | `#ffffff` | `0.5rem` (`rounded-lg`) | `px-5 py-3` | `.type-label` + `font-medium` 14px / **500** | `bg-white/30` |
-| "Ver Produto →" (Home NARA, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-6 py-3` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
-| "Ver portfólio completo" (Home, inline) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` 14px / 400 | borda `white/60` + `bg-white/10` |
-| "Falar sobre um projeto" (case, inline) | `--gmt-accent` `#2563eb` | `#ffffff` | `0.5rem` (`rounded-lg`) | `px-6 py-3` | `.type-body`+`.type-medium` 18px / 500 | `--gmt-accent-2` `#7c3aed` |
-| FloatingCTA (inline) | `rgba(0,0,0,0.8)` | `#ffffff` | `9999px` | `px-6 py-3.5` | DM Sans 14px / 500 | `#000` + ícone `translate-x-0.5` |
+| "Ver Produto →" / "Ver portfólio completo →" (Home) | transparente, borda `white/30` | `#ffffff` | `9999px` | `px-6–8 py-3–3.5` | `.type-label` | `border-white/60` + `bg-white/10` |
+| "Falar sobre um projeto →" (portfolio detalhe) | `#000000` | `#ffffff` | `9999px` | `px-8 py-3.5` | `.type-label` | `bg-black/80` |
+| Nav hero serviço (`HERO_NAV_LINK`) | `bg-white/20` + borda `white/25` | `#ffffff` | `rounded-lg` | `px-5 py-3` | `.type-label` font-medium | `bg-white/30` |
+| ChatLauncher (agente IA) | conforme `ChatLauncher.tsx` | — | — | `bottom-4 right-4` | label contextual | painel expansível |
 | Accordion header (`<button>`) | transparente → `bg-black` (aberto/hover) | `#0a0a0a` → `#ffffff` | `0.5rem` (`rounded-lg`) | `px-4 py-5` | `.type-body-lg` 21px / 400 | `hover:bg-black` |
 | Navbar pill / hamburger | glass (ver §3.5) | conforme tema | `full` / `0.5rem` | `px-7 py-2.5` / `h-10 w-10` | `.type-label` 14px | troca de tema 300–500ms |
 
@@ -155,13 +157,13 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 | Animação | Biblioteca | Contexto / Gatilho | Duração / efeito |
 |---|---|---|---|
-| Reveal de conteúdo (texto/mídia) | Framer Motion (`RevealOnScroll`) | quase todas as seções; on-scroll | `2.1s`, ease `[0.22,1,0.36,1]`; textos **linha-a-linha sequencial** (`REVEAL_LINE_GAP 0.06s` entre linhas); itens media com stagger por `delay` do caller; `y 32→0` (texto) / `24→0` (mídia). **Hero Home (`HeroTitle`) excluída** |
-| Hero brand letra-a-letra + blink | Framer Motion (`HeroTitle`) | Home Hero; on-load + on-view | char `0.28s` ease `[0.2,0.65,0.3,0.9]`; blink `0.8s` |
-| Frame expansivo | Framer Motion `useScroll`/`useTransform` | Home transição; on-scroll | scale `35%→100%`/`45vh→100vh` a partir de `SCALE_START≈0.4`; bg `#fff→#000` em janela curta (`0.4→0.52`); radius `16→0`; slideshow 700ms |
-| Service overlay hover | CSS (`group-hover`) | Home "O que fazemos"; on-hover | `blur(4px)` + `saturate(0.35)` na imagem; descrição `opacity 0→1` |
-| Lanterna GMT | CSS `mask-image` (radial) + JS `rAF` | global — acima do Footer; on-hover cursor | foco `circle 20vw`; `opacity 0.5s`; padding `py-[2.04rem] md:py-[3.4rem]` |
-| FloatingCTA | Framer Motion `AnimatePresence` | global; scroll threshold | `0.35s`, `opacity`+`y 14` |
-| Navbar (tema) | Framer Motion `useScroll` | global; scroll > 60px | transição CSS 300–500ms |
+| Reveal de conteúdo | Framer Motion (`RevealOnScroll`) | on-scroll | `2.0s`, ease `[0.25,1,0.35,1]`; bloco único `y`+`opacity`; viewport `-4%` |
+| Hero intro + scroll | GSAP (`Preloader` + `HeroTitle`) | on-load / scroll | intro 1× sessão; slide horizontal no scroll |
+| Frame expansivo | Framer Motion `useScroll` | Home/Sobre | largura `35%→75%`; bg `#fff→#000`; slideshow 700ms |
+| Service overlay hover | CSS (`group-hover`) | Home cards | `scale-[1.04]`; overlay `bg-black/55` |
+| Lanterna GMT | CSS `mask-image` + rAF | global | foco `circle 16vw`; `.gmt-lantern-section` padding |
+| ChatWidget | Framer Motion | global | launcher canto inferior direito; painel `0.35s` |
+| Navbar (tema) | `useNavTone` + CSS | global | `data-nav-tone="dark"` nas secções |
 | Accordion | CSS `grid-template-rows` | `/servicos`; on-click | `0.3s cubic-bezier(0.4,0,0.2,1)`; chevron rotação 180° |
 | Hover global (links/botões) | CSS | global; on-hover | `0.3s var(--ease)` cor/bg/borda |
 | Media zoom | CSS (`.media-zoom`) | cards/thumbs com imagem; on-hover | `scale(1.03)`, 400ms; fade-in da imagem (`data-loaded`) |
@@ -179,27 +181,21 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 
 ## 6. Lacunas de mídia (IDs cruzados com PARTE 4 do Plano)
 
-### 6.1 IDs definidos em `media-spec.ts` SEM asset em `public/`
+### 6.1 IDs definidos em `media-spec.ts` SEM asset em `public/` (lacunas activas)
 
-| ID | Slot (PARTE 4) | Proporção | Export | Status |
-|---|---|---|---|---|
-| SERV-AV-01 | Home Sec2 — Card overlay Criação de Conteúdo (Tabela 4.4-B) | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-02 | Home Sec2 — Card overlay Publicidade Digital | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-03 | Home Sec2 — Card overlay Branding & Estratégia | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-04 | Home Sec2 — Card overlay Websites | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-05 | Home Sec2 — Card overlay Inteligência Artificial | 7:5 | 1400×1000 | **Lacuna** |
-| SERV-AV-06 | Home Sec2 — Card overlay Analytics & Otimização | 7:5 | 1400×1000 | **Lacuna** |
-| PF-EB1 | Portfolio Geral — slot vazio (Tabela 4.5 / PF-SLOT-G) | 9:16 | 1080×1920 | **Lacuna** (intencional) |
-| PF-EB2 | Portfolio Geral — slot vazio | 9:16 | 1080×1920 | **Lacuna** (intencional) |
-| PF-EB3 | Portfolio Geral — slot vazio | 9:16 | 1080×1920 | **Lacuna** (intencional) |
-
-### 6.2 IDs referenciados em código mas SEM registo em `media-spec.ts` (placeholder puro)
-
-| ID | Onde | Status |
+| ID | Slot | Status |
 |---|---|---|
-| PF-02a | Home Sec "Trabalhos recentes" — card "em breve" 1 (PF-SLOT-H) | **Lacuna** (intencional) |
-| PF-02b | Home Sec "Trabalhos recentes" — card "em breve" 2 (PF-SLOT-H) | **Lacuna** (intencional) |
-| PF-EB1/2/3 (também no grid hero do Portfolio) | Portfolio Geral — grid | **Lacuna** (intencional) |
+| CF-01…05 | Cards "Como funciona" (detalhe serviço) | **Lacuna** — usa fallback AGP-F* via `getComoFuncionaCardId` |
+| PF-EB1…3 | Portfolio — slots futuros | **Lacuna** (intencional) |
+
+> **SERV-AV-01…06** estão **produzidos** (`public/images/SERV-AV-*.webp`) e activos na Home.
+
+### 6.2 IDs removidos do código activo
+
+| ID | Observação |
+|---|---|
+| PF-02a/b | Slots "em breve" na Home — **removidos** do template |
+| HER-01 | Só usado pelo `HeroSlider` órfão |
 
 ### 6.3 Lacunas da PARTE 4 sem implementação/asset
 
@@ -218,18 +214,16 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | ID | Arquivo | Observação |
 |---|---|---|
 | GL-01 | `public/images/GL-01.webp` | logo 7:2 — o site usa logo **textual** (`GmtLogo`) |
-| HER-01 | `public/videos/HER-01.webp` | hero 16:9 — usado só pelo `HeroSlider` (órfão) |
+| GL-03 | `public/images/GL-03.webp` | textura 16:9 — **não renderizada** no Footer actual |
+| HER-01 | `public/images/HER-01.webp` | hero 16:9 — só `HeroSlider` órfão |
 | GL-04 | `public/images/GL-04.webp` | avatar 1:1 — sem secção de testemunhos na Home |
 | CON-01 | `public/images/CON-01.webp` | fundo 16:9 — não referenciado em `/contacto` |
 
 ### 6.5 Inventário de assets presentes em `public/`
 
 - **`public/images/`:** HER-02..HER-07, ABT-01..ABT-05, CON-01, AGP-F1..F4, **AG-01..AG-15**, MKT-01..MKT-03, AV-01..AV-06, SERV-AV-01..06, PF-01..PF-12, GL-01..GL-04, CF-01..05 (quando produzidos).
-- **`public/videos/`:** HER-01.
-- **Retirados (podem apagar):** ~~AGH-F1..AGH-F4~~ (`public/images/`), ~~MKT-04~~ (`public/videos/`).
-- Todos em `.webp` (vídeos ainda como `.webp`; MP4/WebM previstos no futuro pelo PLANO).
-
-> Resumo: as únicas **lacunas reais de produção** actualmente activas no site são os **6 cards overlay `SERV-AV-01..06`** (Home "O que fazemos"). As demais lacunas (`PF-EB*`, `PF-02a/b`, `PF-SLOT-N`) são **intencionais** ("Em breve") por falta de novos cases.
+- **`public/videos/`:** vazio (`.gitkeep` apenas).
+- **Resumo:** lacunas activas principais = **CF-01…05** (cards Como funciona) e **PF-EB*** (cases futuros).
 
 ---
 
@@ -243,8 +237,9 @@ Tokens definidos em `:root` (`globals.css`) e classes utilitárias correspondent
 | Especificação de mídia (ratio, px, pasta, container) | `src/data/media-spec.ts` |
 | Mapeamentos slug→ID, helpers de mídia | `src/lib/media.ts` |
 | Cores de família / portfolio | `src/data/servicos.ts`, `src/data/portfolio.ts` |
-| Reveal / motion | `src/components/ui/RevealOnScroll.tsx`, `src/lib/split-text-lines.ts`, `src/hooks/useReducedMotion.ts` |
-| Tipografia por página (referência) | `docs/TIPOGRAFIA_PAGINAS.md` |
+| Reveal / motion | `src/components/ui/RevealOnScroll.tsx`, `src/hooks/useReducedMotion.ts` |
+| Layout site | `src/app/(site)/layout.tsx` |
+| Favicon | `src/app/icon.svg` |
 | Inventário de mídia (referência) | `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4) |
 
 *Documento gerado a partir do código do repositório e das fontes de verdade indicadas. Nenhuma informação foi inventada.*

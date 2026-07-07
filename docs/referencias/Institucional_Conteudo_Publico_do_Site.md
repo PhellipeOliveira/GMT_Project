@@ -61,6 +61,8 @@ PT · EN · ES
 
 ## CONTACTO
 
+> **Nota (Jul 2026):** a página `/contacto` renderiza apenas o link telefónico na coluna sticky + formulário. Os canais abaixo são **copy de referência** (metadata, agente IA, futuras expansões) — não aparecem todos na UI actual.
+
 - **Email:** contato@phellipeoliveira.org
 - **WhatsApp / Telefone:** +351 913 628 211
 - **LinkedIn:** linkedin.com/in/phellipeoliveira-org/

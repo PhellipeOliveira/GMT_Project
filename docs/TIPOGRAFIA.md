@@ -124,7 +124,7 @@ Definidas em `src/styles/globals.css`:
 | `.gmt-brand` | Host Grotesk | — | **800** | base da marca GMT: `ls 0.02em`, `scaleX(1.03)` |
 | `.gmt-brand--hero` | Host Grotesk | clamp brand | 800 | Home Hero |
 | `.gmt-brand--navbar` | Host Grotesk | clamp(18px, 2.8vw, 28px) | 800 | Navbar + Footer logo |
-| `.gmt-brand--footer` | Host Grotesk | clamp(8rem, 33vw, 36rem) | 800 | GMT Lantern global (acima do Footer) |
+| `.gmt-brand--footer` | Host Grotesk | clamp(6.4rem, 26.4vw, 28.8rem) | 800 | GMT Lantern global |
 | `.type-hero-subtitle` | DM Sans | clamp subtitle | 400 | Home — uppercase, tracking 0.05em |
 | `.type-hero--fullscreen` | — | — | — | Line-height viewport-relative |
 | `.type-medium` | — | — | 500 | Modificador de peso |
@@ -139,10 +139,10 @@ Definidas em `src/styles/globals.css`:
 <h1 className="gmt-brand gmt-brand--hero text-white">GMT</h1>
 
 {/* Título de página */}
-<RevealText as="h1" className="type-h2 mt-4">...</RevealText>
+<RevealOnScroll as="h1" className="type-h2 mt-4">...</RevealOnScroll>
 
-{/* Hero fullscreen */}
-<RevealText as="h1" className="type-hero type-hero--fullscreen mt-5">...</RevealText>
+{/* Hero fullscreen serviço */}
+<RevealOnScroll as="h1" className="type-hero type-hero--fullscreen">...</RevealOnScroll>
 
 {/* Botão */}
 <button className="type-body type-medium ...">Enviar</button>
@@ -209,7 +209,7 @@ Host Grotesk está carregada com 300, 400, 500, 600, 700 e 800. DM Sans com 400 
 
 ## Prose (conteúdo longo)
 
-O `<main>` em `layout.tsx` aplica:
+O `<main>` em `src/app/(site)/layout.tsx` aplica:
 
 ```tsx
 <main className="prose prose-gmt max-w-none flex-1">
@@ -241,10 +241,11 @@ Elementos sem classe `.type-*` herdam corpo 18px DM Sans.
 ### Use
 
 - **Label** → `.type-label` (14px, uppercase, tracking largo)
-- **Rótulo de secção** → `.section-label` (12px, via `SectionLabel`)
+- **Rótulo eyebrow** → `.section-label` (13px, via `SectionLabel variant="eyebrow"`)
+- **Título de secção** → `.type-section-title` (via `SectionLabel variant="title"`)
 - **Marca GMT** → `.gmt-brand` + variante (`--hero`, `--navbar`, `--footer`)
 - **Corpo** → `.type-body` ou `.type-body-lg`
-- **Título de secção** → `.type-h2`
+- **Título de página** → `.type-h2`
 - **Título de cartão** → `.type-h3`
 - **Hero** → `.type-hero` (+ `--fullscreen` se viewport-leading)
 - **Fonte display** → Host Grotesk
@@ -317,16 +318,20 @@ Actualizar ou tokenizar tamanhos hardcoded.
 - [ ] Legibilidade de `type-label` uppercase em mobile
 - [ ] Formulários e botões com `type-body`
 - [ ] Heroes com `type-hero--fullscreen` sem clipping
-- [ ] `RevealText` com novas fontes (animación por letra — verificar line-height)
+- [ ] Heroes com `type-hero--fullscreen` sem clipping
 - [ ] `npm run build` sem erros
 
 ---
 
 ## Componentes tipográficos especiais
 
-### `RevealText`
+### `RevealOnScroll`
 
-Animação letra a letra (Framer Motion). Recebe `className` com estilos tipográficos (ex.: `type-h2`). Ao mudar line-height ou tamanho do hero, testar especialmente com textos longos.
+Animação de bloco ao scroll (Framer Motion). Recebe `className` com estilos tipográficos. Usado em títulos, parágrafos e wrappers de mídia.
+
+### `Preloader` + `HeroTitle` (Home)
+
+Intro GSAP + scroll GSAP — ver `docs/HERO_HOME_ANIMACAO.md`. Não usa `RevealOnScroll`.
 
 ### `font-mono` pontual
 

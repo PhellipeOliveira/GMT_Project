@@ -1,0 +1,2 @@
+-- Seed vazio — reservado para dados de desenvolvimento local.
+-- Referenciado por backend/supabase/config.toml ([db.seed] sql_paths).

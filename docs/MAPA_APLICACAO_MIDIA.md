@@ -205,7 +205,7 @@ Thumbs 3:2 dentro de **linhas flex** (ex.: Accordion `/servicos`) não devem usa
 
 ```tsx
 const LISTING_THUMB_FRAME =
-  "relative w-14 h-[calc(3.5rem*2/3)] shrink-0 flex-none ... md:w-20 md:h-[calc(5rem*2/3)]";
+  "relative w-14 aspect-[3/2] shrink-0 flex-none self-center overflow-hidden rounded-md md:w-20";
 
 <div className={LISTING_THUMB_FRAME}>
   <PlaceholderMedia id="AG-01" fill ... />  {/* absolute inset-0 */}

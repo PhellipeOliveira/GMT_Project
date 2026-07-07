@@ -15,7 +15,7 @@
 | **`fill={true}`** | **Container pai** | `absolute inset-0` + `object-cover` → asset cortado, sem distorção |
 | **`fill={false}`** | **Spec (`media-spec.ts`)** | `aspect-ratio` no wrapper → moldura = ratio do asset |
 | **Full-bleed + `vh`** | **Container em `vh`** | Hero de serviço: ratio visível ≠ ratio de export |
-| **`ExpandingFrame`** | **Frame pai 16:9** | `aspect-video`; largura 35%→90%; assets 16:9 com `fill` |
+| **`ExpandingFrame`** | **Frame pai 16:9** | `aspect-video`; largura 35%→75%; assets 16:9 com `fill` |
 
 ---
 
@@ -25,7 +25,7 @@
 
 1. **Cards / thumbs / galeria** → **container = ratio do asset** (`aspect-[X/Y]` ou spec via `PlaceholderMedia` sem `fill`). Exportar no px da spec.
 2. **Heroes full-bleed** → **container define a moldura** (`aspect-video`, `80vh`); asset exportado no ratio da spec + **safe zone central**; esperar **crop** com `object-cover`.
-3. **Frame expansivo (`ExpandingFrame`)** → frame pai **e** assets em **16:9 · 2560×1440**; largura animada **35% → 90%**; depois scroll continua; **35%** = largura inicial do container pai.
+3. **Frame expansivo (`ExpandingFrame`)** → frame pai **e** assets em **16:9 · 2560×1440**; largura animada **35% → 75%**; depois scroll continua; **35%** = largura inicial do container pai.
 
 ---
 
@@ -38,9 +38,9 @@
 | **Conjuntos** | Home: **HER-02…07** (6 slides) · Sobre: **ABT-01…05** (5 slides) |
 | **Unidade** | Cada conjunto = **um único** `ExpandingFrame`; slides não são imagens independentes |
 | **35%** | Largura inicial do **frame pai** (`motion.div`), **não** dimensão do asset |
-| **90%** | Largura máxima do frame pai; depois o scroll **continua** pela secção |
+| **75%** | Largura máxima do frame pai; depois o scroll **continua** pela secção |
 | **16:9** | Frame pai (`aspect-video`) **e** assets do mesmo grupo — alinhados |
-| **Expansão** | Scroll: largura **35% → 90%**, ratio **16:9** constante |
+| **Expansão** | Scroll: largura **35% → 75%**, ratio **16:9** constante |
 | **Assets** | Produzir todos do mesmo grupo em **16:9 · 2560×1440** |
 | **Render** | `PlaceholderMedia` + `fill` + `object-cover` dentro do frame 16:9 |
 | **Ratio visível** | **16:9** em todo o percurso (frame pai = asset) |
@@ -64,9 +64,9 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 
 | Slot (PLANO) | Componente | Ratio esperado (asset) | Ratio real do container | Status | Notas |
 |---|---|---|---|---|---|
-| **HER-01** · Home Sec0 | `HeroSection` | 16:9 · 2560×1440 | **16:9** inner · secção **`h-[45vw]`** (−20% vs full-bleed) | **OK** | Wrapper `aspect-video` centrado; mídia ≈ 80vw |
-| **HER-02…07** · Home Sec4 | `ExpandingFrame` | **16:9 · 2560×1440** (conjunto) | **16:9** (35%→90% largura) | **OK** | 6 slides; HER-06 e HER-07 adicionados Jul 2026 |
-| **ABT-01…05** · Sobre Sec2 | `ExpandingFrame` | **16:9 · 2560×1440** (conjunto) | **16:9** (35%→90% largura) | **OK** | Mesma lógica que a Home |
+| **HER-01** · Home Sec0 | `HeroSlider` (órfão) | 16:9 · 2560×1440 | **N/A** — hero activa sem imagem (`100dvh` preto) | **Órfão** | Só `HeroSlider`; `HeroSection` não usa HER-01 |
+| **HER-02…07** · Home Sec4 | `ExpandingFrame` | **16:9 · 2560×1440** (conjunto) | **16:9** (35%→75% largura) | **OK** | 6 slides; HER-06 e HER-07 adicionados Jul 2026 |
+| **ABT-01…05** · Sobre Sec2 | `ExpandingFrame` | **16:9 · 2560×1440** (conjunto) | **16:9** (35%→75% largura) | **OK** | Mesma lógica que a Home |
 | **CON-01** · Contacto | — | 16:9 · 2560×1440 | **Não renderizado** | **Não implementado** | Opcional / inactivo |
 
 ---
@@ -96,7 +96,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 
 **Trecho hero serviço:**
 
-```51:52:src/app/servicos/[slug]/page.tsx
+```51:52:src/app/(site)/servicos/[slug]/page.tsx
       <section
         className="not-prose relative h-[80vh] w-full overflow-hidden md:h-[70vh]"
 ```
@@ -109,7 +109,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 |---|---|---|---|---|---|
 | **CF-01..05** | `servicos/[slug]/page.tsx` Sec3 | 2:3 · 1200×1800 | **3:4** mobile · **2:3** md+ | **Conflito mobile** | Uniformizar: `aspect-[2/3]` em todos os breakpoints **ou** actualizar PLANO/spec para 3:4 mobile |
 
-```188:188:src/app/servicos/[slug]/page.tsx
+```188:188:src/app/(site)/servicos/[slug]/page.tsx
                 <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-gmt-border md:aspect-[2/3]">
 ```
 
@@ -168,7 +168,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 | Slot | Componente | Ratio esperado | Ratio real | Status | Correção |
 |---|---|---|---|---|---|
 | **GL-01** · logo | `GmtLogo` (texto “GMT”) | 7:2 · 1400×400 | **Tipografia**, não imagem | **Asset não usado** | Usar `GL-01.webp` **ou** retirar do inventário activo |
-| **GL-02** · favicon | `layout.tsx` metadata | 1:1 · 512×512 | **1:1** | **OK** | — |
+| **GL-02** · favicon | `src/app/icon.svg` | SVG 16×16 | **1:1** | **OK** | App Router; `GL-02.webp` não usado |
 | **GL-03** · textura footer | `Footer.tsx` | 16:9 · 2560×1440 | **Altura do footer** (não 16:9), `absolute inset-0` + crop | **Conflito decorativo** | Aceitável para textura; compor padrão repetível / centro |
 | **GL-04** · avatar testimonial | — | 1:1 | Secção removida | **N/A** | — |
 | **GL-05** · ícones | `lucide-react` | vetor | vetor | **OK** | — |
@@ -179,9 +179,9 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 
 | Tema | PLANO / spec | Código real |
 |---|---|---|
-| HER-01 slot | Sec0 hero · asset 16:9 · container `h-[45vw]` | `HeroSection` · inner `aspect-video` centrado |
-| HER-02…07 | Conjunto ExpandingFrame Home Sec4 · 16:9 · 35%→90% | `ExpandingFrame` |
-| ABT-01…05 | Conjunto ExpandingFrame Sobre Sec2 · 16:9 · 35%→90% | `ExpandingFrame` |
+| HER-01 slot | Asset órfão · hero activa `100dvh` preto + Preloader | `HeroSection` sem `PlaceholderMedia` |
+| HER-02…07 | Conjunto ExpandingFrame Home Sec4 · 16:9 · 35%→75% | `ExpandingFrame` |
+| ABT-01…05 | Conjunto ExpandingFrame Sobre Sec2 · 16:9 · 35%→75% | `ExpandingFrame` |
 | Thumbs listagem + hero | AG/MKT/AV 3:2 | `Accordion` + `getServicoHeroId` | **24+3 activos** |
 | ~~AGH-F*, MKT-04~~ | Hero 3:1 partilhado | — | **Removidos Jul 2026** |
 | CON-01 | Fundo contacto | Não implementado |
@@ -218,6 +218,6 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 ```
 Card / thumb / galeria     → exportar no ratio + px da spec; container usa aspect-ratio
 Hero full-bleed            → exportar no ratio da spec; compor safe zone; esperar crop
-ExpandingFrame (fill)      → asset 16:9 + frame pai aspect-video 16:9; largura 35%→90%; scroll continua depois
+ExpandingFrame (fill)      → asset 16:9 + frame pai aspect-video 16:9; largura 35%→75%; scroll continua depois
 fill={true}                → ratio visível = ratio do PAI, não do asset
 ```

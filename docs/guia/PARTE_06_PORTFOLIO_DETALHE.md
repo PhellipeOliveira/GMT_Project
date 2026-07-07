@@ -2,7 +2,7 @@
 
 > Documentação completa do **template dinâmico** de página de case.
 >
-> **Arquivo principal:** `src/app/portfolio/[slug]/page.tsx`
+> **Arquivo principal:** `src/app/(site)/portfolio/[slug]/page.tsx`
 >
 > **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/styles/globals.css`, `src/styles/tokens.css`, `src/data/media-spec.ts`, `src/data/portfolio.ts` + componentes em `src/components/`.
 >
@@ -17,19 +17,19 @@
 | Campo | Detalhe |
 |---|---|
 | Rota | `/portfolio/[slug]` (rota dinâmica) |
-| Arquivo | `src/app/portfolio/[slug]/page.tsx` |
+| Arquivo | `src/app/(site)/portfolio/[slug]/page.tsx` |
 | Componentes | `RevealOnScroll`, `PlaceholderMedia` |
 | Dados | `portfolio`, `getCaseBySlug` (`src/data/portfolio.ts`) — **1 case (NARA)** |
 | Geração estática | `generateStaticParams()` → 1 página por case; `generateMetadata()` (title = `caso.nome`, description = `caso.resumo`) |
 | 404 | `notFound()` quando o slug não existe |
-| Globais (via `layout.tsx`) | `Navbar`, `GMTLightFooter`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `(site)/layout.tsx`) | `Navbar`, `GMTLightFooter`, `Footer`, `ChatWidgetLoader`, `SmoothScroll` (Lenis) |
 
 **Ordem das seções:**
 
 1. Seção 01 — Ficha lateral (sticky) + galeria
 2. Seção 02 — Lista de projetos (cases em `portfolio`)
 
-> A página **não** usa o wrapper `.section-light`. **Sem CTA final** — conversão global via `FloatingCTA`. A página termina na lista de projetos.
+> A página **não** usa o wrapper `.section-light`. **Sem CTA final** — conversão global via `ChatWidgetLoader`. A página termina na lista de projetos.
 
 **Removido do template (não documentar como activo):**
 
@@ -71,7 +71,7 @@ Tags NARA: `Branding`, `Website`, `Chatbots`, `Campanhas`. Pill: `rounded-lg bg-
 Galeria de `caso.galeria` (NARA = 10 imagens). Cruzado com PLANO Tabela 4.5 — PF-03…PF-12.
 
 ### 4. Botões / CTAs
-"Falar sobre um projeto" → `/contacto` — `bg-gmt-accent`, hover `bg-gmt-accent-2`.
+"Falar sobre um projeto" → `/contacto` — `rounded-full bg-black px-8 py-3.5 text-white hover:bg-black/80` (`.type-label`).
 
 ### 5. Animações
 `RevealOnScroll` com delays `0.08` / `0.16` / `0.24`; galeria com stagger `i * 0.08`.
@@ -80,7 +80,7 @@ Galeria de `caso.galeria` (NARA = 10 imagens). Cruzado com PLANO Tabela 4.5 — 
 Desktop: `flex-row`, ficha `md:sticky md:top-24 md:w-2/5`, galeria `md:w-3/5`. Mobile: `flex-col`, `pt-28`, `px-5`.
 
 ### 7. Arquivos relacionados
-`src/app/portfolio/[slug]/page.tsx`, `PlaceholderMedia`, `portfolio.ts`, `media-spec.ts`.
+`src/app/(site)/portfolio/[slug]/page.tsx`, `PlaceholderMedia`, `portfolio.ts`, `media-spec.ts`.
 
 ---
 
@@ -109,7 +109,7 @@ Cada linha = `Link` para `/portfolio/{slug}`. Hover: título → `--gmt-accent`;
 Desktop: `py-[8vw]`, `mt-[8vw]`, `px-[5vw]`. Mobile: `py-16`, `mt-20`, `px-5`.
 
 ### 7. Arquivos relacionados
-`src/app/portfolio/[slug]/page.tsx`, `portfolio.ts`.
+`src/app/(site)/portfolio/[slug]/page.tsx`, `portfolio.ts`.
 
 ---
 
@@ -121,8 +121,7 @@ Desktop: `py-[8vw]`, `mt-[8vw]`, `px-[5vw]`. Mobile: `py-16`, `mt-20`, `px-5`.
 | `--gmt-bg-alt` | `#f5f5f5` | pills de tag da ficha |
 | `--gmt-text` | `#0a0a0a` | h1, h3, tags, `<dd>` |
 | `--gmt-text-muted` | `#575757` | link voltar, resumo, rótulos, local |
-| `--gmt-accent` | `#2563eb` | botão ficha + hover título lista |
-| `--gmt-accent-2` | `#7c3aed` | hover botão ficha |
+| `--gmt-accent` | `#2563eb` | hover título lista |
 | `--gmt-border` | `#dcdcdc` | divisórias da lista |
 | `COR_PORTFOLIO` | `#134E4A` | fallback galeria e thumb NARA |
 

@@ -37,8 +37,8 @@ Ambos partilham a **mesma máscara** (`overflow-hidden` + `motion.div`). A únic
 | `/servicos` | Cabeçalho, thumbs, accordion |
 | `/servicos/[slug]` | Secções de conteúdo, cards «Como funciona» |
 | `/portfolio`, `/portfolio/[slug]` | Listagens, ficha |
-| `/contacto` | Intro, formulário, CTA |
-| Componentes | `SectionLabel`, `PlaceholderMedia` (default `reveal={true}`), `Accordion`, cards |
+| `/contacto` | Intro, formulário |
+| Componentes | `SectionLabel`, `RevealOnScroll`; thumbs Accordion com `PlaceholderMedia reveal={false}` + wrapper `RevealOnScroll` |
 
 **Não usa reveal global:**
 

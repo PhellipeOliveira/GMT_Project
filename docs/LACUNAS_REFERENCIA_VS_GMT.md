@@ -2,7 +2,7 @@
 
 > Documento de acompanhamento da implementação do site GMT face aos design maps em `docs/referencias/site_json/design_map_*_v2.json`.
 >
-> **Última auditoria:** Junho 2026 · Base: código em `src/` + design maps v2 + `PLANO_MESTRE_DE_MIDIA.md`.
+> **Última auditoria:** Jul 2026 · Base: código em `src/` + design maps v2 + `PLANO_MESTRE_DE_MIDIA.md`.
 
 ---
 
@@ -26,21 +26,18 @@
 
 | Área | Estado | Prioridade sugerida |
 |---|---|---|
-| Secções dual-mode (claro `#EBEBEB` → escuro `#000` → footer `#101010`) | Parcial — Serviços, Sobre, CTAs | Média |
-| Hero slider, Lenis, easings, media zoom | Implementado | — |
-| Navbar blur + CTA pill + modo claro | Implementado | — |
+| Secções dual-mode (claro → `.section-cta` em Home/Sobre → footer `#000`) | Parcial | Média |
+| Hero fullscreen preto + Preloader, Lenis, easings | Implementado | — |
+| Navbar `useNavTone` + pill adaptativo | Implementado | — |
+| ChatWidgetLoader (agente IA) | Implementado | — |
 | Accordion blur + border lento | Implementado | — |
-| Botão submit `bg-white/70` em CTAs escuros | Implementado | — |
-| Tag pills glassmorphism | Implementado | — |
+| Reveal bloco uniforme (`RevealOnScroll` 2.0s) | Implementado (Jul 2026) | — |
 | Formulário (shake, spinner, sucesso) | Parcial — sem backend real | Baixa |
-| Preloader Home | Não implementado | Média |
-| Reveal linha-a-linha (`mst`) | Não implementado (usa letra-a-letra) | Média |
 | Cursor preview (`mouse-alert-bubble`) | Não implementado | Baixa |
 | Transições entre rotas | Não implementado | Baixa |
-| Scan shimmer no load de imagens | Não implementado | Baixa |
 | Depoimentos / Blog | Lacuna de conteúdo | Aguardar conteúdo |
 | Cases além do NARA | Lacuna de conteúdo | Aguardar cases |
-| Assets em proporção antiga | Re-exportar | Alta |
+| CF-01…05 (Como funciona) | Lacuna — usa AGP-F* fallback | Média |
 
 ---
 
@@ -50,10 +47,10 @@
 
 | # | Item | Referência | GMT actual | Tipo | Prioridade |
 |---|---|---|---|---|---|
-| G-01 | **Preloader** — fullscreen preto, barra 7s linear, bloqueia interacção até hero carregar | `design_map_home_v2` → `svelte-1ycgkir-fill` | Ausente | Design | Média |
-| G-02 | **Reveal `mst`** — texto linha-a-linha com máscara `translateY(100%)→0`, 1s, easing services | 52+ instâncias em Portfolio/Services | `RevealText` letra-a-letra (Framer Motion) | Design | Média |
+| G-01 | **Preloader** — overlay GSAP, 1× sessão | `design_map_home_v2` | **Implementado** (`Preloader.tsx`) | — | — |
+| G-02 | **Reveal `mst`** — linha-a-linha | Referência Svelte | **Bloco uniforme** `RevealOnScroll` 2.0s (Jul 2026) | Decisão | — |
 | G-03 | **Transições de rota** — overlay opacity 0.5s entre páginas | Keyframes globais SvelteKit | Navegação App Router sem overlay | Design | Baixa |
-| G-04 | **Cursor `mouse-alert-bubble`** — tooltip com preview de projeto/serviço no hover | Services geral, Portfolio geral | `CursorFollower` — anel sem texto/preview | Design | Baixa |
+| G-04 | **Cursor preview** | Services, Portfolio | Não implementado (sem `CursorFollower`) | Design | Baixa |
 | G-05 | **Scan shimmer** — skeleton `translate(-100%) skew(-20deg)→translate(250%)` no lazy-load | `svelte-1b2mvyb-scan` | Fade opacity apenas | Design | Baixa |
 | G-06 | **Lazy-load DOM duplicado** — imagem offscreen `width:0 height:0` + `transition-opacity` | Padrão em todas as páginas | `next/image` único | Design | Baixa |
 | G-07 | **Footer grid 5 colunas** — “Visual and Marketing” + “Technology” | Home Sec5, Services, Portfolio | Footer GMT: 3 colunas + copyright (mais completo legalmente) | Decisão | Baixa |
@@ -73,8 +70,8 @@
 | T-01 | `--text-sm` (14px) | Usado em labels secundários | Sem token 14px | Design |
 | T-02 | `--text-2xl` (24px) | Subtítulos intermédios | Não mapeado | Design |
 | T-03 | `--text-5xl` (48px) em H2 de categorias | Services accordion | `.type-category` clamp até 48px — próximo | Design |
-| T-04 | Manifesto About em `font-serif` | `text-3xl md:text-[3vw]` serif | `type-h3` sans (Host Grotesk) | Design |
-| T-05 | H1 invisível só para SEO na Home | H1 hidden, H2 visível | H1 visível via `RevealText` (melhor SEO) | Decisão ✓ |
+| T-04 | Manifesto About | serif referência | `.type-manifesto` (Host Grotesk fluido) | Design |
+| T-05 | H1 visível na Home | H1 hidden ref. | H1 visível `gmt-brand--hero` (melhor SEO) | Decisão ✓ |
 
 ### 1.3 Motion stack
 
@@ -101,7 +98,7 @@
 | **Sec 4 — Testimonials** | Secção ausente | **Conteúdo** — sem depoimentos na copy; carousel `scroll-up` 32s |
 | **Sec 5 — Latest News + footer-grid** | CTA + Footer separado | **Conteúdo** — sem blog; footer-grid 5 col vs Footer GMT 3 col |
 | **Pills de categoria** | `border` rounded-full | Referência: `SPAN.tag rounded-lg px-4 py-2 bg-opaco` | Design |
-| **CTAs explícitos** | CTA final Home removido | Referência Home: engagement via cards — GMT usa `FloatingCTA` global (**Decisão**) |
+| **CTAs explícitos** | CTA final Home removido | Referência Home: engagement via cards — GMT usa `ChatWidgetLoader` global (**Decisão**) |
 
 ### 2.2 Sobre (`design_map_about_v2.json`) — implementação actual
 
@@ -111,7 +108,7 @@
 | **Sec 2 — Slideshow expansivo** | Implementado | `ExpandingFrame` + ABT-01…05 em `public/images/`; branco→preto no scroll |
 | **Sec 3 — Manifesto** | Implementado | Texto em `bg-black`, sem imagem; secção compacta |
 | **Sec 4 — Nossos valores** | Implementado | `.section-cta`; 6 diferenciais + ícones (coluna 2); `src/data/diferenciais.ts` |
-| **CTA final inline** | Removida (Home, Sobre, `/servicos`, detalhe serviço) | Conversão via `FloatingCTA` global |
+| **CTA final inline** | Removida (Home, Sobre, `/servicos`, detalhe serviço) | Conversão via `ChatWidgetLoader` global |
 | **Footer ticker + social** | Footer global | Ticker marquee Instagram/LinkedIn/Dribbble/Mail — ausente |
 
 ### 2.3 Serviços — Listagem (`design_map_services_geral_v2.json`)
@@ -142,7 +139,7 @@
 
 | Secção referência | Estado GMT | Lacunas |
 |---|---|---|
-| **Hero grid 13 thumbs** | NARA + 3 “em breve” | **PF-SLOT-G** ≈12 slots vazios |
+| **Hero grid 13 thumbs** | Só lista NARA (sem grid hero) | **PF-SLOT-G** para cases futuros |
 | **Lista vertical numerada** | Implementado | Gap 292px ref. vs `py-16 md:py-[8vw]` GMT — aproximado |
 | **Tag pills glassmorphism** | Implementado | — |
 | **Filtro por categoria/tag** | Ausente | Design map recomenda filtros para GMT |
@@ -153,17 +150,16 @@
 | Secção referência | Estado GMT | Lacunas |
 |---|---|---|
 | **Sec 0 — Galeria sticky sidebar** | Sidebar + galeria vertical | Verificar sticky behaviour em viewport largo |
-| **Sec 1 — Next project ×2** | 2 slots “Em breve” | **PF-SLOT-N** — lacuna cases |
+| **Sec 1 — Next project ×2** | Lista de cases reais (`portfolio.map`) | Só NARA disponível |
 | **Sec 2 — CTA-form** | Link contacto no sidebar | Formulário inline na página |
 
 ### 2.7 Contacto (`design_map_contact_v2.json`)
 
 | Secção referência | Estado GMT | Lacunas |
 |---|---|---|
-| **Layout split 50/60** | `md:w-2/5` + `md:w-3/5` | Próximo (ref. 50/60) |
-| **Título `text-6xl md:text-[6vw] text-[#c7c7c7]`** | `type-h2` + `#c7c7c7` | Escala viewport no título — parcial |
-| **Nav bottom pill** | Navbar topo | **G-09** |
-| **Sem footer** | Footer global | **G-10** |
+| **Layout split** | `grid md:grid-cols-[0.8fr_1.2fr]` | Próximo da ref. |
+| **Título** | `type-h2` tema claro | Diverge da ref. escura |
+| **Canais** | Só link telefone na coluna sticky | Email/WhatsApp/LinkedIn não na UI |
 | **Formulário** | Floating labels + pills + btn branco | Backend real pendente (**G-15**) |
 
 ---
@@ -189,20 +185,20 @@ Consolidado de `PLANO_MESTRE_DE_MIDIA.md` Parte 6 e mapas de distribuição.
 
 Ver tabela completa em `PLANO_MESTRE_DE_MIDIA.md` § Hierarquia da Verdade → Migração.
 
-### 4.1 Re-exportação obrigatória (proporção errada)
+### 4.1 Re-exportação (verificar se ainda aplicável)
 
-| ID | Exportado | Correcto | Onde aparece mal |
-|---|---|---|---|
-| HER-02 | 7:5 | **110:225** (~880×1800) | Home approach portrait |
-| HER-03, 04, 05 | 7:5 | **4:3** (1200×900) | Home approach thumbs |
-| PF-02 | 3:2 | **9:16** (1080×1920) | Portfolio grid/lista |
-| AGP-F1..F4 | 3:4 | **2:3** (1200×1800) | Cards processo serviços |
+> HER-02…07 e ABT-01…05 estão em **16:9** no código actual. PF-02 em **9:16**. SERV-AV-01…06 **produzidos**.
+
+| ID | Notas |
+|---|---|
+| CF-01…05 | Cards "Como funciona" — ainda sem assets; usa AGP-F* |
+| AGP-F1…F4 | 2:3 — activos como fallback dos cards CF |
 
 ### 4.2 Vídeos ainda como WebP (slots definidos)
 
 | ID | Página | Formato final |
 |---|---|---|
-| HER-01 | Home hero | MP4/WebM loop 5–10s, sem áudio |
+| HER-01 | Home (órfão `HeroSlider` apenas) | WebP em `public/images/` |
 | ABT-01…ABT-05 | Sobre slideshow | WebP em `public/images/` (2:1); futuro: vídeo loop opcional |
 | AGH-F1..F4 | ~~Serviço item hero~~ | **Retirado** — thumbs AG-01…15 |
 | MKT-04 | ~~Pacotes marketing hero~~ | **Retirado** — MKT-01…03 |
@@ -217,7 +213,7 @@ Ver tabela completa em `PLANO_MESTRE_DE_MIDIA.md` § Hierarquia da Verdade → M
 
 | ID | Descrição |
 |---|---|
-| PF-SLOT-H ×2 | Cards portfolio Home “Em breve” |
+| PF-SLOT-H ×2 | **Removido** — Home só mostra NARA |
 | PF-SLOT-G ×≈12 | Thumbs portfolio catálogo |
 | PF-SLOT-N ×2 | Next project no case item |
 | PF-EB1..3 | Placeholders “em breve” no grid (spec existe, sem imagem) |
@@ -230,49 +226,42 @@ Ver tabela completa em `PLANO_MESTRE_DE_MIDIA.md` § Hierarquia da Verdade → M
 | Componente | Ficheiro | Implementado | Falta |
 |---|---|---|---|
 | Navbar | `Navbar.tsx` | Blur, altura vw, CTA pill, hamburger box, modo claro | Opacity fade no scroll; seta animada ✓ |
-| Footer | `Footer.tsx` | `#101010`, `pt-[8vw]`, `py-[3.2rem]`, 3 colunas | Grid 5 col; ticker; social strip |
-| HeroSlider | `HeroSlider.tsx` | Keyframes, drag, barra 7s | Preloader; multi-mídia slides |
-| Accordion | `Accordion.tsx` | Blur, border 1s, grid reveal | 3º nível nested; transform scale sub-list |
-| ContactForm | `ContactForm.tsx` | Labels, pills, shake, spinner, sucesso | API; validação campo-a-campo |
-| PlaceholderMedia | `PlaceholderMedia.tsx` | Spec ratio, fill, fade load | Scan shimmer; opacity lazy duplicate |
-| RevealText | `RevealText.tsx` | Letter stagger | Line mask `mst` |
-| RevealItem | `RevealItem.tsx` | Scroll reveal 3 easings | `rowFadeIn` variant |
-| CursorFollower | `CursorFollower.tsx` | Anel, blend, coarse hidden | Preview bubble com texto |
-| PortfolioCard | `PortfolioCard.tsx` | Tag pills, zoom | Hover transform 1s |
-| ServiceCard | `ServiceCard.tsx` | Thumb 3:2 via spec | — |
+| Footer | `Footer.tsx` | `bg-black`, `.type-footer-subtitle`, `py-20 md:py-28`, 3 colunas | Grid 5 col; ticker |
+| HeroSlider | `HeroSlider.tsx` | Órfão — keyframes em CSS | Não usado na Home activa |
+| Preloader | `Preloader.tsx` | GSAP intro 1× sessão | — |
+| Accordion | `Accordion.tsx` | Blur, border 1s, `aspect-[3/2]` thumbs | — |
+| ContactForm | `ContactForm.tsx` | Labels, pills, shake, spinner, sucesso | API real |
+| PlaceholderMedia | `PlaceholderMedia.tsx` | Spec ratio, fill, fade load | Scan shimmer |
+| RevealOnScroll | `RevealOnScroll.tsx` | Bloco uniforme 2.0s | — |
+| ChatWidgetLoader | `ChatWidgetLoader.tsx` | Agente IA canto inferior direito | — |
+| PortfolioCard | `PortfolioCard.tsx` | Órfão | — |
+| ServiceCard | `ServiceCard.tsx` | Órfão | — |
 
 ---
 
 ## 6. Priorização sugerida para próximas sprints
 
 ### Sprint A — Impacto visual imediato
-1. Re-exportar **HER-02..05**, **PF-02**, **AGP-F*** (tabela §4.1)
-2. Converter **HER-01** para vídeo loop
-3. **Preloader** Home (G-01)
+1. Produzir **CF-01…05** (cards Como funciona)
+2. Novos cases → preencher PF-SLOT-*
 
 ### Sprint B — Fidelidade UX
-4. **mst** line reveal (G-02) — substituir ou complementar `RevealText`
-5. Formulário inline em Serviços + Sobre (secções CTA-form da referência)
-6. **Cross-nav 8 serviços** na página de serviço individual
+3. Formulário com backend real (G-15)
+4. Filtros no Portfolio (opcional)
 
-### Sprint C — Quando houver conteúdo
-7. Secção depoimentos + GL-04
-8. Novos cases → preencher PF-SLOT-*
-9. Blog ou bloco alternativo (FAQ)
-
-### Sprint D — Polish
-10. Cursor preview (G-04)
-11. Scan shimmer (G-05)
-12. Transições de rota (G-03)
-13. Filtros no Portfolio
-14. Backend do formulário (G-15)
+### Sprint C — Polish
+5. Cursor preview (G-04)
+6. Transições de rota (G-03)
 
 ---
 
 ## 7. O que já está alinhado (não reimplementar)
 
-- Hero slider: `80vh`, autoplay 7s, slide-in/out, darken 0.6, bar fade 1s
-- Lenis smooth scroll
+- Hero Home: fullscreen preto `100dvh` + **Preloader** (GSAP) + scroll GSAP em `HeroTitle`
+- Lenis smooth scroll + **ChatWidgetLoader**
+- `RevealOnScroll` bloco uniforme (2.0s, ease `[0.25,1,0.35,1]`)
+- ExpandingFrame **35% → 75%** largura
+- SERV-AV-01…06 produzidos (cards Home)
 - Tokens `--ease`, `--ease-services`, `--ease-portfolio`, `--slide-duration`, `--color-transition`
 - Spacing `px-5` / `md:px-[5vw]`, `md:pt-[11vw]`, `md:mt-[8vw]`
 - Classes tipográficas `.type-*` + prose invert

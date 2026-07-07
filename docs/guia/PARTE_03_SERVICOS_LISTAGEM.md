@@ -2,7 +2,7 @@
 
 > Documentação da página de listagem de Serviços.
 >
-> **Arquivo principal:** `src/app/servicos/page.tsx`
+> **Arquivo principal:** `src/app/(site)/servicos/page.tsx`
 >
 > **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (PARTE 4), `src/data/media-spec.ts`, `src/lib/media.ts`, `src/data/servicos.ts`.
 >
@@ -17,11 +17,11 @@ A rota `/servicos` apresenta toda a oferta da GMT organizada em três categorias
 | Campo | Detalhe |
 |---|---|
 | Rota | `/servicos` |
-| Arquivo | `src/app/servicos/page.tsx` |
+| Arquivo | `src/app/(site)/servicos/page.tsx` |
 | Componentes | `RevealOnScroll`, `RevealSequence`, `PlaceholderMedia`, `Accordion` |
 | Dados | `agentes`, `pacotes`, `avulsos` (`src/data/servicos.ts`); `SERVICOS_HERO_THUMBS`, `getServicoThumbId` (`src/lib/media.ts`); `CATEGORIAS` + `toItems()` no próprio arquivo |
 | Metadata | `title: "Serviços"`; description institucional |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `(site)/layout.tsx`) | `Navbar`, `Footer`, `ChatWidgetLoader`, `SmoothScroll` (Lenis) |
 
 ---
 
@@ -54,11 +54,11 @@ Toda a página está dentro de `<div className="section-light">` (fundo claro). 
 | MKT-02 | Pacotes de Marketing | 3:2 | 1200×800 | `public/images/MKT-02.webp` | **Produzido** |
 | AV-05 | Serviços Avulsos (IA) | 3:2 | 1200×800 | `public/images/AV-05.webp` | **Produzido** |
 
-> Ordem no grid (esquerda → direita): AG-01 · MKT-02 · AV-05. Definida em `SERVICOS_HERO_THUMBS` (`src/lib/media.ts`). Ratio via spec (`PlaceholderMedia` sem `fill`).
+> Ordem no grid (esquerda → direita): AG-01 · MKT-02 · AV-05. Definida em `SERVICOS_HERO_THUMBS` (`src/lib/media.ts`). Wrapper `aspect-[3/2]` + `PlaceholderMedia fill`.
 
 ### Categorias (Accordion) — 3 secções em loop
 
-Geradas a partir de `CATEGORIAS`:
+Geradas a partir de `CATEGORIAS`. Títulos de categoria usam `<h2 class="type-category">` (Host Grotesk 300, `clamp(36px,5vw,48px)`).
 
 | Secção | Label | Descrição | Itens |
 |---|---|---|---|
@@ -76,7 +76,7 @@ Cada item do Accordion expõe: **thumb 3:2** (`mediaId` = AG/MKT/AV), nome, head
 | Pacotes | MKT-01…03 | 3:2 | 1 thumb por pacote | idem |
 | Avulsos | AV-01…06 | 3:2 | 1 thumb por avulso | idem |
 
-> Render: frame `LISTING_THUMB_FRAME` — `w-14 h-[calc(3.5rem*2/3)]` · `md:w-20 md:h-[calc(5rem*2/3)]` + `PlaceholderMedia fill` (`absolute inset-0`). `RevealOnScroll` só envolve o botão, não o painel.
+> Render: frame `LISTING_THUMB_FRAME` — `relative w-14 aspect-[3/2] … md:w-20` + `PlaceholderMedia fill`. `RevealOnScroll` só envolve o botão, não o painel.
 
 > **Strip vs. Accordion:** o strip hero (AG-01, MKT-02, AV-05) é **só decorativo por categoria**. Os restantes thumbs (AG-02…15, MKT-01/03, etc.) aparecem **só no Accordion**. Ver `docs/MAPA_APLICACAO_MIDIA.md`.
 
@@ -91,7 +91,7 @@ Cada item do Accordion expõe: **thumb 3:2** (`mediaId` = AG/MKT/AV), nome, head
 - Botão `Agendar reunião` (`.btn-submit` → `/contacto`)
 - Import `Link` associado a esse bloco
 
-A conversão fica a cargo do **`FloatingCTA` global** (`layout.tsx`), não de um CTA inline nesta página.
+A conversão fica a cargo do **`ChatWidgetLoader` global** (`layout.tsx`), não de um CTA inline nesta página.
 
 ---
 
@@ -112,4 +112,4 @@ A página termina na **última categoria do Accordion** (Serviços Avulsos) e pa
 | Cores de família (ponto) | F1–F4, MKT, AV | fallback do thumb se imagem falhar |
 | Thumb accordion | `w-14 md:w-20` | AG/MKT/AV por linha |
 
-*Documento alinhado com `src/app/servicos/page.tsx`. Nenhuma informação foi inventada.*
+*Documento alinhado com `src/app/(site)/servicos/page.tsx`. Nenhuma informação foi inventada.*

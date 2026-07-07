@@ -1,4 +1,4 @@
-f++# PRODUTOS — CONTEÚDO PÚBLICO DO SITE
+# PRODUTOS — CONTEÚDO PÚBLICO DO SITE
 
 > Arquivo **A** — conteúdo destinado a renderização pública no site.
 > ⚠️ NÃO contém preços, custos de operação ou margens. Esses dados vivem em `precos_interno.md`.

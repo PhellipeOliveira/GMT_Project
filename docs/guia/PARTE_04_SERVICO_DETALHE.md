@@ -2,7 +2,7 @@
 
 > Documentação do **template único** de página individual de serviço.
 >
-> **Arquivo principal:** `src/app/servicos/[slug]/page.tsx`
+> **Arquivo principal:** `src/app/(site)/servicos/[slug]/page.tsx`
 >
 > **Fontes de verdade:** `docs/TIPOGRAFIA_PAGINAS.md`, `docs/PLANO_MESTRE_DE_MIDIA.md` (§ 4.2-C), `src/styles/globals.css`, `src/data/media-spec.ts`, `src/lib/media.ts`, `src/data/servicos.ts` + componentes em `src/components/`.
 >
@@ -14,27 +14,27 @@
 
 ## A. Visão geral
 
-As rotas `/servicos/[slug]` são páginas de detalhe de cada serviço da GMT (agentes, pacotes de marketing e avulsos). Existe **um único template** em `src/app/servicos/[slug]/page.tsx` partilhado por **todos** os slugs.
+As rotas `/servicos/[slug]` são páginas de detalhe de cada serviço da GMT (agentes, pacotes de marketing e avulsos). Existe **um único template** em `src/app/(site)/servicos/[slug]/page.tsx` partilhado por **todos** os slugs.
 
 | Campo | Detalhe |
 |---|---|
 | Rota | `/servicos/[slug]` (dinâmica) |
-| Arquivo | `src/app/servicos/[slug]/page.tsx` |
+| Arquivo | `src/app/(site)/servicos/[slug]/page.tsx` |
 | Componentes | `RevealOnScroll`, `PlaceholderMedia`, ícone `Check` (`lucide-react`), `Link` (`next/link`) |
 | Dados | `servicos`, `getServicoBySlug` (`src/data/servicos.ts`); `getServicoHeroId` (`src/lib/media.ts`); constante `COMO_FUNCIONA_SLOTS` no próprio arquivo |
 | Geração estática | `generateStaticParams()` → **24 páginas** (15 agentes + 3 pacotes + 6 avulsos); `generateMetadata()` (title = `servico.nome`, description = `headline` / `solucao` / `nome`) |
 | 404 | `notFound()` quando o slug não existe |
-| Globais (via `layout.tsx`) | `Navbar`, `Footer`, `FloatingCTA`, `SmoothScroll` (Lenis) |
+| Globais (via `(site)/layout.tsx`) | `Navbar`, `Footer`, `ChatWidgetLoader`, `SmoothScroll` (Lenis) |
 
 **Ordem actual das secções:**
 
 1. Hero
-2. Desafio / Solução *(condicional)*
-3. Benefícios *(condicional)*
+2. O desafio *(condicional — `problema`)*
+3. A solução + benefícios *(condicional)*
 4. O que inclui *(sempre)*
-5. Como funciona — slots CF-01…CF-05 *(sempre)*
-6. Para quem é *(condicional)*
-7. Footer global *(via `layout.tsx`)*
+5. Como funciona — slots CF-01…CF-05 *(sempre; render AGP-F* via `getComoFuncionaCardId`)*
+6. Para quem é *(sempre — tags ou fallback + CTA contacto)*
+7. Footer global *(via `(site)/layout.tsx`)*
 
 > As secções 2–6 estão dentro de `<div className="section-light">`. A Hero fica fora desse wrapper. **Não existe** CTA final nem secção “Em prática” nesta página.
 
@@ -57,7 +57,7 @@ Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/ví
 - Container: `not-prose`, `h-[80vh] md:h-[70vh]`, `overflow-hidden`, fundo inline `backgroundColor: servico.corPlaceholder`
 - Overlay: `bg-gradient-to-t from-black via-black/40 to-black/10` (topo com leve escurecimento — evita faixa branca do `main` a transparecer)
 - Conteúdo textual: `flex h-full flex-col items-center justify-center text-center`
-- Bloco título + subtítulo: `flex flex-col items-center gap-2` (8px entre headline e subtítulo)
+- Bloco título + subtítulo: `flex flex-col items-center gap-3` (12px entre headline e subtítulo)
 - Botão voltar: `absolute bottom-0 left-0` com `px-5 pb-12 md:px-[5vw] md:pb-[5vw]`
 
 ### Espaçamento headline ↔ subtítulo
@@ -65,7 +65,7 @@ Abertura full-bleed (70–80vh) com nome e headline do serviço sobre imagem/ví
 | Elemento | Regra no código | Valor efectivo |
 |---|---|---|
 | Entre linhas do `<h1>` | `!leading-[1.05]` + `[&>div]:!leading-[1.05]` (override de `.type-hero--fullscreen`) | line-height **1.05** — mais compacto que o default `clamp(1, 8vw, 1.1)` |
-| Entre `<h1>` e `<p>` headline | wrapper `gap-2` | **8px** (`0.5rem`) |
+| Entre `<h1>` e `<p>` headline | wrapper `gap-3` | **12px** (`0.75rem`) |
 | Subtítulo anterior | `mt-4` (16px) | **removido** — substituído pelo `gap-2` do wrapper |
 
 > Referência Home: marca GMT usa `line-height: 1`; aqui usa-se **1.05** para legibilidade em nomes longos de serviço, mantendo bloco visual compacto.
@@ -135,8 +135,8 @@ Cruzado com PLANO § 4.2-A (thumbs AG/MKT/AV), § 4.2-B (AGP-F* Sec3).
 ### Animações
 | O que anima | Biblioteca | Gatilho | Duração / efeito |
 |---|---|---|---|
-| h1, headline | `RevealOnScroll` (texto) | on-scroll | `REVEAL_DURATION` 2.75s; headline `delay={0.08}` |
-| Botões anterior/próximo | `RevealOnScroll variant="media"` | on-scroll | translateY + opacity, 2.75s; próximo `delay={0.08}` |
+| h1, headline | `RevealOnScroll` | on-scroll | `REVEAL_DURATION` 2.0s; headline `delay={0.08}` |
+| Botões anterior/próximo | `RevealOnScroll variant="media"` | on-scroll | translateY + opacity, 2.0s; próximo `delay={0.08}` |
 | Mídia de fundo | — | — | `reveal={false}` |
 
 > A hero **não** usa `RevealSequence`. Cada bloco anima de forma independente ao entrar no viewport.
@@ -146,7 +146,7 @@ Cruzado com PLANO § 4.2-A (thumbs AG/MKT/AV), § 4.2-B (AGP-F* Sec3).
 - **Mobile:** `h-[80vh]`; conteúdo centrado, `px-5`; botões `pb-12`
 
 ### Arquivos relacionados
-`src/app/servicos/[slug]/page.tsx`, `src/lib/media.ts`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`, classes `.type-hero`/`.type-hero--fullscreen` em `src/styles/globals.css`.
+`src/app/(site)/servicos/[slug]/page.tsx`, `src/lib/media.ts`, `src/components/ui/PlaceholderMedia.tsx`, `src/data/media-spec.ts`, classes `.type-hero`/`.type-hero--fullscreen` em `src/styles/globals.css`.
 
 ---
 
@@ -159,42 +159,37 @@ Cruzado com PLANO § 4.2-A (thumbs AG/MKT/AV), § 4.2-B (AGP-F* Sec3).
 | **Dados — `servicos.ts` (por serviço)** | `nome`, `headline`, `problema`, `solucao`, `beneficios[]`, `funcionalidades[]`, `casosDeUso[]`, `familia`, `corPlaceholder`, `tipo` |
 | **Dados — `lib/media.ts`** | ID do hero (`getServicoHeroId`) |
 | **Dados — `servicos.ts`** | `getAdjacentServicos(slug)` — anterior/próximo na ordem global |
-| **Estrutural — fixo no template** | Rótulos (`O desafio`, `A solução`, `Benefícios`, `O que inclui`, `Como funciona`, `Para quem é`); constante `COMO_FUNCIONA_SLOTS` (CF-01…05); copy dos botões hero (`← Serviço anterior`, `Próximo serviço →`) |
-| **Condicional** | Sec. Desafio/Solução se `problema \|\| solucao`; Benefícios se `beneficios.length > 0`; intro “O que inclui” (solução repetida) só se `tipo === "pacote"`; Para quem é se `casosDeUso.length > 0` |
+| **Estrutural — fixo no template** | Componente `Kicker` (barra accent + `.type-label`); rótulos (`O desafio`, `A solução`, `Como resolvemos`, `O que inclui`, `Como funciona`, `Para quem é`); constante `COMO_FUNCIONA_SLOTS` (CF-01…05); copy dos botões hero |
+| **Condicional** | Sec. O desafio se `problema`; Sec. Solução+benefícios se `mostrarSolucao \|\| beneficios.length`; intro “O que inclui” (solução repetida) só se `tipo === "pacote"`; **Para quem é sempre renderizada** — tags se `casosDeUso.length > 0`, senão parágrafo fallback + CTA |
 
-### Secção 01 — Proposta de valor (desafio + solução)
+### Secção — O desafio
 
-> Condicional: só renderiza se `servico.problema` ou `servico.solucao` existir.
+> Condicional: só renderiza se `servico.problema` existir.
 
-| Campo | `<h2>` | `<p>` |
+| Campo | Kicker | `<p>` |
 |---|---|---|
-| Desafio | `O desafio` · `.type-label` | `servico.problema` · `.type-h3` |
-| Solução | `A solução` · `.type-label` | `servico.solucao` · `.type-body-lg` |
+| Conteúdo | `O desafio` | `servico.problema` |
+| Classe | `Kicker` → `.type-label` | `.type-section-title` |
 
-Layout: `flex-col md:flex-row`, cada coluna `md:w-1/2`, `gap-10 md:gap-[5vw]`, `pt-16 md:pt-[5vw]`.
+### Secção — A solução + benefícios
 
-### Secção 01b — Benefícios
+> Condicional: `mostrarSolucao` (solução existe e `tipo !== "pacote"`) ou `beneficios.length > 0`.
 
-> Condicional: só renderiza se `servico.beneficios.length > 0`.
+Layout 2 colunas (`md:w-1/3` / `md:w-2/3`), `border-t border-gmt-border`:
+- Esquerda: `Kicker` "A solução" + `<h2 class="type-section-title">Como resolvemos</h2>`
+- Direita: parágrafo `.type-body-lg` (solução) + grelha 2 colunas de benefícios com ícone `Check` em cards `rounded-xl border bg-gmt-bg-alt`
 
-Grid `grid-cols-1 md:grid-cols-3` de cartões com ícone `Check` (`lucide-react`, `text-gmt-accent`). Cada item: `.type-body` dentro de `border-gmt-border bg-gmt-bg-alt rounded-lg p-5`.
+### Secção — O que inclui
 
-### Secção 02 — O que inclui
+> **Sempre** renderizada.
 
-> **Sempre** renderizada (todos os serviços têm `funcionalidades[]`).
+Layout 2 colunas. Lista numerada `01…` com `font-mono` + `.type-body-lg`. Para pacotes, repete `servico.solucao` como prefácio.
 
-Lista `divide-y divide-gmt-border` com cada funcionalidade em `.type-body-lg`. Para pacotes (`tipo === "pacote"`), repete `servico.solucao` como parágrafo introdutório (`.type-body`).
+### Secção — Para quem é
 
-### Secção 04 — Para quem é
+> **Sempre** renderizada.
 
-> Condicional: só renderiza se `servico.casosDeUso.length > 0` (**9 de 24** serviços não têm casos de uso).
-
-Tags `.tag-pill` com `servico.casosDeUso[]`. Padding inferior próprio: `pb-16 md:pb-[8vw]`.
-
-### Padding inferior (evitar buracos visuais)
-
-- Quando **não** há “Para quem é”, a Sec. 03 (“Como funciona”) recebe `pb-16 md:pb-[8vw]`.
-- Quando “Para quem é” existe, o padding inferior fica na Sec. 04.
+Tags `.tag-pill` se `casosDeUso.length > 0`; senão parágrafo fallback institucional. CTA: `Falar sobre este serviço →` — `rounded-full bg-black px-8 py-3.5 text-white hover:bg-black/80`.
 
 ---
 
@@ -228,14 +223,14 @@ Constante `COMO_FUNCIONA_SLOTS` em `page.tsx` (títulos + fallback de cor):
 | CF-05 | Acompanhamento & otimização | `#0F172A` |
 
 ### Layout
-- Rótulo: `<h2>` “Como funciona” · `.type-label`
+- Rótulo: `Kicker` "O processo" + `<h2 class="type-section-title">Como funciona</h2>`
 - Grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4`
 - Card: `aspect-[3/4] md:aspect-[2/3] rounded-2xl border border-gmt-border overflow-hidden`
 - Mídia: `PlaceholderMedia` com `id={getComoFuncionaCardId(...)}`, `fill`, `reveal={false}`, `sizes="(max-width: 1024px) 50vw, 20vw"`
-- **Título sobre o card:** overlay absoluto centrado (`flex items-center justify-center`), caixa `rounded-lg bg-white/75 px-4 py-2.5 backdrop-blur-md text-gmt-text type-body-lg`
+- **Título sobre o card:** overlay inferior `absolute inset-x-0 bottom-0 p-3`; caixa `rounded-lg bg-white/80 px-3 py-2 backdrop-blur-md text-center` com número mono `01…05` + título (`.type-body`)
 
 ### Copy
-Títulos dos 5 passos são **estruturais** (fixos no template, iguais em todos os slugs). Não há números 01–05 nem parágrafos descritivos — apenas título em destaque sobre cada card.
+Títulos dos 5 passos são **estruturais** (fixos no template). Cada card mostra número de passo + título no overlay inferior.
 
 ### Estado actual dos assets
 Até existirem ficheiros em `public/images/CF-*.webp`, o `PlaceholderMedia` exibe fallback de cor. A estrutura está pronta para receber mídias reais — basta produzir e colocar os assets com os IDs correctos.
@@ -277,12 +272,12 @@ Documenta os 5 slots CF com dimensões 1200×1800, proporção 2:3, posições n
 
 ## F. Observações finais
 
-- **Página enxuta:** sem CTA final de conversão; sem showcase de portfolio (NARA); conversão global via `FloatingCTA` do layout.
+- **Página enxuta:** sem CTA final de conversão; sem showcase de portfolio (NARA); conversão global via `ChatWidgetLoader` do layout.
 - **Template único:** qualquer alteração em `page.tsx` afecta os 24 slugs.
 - **Hero actualizada:** headline centrada, subtítulo fluido; navegação anterior/próximo em loop na base da hero.
 - **Sec. Como funciona:** 5 slots CF prontos para mídia; placeholders de cor até produção dos assets.
 - **Footer global:** renderizado em `src/app/layout.tsx`, fora do `page.tsx` do serviço.
-- **Documentação alinhada** com o código em `src/app/servicos/[slug]/page.tsx`, `src/data/media-spec.ts` e `docs/PLANO_MESTRE_DE_MIDIA.md` § 4.2-C.
+- **Documentação alinhada** com o código em `src/app/(site)/servicos/[slug]/page.tsx`, `src/data/media-spec.ts` e `docs/PLANO_MESTRE_DE_MIDIA.md` § 4.2-C.
 
 ---
 

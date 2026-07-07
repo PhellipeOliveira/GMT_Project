@@ -3,7 +3,7 @@
 Mapeamento completo de cada secção e elemento textual: família, tamanho, peso e notas de implementação.
 
 **Última actualização:** 28 Jun 2026 (pós-refactor Home)  
-**Fonte de verdade:** `src/styles/globals.css` + `src/app/layout.tsx`
+**Fonte de verdade:** `src/styles/globals.css` + `src/app/(site)/layout.tsx`
 
 ---
 
@@ -93,7 +93,7 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 |----------|-------|--------|---------|---------|------|
 | `<p>` ×2 | "GMT" | `.gmt-brand` + `.gmt-brand--footer` | Host Grotesk | `clamp(8rem, 33vw, 36rem)` | **800** |
 
-> Renderizada via `GMTLightFooter` em `layout.tsx` — **antes** de `<Footer />`, em todas as páginas. Padding: `py-[2.04rem] md:py-[3.4rem]` (−15% vs. faixa anterior).
+> Renderizada via `GMTLightFooter` em `(site)/layout.tsx` — **antes** de `<Footer />`. Padding: `.gmt-lantern-section` (`globals.css`).
 
 ---
 
@@ -137,28 +137,20 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 ---
 
-### Secção: Manifesto (Sec. 03 — fundo preto, sem imagem)
+### Secção: Manifesto + Valores (Sec. 03 — `.section-cta`)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| `<p>` citação | "O nosso compromisso é simples…" | `.type-h3` + `text-white` | Host Grotesk | 36px | 400 |
+| `<p>` manifesto | "O nosso compromisso é simples…" | `.type-manifesto` + `!text-white` | Host Grotesk | clamp(34px → 64px) | 400 |
+| Item valor | Título do diferencial (6 itens) | `.type-body-lg` + `text-white` | DM Sans | 21px | 400 |
 
----
-
-### Secção: Nossos valores (Sec. 04 — `.section-cta`)
-
-| Elemento | Texto | Classe | Família | Tamanho | Peso |
-|----------|-------|--------|---------|---------|------|
-| Título de secção | "Nossos valores" | `.type-section-title` (via `SectionLabel variant="title"`, branco) | Host Grotesk | clamp(30→46px) | 400 |
-| Item | Título do diferencial (6 itens de `DIFERENCIAIS`) | `.type-body-lg` + `text-white` | DM Sans | 21px | 400 |
-
-Ícones `lucide-react` (`size={22}`, brancos) na segunda coluna; primeira coluna vazia em desktop.
+Ícones `lucide-react` (`size={30}`, brancos), grelha centrada `sm:grid-cols-2`. **Sem** `SectionLabel` "Nossos valores".
 
 ---
 
 ### Secção: CTA final
 
-**Removida.** Conversão via `FloatingCTA` global (`layout.tsx`).
+**Removida.** Conversão via `ChatWidgetLoader` global (`(site)/layout.tsx`).
 
 ---
 
@@ -189,7 +181,7 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 ### Secção: CTA final
 
-**Removida.** A página termina após as três categorias do Accordion. Conversão via `FloatingCTA` global (`layout.tsx`).
+**Removida.** A página termina após as três categorias do Accordion. Conversão via `ChatWidgetLoader` global (`layout.tsx`).
 
 ---
 
@@ -199,7 +191,8 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso | Cor |
 |----------|-------|--------|---------|---------|------|-----|
-| Link | "← Ver todos os serviços" | `.type-label` + `bg-white/20 border-white/25 font-medium text-white backdrop-blur-md` | DM Sans | 14px | **500** | `#ffffff` |
+| Link anterior | "← Serviço anterior" | `.type-label` + `HERO_NAV_LINK` (vidro branco) | DM Sans | 14px | **500** | `#ffffff` |
+| Link próximo | "Próximo serviço →" | idem | DM Sans | 14px | **500** | `#ffffff` |
 | `<h1>` | Nome do serviço (centrado) | `.type-hero .type-hero--fullscreen` + `!leading-[1.05]` + `!text-white` | Host Grotesk | clamp(52px → 108px) | 400 | `#ffffff` |
 | `<p>` | Headline do serviço (centrado) | `text-[clamp(1.125rem,2.5vw,1.75rem)]` + `text-white` | DM Sans | clamp(18px → 28px) | 400 | `#ffffff` |
 
@@ -270,7 +263,7 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Label | "Trabalho recente" | `.type-label` | DM Sans | 14px | 400 |
+| Label | "Trabalho recente" | `.type-section-title` (via `SectionLabel variant="title"`) | Host Grotesk | clamp(30→46px) | 400 |
 | `<h1>` | "Portfolio" | `.type-h2` | Host Grotesk | clamp(42px → 72px) | 400 |
 | `<p>` | "Criámos integralmente o NARA…" | `.type-body-lg` | DM Sans | 21px | 400 |
 
@@ -286,7 +279,7 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 | Tag pill | Tag | `.tag-pill` → `.type-body` | DM Sans | 18px | 400 |
 | Seta | "→" | inline | DM Sans | 18px | 400 |
 
-> Apenas o case **NARA** listado. Sem CTA final nesta página — conversão via `FloatingCTA` global.
+> Apenas o case **NARA** listado. Sem CTA final nesta página — conversão via `ChatWidgetLoader` global.
 
 ---
 
@@ -316,41 +309,31 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 | Tag pill | Tags | `.tag-pill` | DM Sans | 18px | 400 |
 | Seta | "→" | inline | DM Sans | 18px | 400 |
 
-> Apenas cases reais de `portfolio.ts`. Sem placeholders "Em breve" nem CTA final — conversão via `FloatingCTA` global.
+> Apenas cases reais de `portfolio.ts`. Sem placeholders "Em breve" nem CTA final — conversão via `ChatWidgetLoader` global.
 
 ---
 
 ## Página: Contacto (`/contacto`)
 
-### Secção: Cabeçalho + canais
+### Secção: Cabeçalho
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Label | "Contacto" | `.type-label` | DM Sans | 14px | 400 |
+| Label | "Contacto" | `.type-section-title` (via `SectionLabel variant="title"`) | Host Grotesk | clamp(30→46px) | 400 |
 | `<h1>` | "Vamos conversar" | `.type-h2` | Host Grotesk | clamp(42px → 72px) | 400 |
 | `<p>` | "Agende uma reunião gratuita…" | `.type-body-lg` | DM Sans | 21px | 400 |
-| Canal label | "Email" / "WhatsApp"… | `.type-label` | DM Sans | 14px | 400 |
-| Canal valor | "contato@phellipeoliveira.org" | `.type-body` | DM Sans | 18px | 400 |
 
----
-
-### Secção: Formulário
+### Secção: Formulário (split)
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Labels campos | "Nome", "Email"… | `.type-label` (presumido) | DM Sans | 14px | 400 |
+| Label coluna | "Conte-nos o essencial" | `.type-section-title` | Host Grotesk | clamp(30→46px) | 400 |
+| Link telefone | "Prefere ligar? +351…" | `.type-label` + underline | DM Sans | 14px | 400 |
+| Labels campos | "Nome", "Email"… | `.type-body` (flutuante) | DM Sans | 18px → 14px | 400 |
 | Inputs | Texto digitado | `.type-body` | DM Sans | 18px | 400 |
 | Botão enviar | "Enviar mensagem" | `.btn-submit` | DM Sans | 18px | 500 |
 
----
-
-### Secção: CTA final
-
-| Elemento | Texto | Classe | Família | Tamanho | Peso |
-|----------|-------|--------|---------|---------|------|
-| `<h2>` | "Preferimos falar pessoalmente?" | `.type-h3` | Host Grotesk | 36px | 400 |
-| `<p>` | "Agende uma reunião gratuita…" | `.type-body` | DM Sans | 18px | 400 |
-| Botão | "Ligar agora" | `.btn-submit` | DM Sans | 18px | 500 |
+> **Sem** secção CTA final "Preferimos falar pessoalmente?". **Sem** bloco de canais (Email/WhatsApp/LinkedIn) na UI.
 
 ---
 
@@ -366,19 +349,19 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 |----------|-------|--------|---------|---------|------|-------|
 | Logo "GMT" | "GMT" | `.gmt-brand` + `.gmt-brand--navbar` | Host Grotesk | `clamp(18px, 2.8vw, 28px)` | **800** | sempre `tone="on-dark"`; `ls 0.02em`, `scaleX(1.03)`; glass transparente na Home até scroll |
 | Links de navegação | "Serviços", "Portfolio"… | `.type-label` | DM Sans | 14px | 400 | pill dark ou light conforme contexto |
-| ~~Botão CTA~~ | ~~"Agendar reunião"~~ | — | — | — | — | **removido** — substituído pelo `FloatingCTA` global |
+| ~~Botão CTA~~ | ~~"Agendar reunião"~~ | — | — | — | — | **removido** — substituído pelo `ChatWidgetLoader` global |
 
 ---
 
-### FloatingCTA (botão flutuante global)
+### ChatWidgetLoader (agente IA global)
 
-> Componente: `FloatingCTA.tsx` — `fixed bottom-8 left-1/2 z-60`.  
-> Aparece quando `scrollY > 80% do viewport`; desaparece perto do footer (< 220px do fim da página).  
-> Animação: `framer-motion AnimatePresence` — fade + slide-up suave.
+> Componente: `ChatWidgetLoader.tsx` → `ChatWidget` — `fixed bottom-4 right-4 z-[70]`.  
+> Label contextual via `data-agent-hint` ou rota. Painel expansível com `AnimatePresence`.
 
-| Elemento | Texto | Classe | Família | Tamanho | Peso | Notas |
-|----------|-------|--------|---------|---------|------|-------|
-| Botão | "Agendar reunião" | `text-sm tracking-wide` | DM Sans | 14px (0.875rem) | 500 | `bg-black/80 backdrop-blur-md`, texto branco, `rounded-full` |
+| Elemento | Texto | Classe | Notas |
+|----------|-------|--------|-------|
+| Launcher | Label contextual | `ChatLauncher` | canto inferior direito |
+| Painel | Chat do agente | `ChatHeader`, `ChatMessages`, `ChatInput` | `ssr: false` |
 
 ---
 
@@ -386,17 +369,18 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Título | "Growth Marketing Technology" | `.type-section-title` (centrado, branco) | Host Grotesk | clamp(30px → 46px) | 400 |
+| Subtítulo | "Growth Marketing Technology" | `.type-footer-subtitle` (centrado, branco) | Host Grotesk | clamp(24px → 80px) | 400 |
 | Headline coluna | "Automação & IA" (etc.) | `.type-label` + `text-white` | DM Sans | 14px | 400 |
-| Links | Navegação secundária | `.type-body` + `text-white` | DM Sans | 18px | 400 |
-| Copyright / legal | Texto legal | `.type-label` + `text-white` | DM Sans | 14px | 400 |
+| Links | Navegação | `.type-body` + `text-white` | DM Sans | 18px | 400 |
+| Copyright | Texto legal | `.type-label` + `text-white` | DM Sans | 14px | 400 |
 
-> **Fundo:** `.section-footer` a **preto puro `#000000`**, texto branco (alinhado ao `GMTLightFooter`). Título centrado no topo em `.type-section-title`.
-> **Espaçamento (Footer Navigation):** `py-[3.2rem]` · `mb-10 md:mb-14` (título) · `gap-[2.4rem]` (grid) · `mt-[2.4rem] pt-[1.6rem]` (copyright). Ver `PARTE_08` § Footer.
+> **Fundo:** `bg-black` / `.section-footer`. **Espaçamento:** `py-20 md:py-28`, `mb-16 md:mb-24` (subtítulo).
 
 ---
 
-## Padrão CTA (secção final preta em todas as páginas)
+## Padrão CTA (secção final preta — Home e Sobre)
+
+Apenas **`/`** e **`/sobre`** terminam com `.section-cta`. Outras rotas terminam em fundo claro antes do GMT Lantern.
 
 ```
 Fundo: #000000 (section-cta)
@@ -426,11 +410,11 @@ Body           → DM Sans 400       · 18px  ← tamanho base
 Body small     → DM Sans 400       · 16px  (overlays, legendas, denso)
 Eyebrow        → DM Sans 500       · 13px  (uppercase — acima do título)
 Label          → DM Sans 400       · 14px  (uppercase, tracking)
-FloatingCTA    → DM Sans 500       · 14px  (fixed global, z-60)
+ChatWidgetLoader    → DM Sans 500       · 14px  (fixed global, z-60)
 ─────────────────────────────────────────────────────────────────────────────
 Mono           → Sistema           · variável  ← números/índices
 Logo GMT       → Host Grotesk 800  · clamp(18px, 2.8vw, 28px)  (navbar + footer)
-Lanterna GMT   → Host Grotesk 800  · clamp(8rem, 33vw, 36rem)  (global, acima do Footer)
+Lanterna GMT   → Host Grotesk 800  · clamp(6.4rem, 26.4vw, 28.8rem)
 ```
 
 ---
@@ -444,6 +428,6 @@ Lanterna GMT   → Host Grotesk 800  · clamp(8rem, 33vw, 36rem)  (global, acima
 5. **Host Grotesk 300 só é usado em `.type-category`** — se remover essa classe, pode remover o peso 300 do import.
 6. **LaCerchia** — referenciada nos design maps como fonte serif decorativa; não está activa. Para activar, usar `next/font/local` com ficheiro em `public/fonts/`.
 7. **`letter-spacing` do subtítulo Hero** — `0.05em` (26 Jun 2026).
-8. **FloatingCTA** — botão global; threshold: `scrollY > 80vh`; ocultação: `< 220px` do fim da página.
+8. **ChatWidgetLoader** — agente IA; `fixed bottom-4 right-4`; label contextual por secção.
 9. **`white-space: nowrap` no Hero** — aplicado em `.gmt-brand--hero` e `.type-hero-subtitle`.
-10. **Section labels** — usar `.section-label` (12px) via `SectionLabel`, não confundir com `.type-label` (14px).
+10. **Section labels** — eyebrow `.section-label` (**13px**) vs título `.type-section-title` via `SectionLabel variant="title"`.
