@@ -630,6 +630,55 @@ svg {
   animation: bar-fade-out var(--fade-duration) var(--ease) forwards;
 }
 
+/* ===== Preloader + Hero intro (GSAP) ===== */
+
+/* Painéis geométricos full-screen do preloader.
+   Estado inicial (fora do ecrã) definido inline no JSX para evitar flash de
+   SSR; o GSAP anima a partir do mesmo valor. */
+.preloader-panel {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* Palco centrado que replica a geometria do hero (45vw no topo) para que o
+   título do preloader e o título real fiquem exactamente na mesma posição. */
+.preloader-stage {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 45vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-line {
+  will-change: transform;
+}
+
+/* Barra "APRESENTAMOS" na base do hero — só surge no scroll (opacity via GSAP).
+   Fica escondida por defeito, logo em prefers-reduced-motion permanece oculta. */
+.hero-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  opacity: 0;
+  will-change: background-color, opacity;
+}
+
+.hero-bar__text {
+  color: #ffffff;
+  will-change: color;
+}
+
 /* ===== Reduced motion fallback ===== */
 
 @media (prefers-reduced-motion: reduce) {

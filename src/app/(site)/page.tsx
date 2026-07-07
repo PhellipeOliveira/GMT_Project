@@ -10,6 +10,7 @@
 import Link from "next/link";
 import { Target } from "lucide-react";
 import { HeroSection } from "@/components/hero/HeroSection";
+import { Preloader } from "@/components/hero/Preloader";
 import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -25,6 +26,9 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Preloader — overlay de introdução (1x por sessão, respeita reduced-motion) */}
+      <Preloader />
+
       {/* ══ 1 ── HERO ════════════════════════════════════════════════ */}
       {/* data-agent-hint: label contextual do launcher por seção (scroll) */}
       <div data-agent-hint="Olá! Quer conhecer a GMT?">
