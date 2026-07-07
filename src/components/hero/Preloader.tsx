@@ -6,6 +6,10 @@ import {
   SCROLL_LOCK_EVENT,
   SCROLL_UNLOCK_EVENT,
 } from "@/components/ui/SmoothScroll";
+import {
+  HeroSubtitleChars,
+  HeroTitleStage,
+} from "@/components/hero/HeroTitleStage";
 
 const SESSION_KEY = "gmt:preloaded";
 const SUBTITLE = "Growth Marketing Technology";
@@ -69,7 +73,7 @@ export function Preloader() {
         const p2 = q(".pl-p2"); // preto  — entra da direita
         const p3 = q(".pl-p3"); // branco — entra da esquerda
         const p4 = q(".pl-p4"); // preto  — desce (cima→baixo)
-        const subChars = q(".pl-sub span");
+        const subChars = q(".pl-sub-chars span");
         const gmtWrap = q(".pl-gmt-wrap");
 
         // Estados iniciais (fora do ecrã)
@@ -80,7 +84,8 @@ export function Preloader() {
         // Letras invisíveis mas NO lugar (x:0,y:0) e brancas — nada espalhado
         // nem cinza antes da animação começar.
         gsap.set(subChars, { opacity: 0, x: 0, y: 0, color: "#ffffff" });
-        // GMT escala a partir do próprio centro; nunca anima y/top/margin.
+        // GMT: scale só no wrapper interno — o slot (.hero-gmt-slot) mantém o
+        // lugar final no flex; nunca anima y/top/margin.
         gsap.set(gmtWrap, {
           opacity: 0,
           scale: 5.5,
@@ -95,9 +100,8 @@ export function Preloader() {
           .to(p2, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
           .to(p3, { xPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
           .to(p4, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, "-=0.15")
-          // 1) Subtítulo formado letra a letra: cada letra vem de fora do ecrã
-          //    (posição aleatória) e desliza até ao lugar final. Só x/y/opacity
-          //    nos spans — o <p> nunca é animado, logo o subtítulo fica fixo.
+          // 1) Subtítulo formado letra a letra: só x/y/opacity nos spans; o
+          //    <p> (e o ghost text) reservam a caixa final desde o início.
           .fromTo(
             subChars,
             {
@@ -117,9 +121,8 @@ export function Preloader() {
             },
             "+=0.12"
           )
-          // 2) GMT por último, com IMPACTO: só scale/opacity/filter (sem y).
-          //    Sequência explícita: 5.5 → 1.16 (overshoot) → 0.98 (recuo) →
-          //    assenta. Escala a partir do próprio centro; nunca move em y.
+          // 2) GMT por último, com IMPACTO: só scale/opacity/filter no wrapper
+          //    interno. Sequência: 5.5 → 1.16 → 0.98 → 1 (repouso = CSS do h1).
           .fromTo(
             gmtWrap,
             { opacity: 0, scale: 5.5, filter: "blur(10px)" },
@@ -133,23 +136,14 @@ export function Preloader() {
             "+=0.12"
           )
           .to(gmtWrap, { scale: 0.98, duration: 0.12, ease: "power2.out" })
-          // Repouso em scaleX 1.03 / scaleY 1 = exactamente o .gmt-brand em
-          // repouso (CSS), para coincidir ao pixel com o <h1> da Hero real.
-          .to(gmtWrap, {
-            scaleX: 1.03,
-            scaleY: 1,
-            duration: 0.18,
-            ease: "back.out(2.8)",
-          })
+          .to(gmtWrap, { scale: 1, duration: 0.18, ease: "back.out(2.8)" })
           // 3) Fade-out do overlay → revela a hero real por baixo (só no fim)
           .to(root, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.4");
       }, root);
     };
 
-    // Esperar as fontes antes de animar: o GMT usa Host Grotesk e o subtítulo
-    // DM Sans; animar antes de carregarem provoca reflow (o subtítulo saltava
-    // quando o GMT — Host Grotesk — assentava). Com o flex-col a coincidir com
-    // a Hero real, esperar as fontes garante posições estáveis e sem salto.
+    // Esperar as fontes antes de animar: métricas estáveis (Host Grotesk + DM
+    // Sans) → o bloco flex não reflowa a meio da timeline.
     if (document.fonts?.ready) {
       document.fonts.ready.then(build);
     } else {
@@ -167,6 +161,8 @@ export function Preloader() {
 
   if (phase === "done") return null;
 
+  const subtitleChars = chars(SUBTITLE);
+
   return (
     <div
       ref={rootRef}
@@ -179,34 +175,25 @@ export function Preloader() {
       <div className="pl-p3 absolute inset-0 z-[40] bg-white" />
       <div className="pl-p4 absolute inset-0 z-[50] bg-black" />
 
-      {/* Título final do preloader — geometria IDÊNTICA a
-          HeroSection > HeroTitle: o container externo centra (flex items-center
-          justify-center, como a <section>) e o interno é o MESMO bloco
-          `flex flex-col items-center gap-6` com as MESMAS classes (hero-line,
-          gmt-brand--hero, type-hero-subtitle). O <h1> é filho DIRECTO do flex
-          (sem wrapper), tal como na Hero real → sem diferença de layout nem
-          salto no fade-out. O GSAP anima o próprio <h1> (.pl-gmt-wrap): como a
-          centralização é do flex (não há translate no elemento), o scale nunca
-          colide com o posicionamento. */}
+      {/* Palco de título — mesma cadeia que HeroSection > div.z-10 > HeroTitle */}
       <div className="absolute inset-0 z-[60] flex items-center justify-center pointer-events-none">
-        <div className="flex flex-col items-center gap-6">
-          <h1
-            className="pl-gmt-wrap hero-line gmt-brand gmt-brand--hero text-center text-white"
-            style={{ opacity: 0, transformOrigin: "center center" }}
-          >
-            GMT
-          </h1>
-          <p className="pl-sub hero-line type-hero-subtitle select-none text-center text-white">
-            {chars(SUBTITLE).map(({ ch, key }) => (
-              <span
-                key={key}
-                className="inline-block text-white"
-                style={{ opacity: 0, color: "#ffffff", willChange: "transform, opacity" }}
-              >
-                {ch}
-              </span>
-            ))}
-          </p>
+        <div className="relative z-10">
+          <HeroTitleStage
+            gmtAnimClassName="pl-gmt-wrap"
+            gmtAnimStyle={{ opacity: 0 }}
+            subtitleClassName="pl-sub"
+            subtitleContent={
+              <HeroSubtitleChars
+                text={SUBTITLE}
+                chars={subtitleChars}
+                charStyle={{
+                  opacity: 0,
+                  color: "#ffffff",
+                  willChange: "transform, opacity",
+                }}
+              />
+            }
+          />
         </div>
       </div>
     </div>

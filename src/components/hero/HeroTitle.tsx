@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { HeroTitleStage } from "./HeroTitleStage";
 
 /**
  * Título final da hero (estado de repouso).
@@ -66,23 +67,12 @@ export function HeroTitle() {
   }, []);
 
   return (
-    <div
-      ref={rootRef}
-      className="flex flex-col items-center gap-6"
-      aria-label="GMT – Growth Marketing Technology"
-    >
-      <h1
-        ref={brandRef}
-        className="hero-line gmt-brand gmt-brand--hero text-center text-white"
-      >
-        GMT
-      </h1>
-      <p
-        ref={subtitleRef}
-        className="hero-line type-hero-subtitle select-none text-center text-white"
-      >
-        Growth Marketing Technology
-      </p>
+    <div ref={rootRef}>
+      <HeroTitleStage
+        brandRef={brandRef}
+        subtitleRef={subtitleRef}
+        subtitleContent="Growth Marketing Technology"
+      />
     </div>
   );
 }
