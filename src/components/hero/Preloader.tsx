@@ -20,14 +20,15 @@ const useIsomorphicLayoutEffect =
  *
  * Abordagem (A): o preloader é totalmente auto-contido e anima a SUA cópia do
  * título, posicionada exactamente sobre o título real da hero (mesma geometria:
- * 45vw no topo, centrado, mesmas classes tipográficas). No fim faz fade-out do
- * overlay revelando o título real idêntico por baixo → sem salto nem duplo
- * título.
+ * 100dvh full screen, centrado, mesmas classes tipográficas). No fim faz
+ * fade-out do overlay revelando o título real idêntico por baixo → sem salto
+ * nem duplo título.
  *
- * Sequência (~3s):
- *   1. 4 divs geométricas full-screen (~1,3s, com overlap) terminando a preto.
- *   2. Subtítulo letra-a-letra (SplitText), cada letra de direcção aleatória.
- *   3. "GMT" vindo "da frente do monitor" (scale grande → 1 com overshoot).
+ * Sequência (~4s, premium/legível):
+ *   1. 4 divs geométricas full-screen (~1,8s, power4.inOut) terminando a preto.
+ *   2. Subtítulo letra-a-letra (SplitText): cada letra vem de MUITO longe
+ *      (x ±600, y ±400) e desliza até ao sítio — vê-se claramente a chegar.
+ *   3. "GMT" com impacto: scale ~8 → overshoot 1.12 → assenta em 1 (batida).
  *   4. Fade-out do overlay → hero visível.
  *
  * prefers-reduced-motion: não renderiza nada, não bloqueia scroll.
@@ -89,54 +90,55 @@ export function Preloader() {
       split = new SplitText(subtitleRef.current, { type: "chars" });
 
       const tl = gsap.timeline({
-        defaults: { ease: "power3.inOut" },
+        defaults: { ease: "power4.inOut" },
         onComplete: () => {
           unlockScroll();
           setActive(false);
         },
       });
 
-      // ── 1) Divs geométricas (~1,3s, com overlap ~0.15s) ────────────────────
-      tl.to(panel1Ref.current, { yPercent: 0, duration: 0.5 }, 0.0)
-        .to(panel2Ref.current, { xPercent: 0, duration: 0.5 }, 0.28)
-        .to(panel3Ref.current, { xPercent: 0, duration: 0.5 }, 0.56)
-        .to(panel4Ref.current, { yPercent: 0, duration: 0.5 }, 0.84);
+      // ── 1) Divs geométricas — lentas e legíveis (~1,8s, overlap ~0.15s) ─────
+      // branco sobe → preto entra (dir→esq) → branco sai (esq→dir) → preto desce.
+      tl.to(panel1Ref.current, { yPercent: 0, duration: 0.6 }, 0.0)
+        .to(panel2Ref.current, { xPercent: 0, duration: 0.6 }, 0.45)
+        .to(panel3Ref.current, { xPercent: 0, duration: 0.6 }, 0.9)
+        .to(panel4Ref.current, { yPercent: 0, duration: 0.6 }, 1.35);
 
-      // ── 2) Subtítulo letra-a-letra, direcções aleatórias (só deslize) ──────
+      // ── 2) Subtítulo letra-a-letra: vindo de MUITO longe, deslize puro ─────
       tl.set(subtitleRef.current, { autoAlpha: 1 }, ">-0.05");
       tl.from(
         split.chars,
         {
-          x: () => gsap.utils.random(-140, 140),
-          y: () => gsap.utils.random(-120, 120),
+          x: () => gsap.utils.random(-600, 600),
+          y: () => gsap.utils.random(-400, 400),
           opacity: 0,
-          duration: 0.3,
+          duration: 0.6,
           ease: "power3.out",
-          stagger: 0.02,
+          stagger: 0.035,
         },
         "<",
       );
 
-      // ── 3) "GMT" vindo da frente do monitor, com leve overshoot ────────────
-      tl.set(brandWrapRef.current, { autoAlpha: 1 }, ">-0.02");
+      // ── 3) "GMT" — impacto: da frente do monitor, overshoot 1.12 → 1 ───────
+      tl.set(brandWrapRef.current, { autoAlpha: 1 }, ">-0.05");
       tl.fromTo(
         brandWrapRef.current,
-        { scale: 7, filter: "blur(6px)" },
+        { scale: 8, filter: "blur(10px)" },
         {
-          scale: 1.08,
+          scale: 1.12,
           filter: "blur(0px)",
-          duration: 0.45,
-          ease: "power4.out",
+          duration: 0.6,
+          ease: "power3.out",
         },
         "<",
       ).to(brandWrapRef.current, {
         scale: 1,
-        duration: 0.22,
-        ease: "power2.out",
+        duration: 0.32,
+        ease: "back.out(3)",
       });
 
       // ── 4) Fade-out do overlay → revela a hero real idêntica por baixo ─────
-      tl.to(overlayRef.current, { autoAlpha: 0, duration: 0.35 }, ">-0.02");
+      tl.to(overlayRef.current, { autoAlpha: 0, duration: 0.4 }, ">-0.03");
     }, overlayRef);
 
     return () => {

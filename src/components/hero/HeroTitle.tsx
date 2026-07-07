@@ -47,16 +47,18 @@ export function HeroTitle() {
       });
 
       // Deslize parcial: "GMT" para a direita, subtítulo para a esquerda.
+      // (ritmo mantido: mesma duração, magnitudes 38/-38.)
       tl.to(brandRef.current, { xPercent: 38, ease: "none", duration: 1 }, 0);
       tl.to(subtitleRef.current, { xPercent: -38, ease: "none", duration: 1 }, 0);
 
       if (bar) {
-        // A barra surge no arranque do scroll e faz um único ciclo de cor.
-        tl.to(bar, { opacity: 1, ease: "none", duration: 0.12 }, 0);
-        tl.to(bar, { backgroundColor: "#ffffff", ease: "none", duration: 1 }, 0);
+        // Barra fica BRANCA logo no arranque do scroll (~primeiros 8% do
+        // progresso), não gradual ao longo de todo o percurso.
+        tl.to(bar, { opacity: 1, ease: "none", duration: 0.03 }, 0);
+        tl.to(bar, { backgroundColor: "#ffffff", ease: "none", duration: 0.08 }, 0);
       }
       if (barText) {
-        tl.to(barText, { color: "#000000", ease: "none", duration: 1 }, 0);
+        tl.to(barText, { color: "#000000", ease: "none", duration: 0.08 }, 0);
       }
     }, rootRef);
 

@@ -90,6 +90,8 @@ body {
   font-family: var(--font-sans);
   font-size: var(--type-body);
   font-weight: 400;
+  /* Evita scroll horizontal residual do hero full-bleed (width:100vw). */
+  overflow-x: clip;
   transition:
     background-color var(--color-transition) var(--ease),
     color var(--color-transition) var(--ease);
@@ -641,14 +643,25 @@ svg {
   will-change: transform;
 }
 
-/* Palco centrado que replica a geometria do hero (45vw no topo) para que o
-   título do preloader e o título real fiquem exactamente na mesma posição. */
+/* Hero fullscreen full-bleed — ocupa o ecrã inteiro mesmo dentro do
+   <main class="prose"> com padding (técnica width:100vw + margin negativo). */
+.hero-fullscreen {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Palco centrado que replica a geometria do hero NOVO (100dvh full screen) para
+   que o título do preloader e o título real fiquem exactamente na mesma posição. */
 .preloader-stage {
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
-  height: 45vw;
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -665,7 +678,7 @@ svg {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 70px;
+  height: 88px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -674,7 +687,9 @@ svg {
   will-change: background-color, opacity;
 }
 
+/* ~2x o tamanho do .type-label (14px) — mantém tracking/uppercase do label. */
 .hero-bar__text {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
   color: #ffffff;
   will-change: color;
 }
