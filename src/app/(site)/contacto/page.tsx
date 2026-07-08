@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export const metadata: Metadata = {
   title: "Contacto",
@@ -15,12 +15,15 @@ export default function ContactoPage() {
     <>
       <section className="not-prose px-5 pt-28 pb-12 md:px-[5vw] md:pt-[11vw] md:pb-16">
         <RevealSequence>
-          <SectionLabel variant="title" tone="on-light" className="block text-left">
-            Contacto
-          </SectionLabel>
-          <RevealOnScroll as="h1" className="type-h2 mt-6 max-w-3xl">
-            Vamos conversar
-          </RevealOnScroll>
+          <SectionHeader
+            eyebrow="Contacto"
+            title="Vamos conversar"
+            tone="on-light"
+            eyebrowAs="h2"
+            eyebrowClassName="type-section-title text-gmt-text block text-left"
+            titleAs="h1"
+            titleClassName="type-h2 mt-6 max-w-3xl"
+          />
           <RevealOnScroll as="p" className="type-body-lg mt-8 max-w-2xl text-gmt-muted">
             Agende uma reunião gratuita e sem compromisso. Conte-nos sobre o seu
             negócio e desenhamos o plano certo para si.
@@ -32,9 +35,12 @@ export default function ContactoPage() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-[6vw]">
           <div className="md:sticky md:top-28 md:self-start">
             <RevealSequence>
-              <SectionLabel variant="title" tone="on-light" className="block text-left">
-                Conte-nos o essencial
-              </SectionLabel>
+              <SectionHeader
+                title="Conte-nos o essencial"
+                tone="on-light"
+                titleAs="h2"
+                titleClassName="type-section-title text-gmt-text block text-left"
+              />
               <RevealOnScroll as="p" className="type-body-lg mt-6 max-w-md text-gmt-muted">
                 Quanto mais soubermos sobre o seu negócio e objetivos, mais
                 concreta será a nossa resposta. Preencha o formulário — respondemos

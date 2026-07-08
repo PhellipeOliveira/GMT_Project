@@ -12,6 +12,11 @@ interface SectionLabelProps {
   delay?: number;
 }
 
+/**
+ * @deprecated Use {@link SectionHeader} from `@/components/ui/SectionHeader`.
+ * Mantido durante a migração incremental (fase 1). Remoção prevista na fase 2,
+ * após validação visual de todas as páginas.
+ */
 export function SectionLabel({
   children,
   tone = "on-light",
