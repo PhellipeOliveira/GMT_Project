@@ -62,7 +62,7 @@ Manifesto institucional (coluna esquerda) + grid de contadores animados (coluna 
 
 | Campo | Label | `<h1>` | `<p>` | Contador valor | Contador legenda |
 |---|---|---|---|---|---|
-| Conteúdo | `Sobre a GMT` | `Agência especialista em automações, inteligência artificial e marketing digital, dedicada a ajudar pequenas empresas a crescer e a destacar-se no mundo digital.` | `Objetivo claro: gerar resultados reais. Cada negócio, por mais pequeno que seja, merece uma presença digital profissional e eficaz.` | `19` · `10` · `3` (com sufixo `+`) | `serviços disponíveis` · `agentes de IA prontos para trabalhar` · `pacotes de marketing` |
+| Conteúdo | `Sobre a GMT` | `Agência especialista em automações, inteligência artificial e marketing digital, dedicada a ajudar pequenas empresas a crescer e a destacar-se no mundo digital.` | `Objetivo claro: gerar resultados reais. Cada negócio, por mais pequeno que seja, merece uma presença digital profissional e eficaz.` | `18` · `9` · `3` (com sufixo `+`) | `serviços disponíveis` · `agentes de IA prontos para trabalhar` · `pacotes de marketing` |
 | Elemento HTML | `p` | `h1` | `p` | `span` | `span` |
 | Classe | `.type-label` | `.type-h2` | `.type-body-lg` | `font-mono text-5xl md:text-[8vw] lg:text-6xl` | `.type-label` |
 | Família | DM Sans | Host Grotesk | DM Sans | Mono sistema (`--font-mono`) | DM Sans |
@@ -73,10 +73,10 @@ Manifesto institucional (coluna esquerda) + grid de contadores animados (coluna 
 **Layout dos contadores** (`AboutCounterGrid`):
 
 - Grid `grid-cols-2`.
-- **Card superior** (`wide: true`, `col-span-2`): **19+ serviços disponíveis**.
-- **Dois cards inferiores** lado a lado: **10+ agentes de IA prontos para trabalhar** · **3+ pacotes de marketing**.
+- **Card superior** (`wide: true`, `col-span-2`): **18+ serviços disponíveis**.
+- **Dois cards inferiores** lado a lado: **9+ agentes de IA prontos para trabalhar** · **3+ pacotes de marketing**.
 
-> Números derivam da estrutura de serviços: 10 agentes + 3 pacotes + 6 avulsos = 19 serviços totais.
+> Números derivam da estrutura de serviços: 9 agentes + 3 pacotes + 6 avulsos = 18 serviços totais.
 
 ### 3. Imagens / mídia
 Nenhuma nesta seção. Contadores = tipografia + animação de contagem.

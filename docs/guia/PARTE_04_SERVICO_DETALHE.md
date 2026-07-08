@@ -22,7 +22,7 @@ As rotas `/servicos/[slug]` são páginas de detalhe de cada serviço da GMT (ag
 | Arquivo | `src/app/(site)/servicos/[slug]/page.tsx` |
 | Componentes | `RevealOnScroll`, `ComoFuncionaTimeline`, `PlaceholderMedia`, ícone `Check` (`lucide-react`), `Link` (`next/link`) |
 | Dados | `servicos`, `getServicoBySlug` (`src/data/servicos.ts`); `getServicoHeroId` (`src/lib/media.ts`) |
-| Geração estática | `generateStaticParams()` → **19 páginas** (10 agentes + 3 pacotes + 6 avulsos); `generateMetadata()` (title = `servico.nome`, description = `headline` / `solucao` / `nome`) |
+| Geração estática | `generateStaticParams()` → **18 páginas** (9 agentes + 3 pacotes + 6 avulsos); `generateMetadata()` (title = `servico.nome`, description = `headline` / `solucao` / `nome`) |
 | 404 | `notFound()` quando o slug não existe |
 | Globais (via `(site)/layout.tsx`) | `Navbar`, `Footer`, `ChatWidgetLoader`, `SmoothScroll` (Lenis) |
 
@@ -241,7 +241,7 @@ Comunicar **um processo contínuo** em cinco etapas — timeline minimalista (li
 ## F. Observações finais
 
 - **Página enxuta:** sem CTA final de conversão; sem showcase de portfolio (NARA); conversão global via `ChatWidgetLoader` do layout.
-- **Template único:** qualquer alteração em `page.tsx` afecta os 19 slugs.
+- **Template único:** qualquer alteração em `page.tsx` afecta os 18 slugs.
 - **Hero actualizada:** headline centrada, subtítulo fluido; navegação anterior/próximo em loop na base da hero.
 - **Sec. Como funciona:** timeline animada (`ComoFuncionaTimeline`); sem slots de mídia.
 - **Footer global:** renderizado em `src/app/layout.tsx`, fora do `page.tsx` do serviço.

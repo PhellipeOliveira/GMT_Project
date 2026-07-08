@@ -20,7 +20,6 @@ const AGENTE_THUMB_BY_SLUG: Record<string, string> = {
   "cobranca-automatica": "AG-09",
   "qualificacao-leads": "AG-13",
   "grafos-personalizados": "AG-14",
-  "onboarding-clientes": "AG-15",
 };
 
 const PACOTE_THUMB_BY_SLUG: Record<string, string> = {

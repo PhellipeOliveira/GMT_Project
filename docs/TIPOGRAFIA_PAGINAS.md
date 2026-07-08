@@ -124,7 +124,7 @@ Mapeamento completo de cada secção e elemento textual: família, tamanho, peso
 
 | Elemento | Texto | Classe | Família | Tamanho | Peso |
 |----------|-------|--------|---------|---------|------|
-| Valor numérico | "19+", "10+", "3+" (contagem animada de 0) | `font-mono text-5xl md:text-[8vw] lg:text-6xl` | Mono sistema | 48px → fluido → 60px (`lg`) | 400 |
+| Valor numérico | "18+", "9+", "3+" (contagem animada de 0) | `font-mono text-5xl md:text-[8vw] lg:text-6xl` | Mono sistema | 48px → fluido → 60px (`lg`) | 400 |
 | Legenda | "serviços disponíveis" / "agentes de IA prontos para trabalhar" / "pacotes de marketing" | `.type-label` | DM Sans | 14px | 400 |
 
 Layout: card largo superior (`col-span-2`) + dois cards inferiores lado a lado.
@@ -171,7 +171,7 @@ Sem tipografia — apenas mídia `ABT-01`…`ABT-05` em `ExpandingFrame`. Ver `d
 | Elemento | Texto exemplo | Classe | Família | Tamanho | Peso |
 |----------|--------------|--------|---------|---------|------|
 | `<h2>` categoria | "Automação & IA" | `.type-category` | Host Grotesk | clamp(36px → 48px) | **300** |
-| `<p>` descrição | "10 agentes inteligentes…" | `.type-body` | DM Sans | 18px | 400 |
+| `<p>` descrição | "9 agentes inteligentes…" | `.type-body` | DM Sans | 18px | 400 |
 | Accordion título | Nome do serviço | `.type-body-lg` | DM Sans | 21px | 400 |
 | Accordion subtítulo | Headline do serviço | `.type-body` | DM Sans | 18px | 400 |
 | Accordion item | Funcionalidade | `.type-body` | DM Sans | 18px | 400 |

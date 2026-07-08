@@ -32,7 +32,7 @@ Toda a página está dentro de `<div className="section-light">` (fundo claro). 
 **Sequência final:**
 
 1. **Cabeçalho + thumbnails** — label, h1, tagline e 3 thumbs (AG-01, MKT-02, AV-05)
-2. **Automação & IA** — Accordion com 10 agentes
+2. **Automação & IA** — Accordion com 9 agentes
 3. **Pacotes de Marketing** — Accordion com 3 pacotes
 4. **Serviços Avulsos** — Accordion com 6 avulsos
 5. **Footer global** — via `layout.tsx` (fora do `page.tsx`)
@@ -62,7 +62,7 @@ Geradas a partir de `CATEGORIAS`. Títulos de categoria usam `<h2 class="type-ca
 
 | Secção | Label | Descrição | Itens |
 |---|---|---|---|
-| Automação & IA | `Automação & IA` | 10 agentes inteligentes… | 10 agentes |
+| Automação & IA | `Automação & IA` | 9 agentes inteligentes… | 9 agentes |
 | Pacotes de Marketing | `Pacotes de Marketing` | 3 pacotes para iniciar… | 3 pacotes |
 | Serviços Avulsos | `Serviços Avulsos` | 6 áreas de especialização… | 6 avulsos |
 

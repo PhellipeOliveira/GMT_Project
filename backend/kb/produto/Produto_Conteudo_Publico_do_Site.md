@@ -161,22 +161,6 @@
 - **Casos de uso:**
   - Empresas com processos internos pesados
 
-### Onboarding de Clientes
-- **Categoria:** Custom
-- **Headline:** Um onboarding que corre sozinho, impecável desde o primeiro minuto.
-- **Problema:** Um onboarding confuso afasta clientes logo à partida.
-- **Solução:** Automatiza a entrada de cada novo cliente: recolhe dados, configura tudo, gera o contrato e confirma.
-- **Benefícios:**
-  - Mais clientes sem esforço manual
-  - Imagem moderna e organizada
-  - Relações que começam com o pé direito
-- **Funcionalidades:**
-  - Coleta de dados via chat
-  - Geração de contrato
-  - Cobrança e confirmação
-- **Casos de uso:**
-  - Negócios com alto volume de novos clientes
-
 ---
 
 # 📣 MARKETING DIGITAL — PACOTES

@@ -30,7 +30,6 @@
 - Cobrança Automática → `/servicos/cobranca-automatica`
 - Qualificação de Leads → `/servicos/qualificacao-leads`
 - Grafos Personalizados (Premium) → `/servicos/grafos-personalizados`
-- Onboarding de Clientes → `/servicos/onboarding-clientes`
 
 ## Pacotes de Marketing (páginas `/servicos/<slug>`)
 

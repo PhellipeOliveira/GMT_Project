@@ -105,11 +105,3 @@ Quer mapear o seu processo numa conversa de descoberta?
 
 ---
 
-### 4.4 — Onboarding de Clientes
-
-A primeira impressão decide tudo, e um onboarding confuso afasta clientes logo à partida. Este agente automatiza a entrada de cada novo cliente: recolhe dados, configura tudo, gera o contrato e confirma. Profissional, rápido e impecável desde o primeiro minuto. Você acolhe mais clientes sem esforço manual, passa uma imagem moderna e organizada, e começa cada relação com o pé direito. Menos trabalho de bastidores, mais clientes a entrar prontos para começar.
-
-Quer um onboarding que corre sozinho?
-
----
-

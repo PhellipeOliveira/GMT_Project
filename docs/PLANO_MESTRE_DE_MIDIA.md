@@ -35,7 +35,7 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 > **Strip `/servicos`:** cabeçalho da listagem usa **AG-01**, **MKT-02**, **AV-05** (3:2 · 1200×800) — um thumb por categoria principal. Assets em `public/images/`. **Produzido.**
 
-### Tabela 4.2 — Agentes de IA (10 agentes)
+### Tabela 4.2 — Agentes de IA (9 agentes)
 
 **4.2-A · Thumbnails únicos (1 por agente) — listagem `/servicos` + hero Sec0**
 
@@ -52,7 +52,6 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | AG-09 | Thumb · Cobrança Automática | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F2 | Pagamento garantido na marcação | — | Alta |
 | AG-13 | Thumb · Qualificação de Leads | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | Falar só com quem decide | — | Alta |
 | AG-14 | Thumb · Grafos Personalizados | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Automação sob medida | — | Média |
-| AG-15 | Thumb · Onboarding de Clientes | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Entrada de cliente impecável | — | Média |
 
 **4.2-B · Processos por família (AGP-F*) + IDs retirados (AGH-F*, MKT-04)**
 

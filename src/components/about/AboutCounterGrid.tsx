@@ -11,8 +11,8 @@ interface CounterItem {
 }
 
 const COUNTERS: CounterItem[] = [
-  { valor: 19, label: "serviços disponíveis", wide: true },
-  { valor: 10, label: "agentes de IA prontos para trabalhar" },
+  { valor: 18, label: "serviços disponíveis", wide: true },
+  { valor: 9, label: "agentes de IA prontos para trabalhar" },
   { valor: 3, label: "pacotes de marketing" },
 ];
 

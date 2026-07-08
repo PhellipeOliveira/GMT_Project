@@ -415,7 +415,6 @@ export const MEDIA_SLOTS: Record<string, MediaSlot> = {
   "AG-09": thumb("AG-09", "Thumb Cobrança Automática"),
   "AG-13": thumb("AG-13", "Thumb Qualificação Leads"),
   "AG-14": thumb("AG-14", "Thumb Grafos Personalizados"),
-  "AG-15": thumb("AG-15", "Thumb Onboarding"),
   "MKT-01": thumb("MKT-01", "Thumb Pacote Essencial"),
   "MKT-02": thumb("MKT-02", "Thumb Pacote Crescimento"),
   "MKT-03": thumb("MKT-03", "Thumb Pacote Premium"),

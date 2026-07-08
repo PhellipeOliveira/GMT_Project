@@ -51,12 +51,12 @@ O site trata **três tipos** de serviço (`src/data/servicos.ts`). Cada tipo usa
 
 ---
 
-## AG-01 … AG-15 — Thumbs dos 10 agentes
+## AG-01 … AG-15 — Thumbs dos 9 agentes
 
 | Campo | Detalhe |
 |---|---|
 | **Proporção** | 3:2 · 1200×800 |
-| **Ficheiros** | `public/images/AG-01.webp` … `AG-15.webp` *(AG-02, AG-08, AG-10, AG-11 e AG-12 retirados)* |
+| **Ficheiros** | `public/images/AG-01.webp` … `AG-15.webp` *(AG-02, AG-08, AG-10, AG-11, AG-12 e AG-15 retirados)* |
 | **Função** | Identificar visualmente cada agente na **listagem** de serviços |
 | **Mapeamento** | `getServicoThumbId()` → `AGENTE_THUMB_BY_SLUG` em `src/lib/media.ts` |
 
@@ -153,7 +153,7 @@ export const SERVICOS_HERO_THUMBS = ["AG-01", "MKT-02", "AV-05"];
 
 | Thumb | Representa |
 |---|---|
-| AG-01 | Automação & IA (10 agentes) |
+| AG-01 | Automação & IA (9 agentes) |
 | MKT-02 | Pacotes de Marketing (3 pacotes) |
 | AV-05 | Serviços Avulsos (6 avulsos) |
 

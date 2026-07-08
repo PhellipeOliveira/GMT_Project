@@ -244,29 +244,6 @@ export const servicos: Servico[] = [
     ],
     casosDeUso: ["Empresas com processos internos pesados"],
   },
-  {
-    slug: "onboarding-clientes",
-    nome: "Onboarding de Clientes",
-    tipo: "agente",
-    familia: "F4",
-    corPlaceholder: CORES_FAMILIA.F4,
-    headline:
-      "Um onboarding que corre sozinho, impecável desde o primeiro minuto.",
-    problema: "Um onboarding confuso afasta clientes logo à partida.",
-    solucao:
-      "Automatiza a entrada de cada novo cliente: recolhe dados, configura tudo, gera o contrato e confirma.",
-    beneficios: [
-      "Mais clientes sem esforço manual",
-      "Imagem moderna e organizada",
-      "Relações que começam com o pé direito",
-    ],
-    funcionalidades: [
-      "Coleta de dados via chat",
-      "Geração de contrato",
-      "Cobrança e confirmação",
-    ],
-    casosDeUso: ["Negócios com alto volume de novos clientes"],
-  },
 
   // ===================== MARKETING DIGITAL — Pacotes (MKT) =====================
   {
@@ -546,6 +523,24 @@ export function getAdjacentServicos(slug: string): {
   };
 }
 
-export const agentes = servicos.filter((s) => s.tipo === "agente");
+/** Ordem na listagem «Automação & IA» (/servicos, footer, etc.). */
+const AGENTE_SLUG_ORDER = [
+  "cardapio-inteligente",
+  "reservas-whatsapp",
+  "agendamento-universal",
+  "relatorio-semanal",
+  "follow-up-clientes",
+  "qualificacao-leads",
+  "reputacao-reviews",
+  "cobranca-automatica",
+  "grafos-personalizados",
+];
+
+export const agentes = servicos
+  .filter((s) => s.tipo === "agente")
+  .sort(
+    (a, b) =>
+      AGENTE_SLUG_ORDER.indexOf(a.slug) - AGENTE_SLUG_ORDER.indexOf(b.slug),
+  );
 export const pacotes = servicos.filter((s) => s.tipo === "pacote");
 export const avulsos = servicos.filter((s) => s.tipo === "avulso");

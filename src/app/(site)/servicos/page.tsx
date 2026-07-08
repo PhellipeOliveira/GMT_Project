@@ -29,7 +29,7 @@ const CATEGORIAS = [
   {
     id: "automacao-ia",
     label: "Automação & IA",
-    descricao: "10 agentes inteligentes que trabalham pelo seu negócio, 24h por dia.",
+    descricao: "9 agentes inteligentes que trabalham pelo seu negócio, 24h por dia.",
     items: toItems(agentes),
   },
   {

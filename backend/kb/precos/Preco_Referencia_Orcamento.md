@@ -33,7 +33,6 @@
 | Cobrança Automática | €25–60 +taxas Stripe | €900–1.600 | €550–850 | €90–180 | 2 sem |
 | Qualificação de Leads | €40–100 | €1.200–2.000 | €700–1.000 | €150–300 | 3 sem |
 | Grafos Custom (Premium) | €50–200+ | €3.000–8.000+ | orçamento | €300–700+ | 6–10 sem |
-| Onboarding de Clientes | €30–80 | €1.500–3.000 | €900–1.500 | €120–250 | 3–4 sem |
 
 > Taxas Stripe: ~1,5% + €0,25/transação (são do cliente).
 > Grafos Custom: cobrar a fase de descoberta separadamente.
