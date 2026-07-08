@@ -25,17 +25,12 @@
 | Agente | Operação/mês | Setup (1 loja) | Por loja (rede 5+) | Manutenção/mês | Prazo |
 |---|---|---|---|---|---|
 | Reservas WhatsApp | €40–90 | €1.200–2.000 | €700–1.000 | €120–250 | 2–3 sem |
-| Voz para Telefone | €90–220 | €2.500–4.000 | €1.500–2.200 | €250–450 | 4–6 sem |
 | Cardápio RAG | €25–60 | €900–1.500 | €500–800 | €80–180 | 1–2 sem |
 | Reputação e Reviews | €40–100 | €1.000–1.800 | €600–900 | €100–200 | 2 sem |
 | Relatório Semanal | €20–50 | €700–1.200 | €400–650 | €70–150 | 1–2 sem |
 | Agendamento Universal | €35–80 | €1.000–1.800 | €600–900 | €100–220 | 2–3 sem |
 | Follow-up de Clientes | €30–70 | €800–1.400 | €450–700 | €80–160 | 1–2 sem |
-| Triagem de Documentos | €40–110 | €1.500–2.800 | €900–1.400 | €150–300 | 3–4 sem |
 | Cobrança Automática | €25–60 +taxas Stripe | €900–1.600 | €550–850 | €90–180 | 2 sem |
-| Criação de Conteúdo | €50–130 | €1.200–2.200 | €700–1.100 | €200–500 | 2–3 sem |
-| Monitor Concorrência | €60–150 | €1.000–1.800 | €600–950 | €150–350 | 2–3 sem |
-| Relatório Performance | €25–60 | €900–1.500 | €500–800 | €100–220 | 2 sem |
 | Qualificação de Leads | €40–100 | €1.200–2.000 | €700–1.000 | €150–300 | 3 sem |
 | Grafos Custom (Premium) | €50–200+ | €3.000–8.000+ | orçamento | €300–700+ | 6–10 sem |
 | Onboarding de Clientes | €30–80 | €1.500–3.000 | €900–1.500 | €120–250 | 3–4 sem |

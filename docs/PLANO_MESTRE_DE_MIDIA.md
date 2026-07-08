@@ -35,7 +35,7 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 
 > **Strip `/servicos`:** cabeçalho da listagem usa **AG-01**, **MKT-02**, **AV-05** (3:2 · 1200×800) — um thumb por categoria principal. Assets em `public/images/`. **Produzido.**
 
-### Tabela 4.2 — Agentes de IA (15 agentes)
+### Tabela 4.2 — Agentes de IA (10 agentes)
 
 **4.2-A · Thumbnails únicos (1 por agente) — listagem `/servicos` + hero Sec0**
 
@@ -44,17 +44,12 @@ Colunas: `ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Propo
 | ID | Nome/Descrição | Página | Seção/Slot | Tipo | Mídia | Proporção | Dimensão (px) | Família | Objetivo | Duração | Prioridade |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | AG-01 | Thumb · Reservas via WhatsApp | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F1 | Mostrar reserva automatizada 24h | — | Alta |
-| AG-02 | Thumb · Voz para Telefone | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F1 | Atendimento por voz fora de horas | — | Alta |
 | AG-03 | Thumb · Cardápio Inteligente (RAG) | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F1 | Resposta instantânea ao cliente | — | Alta |
 | AG-04 | Thumb · Reputação e Reviews | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F1 | Subir avaliações no Google | — | Alta |
 | AG-05 | Thumb · Relatório Semanal para o Dono | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F1 | Visão do negócio em 2 minutos | — | Média |
 | AG-06 | Thumb · Agendamento Universal | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F2 | Agenda que enche sozinha | — | Alta |
 | AG-07 | Thumb · Follow-up de Clientes | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F2 | Recorrência/retorno de clientes | — | Alta |
-| AG-08 | Thumb · Triagem de Documentos | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F2 | Fim da papelada manual | — | Média |
 | AG-09 | Thumb · Cobrança Automática | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F2 | Pagamento garantido na marcação | — | Alta |
-| AG-10 | Thumb · Criação de Conteúdo Autónomo | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | Calendário editorial pronto | — | Alta |
-| AG-11 | Thumb · Monitor de Concorrência | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | Inteligência competitiva semanal | — | Média |
-| AG-12 | Thumb · Relatório de Performance | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | Retorno real dos anúncios | — | Alta |
 | AG-13 | Thumb · Qualificação de Leads | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F3 | Falar só com quem decide | — | Alta |
 | AG-14 | Thumb · Grafos Personalizados | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Automação sob medida | — | Média |
 | AG-15 | Thumb · Onboarding de Clientes | Serviços Geral | card listagem | thumbnail | imagem | 3:2 | 1200×800 | F4 | Entrada de cliente impecável | — | Média |

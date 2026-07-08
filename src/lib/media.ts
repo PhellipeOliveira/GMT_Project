@@ -12,17 +12,12 @@ export const MEDIA_ASSET_IDS = new Set(Object.keys(MEDIA_SLOTS));
 
 const AGENTE_THUMB_BY_SLUG: Record<string, string> = {
   "reservas-whatsapp": "AG-01",
-  "voz-telefone": "AG-02",
   "cardapio-inteligente": "AG-03",
   "reputacao-reviews": "AG-04",
   "relatorio-semanal": "AG-05",
   "agendamento-universal": "AG-06",
   "follow-up-clientes": "AG-07",
-  "triagem-documentos": "AG-08",
   "cobranca-automatica": "AG-09",
-  "criacao-conteudo": "AG-10",
-  "monitor-concorrencia": "AG-11",
-  "relatorio-performance": "AG-12",
   "qualificacao-leads": "AG-13",
   "grafos-personalizados": "AG-14",
   "onboarding-clientes": "AG-15",

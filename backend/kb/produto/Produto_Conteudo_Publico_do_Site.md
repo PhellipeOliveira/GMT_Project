@@ -26,23 +26,6 @@
   - Restaurantes, cafés e bares
   - Hotéis e alojamento local
 
-### Voz para Telefone
-- **Categoria:** Hospitalidade
-- **Headline:** O seu negócio atende mesmo depois de fechar.
-- **Problema:** O telefone toca fora de horas e ninguém atende — é uma venda a sair pela porta.
-- **Solução:** Atende por voz, responde a horários, localização e menu, e marca reservas mesmo fora de horas.
-- **Benefícios:**
-  - Nenhum contacto perdido, dia e noite
-  - Imagem moderna e tecnológica
-  - Recuperação de vendas que ficavam na rua
-- **Funcionalidades:**
-  - Atendimento por voz natural
-  - Respostas a dúvidas frequentes
-  - Marcação de reservas por voz + fallback humano
-- **Casos de uso:**
-  - Restaurantes com alto volume de chamadas
-  - Negócios com atendimento fora de horário
-
 ### Cardápio Inteligente (RAG)
 - **Categoria:** Hospitalidade
 - **Headline:** Responde a cada dúvida do cliente na hora, no site ou na mesa.
@@ -126,22 +109,6 @@
 - **Casos de uso:**
   - Negócios de serviço recorrente
 
-### Triagem de Documentos
-- **Categoria:** Serviços Locais · Gestão
-- **Headline:** O fim das horas perdidas a arquivar papelada.
-- **Problema:** Afogado em PDFs, fotos e papéis, com dados que se perdem.
-- **Solução:** Recebe documentos por WhatsApp, classifica, extrai a informação e organiza tudo numa base pronta a consultar.
-- **Benefícios:**
-  - Mais tempo e menos erros de transcrição
-  - Mais capacidade sem contratar
-  - Imagem moderna e eficiente
-- **Funcionalidades:**
-  - Extração com leitura de layout
-  - Classificação automática
-  - Armazenamento estruturado
-- **Casos de uso:**
-  - Imobiliárias, contabilistas, advogados
-
 ### Cobrança Automática
 - **Categoria:** Serviços Locais · Gestão
 - **Headline:** Cada marcação garantida com pagamento à cabeça.
@@ -159,54 +126,6 @@
   - Consultas, sessões e serviços por marcação
 
 ## Bloco 3 — Marketing com IA
-
-### Criação de Conteúdo Autónomo
-- **Categoria:** Marketing com IA
-- **Headline:** Um calendário editorial pronto a aprovar, todos os meses.
-- **Problema:** Sabe que devia publicar, mas falta-lhe tempo e ideias.
-- **Solução:** Pesquisa tendências, escreve, revê-se a si próprio e entrega um calendário editorial pronto a aprovar.
-- **Benefícios:**
-  - Mais publicações no mesmo tempo
-  - Marca ativa e relevante
-  - Atração de seguidores que viram clientes
-- **Funcionalidades:**
-  - Pesquisa de tendências
-  - Escritor + crítico (revisão automática)
-  - Calendário editorial e fluxo de aprovação
-- **Casos de uso:**
-  - Negócios que querem presença constante
-
-### Monitor de Concorrência
-- **Categoria:** Marketing com IA
-- **Headline:** Saiba, toda a semana, o que a concorrência anda a fazer.
-- **Problema:** Decisões tomadas tarde, com base em palpites.
-- **Solução:** Vigia preços, redes e novidades dos concorrentes e entrega um relatório claro e acionável.
-- **Benefícios:**
-  - Antecipa movimentos do mercado
-  - Decisões com base em informação real
-  - Visão competitiva dos grandes
-- **Funcionalidades:**
-  - Monitorização semanal
-  - Síntese acionável
-  - Histórico de relatórios
-- **Casos de uso:**
-  - Setores de alta concorrência local
-
-### Relatório de Performance de Marketing
-- **Categoria:** Marketing com IA · Gestão
-- **Headline:** Veja o retorno real dos seus anúncios num minuto.
-- **Problema:** Investe em anúncios sem saber o que dá retorno.
-- **Solução:** Liga Google Analytics e Meta Ads e traduz os números num PDF claro.
-- **Benefícios:**
-  - Investimento com confiança
-  - Mais orçamento no que funciona
-  - Clareza que transforma gasto em lucro
-- **Funcionalidades:**
-  - Integração GA4 + Meta Ads
-  - Insights em linguagem natural
-  - Relatório PDF automático
-- **Casos de uso:**
-  - Quem já faz anúncios pagos
 
 ### Qualificação de Leads
 - **Categoria:** Marketing com IA

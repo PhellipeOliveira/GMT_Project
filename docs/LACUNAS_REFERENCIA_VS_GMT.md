@@ -104,7 +104,7 @@
 
 | Secção GMT (código) | Estado | Observação |
 |---|---|---|
-| **Sec 1 — Introdução + contadores** | Implementado | 24+ serviços · 15+ agentes · 3+ pacotes; contagem animada; `AboutCounterGrid` |
+| **Sec 1 — Introdução + contadores** | Implementado | 19+ serviços · 10+ agentes · 3+ pacotes; contagem animada; `AboutCounterGrid` |
 | **Sec 2 — Slideshow expansivo** | Implementado | `ExpandingFrame` + ABT-01…05 em `public/images/`; branco→preto no scroll |
 | **Sec 3 — Manifesto** | Implementado | Texto em `bg-black`, sem imagem; secção compacta |
 | **Sec 4 — Nossos valores** | Implementado | `.section-cta`; 6 diferenciais + ícones (coluna 2); `src/data/diferenciais.ts` |
@@ -173,7 +173,7 @@ Consolidado de `PLANO_MESTRE_DE_MIDIA.md` Parte 6 e mapas de distribuição.
 | **Depoimentos de clientes** | Home *(secção removida)* | Alto | Secção Testemunhos removida da Home |
 | **Blog / Latest News** | Home Sec5 | Médio | Secção não existe no GMT; detalhe de serviço tem timeline «Como funciona» |
 | **Cases além do NARA** | Home Sec5, Portfolio geral (≈12), Next project | Alto | Manter “Em breve”; não criar cases fictícios |
-| **Métricas numéricas nos counters** | Sobre | — | Implementado: 24 · 15 · 3 (catálogo de serviços) |
+| **Métricas numéricas nos counters** | Sobre | — | Implementado: 19 · 10 · 3 (catálogo de serviços) |
 | **Logos de clientes parceiros** | Home Sec4 | Médio | Omitir; foco no NARA |
 | **Credencial tipo Shopify Experts** | Navbar/footer | Baixo | Manter omitido |
 | **Fotos de equipa** | Sobre | Baixo | Manter impessoal |

@@ -57,32 +57,6 @@ export const servicos: Servico[] = [
     casosDeUso: ["Restaurantes, cafés e bares", "Hotéis e alojamento local"],
   },
   {
-    slug: "voz-telefone",
-    nome: "Voz para Telefone",
-    tipo: "agente",
-    familia: "F1",
-    corPlaceholder: CORES_FAMILIA.F1,
-    headline: "O seu negócio atende mesmo depois de fechar.",
-    problema:
-      "O telefone toca fora de horas e ninguém atende — é uma venda a sair pela porta.",
-    solucao:
-      "Atende por voz, responde a horários, localização e menu, e marca reservas mesmo fora de horas.",
-    beneficios: [
-      "Nenhum contacto perdido, dia e noite",
-      "Imagem moderna e tecnológica",
-      "Recuperação de vendas que ficavam na rua",
-    ],
-    funcionalidades: [
-      "Atendimento por voz natural",
-      "Respostas a dúvidas frequentes",
-      "Marcação de reservas por voz + fallback humano",
-    ],
-    casosDeUso: [
-      "Restaurantes com alto volume de chamadas",
-      "Negócios com atendimento fora de horário",
-    ],
-  },
-  {
     slug: "cardapio-inteligente",
     nome: "Cardápio Inteligente (RAG)",
     tipo: "agente",
@@ -199,28 +173,6 @@ export const servicos: Servico[] = [
     casosDeUso: ["Negócios de serviço recorrente"],
   },
   {
-    slug: "triagem-documentos",
-    nome: "Triagem de Documentos",
-    tipo: "agente",
-    familia: "F2",
-    corPlaceholder: CORES_FAMILIA.F2,
-    headline: "O fim das horas perdidas a arquivar papelada.",
-    problema: "Afogado em PDFs, fotos e papéis, com dados que se perdem.",
-    solucao:
-      "Recebe documentos por WhatsApp, classifica, extrai a informação e organiza tudo numa base pronta a consultar.",
-    beneficios: [
-      "Mais tempo e menos erros de transcrição",
-      "Mais capacidade sem contratar",
-      "Imagem moderna e eficiente",
-    ],
-    funcionalidades: [
-      "Extração com leitura de layout",
-      "Classificação automática",
-      "Armazenamento estruturado",
-    ],
-    casosDeUso: ["Imobiliárias, contabilistas, advogados"],
-  },
-  {
     slug: "cobranca-automatica",
     nome: "Cobrança Automática",
     tipo: "agente",
@@ -244,71 +196,6 @@ export const servicos: Servico[] = [
   },
 
   // ===================== AGENTES DE IA — Bloco 3: Marketing com IA (F3) =====================
-  {
-    slug: "criacao-conteudo",
-    nome: "Criação de Conteúdo Autónomo",
-    tipo: "agente",
-    familia: "F3",
-    corPlaceholder: CORES_FAMILIA.F3,
-    headline: "Um calendário editorial pronto a aprovar, todos os meses.",
-    problema: "Sabe que devia publicar, mas falta-lhe tempo e ideias.",
-    solucao:
-      "Pesquisa tendências, escreve, revê-se a si próprio e entrega um calendário editorial pronto a aprovar.",
-    beneficios: [
-      "Mais publicações no mesmo tempo",
-      "Marca ativa e relevante",
-      "Atração de seguidores que viram clientes",
-    ],
-    funcionalidades: [
-      "Pesquisa de tendências",
-      "Escritor + crítico (revisão automática)",
-      "Calendário editorial e fluxo de aprovação",
-    ],
-    casosDeUso: ["Negócios que querem presença constante"],
-  },
-  {
-    slug: "monitor-concorrencia",
-    nome: "Monitor de Concorrência",
-    tipo: "agente",
-    familia: "F3",
-    corPlaceholder: CORES_FAMILIA.F3,
-    headline: "Saiba, toda a semana, o que a concorrência anda a fazer.",
-    problema: "Decisões tomadas tarde, com base em palpites.",
-    solucao:
-      "Vigia preços, redes e novidades dos concorrentes e entrega um relatório claro e acionável.",
-    beneficios: [
-      "Antecipa movimentos do mercado",
-      "Decisões com base em informação real",
-      "Visão competitiva dos grandes",
-    ],
-    funcionalidades: [
-      "Monitorização semanal",
-      "Síntese acionável",
-      "Histórico de relatórios",
-    ],
-    casosDeUso: ["Setores de alta concorrência local"],
-  },
-  {
-    slug: "relatorio-performance",
-    nome: "Relatório de Performance de Marketing",
-    tipo: "agente",
-    familia: "F3",
-    corPlaceholder: CORES_FAMILIA.F3,
-    headline: "Veja o retorno real dos seus anúncios num minuto.",
-    problema: "Investe em anúncios sem saber o que dá retorno.",
-    solucao: "Liga Google Analytics e Meta Ads e traduz os números num PDF claro.",
-    beneficios: [
-      "Investimento com confiança",
-      "Mais orçamento no que funciona",
-      "Clareza que transforma gasto em lucro",
-    ],
-    funcionalidades: [
-      "Integração GA4 + Meta Ads",
-      "Insights em linguagem natural",
-      "Relatório PDF automático",
-    ],
-    casosDeUso: ["Quem já faz anúncios pagos"],
-  },
   {
     slug: "qualificacao-leads",
     nome: "Qualificação de Leads",

@@ -32,7 +32,7 @@ Toda a página está dentro de `<div className="section-light">` (fundo claro). 
 **Sequência final:**
 
 1. **Cabeçalho + thumbnails** — label, h1, tagline e 3 thumbs (AG-01, MKT-02, AV-05)
-2. **Automação & IA** — Accordion com 15 agentes
+2. **Automação & IA** — Accordion com 10 agentes
 3. **Pacotes de Marketing** — Accordion com 3 pacotes
 4. **Serviços Avulsos** — Accordion com 6 avulsos
 5. **Footer global** — via `layout.tsx` (fora do `page.tsx`)
@@ -62,7 +62,7 @@ Geradas a partir de `CATEGORIAS`. Títulos de categoria usam `<h2 class="type-ca
 
 | Secção | Label | Descrição | Itens |
 |---|---|---|---|
-| Automação & IA | `Automação & IA` | 15 agentes inteligentes… | 15 agentes |
+| Automação & IA | `Automação & IA` | 10 agentes inteligentes… | 10 agentes |
 | Pacotes de Marketing | `Pacotes de Marketing` | 3 pacotes para iniciar… | 3 pacotes |
 | Serviços Avulsos | `Serviços Avulsos` | 6 áreas de especialização… | 6 avulsos |
 
@@ -78,7 +78,7 @@ Cada item do Accordion expõe: **thumb 3:2** (`mediaId` = AG/MKT/AV), nome, head
 
 > Render: frame `LISTING_THUMB_FRAME` — `relative w-14 aspect-[3/2] … md:w-20` + `PlaceholderMedia fill`. `RevealOnScroll` só envolve o botão, não o painel.
 
-> **Strip vs. Accordion:** o strip hero (AG-01, MKT-02, AV-05) é **só decorativo por categoria**. Os restantes thumbs (AG-02…15, MKT-01/03, etc.) aparecem **só no Accordion**. Ver `docs/MAPA_APLICACAO_MIDIA.md`.
+> **Strip vs. Accordion:** o strip hero (AG-01, MKT-02, AV-05) é **só decorativo por categoria**. Os restantes thumbs (AG-03…15, MKT-01/03, etc.) aparecem **só no Accordion**. Ver `docs/MAPA_APLICACAO_MIDIA.md`.
 
 ---
 

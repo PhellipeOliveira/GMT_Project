@@ -180,7 +180,7 @@ Frame pai: `className="relative aspect-video overflow-hidden"` — **16:9** cons
 | HER-01 slot | Asset órfão · hero activa `100dvh` preto + Preloader | `HeroSection` sem `PlaceholderMedia` |
 | HER-02…07 | Conjunto ExpandingFrame Home Sec4 · 16:9 · 35%→75% | `ExpandingFrame` |
 | ABT-01…05 | Conjunto ExpandingFrame Sobre Sec2 · 16:9 · 35%→75% | `ExpandingFrame` |
-| Thumbs listagem + hero | AG/MKT/AV 3:2 | `Accordion` + `getServicoHeroId` | **24+3 activos** |
+| Thumbs listagem + hero | AG/MKT/AV 3:2 | `Accordion` + `getServicoHeroId` | **19+3 activos** |
 | ~~AGH-F*, MKT-04~~ | Hero 3:1 partilhado | — | **Removidos Jul 2026** |
 | CON-01 | Fundo contacto | Não implementado |
 | CF cards | 2:3 uniforme | 3:4 mobile + 2:3 desktop |

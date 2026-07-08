@@ -22,17 +22,12 @@
 ## Agentes de IA (páginas `/servicos/<slug>`)
 
 - Reservas via WhatsApp → `/servicos/reservas-whatsapp`
-- Voz para Telefone → `/servicos/voz-telefone`
 - Cardápio Inteligente (RAG) → `/servicos/cardapio-inteligente`
 - Reputação e Reviews → `/servicos/reputacao-reviews`
 - Relatório Semanal para o Dono → `/servicos/relatorio-semanal`
 - Agendamento Universal → `/servicos/agendamento-universal`
 - Follow-up de Clientes → `/servicos/follow-up-clientes`
-- Triagem de Documentos → `/servicos/triagem-documentos`
 - Cobrança Automática → `/servicos/cobranca-automatica`
-- Criação de Conteúdo Autónomo → `/servicos/criacao-conteudo`
-- Monitor de Concorrência → `/servicos/monitor-concorrencia`
-- Relatório de Performance de Marketing → `/servicos/relatorio-performance`
 - Qualificação de Leads → `/servicos/qualificacao-leads`
 - Grafos Personalizados (Premium) → `/servicos/grafos-personalizados`
 - Onboarding de Clientes → `/servicos/onboarding-clientes`

@@ -41,7 +41,7 @@ O site trata **três tipos** de serviço (`src/data/servicos.ts`). Cada tipo usa
 |---|---|---|
 | **AGH-F1** | Hero partilhado por família F1 | **AG-01…05** (thumb de cada agente F1) |
 | **AGH-F2** | Hero partilhado por família F2 | **AG-06…09** |
-| **AGH-F3** | Hero partilhado por família F3 | **AG-10…13** |
+| **AGH-F3** | Hero partilhado por família F3 | **AG-13** |
 | **AGH-F4** | Hero partilhado por família F4 | **AG-14…15** |
 | **MKT-04** | Hero partilhado dos pacotes | **MKT-01**, **MKT-02**, **MKT-03** |
 
@@ -51,12 +51,12 @@ O site trata **três tipos** de serviço (`src/data/servicos.ts`). Cada tipo usa
 
 ---
 
-## AG-01 … AG-15 — Thumbs dos 15 agentes
+## AG-01 … AG-15 — Thumbs dos 10 agentes
 
 | Campo | Detalhe |
 |---|---|
 | **Proporção** | 3:2 · 1200×800 |
-| **Ficheiros** | `public/images/AG-01.webp` … `AG-15.webp` |
+| **Ficheiros** | `public/images/AG-01.webp` … `AG-15.webp` *(AG-02, AG-08, AG-10, AG-11 e AG-12 retirados)* |
 | **Função** | Identificar visualmente cada agente na **listagem** de serviços |
 | **Mapeamento** | `getServicoThumbId()` → `AGENTE_THUMB_BY_SLUG` em `src/lib/media.ts` |
 
@@ -153,11 +153,11 @@ export const SERVICOS_HERO_THUMBS = ["AG-01", "MKT-02", "AV-05"];
 
 | Thumb | Representa |
 |---|---|
-| AG-01 | Automação & IA (15 agentes) |
+| AG-01 | Automação & IA (10 agentes) |
 | MKT-02 | Pacotes de Marketing (3 pacotes) |
 | AV-05 | Serviços Avulsos (6 avulsos) |
 
-Os restantes thumbs (AG-02…15, MKT-01/03, AV-01…04/06) aparecem no **Accordion** abaixo.
+Os restantes thumbs (AG-03…15, MKT-01/03, AV-01…04/06) aparecem no **Accordion** abaixo.
 
 ---
 
