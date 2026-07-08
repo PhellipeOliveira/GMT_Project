@@ -7,7 +7,7 @@ const linkClass =
 export function Footer() {
   return (
     <footer className="section-footer relative w-full overflow-hidden bg-black">
-      <div className="relative z-10 mx-auto px-5 py-20 md:px-[5vw] md:py-28">
+      <div className="relative z-10 mx-auto px-5 pt-[4.25rem] pb-20 md:px-[5vw] md:pt-[5.95rem] md:pb-28">
         <p className="type-footer-subtitle mx-auto mb-16 max-w-full text-center text-white md:mb-24">
           Growth Marketing Technology
         </p>

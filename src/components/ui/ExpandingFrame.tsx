@@ -23,6 +23,21 @@ interface ExpandingFrameProps {
   images?: ExpandingFrameImage[];
   fallbackColor?: string;
   slideIntervalMs?: number;
+  /**
+   * Altura total da secção em unidades de viewport height.
+   * Default mantém o ritmo actual (200vh).
+   */
+  sectionVh?: number;
+  /**
+   * Pré-roll (em vh) antes da expansão começar.
+   * Default mantém o ritmo actual (60vh).
+   */
+  preRollVh?: number;
+  /**
+   * Progresso (0–1) onde a expansão termina e inicia o "tail".
+   * Default mantém o ritmo actual (0.85).
+   */
+  scaleEnd?: number;
 }
 
 /**
@@ -31,11 +46,9 @@ interface ExpandingFrameProps {
  * 1. Secção entra pela base do viewport (progress = 0).
  * 2. Progress 0 → SCALE_START: frame sobe até ao centro (sem crescer).
  * 3. Progress = SCALE_START: sticky activa; expansão e transição de fundo começam.
- * 4. Progress SCALE_START → 1: frame cresce (35% → 75% largura, 16:9); fundo branco → preto no início.
- * 5. Após expansão máxima, o scroll continua pela secção (250vh) até à seguinte.
+ * 4. Progress SCALE_START → SCALE_END: frame cresce (35% → 75% largura, 16:9); fundo branco → preto no início.
+ * 5. Progress SCALE_END → 1: "tail" para estabilizar antes da transição.
  */
-const SECTION_VH = 250;
-const SCALE_START = 100 / SECTION_VH; // ≈ 0.4
 const FRAME_WIDTH_START = "35%";
 const FRAME_WIDTH_END = "75%";
 
@@ -43,9 +56,18 @@ export function ExpandingFrame({
   images = HOME_FRAME_IMAGES,
   fallbackColor = "#111827",
   slideIntervalMs = 700,
+  sectionVh = 200,
+  preRollVh = 60,
+  scaleEnd = 0.85,
 }: ExpandingFrameProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
+
+  // Derivados (mantêm a proporção visual dentro da janela de expansão)
+  const scaleStart = preRollVh / sectionVh;
+  const expansionRange = scaleEnd - scaleStart;
+  const bgEnd = scaleStart + expansionRange * 0.2;
+  const radiusEnd = scaleStart + expansionRange * 0.75;
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -54,18 +76,18 @@ export function ExpandingFrame({
 
   const frameWidth = useTransform(
     scrollYProgress,
-    [SCALE_START, 1],
-    [FRAME_WIDTH_START, FRAME_WIDTH_END],
+    [scaleStart, scaleEnd, 1],
+    [FRAME_WIDTH_START, FRAME_WIDTH_END, FRAME_WIDTH_END],
   );
   const borderRadius = useTransform(
     scrollYProgress,
-    [SCALE_START, SCALE_START + 0.45],
-    ["16px", "0px"],
+    [scaleStart, radiusEnd, scaleEnd, 1],
+    ["16px", "0px", "0px", "0px"],
   );
   const bgColor = useTransform(
     scrollYProgress,
-    [SCALE_START, SCALE_START + 0.12],
-    ["#ffffff", "#000000"],
+    [scaleStart, bgEnd, scaleEnd, 1],
+    ["#ffffff", "#000000", "#000000", "#000000"],
   );
 
   useEffect(() => {
@@ -80,7 +102,7 @@ export function ExpandingFrame({
     <div
       ref={containerRef}
       className="not-prose relative"
-      style={{ height: `${SECTION_VH}vh` }}
+      style={{ height: `${sectionVh}vh` }}
     >
       <motion.div
         style={{ backgroundColor: bgColor }}

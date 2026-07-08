@@ -3,6 +3,7 @@ import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { Accordion, type AccordionItem } from "@/components/ui/Accordion";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { agentes, pacotes, avulsos, type Servico } from "@/data/servicos";
 import { SERVICOS_HERO_THUMBS, getServicoThumbId } from "@/lib/media";
 
@@ -53,12 +54,15 @@ export default function ServicosPage() {
           <RevealSequence>
             <div className="flex flex-col gap-6 md:flex-row md:gap-[5vw]">
               <div className="md:w-1/3">
-                <RevealOnScroll as="p" className="type-label text-gmt-muted">
-                  Os nossos serviços
-                </RevealOnScroll>
-                <RevealOnScroll as="h1" className="type-h2 mt-4">
-                  Serviços
-                </RevealOnScroll>
+                <SectionHeader
+                  eyebrow="Os nossos serviços"
+                  title="Serviços"
+                  tone="on-light"
+                  eyebrowAs="p"
+                  eyebrowClassName="type-label text-gmt-muted"
+                  titleAs="h1"
+                  titleClassName="type-h2 mt-4"
+                />
               </div>
               <div className="md:w-2/3">
                 <RevealOnScroll as="p" className="type-h3 max-w-3xl">
@@ -95,7 +99,9 @@ export default function ServicosPage() {
         {CATEGORIAS.map((cat) => (
           <section
             key={cat.id}
-            className="mt-10 px-5 md:mt-[8vw] md:px-[5vw]"
+            className={`mt-10 px-5 md:mt-[8vw] md:px-[5vw] ${
+              cat.id === "servicos-avulsos" ? "mb-20 md:mb-[8vw]" : ""
+            }`}
           >
             <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between md:gap-[1vw]">
               <RevealOnScroll as="h2" className="type-category">

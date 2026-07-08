@@ -7,34 +7,108 @@ import { cn } from "@/lib/utils";
 type SectionHeaderTone = "on-light" | "on-dark";
 
 export interface SectionHeaderProps {
-  /** Categoria da secção — não deve repetir o título (fase 2). */
+  /**
+   * Eyebrow (label) da secção.
+   *
+   * Use para indicar a **categoria** da secção (ex.: "Serviços", "Portfólio",
+   * "Contacto", "O processo"). Nesta fase o componente é um *drop-in replacement*,
+   * portanto não valida nem altera texto automaticamente.
+   */
   eyebrow?: ReactNode;
-  /** Mensagem principal da secção. */
+  /**
+   * Título principal da secção.
+   *
+   * Use para comunicar a **mensagem** da secção (ex.: "O que fazemos",
+   * "Trabalhos recentes", "Vamos conversar").
+   */
   title: ReactNode;
+  /**
+   * Tom do cabeçalho (`on-light` / `on-dark`).
+   *
+   * Serve apenas como *default* de cor quando não estás a passar `eyebrowClassName`.
+   * Para preservar o visual exactamente como existe em cada página, preferir
+   * passar explicitamente as classes (fase 1).
+   */
   tone?: SectionHeaderTone;
-  /** Barra accent + eyebrow em linha (padrão Kicker em `/servicos/[slug]`). */
+  /**
+   * Quando `true`, renderiza eyebrow no formato "barra + label em linha".
+   *
+   * Isto permite substituir o padrão "Kicker" (barra accent + `.type-label`)
+   * sem reescrever markup nas páginas.
+   */
   accentBar?: boolean;
-  /** Elemento HTML do eyebrow — fase 1: preserva tags actuais por página. */
+  /**
+   * Tag/elemento do eyebrow.
+   *
+   * Fase 1: usar para preservar a tag actual (ex.: o projecto tem lugares onde o
+   * "label" estava num `h2` por motivos históricos — isto será corrigido na fase 2).
+   */
   eyebrowAs?: ElementType;
-  /** Elemento HTML do título — fase 1: preserva h1/h2 actuais. */
+  /**
+   * Tag/elemento do título.
+   *
+   * Fase 1: usar para preservar `h1`/`h2` actuais por página (a semântica será
+   * padronizada na fase 2).
+   */
   titleAs?: ElementType;
+  /** Classes CSS aplicadas ao eyebrow (no modo não-`accentBar`). */
   eyebrowClassName?: string;
+  /** Classes CSS aplicadas ao título. */
   titleClassName?: string;
+  /**
+   * Classes do wrapper externo.
+   *
+   * No modo `accentBar`, aplica-se ao wrapper do eyebrow (barra+label),
+   * preservando o markup do padrão existente.
+   */
   className?: string;
+  /** Delay adicional do reveal do eyebrow. */
   eyebrowDelay?: number;
+  /** Delay adicional do reveal do título. */
   titleDelay?: number;
 }
 
-function toneTitleColor(tone: SectionHeaderTone) {
+function defaultEyebrowColor(tone: SectionHeaderTone) {
   return tone === "on-dark" ? "text-white" : "text-gmt-text";
 }
 
 /**
- * Cabeçalho editorial unificado — eyebrow + título.
+ * `SectionHeader` — Cabeçalho editorial unificado (eyebrow + título).
  *
- * Fase 1: reproduz exactamente o markup/classes das implementações anteriores
- * (`SectionLabel`, `Kicker`, pares manuais). Props `eyebrowAs`, `titleAs` e
- * `*ClassName` permitem preservar h1/h2 e tipografia actuais por página.
+ * Objetivo: consolidar a arquitectura de cabeçalhos do projecto num único
+ * componente reutilizável, **sem alterar** o resultado visual nesta fase.
+ *
+ * - Fase 1 (actual): componente pensado como *drop-in replacement*.
+ *   Usa `RevealOnScroll` (e portanto funciona bem dentro de `RevealSequence`)
+ *   e permite manter o markup/classes existentes por página via props.
+ * - Fase 2 (futura): padronização semântica (um `h1` por página, secções em `h2`,
+ *   eyebrow não-heading) + limpeza de componentes antigos.
+ *
+ * ### Exemplo (piloto /contacto)
+ *
+ * ```tsx
+ * <SectionHeader
+ *   eyebrow="Contacto"
+ *   title="Vamos conversar"
+ *   tone="on-light"
+ *   eyebrowAs="h2"
+ *   eyebrowClassName="type-section-title text-gmt-text block text-left"
+ *   titleAs="h1"
+ *   titleClassName="type-h2 mt-6 max-w-3xl"
+ * />
+ * ```
+ *
+ * ### Exemplo (variante com barra)
+ *
+ * ```tsx
+ * <SectionHeader
+ *   accentBar
+ *   eyebrow="O processo"
+ *   title="Como funciona"
+ *   titleAs="h2"
+ *   titleClassName="type-section-title"
+ * />
+ * ```
  */
 export function SectionHeader({
   eyebrow,
@@ -68,8 +142,7 @@ export function SectionHeader({
         as={eyebrowAs}
         delay={eyebrowDelay}
         className={cn(
-          eyebrowClassName,
-          !eyebrowClassName?.includes("text-") && toneTitleColor(tone),
+          eyebrowClassName ?? defaultEyebrowColor(tone),
         )}
       >
         {eyebrow}

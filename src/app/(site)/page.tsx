@@ -13,7 +13,7 @@ import { HeroSection } from "@/components/hero/HeroSection";
 import { Preloader } from "@/components/hero/Preloader";
 import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
 import { ServiceOverlayCard } from "@/components/home/ServiceOverlayCard";
 import { HomePortfolioRow } from "@/components/home/HomePortfolioRow";
@@ -40,9 +40,12 @@ export default function HomePage() {
         data-agent-hint="Dúvidas sobre os serviços?"
         className="not-prose bg-white px-5 py-20 text-left md:px-[5vw] md:py-[8vw]"
       >
-        <SectionLabel variant="title" tone="on-light" className="block w-full text-left">
-          O que fazemos
-        </SectionLabel>
+        <SectionHeader
+          title="O que fazemos"
+          tone="on-light"
+          titleAs="h2"
+          titleClassName="type-section-title block w-full text-left"
+        />
 
         <div className="mt-10 grid grid-cols-1 gap-7 sm:grid-cols-2">
           {avulsos.map((servico, i) => (
@@ -72,9 +75,12 @@ export default function HomePage() {
         data-agent-hint="Quer saber por que a GMT?"
         className="not-prose bg-gmt-bg-alt px-5 py-20 text-left md:px-[5vw] md:py-[8vw]"
       >
-        <SectionLabel variant="title" tone="on-light" className="block w-full text-left">
-          Por que a GMT
-        </SectionLabel>
+        <SectionHeader
+          title="Por que a GMT"
+          tone="on-light"
+          titleAs="h2"
+          titleClassName="type-section-title block w-full text-left"
+        />
 
         <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
           {DIFERENCIAIS.map((titulo, i) => {
@@ -105,9 +111,12 @@ export default function HomePage() {
         data-nav-tone="dark"
         className="section-cta px-5 py-20 text-left md:px-[5vw] md:py-[8vw]"
       >
-        <SectionLabel variant="title" tone="on-dark" className="block w-full text-left">
-          Trabalhos recentes
-        </SectionLabel>
+        <SectionHeader
+          title="Trabalhos recentes"
+          tone="on-dark"
+          titleAs="h2"
+          titleClassName="type-section-title block w-full text-left text-white"
+        />
 
         <div className="mt-12">
           {nara && (

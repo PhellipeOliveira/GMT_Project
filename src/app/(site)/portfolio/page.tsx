@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { portfolio } from "@/data/portfolio";
 
 export const metadata: Metadata = {
@@ -17,12 +17,15 @@ export default function PortfolioPage() {
     <>
       <section className="not-prose px-5 pt-28 md:px-[5vw] md:pt-[11vw]">
         <RevealSequence>
-          <SectionLabel variant="title" tone="on-light" className="block text-left">
-            Trabalho recente
-          </SectionLabel>
-          <RevealOnScroll as="h1" className="type-h2 mt-6 max-w-4xl">
-            Portfolio
-          </RevealOnScroll>
+          <SectionHeader
+            eyebrow="Trabalho recente"
+            title="Portfolio"
+            tone="on-light"
+            eyebrowAs="h2"
+            eyebrowClassName="type-section-title text-gmt-text block text-left"
+            titleAs="h1"
+            titleClassName="type-h2 mt-6 max-w-4xl"
+          />
           <RevealOnScroll as="p" className="type-body-lg mt-8 max-w-2xl text-gmt-muted">
             Criámos integralmente o NARA — uma plataforma tecnológica que atende
             profissionais em vários países. Do branding e website a chatbots

@@ -4,22 +4,13 @@ import { notFound } from "next/navigation";
 import { Check } from "lucide-react";
 import { PlaceholderMedia } from "@/components/ui/PlaceholderMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ComoFuncionaTimeline } from "@/components/servicos/ComoFuncionaTimeline";
 import { servicos, getServicoBySlug, getAdjacentServicos } from "@/data/servicos";
 import { getServicoHeroId } from "@/lib/media";
 
 const HERO_NAV_LINK =
   "type-label inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/20 px-5 py-3 font-medium text-white backdrop-blur-md transition-colors hover:bg-white/30";
-
-/** Eyebrow visível de secção: barra de destaque + rótulo escuro (não cinzento). */
-function Kicker({ children }: { children: string }) {
-  return (
-    <RevealOnScroll variant="media" className="mb-5 flex items-center gap-3">
-      <span className="h-px w-8 shrink-0 bg-gmt-accent" aria-hidden />
-      <span className="type-label text-gmt-text">{children}</span>
-    </RevealOnScroll>
-  );
-}
 
 export function generateStaticParams() {
   return servicos.map((s) => ({ slug: s.slug }));
@@ -113,10 +104,14 @@ export default async function ServicoItemPage({
         {servico.problema && (
           <section className="px-5 pt-20 md:px-[5vw] md:pt-[7vw]">
             <div className="mx-auto max-w-5xl">
-              <Kicker>O desafio</Kicker>
-              <RevealOnScroll as="p" className="type-section-title max-w-4xl">
-                {servico.problema}
-              </RevealOnScroll>
+              <SectionHeader
+                accentBar
+                eyebrow="O desafio"
+                title={servico.problema}
+                tone="on-light"
+                titleAs="p"
+                titleClassName="type-section-title max-w-4xl"
+              />
             </div>
           </section>
         )}
@@ -127,10 +122,14 @@ export default async function ServicoItemPage({
             <div className="mx-auto max-w-5xl border-t border-gmt-border pt-16 md:pt-[5vw]">
               <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
                 <div className="md:w-1/3">
-                  <Kicker>A solução</Kicker>
-                  <RevealOnScroll as="h2" className="type-section-title">
-                    Como resolvemos
-                  </RevealOnScroll>
+                  <SectionHeader
+                    accentBar
+                    eyebrow="A solução"
+                    title="Como resolvemos"
+                    tone="on-light"
+                    titleAs="h2"
+                    titleClassName="type-section-title"
+                  />
                 </div>
                 <div className="md:w-2/3">
                   {mostrarSolucao && (
@@ -167,10 +166,14 @@ export default async function ServicoItemPage({
           <div className="mx-auto max-w-5xl border-t border-gmt-border pt-16 md:pt-[5vw]">
             <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
               <div className="md:w-1/3">
-                <Kicker>Em detalhe</Kicker>
-                <RevealOnScroll as="h2" className="type-section-title">
-                  O que inclui
-                </RevealOnScroll>
+                <SectionHeader
+                  accentBar
+                  eyebrow="Em detalhe"
+                  title="O que inclui"
+                  tone="on-light"
+                  titleAs="h2"
+                  titleClassName="type-section-title"
+                />
               </div>
               <div className="md:w-2/3">
                 {prefacioInclui && (
@@ -200,10 +203,14 @@ export default async function ServicoItemPage({
         {/* ===== Sec 4 — Como funciona (timeline) ===== */}
         <section className="px-5 pt-16 md:px-[5vw] md:pt-[6vw]">
           <div className="mx-auto max-w-6xl border-t border-gmt-border pt-16 md:pt-[5vw]">
-            <Kicker>O processo</Kicker>
-            <RevealOnScroll as="h2" className="type-section-title">
-              Como funciona
-            </RevealOnScroll>
+            <SectionHeader
+              accentBar
+              eyebrow="O processo"
+              title="Como funciona"
+              tone="on-light"
+              titleAs="h2"
+              titleClassName="type-section-title"
+            />
             <ComoFuncionaTimeline />
           </div>
         </section>
@@ -213,10 +220,14 @@ export default async function ServicoItemPage({
           <div className="mx-auto max-w-5xl border-t border-gmt-border pt-16 md:pt-[5vw]">
             <div className="flex flex-col gap-10 md:flex-row md:gap-[5vw]">
               <div className="md:w-1/3">
-                <Kicker>Ideal para</Kicker>
-                <RevealOnScroll as="h2" className="type-section-title">
-                  Para quem é
-                </RevealOnScroll>
+                <SectionHeader
+                  accentBar
+                  eyebrow="Ideal para"
+                  title="Para quem é"
+                  tone="on-light"
+                  titleAs="h2"
+                  titleClassName="type-section-title"
+                />
               </div>
               <div className="md:w-2/3">
                 {servico.casosDeUso.length > 0 ? (

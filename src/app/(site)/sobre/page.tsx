@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Target } from "lucide-react";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { RevealSequence } from "@/components/ui/reveal-sequence";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { DIFERENCIAIS, ICONES_DIFERENCIAIS } from "@/data/diferenciais";
 import { ExpandingFrame } from "@/components/ui/ExpandingFrame";
 import { AboutCounterGrid } from "@/components/about/AboutCounterGrid";
@@ -28,14 +29,21 @@ export default function SobrePage() {
         <section className="flex flex-col gap-12 px-5 pt-28 md:flex-row md:items-start md:justify-between md:gap-[5vw] md:px-[5vw] md:pt-[11vw]">
           <div className="md:max-w-[55%]">
             <RevealSequence>
-              <RevealOnScroll as="p" className="type-label text-gmt-muted">
-                Sobre a GMT
-              </RevealOnScroll>
-              <RevealOnScroll as="h1" className="type-h2 mt-6 max-w-3xl">
-                Agência especialista em automações, inteligência artificial e
-                marketing digital, dedicada a ajudar pequenas empresas a crescer e a
-                destacar-se no mundo digital.
-              </RevealOnScroll>
+              <SectionHeader
+                eyebrow="Sobre a GMT"
+                title={
+                  <>
+                    Agência especialista em automações, inteligência artificial e
+                    marketing digital, dedicada a ajudar pequenas empresas a crescer e a
+                    destacar-se no mundo digital.
+                  </>
+                }
+                tone="on-light"
+                eyebrowAs="p"
+                eyebrowClassName="type-label text-gmt-muted"
+                titleAs="h1"
+                titleClassName="type-h2 mt-6 max-w-3xl"
+              />
               <RevealOnScroll
                 as="p"
                 className="type-body-lg mt-8 max-w-lg text-gmt-muted"
@@ -77,7 +85,7 @@ export default function SobrePage() {
                     className="shrink-0 text-white"
                     aria-hidden
                   />
-                  <p className="type-body-lg text-white">{titulo}</p>
+                  <p className="type-body-lg !text-white">{titulo}</p>
                 </div>
               </RevealOnScroll>
             );
