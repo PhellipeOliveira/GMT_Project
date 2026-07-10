@@ -29,6 +29,32 @@
 
 ---
 
+## Duas formas de agendar: híbrido
+
+O agente GMT oferece ao visitante **duas opções** ao agendar:
+
+**Opção A — O agente sugere horários**
+O agente busca automaticamente a disponibilidade e apresenta **3 horários do próximo dia útil**:
+- O **primeiro** slot disponível da tarde (mais cedo possível).
+- Um slot **intermediário** (por volta do meio da tarde).
+- O **último** slot disponível (mais tarde disponível).
+Após o visitante escolher, o agente confirma nome e e-mail e agenda internamente.
+Se o visitante quiser mais opções além dos 3, o agente partilha o link da agenda completa.
+
+**Opção B — O visitante escolhe pela agenda completa (Cal.com)**
+O agente partilha o link da agenda: https://cal.com/phellipe-oliveira-ncbgsl/30min
+O visitante escolhe o dia e a hora com toda a disponibilidade visível (13h–19h, intervalos de 30 min).
+O agendamento e a confirmação por e-mail (com link Google Meet) ficam ao cargo da plataforma Cal.com.
+
+### Regra dos 3 horários (obrigatória quando o agente sugere)
+- Apresentar SEMPRE exatamente 3 horários, nunca mais.
+- Os 3 horários devem ser espaçados ao longo da tarde: primeiro, intermediário, último.
+- Se houver menos de 3 slots disponíveis, apresentar os que existirem.
+- Se não houver nenhum slot disponível no próximo dia útil, informar o visitante
+  e partilhar o link Cal.com para que escolha outro dia.
+
+---
+
 ## Remarcar ou cancelar
 
 - **Remarcar:** o lead pode pedir uma nova data/hora (dentro de 13h–19h); a reunião é atualizada e uma nova confirmação é enviada.

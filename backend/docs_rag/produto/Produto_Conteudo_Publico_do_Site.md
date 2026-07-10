@@ -7,8 +7,23 @@
 
 # 🤖 AGENTES DE IA
 
-## Bloco 1 — Hospitalidade
-
+### Cardápio Inteligente (RAG)
+- **Categoria:** Hospitalidade
+- **Headline:** Responde a cada dúvida do cliente na hora, no site ou na mesa.
+- **Problema:** Dúvidas sobre ingredientes, alergénios e sugestões sem resposta são pedidos a menos.
+- **Solução:** Chatbot no site ou QR code na mesa que responde na hora, recomenda pratos e aceita pedidos antecipados.
+- **Benefícios:**
+  - Confiança de clientes com alergias/intolerâncias
+  - Mais decisões de compra, menos hesitação
+  - Equipa livre nas horas de ponta
+- **Funcionalidades:**
+  - Base RAG do cardápio
+  - Recomendação de pratos
+  - Pedidos antecipados
+- **Casos de uso:**
+  - Restaurantes com cardápio extenso ou sazonal
+  - Clientes com restrições alimentares
+  
 ### Reservas via WhatsApp
 - **Categoria:** Hospitalidade
 - **Headline:** Nunca mais perca uma reserva por não atender a tempo.
@@ -26,38 +41,21 @@
   - Restaurantes, cafés e bares
   - Hotéis e alojamento local
 
-### Cardápio Inteligente (RAG)
-- **Categoria:** Hospitalidade
-- **Headline:** Responde a cada dúvida do cliente na hora, no site ou na mesa.
-- **Problema:** Dúvidas sobre ingredientes, alergénios e sugestões sem resposta são pedidos a menos.
-- **Solução:** Chatbot no site ou QR code na mesa que responde na hora, recomenda pratos e aceita pedidos antecipados.
+### Agendamento Universal
+- **Categoria:** Serviços Locais
+- **Headline:** A sua agenda enche-se sozinha, sem ninguém ao telefone.
+- **Problema:** Cada chamada perdida é uma marcação que não aconteceu.
+- **Solução:** Atende no WhatsApp ou site, abre a agenda, marca, confirma e lembra cada cliente automaticamente.
 - **Benefícios:**
-  - Confiança de clientes com alergias/intolerâncias
-  - Mais decisões de compra, menos hesitação
-  - Equipa livre nas horas de ponta
+  - Fim das faltas
+  - Recepção liberta
+  - Marcação em segundos, a qualquer hora
 - **Funcionalidades:**
-  - Base RAG do cardápio
-  - Recomendação de pratos
-  - Pedidos antecipados
+  - Integração com calendário existente
+  - Regras de disponibilidade
+  - Confirmações e lembretes
 - **Casos de uso:**
-  - Restaurantes com cardápio extenso ou sazonal
-  - Clientes com restrições alimentares
-
-### Reputação e Reviews
-- **Categoria:** Hospitalidade
-- **Headline:** A sua nota no Google sobe, semana após semana.
-- **Problema:** A reputação online vale ouro e está a ficar ao acaso.
-- **Solução:** Pede avaliação no momento certo — satisfeitos vão ao Google, insatisfeitos chegam primeiro a si, em privado.
-- **Benefícios:**
-  - Mais estrelas e visibilidade no mapa
-  - Queixas tratadas a tempo, marca protegida
-  - Mais reservas vindas da reputação
-- **Funcionalidades:**
-  - Pedido de avaliação automático
-  - Análise de sentimento e direcionamento
-  - Captura interna de feedback negativo
-- **Casos de uso:**
-  - Negócios que dependem de avaliações locais
+  - Clínicas, salões, personal trainers, imobiliárias
 
 ### Relatório Semanal para o Dono
 - **Categoria:** Hospitalidade · Gestão
@@ -75,24 +73,6 @@
 - **Casos de uso:**
   - Donos que querem visão semanal sem esforço
 
-## Bloco 2 — Serviços Locais
-
-### Agendamento Universal
-- **Categoria:** Serviços Locais
-- **Headline:** A sua agenda enche-se sozinha, sem ninguém ao telefone.
-- **Problema:** Cada chamada perdida é uma marcação que não aconteceu.
-- **Solução:** Atende no WhatsApp ou site, abre a agenda, marca, confirma e lembra cada cliente automaticamente.
-- **Benefícios:**
-  - Fim das faltas
-  - Recepção liberta
-  - Marcação em segundos, a qualquer hora
-- **Funcionalidades:**
-  - Integração com calendário existente
-  - Regras de disponibilidade
-  - Confirmações e lembretes
-- **Casos de uso:**
-  - Clínicas, salões, personal trainers, imobiliárias
-
 ### Follow-up de Clientes
 - **Categoria:** Serviços Locais
 - **Headline:** Transforme quem veio uma vez em cliente habitual.
@@ -108,24 +88,6 @@
   - Registo de respostas
 - **Casos de uso:**
   - Negócios de serviço recorrente
-
-### Cobrança Automática
-- **Categoria:** Serviços Locais · Gestão
-- **Headline:** Cada marcação garantida com pagamento à cabeça.
-- **Problema:** Marcações que não aparecem custam dinheiro real.
-- **Solução:** Envia link de pagamento no WhatsApp no momento do agendamento e só garante o horário com o pagamento confirmado.
-- **Benefícios:**
-  - Fim das faltas e prejuízos
-  - Fluxo de caixa previsível
-  - Imagem profissional desde o primeiro contacto
-- **Funcionalidades:**
-  - Geração de link de pagamento
-  - Confirmação antes de garantir slot
-  - Registo de pagamentos
-- **Casos de uso:**
-  - Consultas, sessões e serviços por marcação
-
-## Bloco 3 — Marketing com IA
 
 ### Qualificação de Leads
 - **Categoria:** Marketing com IA
@@ -143,7 +105,37 @@
 - **Casos de uso:**
   - Negócios com fluxo de leads pelo site
 
-## Bloco 4 — Premium / Custom
+### Reputação e Reviews
+- **Categoria:** Hospitalidade
+- **Headline:** A sua nota no Google sobe, semana após semana.
+- **Problema:** A reputação online vale ouro e está a ficar ao acaso.
+- **Solução:** Pede avaliação no momento certo — satisfeitos vão ao Google, insatisfeitos chegam primeiro a si, em privado.
+- **Benefícios:**
+  - Mais estrelas e visibilidade no mapa
+  - Queixas tratadas a tempo, marca protegida
+  - Mais reservas vindas da reputação
+- **Funcionalidades:**
+  - Pedido de avaliação automático
+  - Análise de sentimento e direcionamento
+  - Captura interna de feedback negativo
+- **Casos de uso:**
+  - Negócios que dependem de avaliações locais
+
+### Cobrança Automática
+- **Categoria:** Serviços Locais · Gestão
+- **Headline:** Cada marcação garantida com pagamento à cabeça.
+- **Problema:** Marcações que não aparecem custam dinheiro real.
+- **Solução:** Envia link de pagamento no WhatsApp no momento do agendamento e só garante o horário com o pagamento confirmado.
+- **Benefícios:**
+  - Fim das faltas e prejuízos
+  - Fluxo de caixa previsível
+  - Imagem profissional desde o primeiro contacto
+- **Funcionalidades:**
+  - Geração de link de pagamento
+  - Confirmação antes de garantir slot
+  - Registo de pagamentos
+- **Casos de uso:**
+  - Consultas, sessões e serviços por marcação
 
 ### Grafos Personalizados (Premium)
 - **Categoria:** Custom · Premium

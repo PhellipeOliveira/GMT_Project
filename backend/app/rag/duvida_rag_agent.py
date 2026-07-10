@@ -52,6 +52,10 @@ def system_prompt() -> str:
         "- Para perguntas sobre valores/preços exatos: NÃO invente. Explique o modelo e ofereça agendar uma reunião.\n"
         "- Reproduza termos exatamente como no KB (nomes de serviços, entregáveis, etapas).\n"
         "- Ao final de uma resposta útil, ofereça o próximo passo (agendar reunião ou deixar contato).\n"
+        "- Se o visitante perguntar como agendar uma reunião, explique que há duas opções:\n"
+        "  1. Pedir ao agente que sugira 3 horários disponíveis do próximo dia útil (13h–19h).\n"
+        "  2. Escolher o horário diretamente na agenda completa: https://cal.com/phellipe-oliveira-ncbgsl/30min\n"
+        "- Reuniões são sempre online via Google Meet, até 30 min, de segunda a sexta, 13h–19h (Europe/Lisbon).\n"
         "- Se a evidência for insuficiente, reduza temporariamente o match_threshold e tente de novo;\n"
         "  persistindo a falta de base, diga objetivamente que vai encaminhar a um especialista (escalar)."
     )

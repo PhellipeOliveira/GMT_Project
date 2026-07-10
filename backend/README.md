@@ -36,7 +36,7 @@ backend/
 │   │   └── gcal.py        # Google Calendar (push one-way)
 │   └── server/       # API HTTP
 │       └── webapp.py     # FastAPI real — ENTRYPOINT OFICIAL
-├── kb/               # fonte .md do RAG (produto/institucional/faq)
+├── docs_rag/         # fonte .md do RAG (produto/institucional/faq)
 ├── docs/             # cheat sheet de intents
 ├── scripts/          # utilitários (test_connections.py)
 ├── secrets/          # credenciais locais (NÃO versionar)
@@ -128,13 +128,13 @@ make supabase-push     # supabase db push          (aplica no projeto linkado)
 
 ## Ingestão do KB (RAG)
 
-Os arquivos `.md` em `kb/` alimentam o RAG (tabelas `kb_docs`/`kb_chunks`):
+Os arquivos `.md` em `docs_rag/` alimentam o RAG (tabelas `rag_docs`/`rag_chunks`):
 
 ```bash
-make rag-ingest BASE_DIR=kb CATEGORIA=produto STRATEGY=markdown
+make rag-ingest BASE_DIR=docs_rag CATEGORIA=produto STRATEGY=markdown
 ```
 
-Veja `kb/README.txt` para a organização por categorias.
+Veja `docs_rag/README.txt` para a organização por categorias.
 
 ## Segurança
 

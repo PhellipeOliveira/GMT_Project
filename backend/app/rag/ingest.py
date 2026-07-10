@@ -33,7 +33,7 @@ def embed_texts(texts: List[str]) -> List[List[float]]:
 
 
 def upsert_chunks(rows: List[Dict[str, Any]], *, categoria: Optional[str] = None) -> int:
-    """Upsert idempotente por (doc_path, chunk_ix) na tabela kb_chunks do GMT.
+    """Upsert idempotente por (doc_path, chunk_ix) na tabela rag_chunks do GMT.
 
     `categoria` permite segmentar o KB (ex.: 'produto', 'institucional', 'faq').
     """
@@ -46,7 +46,7 @@ def upsert_chunks(rows: List[Dict[str, Any]], *, categoria: Optional[str] = None
                 vec_lit = vec_to_literal(r["embedding"])
                 cur.execute(
                     """
-                    insert into public.kb_chunks (doc_path, chunk_ix, content, embedding, meta, categoria)
+                    insert into public.rag_chunks (doc_path, chunk_ix, content, embedding, meta, categoria)
                     values (%s, %s, %s, %s::vector(1536), %s::jsonb, %s)
                     on conflict (doc_path, chunk_ix)
                     do update set content=excluded.content, embedding=excluded.embedding,
@@ -67,7 +67,7 @@ def upsert_chunks(rows: List[Dict[str, Any]], *, categoria: Optional[str] = None
 
 
 def ingest_dir(
-    base_dir: str = "kb",
+    base_dir: str = "docs_rag",
     *,
     strategy: str = "markdown",
     categoria: Optional[str] = None,
@@ -88,14 +88,14 @@ def ingest_dir(
     return upsert_chunks(rows, categoria=categoria)
 
 
-# ---- Staging (kb_docs) ----
+# ---- Staging (rag_docs) ----
 
 def sha256_text(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
 
 
-def stage_docs_from_dir(base_dir: str = "kb", *, categoria: Optional[str] = None) -> int:
-    """Lê arquivos .md do diretório e insere em kb_docs (staging), idempotente por (source_path, source_hash)."""
+def stage_docs_from_dir(base_dir: str = "docs_rag", *, categoria: Optional[str] = None) -> int:
+    """Lê arquivos .md do diretório e insere em rag_docs (staging), idempotente por (source_path, source_hash)."""
     base = Path(base_dir)
     files = sorted([p for p in base.rglob("*.md") if p.is_file()])
     if not files:
@@ -109,7 +109,7 @@ def stage_docs_from_dir(base_dir: str = "kb", *, categoria: Optional[str] = None
                 mime = mimetypes.guess_type(str(path))[0] or "text/markdown"
                 cur.execute(
                     """
-                    insert into public.kb_docs (source_path, source_hash, mime_type, content, meta, categoria)
+                    insert into public.rag_docs (source_path, source_hash, mime_type, content, meta, categoria)
                     values (%s, %s, %s, %s, %s::jsonb, %s)
                     on conflict (source_path, source_hash) do nothing
                     """,
@@ -125,8 +125,8 @@ def truncate_kb_tables() -> None:
     with get_conn() as conn:
         conn.autocommit = True
         with conn.cursor() as cur:
-            cur.execute("truncate table public.kb_chunks;")
-            cur.execute("truncate table public.kb_docs;")
+            cur.execute("truncate table public.rag_chunks;")
+            cur.execute("truncate table public.rag_docs;")
 
 
 def materialize_chunks_from_staging(
@@ -136,7 +136,7 @@ def materialize_chunks_from_staging(
     chunk_size: int = 800,
     chunk_overlap: int = 200,
 ) -> int:
-    """Lê kb_docs (filtra por categoria) e materializa kb_chunks com a estratégia indicada.
+    """Lê rag_docs (filtra por categoria) e materializa rag_chunks com a estratégia indicada.
 
     Idempotente por (doc_path, chunk_ix).
     """
@@ -148,7 +148,7 @@ def materialize_chunks_from_staging(
                 vals.append(categoria)
             where = (" where " + " and ".join(clauses)) if clauses else ""
             cur.execute(
-                f"select id, source_path, content from public.kb_docs{where}",
+                f"select id, source_path, content from public.rag_docs{where}",
                 tuple(vals),
                 prepare=False,
             )
@@ -195,7 +195,7 @@ class IngestState(TypedDict, total=False):
 def _resolve_base_dir(requested: Optional[str]) -> str:
     """Resolve o diretório do KB com fallback.
 
-    Ordem: valor explícito → env BASE_DIR → 'kb' no CWD → 'docs/site' relativo à raiz do repo.
+    Ordem: valor explícito → env BASE_DIR → 'docs_rag' no CWD → 'docs/site' relativo à raiz do repo.
     """
     def has_md(p: Path) -> bool:
         try:
@@ -218,7 +218,7 @@ def _resolve_base_dir(requested: Optional[str]) -> str:
         if has_md(p):
             return str(p)
 
-    p_kb = Path.cwd() / "kb"
+    p_kb = Path.cwd() / "docs_rag"
     if has_md(p_kb):
         return str(p_kb)
 
@@ -227,7 +227,7 @@ def _resolve_base_dir(requested: Optional[str]) -> str:
     if has_md(p_site):
         return str(p_site)
 
-    return requested or "kb"
+    return requested or "docs_rag"
 
 
 def node_stage(state: IngestState) -> IngestState:

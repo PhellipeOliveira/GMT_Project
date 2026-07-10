@@ -1,18 +1,15 @@
 """
-Ferramentas (tools) do Agente GMT (Landing Page)
+Ferramentas (tools) do Agente GMT — Fase 1 (Receção Digital)
 
-Cada tool mapeia uma intent do Cheat Sheet e usa o schema
-`01_gmt_agent_schema.sql` (Supabase / Postgres).
+Grupos ativos:
+- Leads: cadastrar, obter, buscar, listar, atualizar, resolver
+- Dúvidas / RAG: responder_duvida_rag
+- Reuniões: verificar disponibilidade, agendar, remarcar, cancelar, listar
+- Notificações: e-mail confirmação (lead) e alerta (equipe) via Resend
 
-Grupos:
-- Leads (cadastro, busca, qualificação, classificação)
-- Dúvidas / RAG
-- Orçamentos
-- Reuniões (agendamento)
-- Nutrição por e-mail
-- Notificações (e-mail confirmação/equipe)
-- Relatório semanal
-- Utilidades (resolver_lead, lookups, respond)
+Fase 2 (Agente Comercial — projeto separado, integração via webhook):
+- Orçamentos, Nutrição, Relatórios, Escalada humana
+- Referência: ver docs/FASE2_AGENTE_COMERCIAL.md
 """
 
 import base64
@@ -298,51 +295,9 @@ def atualizar_lead(
     return {"message": "Lead atualizado", "data": {"lead_id": lead_id}}
 
 
-@tool
-def qualificar_lead(
-    lead_ref_ou_id: str,
-    qualificado: bool = True,
-    score: Optional[int] = None,
-    etapa_funil: Optional[str] = None,
-) -> Dict[str, Any]:
-    """Qualifica um lead (marca qualificado, score 0-100 e/ou etapa do funil)."""
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            lead_id, matches = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
-            if not lead_id:
-                if matches:
-                    return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
-                return {"error": {"message": "Lead não encontrado"}}
-            sets, vals = ["qualificado=%s"], [qualificado]
-            if score is not None:
-                sets.append("score=%s"); vals.append(score)
-            if etapa_funil is not None:
-                sets.append("etapa_funil=%s"); vals.append(etapa_funil)
-            sets.append("atualizado_em=now()")
-            cur.execute(f"update public.leads set {', '.join(sets)} where id=%s", (*vals, lead_id))
-    return {"message": "Lead qualificado", "data": {"lead_id": str(lead_id), "qualificado": qualificado, "score": score}}
-
-
-@tool
-def classificar_lead(lead_ref_ou_id: str, status_codigo: str) -> Dict[str, Any]:
-    """Move o lead no funil (status_codigo: novo, em_contato, qualificado, proposta_enviada, fechado, perdido)."""
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute("select 1 from public.status_lead where codigo=%s", (status_codigo,))
-            if not cur.fetchone():
-                return {"error": {"message": f"status_codigo inválido: {status_codigo}"}}
-            lead_id, matches = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
-            if not lead_id:
-                if matches:
-                    return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
-                return {"error": {"message": "Lead não encontrado"}}
-            cur.execute("update public.leads set status_codigo=%s, atualizado_em=now() where id=%s", (status_codigo, lead_id))
-    return {"message": "Lead classificado", "data": {"lead_id": str(lead_id), "status_codigo": status_codigo}}
-
-
 # ═══════════════════════════ DÚVIDAS / RAG ═══════════════════════════
 # Parâmetros padrão de recuperação (fallback). O threshold é aplicado à parte
-# vetorial dentro de kb_hybrid_search; por isso "sem base" = lista vazia de chunks.
+# vetorial dentro de rag_hybrid_search; por isso "sem base" = lista vazia de chunks.
 RAG_SEARCH_TYPE = "hybrid_rrf"
 RAG_K = 5
 RAG_MATCH_THRESHOLD = 0.35
@@ -398,15 +353,15 @@ def responder_duvida_rag(pergunta: str, lead_ref_ou_id: Optional[str] = None) ->
 
     Recupera contexto do KB do GMT (busca híbrida RRF, k=5, threshold=0.35) e formula a
     resposta ao lead em linguagem natural. Se nenhum chunk relevante for encontrado, NÃO
-    inventa: registra a dúvida como não respondida e sinaliza escalonamento
-    (`escalar=True`, `proxima_acao='duvida_escalar'`) para o agente chamar `escalar_duvida_humano`.
+    inventa: registra a dúvida como não respondida e orienta encaminhamento pela equipe
+    comercial no fluxo conversacional.
     """
     if not pergunta:
         return {"error": {"message": "pergunta é obrigatória"}}
 
     chunks = _rag_recuperar_chunks(pergunta)
 
-    # Sem base suficiente (lista vazia / scores abaixo do threshold) → escalar, não inventar.
+    # Sem base suficiente (lista vazia / scores abaixo do threshold) -> nao inventar.
     if not chunks:
         with get_conn() as conn:
             with conn.cursor() as cur:
@@ -427,7 +382,6 @@ def responder_duvida_rag(pergunta: str, lead_ref_ou_id: Optional[str] = None) ->
                 "resposta": None,
                 "respondida": False,
                 "escalar": True,
-                "proxima_acao": "duvida_escalar",
             },
         }
 
@@ -458,160 +412,6 @@ def responder_duvida_rag(pergunta: str, lead_ref_ou_id: Optional[str] = None) ->
             "escalar": False,
         },
     }
-
-
-@tool
-def escalar_duvida_humano(pergunta: str, motivo: str = "solicitação do lead", lead_ref_ou_id: Optional[str] = None) -> Dict[str, Any]:
-    """Escala uma dúvida para atendimento humano e sinaliza notificação à equipe."""
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            lead_id = None
-            if lead_ref_ou_id:
-                lead_id, _ = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
-            cur.execute(
-                "insert into public.duvidas (lead_id, pergunta, escalada, motivo_escalada, respondida_por_agente) "
-                "values (%s,%s,true,%s,false) returning id",
-                (lead_id, pergunta, motivo),
-            )
-            duvida_id = cur.fetchone()[0]
-    return {"message": "Dúvida escalada", "data": {"duvida_id": duvida_id, "lead_id": lead_id, "motivo": motivo, "notificar_equipe": True}}
-
-
-# ═══════════════════════════ ORÇAMENTOS ═══════════════════════════
-@tool
-def criar_orcamento(lead_ref_ou_id: str, titulo: str, moeda: str = "EUR") -> Dict[str, Any]:
-    """Cria um orçamento em rascunho para um lead (moeda padrão EUR)."""
-    if not titulo:
-        return {"error": {"message": "Título é obrigatório"}}
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            lead_id, matches = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
-            if not lead_id:
-                if matches:
-                    return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
-                return {"error": {"message": "Lead não encontrado"}}
-            cur.execute(
-                "insert into public.orcamentos (lead_id, titulo, moeda) values (%s,%s,%s) returning id",
-                (lead_id, titulo, moeda),
-            )
-            orcamento_id = cur.fetchone()[0]
-    return {"message": "Orçamento criado", "data": {"orcamento_id": str(orcamento_id), "lead_id": str(lead_id), "titulo": titulo}}
-
-
-def _recalc_orcamento(cur, orcamento_id: str) -> None:
-    cur.execute("select coalesce(sum(total),0) from public.itens_orcamento where orcamento_id=%s", (orcamento_id,))
-    subtotal = float(cur.fetchone()[0] or 0)
-    cur.execute("select desconto_pct from public.orcamentos where id=%s", (orcamento_id,))
-    row = cur.fetchone()
-    desconto = float(row[0] or 0) if row else 0
-    total = round(subtotal * (1 - desconto / 100.0), 2)
-    cur.execute("update public.orcamentos set subtotal=%s, total=%s, atualizado_em=now() where id=%s",
-                (subtotal, total, orcamento_id))
-
-
-@tool
-def adicionar_item_orcamento(orcamento_id: str, descricao: str, quantidade: float, preco_unitario: float) -> Dict[str, Any]:
-    """Adiciona um item (serviço GMT) ao orçamento e recalcula totais."""
-    if not is_uuid(orcamento_id):
-        return {"error": {"message": "orcamento_id inválido"}}
-    if not descricao or quantidade is None or preco_unitario is None:
-        return {"error": {"message": "Campos obrigatórios: descricao, quantidade, preco_unitario"}}
-    total_linha = round((quantidade or 0) * (preco_unitario or 0), 2)
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "insert into public.itens_orcamento (orcamento_id, descricao, quantidade, preco_unitario, total) "
-                "values (%s,%s,%s,%s,%s) returning id",
-                (orcamento_id, descricao, quantidade, preco_unitario, total_linha),
-            )
-            item_id = cur.fetchone()[0]
-            _recalc_orcamento(cur, orcamento_id)
-    return {"message": "Item adicionado", "data": {"orcamento_id": str(orcamento_id), "item_id": str(item_id)}}
-
-
-@tool
-def calcular_totais_orcamento(orcamento_id: str) -> Dict[str, Any]:
-    """Recalcula e retorna os totais de um orçamento."""
-    if not is_uuid(orcamento_id):
-        return {"error": {"message": "orcamento_id inválido"}}
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            _recalc_orcamento(cur, orcamento_id)
-            cur.execute("select subtotal, desconto_pct, total from public.orcamentos where id=%s", (orcamento_id,))
-            row = cur.fetchone()
-            if not row:
-                return {"error": {"message": "Orçamento não encontrado"}}
-    return {"message": "Totais atualizados", "data": {
-        "orcamento_id": orcamento_id, "subtotal": float(row[0]), "desconto_pct": float(row[1]), "total": float(row[2])}}
-
-
-@tool
-def atualizar_corpo_orcamento(orcamento_id: str, corpo_md: str) -> Dict[str, Any]:
-    """Atualiza o corpo/escopo (Markdown) de um orçamento."""
-    if not is_uuid(orcamento_id):
-        return {"error": {"message": "orcamento_id inválido"}}
-    if not (corpo_md or "").strip():
-        return {"error": {"message": "corpo_md é obrigatório"}}
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute("update public.orcamentos set corpo_md=%s, atualizado_em=now() where id=%s returning id",
-                        (corpo_md, orcamento_id))
-            if not cur.fetchone():
-                return {"error": {"message": "Orçamento não encontrado"}}
-    return {"message": "Corpo do orçamento atualizado", "data": {"orcamento_id": orcamento_id}}
-
-
-@tool
-def listar_orcamentos(lead_ref_ou_id: str) -> Dict[str, Any]:
-    """Lista orçamentos de um lead."""
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            lead_id, matches = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
-            if not lead_id:
-                if matches:
-                    return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
-                return {"error": {"message": "Lead não encontrado"}}
-            cur.execute("select id, titulo, total, status_codigo from public.orcamentos where lead_id=%s order by criado_em desc",
-                        (lead_id,))
-            rows = cur.fetchall() or []
-    items = [{"orcamento_id": r[0], "titulo": r[1], "total": float(r[2] or 0), "status": r[3]} for r in rows]
-    return {"message": f"{len(items)} orçamentos", "data": {"items": items}}
-
-
-@tool
-def exportar_orcamento(orcamento_id: str, formato: str = "markdown") -> Dict[str, Any]:
-    """Exporta um orçamento em markdown ou json."""
-    if not is_uuid(orcamento_id):
-        return {"error": {"message": "orcamento_id inválido"}}
-    formato = (formato or "markdown").lower()
-    if formato not in ("markdown", "json"):
-        return {"error": {"message": "Formato inválido (use markdown|json)"}}
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "select o.id, o.titulo, o.moeda, o.subtotal, o.desconto_pct, o.total, o.corpo_md, l.nome, l.empresa "
-                "from public.orcamentos o join public.leads l on l.id=o.lead_id where o.id=%s",
-                (orcamento_id,),
-            )
-            head = cur.fetchone()
-            if not head:
-                return {"error": {"message": "Orçamento não encontrado"}}
-            cur.execute("select descricao, quantidade, preco_unitario, total from public.itens_orcamento where orcamento_id=%s",
-                        (orcamento_id,))
-            itens = cur.fetchall() or []
-    if formato == "json":
-        return {"message": "Orçamento exportado", "data": {
-            "orcamento_id": head[0], "titulo": head[1], "moeda": head[2],
-            "subtotal": float(head[3] or 0), "desconto_pct": float(head[4] or 0), "total": float(head[5] or 0),
-            "corpo_md": head[6], "lead": {"nome": head[7], "empresa": head[8]},
-            "itens": [{"descricao": r[0], "quantidade": float(r[1] or 0), "preco_unitario": float(r[2] or 0), "total": float(r[3] or 0)} for r in itens]}}
-    if head[6] and str(head[6]).strip():
-        return {"message": "Orçamento exportado", "data": {"orcamento_id": orcamento_id, "formato": "markdown", "conteudo": str(head[6])}}
-    linhas = [f"# {head[1]}", f"Cliente: {head[7]} ({head[8]})", "", "## Itens"]
-    for r in itens:
-        linhas.append(f"- {r[0]} — {r[1]} x {r[2]} = {r[3]}")
-    linhas += ["", f"Subtotal: {head[3]}", f"Desconto: {head[4]}%", f"Total: {head[5]} {head[2]}"]
-    return {"message": "Orçamento exportado", "data": {"orcamento_id": orcamento_id, "formato": "markdown", "conteudo": "\n".join(linhas)}}
 
 
 # ═══════════════════════════ REUNIÕES ═══════════════════════════
@@ -652,6 +452,24 @@ def verificar_disponibilidade(
                 if dh.tzinfo is None:  # defensivo: assume UTC se vier naive
                     dh = dh.replace(tzinfo=timezone.utc)
                 ocupados_utc.add(dh.astimezone(timezone.utc).replace(microsecond=0))
+            # Complementa os ocupados com eventos reais do Google Calendar (blocos externos ao Supabase)
+            try:
+                from app.core.gcal import listar_slots_ocupados_gcal
+                from zoneinfo import ZoneInfo as _ZI
+                _tz = _ZI("Europe/Lisbon")
+                _inicio_range = datetime.combine(base, __import__('datetime').time(0, 0), tzinfo=_tz)
+                _fim_range = datetime.combine(
+                    base + timedelta(days=max(dias_a_frente, 1)),
+                    __import__('datetime').time(23, 59, 59),
+                    tzinfo=_tz,
+                )
+                gcal_ocupados = listar_slots_ocupados_gcal(
+                    _inicio_range.isoformat(),
+                    _fim_range.isoformat(),
+                )
+                ocupados_utc.update(gcal_ocupados)
+            except Exception as _e:
+                logger.warning("Não foi possível complementar com Google Calendar: %s", _e)
 
     agora_utc = datetime.now(timezone.utc)
     livres: List[str] = []
@@ -672,6 +490,103 @@ def verificar_disponibilidade(
 
     livres.sort()
     return {"message": f"{len(livres)} horários disponíveis", "data": {"slots_disponiveis": livres}}
+
+
+@tool
+def sugerir_horarios_proximo_dia_util() -> Dict[str, Any]:
+    """Retorna exatamente 3 horários disponíveis do próximo dia útil (seg–sex, 13h–19h).
+
+    Usado na abordagem híbrida: quando o visitante pede que o agente sugira horários,
+    este tool apresenta sempre 3 opções espaçadas — o primeiro slot disponível, um
+    intermediário e o último. Se quiser mais opções, o visitante consulta o link Cal.com.
+    """
+    from datetime import date as _date, timedelta as _td
+    from zoneinfo import ZoneInfo as _ZI
+
+    # Encontrar próximo dia útil (segunda=0 a sexta=4)
+    hoje = _date.today()
+    proximo = hoje + _td(days=1)
+    while proximo.weekday() >= 5:
+        proximo += _td(days=1)
+
+    # Reutilizar lógica de verificar_disponibilidade para esse dia
+    tz = _ZI("Europe/Lisbon")
+
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "select dia_semana, hora_inicio, hora_fim, duracao_slot_min, fuso_horario "
+                "from public.disponibilidade_config where ativo = true and dia_semana = %s",
+                (proximo.weekday(),),
+            )
+            janelas = cur.fetchall() or []
+            cur.execute(
+                "select data_hora from public.reunioes "
+                "where status_codigo='agendada' and data_hora >= now()"
+            )
+            from datetime import timezone as _tz_utc, datetime as _dt
+            ocupados_utc: set = set()
+            for (dh,) in cur.fetchall() or []:
+                if dh.tzinfo is None:
+                    dh = dh.replace(tzinfo=_tz_utc.utc)
+                ocupados_utc.add(dh.astimezone(_tz_utc.utc).replace(microsecond=0))
+
+    # Complementa com Google Calendar
+    try:
+        from app.core.gcal import listar_slots_ocupados_gcal
+        from datetime import time as _t
+        _ini = _dt.combine(proximo, _t(0, 0), tzinfo=tz)
+        _fim = _dt.combine(proximo, _t(23, 59, 59), tzinfo=tz)
+        ocupados_utc.update(listar_slots_ocupados_gcal(_ini.isoformat(), _fim.isoformat()))
+    except Exception as _e:
+        logger.warning("GCal não disponível para sugestão de horários: %s", _e)
+
+    from datetime import datetime as _dt2, timezone as _tz2, timedelta as _td2
+    agora_utc = _dt2.now(_tz2.utc)
+    livres = []
+    for dow, hi, hf, dur, fuso in janelas:
+        _fuso = _ZI(fuso or "Europe/Lisbon")
+        inicio = _dt2.combine(proximo, hi, tzinfo=_fuso)
+        fim = _dt2.combine(proximo, hf, tzinfo=_fuso)
+        passo = _td2(minutes=int(dur))
+        t = inicio
+        while t + passo <= fim:
+            t_utc = t.astimezone(_tz2.utc).replace(microsecond=0)
+            if t_utc > agora_utc and t_utc not in ocupados_utc:
+                livres.append(t.isoformat())
+            t += passo
+    livres.sort()
+
+    if not livres:
+        return {
+            "message": f"Sem horários disponíveis no próximo dia útil ({proximo.strftime('%d/%m/%Y')}).",
+            "data": {
+                "data": proximo.isoformat(),
+                "sugestoes": [],
+                "total_disponiveis": 0,
+                "cal_link": "https://cal.com/phellipe-oliveira-ncbgsl/30min",
+            },
+        }
+
+    # Selecionar 3 slots: primeiro, intermediário, último
+    n = len(livres)
+    if n == 1:
+        sugestoes = [livres[0]]
+    elif n == 2:
+        sugestoes = [livres[0], livres[-1]]
+    else:
+        sugestoes = [livres[0], livres[n // 2], livres[-1]]
+
+    return {
+        "message": f"3 horários sugeridos para {proximo.strftime('%d/%m/%Y')} (próximo dia útil).",
+        "data": {
+            "data": proximo.isoformat(),
+            "data_formatada": proximo.strftime("%d/%m/%Y"),
+            "sugestoes": sugestoes,
+            "total_disponiveis": n,
+            "cal_link": "https://cal.com/phellipe-oliveira-ncbgsl/30min",
+        },
+    }
 
 
 @tool
@@ -741,10 +656,11 @@ def agendar_reuniao(
     # Google Calendar (push one-way): a reunião JÁ está confirmada acima.
     # Qualquer falha do Google é logada e ignorada — nunca derruba o agendamento.
     gcal_event_id = None
+    meet_link = None
     try:
         from app.core.gcal import criar_evento_gcal
 
-        gcal_event_id = criar_evento_gcal(
+        gcal_result = criar_evento_gcal(
             {
                 "reuniao_id": reuniao_id,
                 "lead_nome": lead_nome,
@@ -756,6 +672,8 @@ def agendar_reuniao(
                 "timezone": "Europe/Lisbon",
             }
         )
+        gcal_event_id = gcal_result.get("gcal_event_id") if isinstance(gcal_result, dict) else None
+        meet_link = gcal_result.get("meet_link") if isinstance(gcal_result, dict) else None
         if gcal_event_id:
             with get_conn() as conn:
                 with conn.cursor() as cur:
@@ -788,7 +706,8 @@ def agendar_reuniao(
                 f"• Data e hora: {data_fmt} (fuso Europe/Lisbon)\n"
                 f"• Duração: até {duracao_min} minutos\n"
                 f"• Formato: {'Online' if tipo == 'online' else 'Presencial'}\n"
-                f"• Plataforma/Local: {plataforma}\n"
+                f"• Plataforma: {'Google Meet' if tipo == 'online' else (local or 'a confirmar')}\n"
+                f"• Link da reunião: {meet_link if meet_link else 'Será partilhado próximo à data da reunião.'}\n"
                 f"{linha_local}\n"
                 "O QUE ESPERAR\n"
                 "Vamos perceber a sua necessidade e propor o próximo passo, de forma objetiva. "
@@ -815,6 +734,12 @@ def agendar_reuniao(
                 corpo=corpo_lead,
                 referencia_id=reuniao_id,
                 attachments=[ics],
+                html_override=_build_html_confirmacao_reuniao(
+                    lead_nome=lead_nome or "",
+                    data_fmt=data_fmt,
+                    duracao_min=duracao_min,
+                    meet_link=meet_link,
+                ),
             )
 
         gcal_txt = f"Google Calendar: evento {gcal_event_id}\n" if gcal_event_id else ""
@@ -849,7 +774,7 @@ def agendar_reuniao(
 
     return {"message": "Reunião agendada", "data": {
         "reuniao_id": str(reuniao_id), "lead_id": str(lead_id), "data_hora": dt.isoformat(),
-        "tipo": tipo, "status": "agendada", "gcal_event_id": gcal_event_id}}
+        "tipo": tipo, "status": "agendada", "gcal_event_id": gcal_event_id, "meet_link": meet_link}}
 
 
 @tool
@@ -910,69 +835,6 @@ def listar_reunioes(lead_ref_ou_id: Optional[str] = None) -> Dict[str, Any]:
     return {"message": f"{len(items)} reuniões", "data": {"items": items}}
 
 
-# ═══════════════════════════ NUTRIÇÃO ═══════════════════════════
-@tool
-def iniciar_sequencia_nutricao(lead_ref_ou_id: str, sequencia: str = "boas_vindas") -> Dict[str, Any]:
-    """Inscreve o lead numa sequência de nutrição por e-mail."""
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            lead_id, matches = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
-            if not lead_id:
-                if matches:
-                    return {"error": {"message": "Mais de um lead corresponde", "matches": matches}}
-                return {"error": {"message": "Lead não encontrado"}}
-            cur.execute("select id, total_etapas from public.sequencias_nutricao where nome=%s and ativa=true", (sequencia,))
-            seq = cur.fetchone()
-            if not seq:
-                return {"error": {"message": f"Sequência inválida: {sequencia}"}}
-            cur.execute(
-                "insert into public.nutricao_leads (lead_id, sequencia_id, etapa_atual, status, proximo_envio_em) "
-                "values (%s,%s,1,'ativa', now()) "
-                "on conflict (lead_id, sequencia_id) do update set status='ativa', atualizado_em=now() "
-                "returning id",
-                (lead_id, seq[0]),
-            )
-            insc_id = cur.fetchone()[0]
-    return {"message": "Nutrição iniciada", "data": {"inscricao_id": insc_id, "lead_id": lead_id, "sequencia": sequencia, "etapa_atual": 1, "total_etapas": seq[1]}}
-
-
-@tool
-def pausar_sequencia_nutricao(lead_ref_ou_id: str, sequencia: str) -> Dict[str, Any]:
-    """Pausa uma sequência de nutrição do lead."""
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            lead_id, _ = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
-            if not lead_id:
-                return {"error": {"message": "Lead não encontrado"}}
-            cur.execute(
-                "update public.nutricao_leads nl set status='pausada', atualizado_em=now() "
-                "from public.sequencias_nutricao s where nl.sequencia_id=s.id and nl.lead_id=%s and s.nome=%s returning nl.id",
-                (lead_id, sequencia),
-            )
-            if not cur.fetchone():
-                return {"error": {"message": "Inscrição não encontrada"}}
-    return {"message": "Nutrição pausada", "data": {"lead_id": lead_id, "sequencia": sequencia, "status": "pausada"}}
-
-
-@tool
-def status_sequencia_nutricao(lead_ref_ou_id: str, sequencia: Optional[str] = None) -> Dict[str, Any]:
-    """Retorna o status das sequências de nutrição do lead."""
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            lead_id, _ = resolve_lead_id_by_ref(cur, lead_ref_ou_id)
-            if not lead_id:
-                return {"error": {"message": "Lead não encontrado"}}
-            q = ("select s.nome, nl.etapa_atual, s.total_etapas, nl.status from public.nutricao_leads nl "
-                 "join public.sequencias_nutricao s on s.id=nl.sequencia_id where nl.lead_id=%s")
-            params = [lead_id]
-            if sequencia:
-                q += " and s.nome=%s"; params.append(sequencia)
-            cur.execute(q, tuple(params))
-            rows = cur.fetchall() or []
-    items = [{"sequencia": r[0], "etapa_atual": r[1], "total_etapas": r[2], "status": r[3]} for r in rows]
-    return {"message": f"{len(items)} sequências", "data": {"items": items}}
-
-
 # ═══════════════════════════ NOTIFICAÇÕES (E-MAIL) ═══════════════════════════
 EMAIL_EQUIPE = os.getenv("GMT_EMAIL_EQUIPE", "contato@phellipeoliveira.org")
 
@@ -983,11 +845,101 @@ def _corpo_html(texto: str) -> str:
     return f'<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#222">{corpo}</div>'
 
 
+def _build_html_confirmacao_reuniao(
+    lead_nome: str,
+    data_fmt: str,
+    duracao_min: int,
+    meet_link: Optional[str],
+) -> str:
+    """Retorna o HTML completo do e-mail de confirmação de reunião."""
+    if meet_link:
+        meet_button = (
+            f'<table cellpadding="0" cellspacing="0" border="0">'
+            f'<tr><td style="background-color:#000000;border-radius:4px;">'
+            f'<a href="{meet_link}" style="display:inline-block;padding:13px 26px;'
+            f'font-family:Arial,sans-serif;font-weight:500;font-size:14px;'
+            f'color:#ffffff;text-decoration:none;">Entrar na Reunião →</a>'
+            f'</td></tr></table>'
+        )
+    else:
+        meet_button = (
+            '<p style="margin:0;font-size:14px;color:#555555;">'
+            'O link do Google Meet será partilhado próximo à data da reunião.</p>'
+        )
+
+    return """<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Host+Grotesk:wght@500;800&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:'DM Sans',Arial,sans-serif;">
+  <div style="width:100%;padding:40px 0;background-color:#ffffff;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+      <tr><td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#ffffff;border:1px solid #e0e0e0;border-collapse:collapse;">
+          <tr><td style="padding:40px 40px 20px 40px;">
+            <div style="display:inline-block;width:36px;height:36px;background-color:#000000;border-radius:50%;color:#ffffff;text-align:center;line-height:36px;font-family:Arial,sans-serif;font-weight:bold;font-size:11px;letter-spacing:0.5px;">GMT</div>
+          </td></tr>
+          <tr><td style="padding:0 40px 28px 40px;">
+            <p style="margin:0 0 6px 0;font-family:'Host Grotesk',Arial,sans-serif;font-size:30px;font-weight:800;color:#000000;line-height:1.2;">Reunião confirmada ✓</p>
+            <p style="margin:0;font-size:15px;color:#666666;">Tudo pronto para o nosso encontro.</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 24px 40px;font-size:15px;line-height:1.7;color:#1a1a1a;">
+            <p style="margin:0;">Olá, <strong>""" + (lead_nome or "visitante") + """</strong>,</p>
+            <p style="margin:12px 0 0 0;">A sua reunião com os especialistas da <strong>GMT (Growth Marketing Technology)</strong> está confirmada. Obrigado pelo interesse!</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 32px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f6f6f6;border-radius:6px;border-collapse:collapse;">
+              <tr><td style="padding:22px 24px 10px 24px;">
+                <p style="margin:0;font-family:'Host Grotesk',Arial,sans-serif;font-size:11px;font-weight:500;color:#888888;text-transform:uppercase;letter-spacing:1px;">Detalhes da Reunião</p>
+              </td></tr>
+              <tr><td style="padding:8px 24px;">📅 &nbsp;<strong>""" + data_fmt + """</strong> <span style="color:#888888;font-size:13px;">(fuso Europe/Lisbon)</span></td></tr>
+              <tr><td style="padding:8px 24px;">⏱ &nbsp;Duração: até <strong>""" + str(duracao_min) + """ minutos</strong></td></tr>
+              <tr><td style="padding:8px 24px 16px 24px;">🎥 &nbsp;Online via <strong>Google Meet</strong></td></tr>
+              <tr><td style="padding:4px 24px 24px 24px;">""" + meet_button + """
+                <p style="margin:8px 0 0 0;font-size:12px;color:#888888;">Guarde este link — será o mesmo no dia da reunião.</p>
+              </td></tr>
+            </table>
+          </td></tr>
+          <tr><td style="padding:0 40px 28px 40px;font-size:15px;line-height:1.7;color:#1a1a1a;">
+            <p style="margin:0 0 10px 0;font-family:'Host Grotesk',Arial,sans-serif;font-weight:500;font-size:16px;color:#000000;">O que esperar</p>
+            <p style="margin:0;">Vamos perceber a sua necessidade e propor o próximo passo, de forma objetiva e sem pressão. Se quiser, prepare as suas principais dúvidas — mas não é obrigatório.</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 24px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #e0e0e0;border-collapse:collapse;">
+              <tr><td style="padding:20px 0 0 0;font-size:13px;color:#555555;line-height:1.6;">
+                📎 O convite de calendário (<strong>.ics</strong>) segue em anexo — abra-o para adicionar ao Google Calendar, Outlook ou Apple Calendar.
+              </td></tr>
+            </table>
+          </td></tr>
+          <tr><td style="padding:0 40px 36px 40px;font-size:13px;color:#888888;line-height:1.6;">
+            Para remarcar ou cancelar, basta responder a este e-mail ou escrever no chat do nosso website.
+          </td></tr>
+          <tr><td style="padding:0 40px 40px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #eeeeee;border-collapse:collapse;">
+              <tr><td style="padding-top:20px;">
+                <strong style="font-family:'Host Grotesk',Arial,sans-serif;font-size:15px;color:#000000;">Phellipe Oliveira</strong><br>
+                <span style="font-size:13px;color:#555555;">Growth Marketing Technology</span><br>
+                <a href="https://www.gmt.marketing" style="font-size:13px;color:#000000;text-decoration:underline;">www.gmt.marketing</a>
+              </td></tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </div>
+</body>
+</html>"""
+
+
 def _enviar_email_resend(
     destinatario: str,
     assunto: str,
     mensagem: str,
     attachments: Optional[List[Dict[str, Any]]] = None,
+    html_override: Optional[str] = None,
 ) -> Tuple[bool, Optional[str], Optional[str]]:
     """Envia um e-mail via Resend.
 
@@ -1009,7 +961,7 @@ def _enviar_email_resend(
             "from": remetente,
             "to": [destinatario],
             "subject": assunto,
-            "html": _corpo_html(mensagem),
+            "html": html_override if html_override else _corpo_html(mensagem),
             "text": mensagem,
         }
         if attachments:
@@ -1124,6 +1076,7 @@ def _enviar_e_registrar(
     corpo: str,
     referencia_id: Optional[str],
     attachments: Optional[List[Dict[str, Any]]] = None,
+    html_override: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Envia via Resend (com dedup por referencia_id) e registra em notificacoes.
 
@@ -1136,7 +1089,11 @@ def _enviar_e_registrar(
             tipo, destinatario, referencia_id,
         )
         return {"enviado": False, "duplicado": True, "erro": None, "notificacao_id": None}
-    enviado, erro, _ = _enviar_email_resend(destinatario, assunto, corpo, attachments=attachments)
+    enviado, erro, _ = _enviar_email_resend(
+        destinatario, assunto, corpo,
+        attachments=attachments,
+        html_override=html_override,
+    )
     if not enviado:
         logger.warning("E-mail '%s' NÃO enviado para %s: %s", tipo, destinatario, erro)
     notif_id = _registrar_notificacao(lead_id, tipo, destinatario, assunto, referencia_id, enviado, erro)
@@ -1225,56 +1182,7 @@ def notificar_equipe_email(
     }
 
 
-# ═══════════════════════════ RELATÓRIO SEMANAL ═══════════════════════════
-@tool
-def gerar_relatorio_semanal(periodo_inicio: Optional[str] = None, periodo_fim: Optional[str] = None) -> Dict[str, Any]:
-    """Consolida métricas da semana (leads, reuniões, orçamentos, dúvidas) e grava um relatório."""
-    hoje = date.today()
-    ini = datetime.fromisoformat(periodo_inicio).date() if periodo_inicio else hoje - timedelta(days=hoje.weekday() + 7)
-    fim = datetime.fromisoformat(periodo_fim).date() if periodo_fim else ini + timedelta(days=6)
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            def _count(sql, extra=()):
-                cur.execute(sql, (ini, fim, *extra))
-                return cur.fetchone()[0] or 0
-            leads_novos = _count("select count(*) from public.leads where criado_em::date between %s and %s")
-            leads_qual = _count("select count(*) from public.leads where qualificado=true and atualizado_em::date between %s and %s")
-            reun_ag = _count("select count(*) from public.reunioes where criado_em::date between %s and %s")
-            reun_conc = _count("select count(*) from public.reunioes where status_codigo='concluida' and atualizado_em::date between %s and %s")
-            orc_criados = _count("select count(*) from public.orcamentos where criado_em::date between %s and %s")
-            orc_aprov = _count("select count(*) from public.orcamentos where status_codigo='aprovado' and atualizado_em::date between %s and %s")
-            duv_total = _count("select count(*) from public.duvidas where criado_em::date between %s and %s")
-            duv_esc = _count("select count(*) from public.duvidas where escalada=true and criado_em::date between %s and %s")
-            taxa = round((1 - (duv_esc / duv_total)) * 100, 2) if duv_total else 0
-            cur.execute(
-                """
-                insert into public.relatorios
-                (periodo_inicio, periodo_fim, leads_novos, leads_qualificados, reunioes_agendadas,
-                 reunioes_concluidas, orcamentos_criados, orcamentos_aprovados, duvidas_total,
-                 duvidas_escaladas, taxa_resolucao)
-                values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id
-                """,
-                (ini, fim, leads_novos, leads_qual, reun_ag, reun_conc, orc_criados, orc_aprov, duv_total, duv_esc, taxa),
-            )
-            relatorio_id = cur.fetchone()[0]
-    metricas = {"leads_novos": leads_novos, "leads_qualificados": leads_qual, "reunioes_agendadas": reun_ag,
-                "reunioes_concluidas": reun_conc, "orcamentos_criados": orc_criados, "orcamentos_aprovados": orc_aprov,
-                "duvidas_total": duv_total, "duvidas_escaladas": duv_esc, "taxa_resolucao": taxa}
-    return {"message": "Relatório gerado", "data": {"relatorio_id": relatorio_id, "periodo": f"{ini} a {fim}", "metricas": metricas}}
-
-
 # ═══════════════════════════ UTILIDADES ═══════════════════════════
-@tool
-def listar_status_lead() -> Dict[str, Any]:
-    """Lista os status válidos do funil de leads (lookup)."""
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute("select codigo, rotulo from public.status_lead order by ordem, codigo")
-            rows = cur.fetchall() or []
-    items = [{"codigo": r[0], "rotulo": r[1]} for r in rows]
-    return {"message": f"{len(items)} status", "data": {"items": items, "total": len(items)}}
-
-
 @tool
 def resolver_lead(ref: str) -> Dict[str, Any]:
     """Resolve um lead por referência (uuid/email/telefone/nome/empresa)."""

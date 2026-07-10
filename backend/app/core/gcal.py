@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import os
 from datetime import datetime, timedelta
+from datetime import time as dtime
 from typing import Any, Dict, Optional
 
 DEFAULT_TZ = "Europe/Lisbon"
@@ -81,8 +82,8 @@ def _build_service():
     return build("calendar", "v3", credentials=credentials, cache_discovery=False)
 
 
-def criar_evento_gcal(reuniao: Dict[str, Any]) -> Optional[str]:
-    """Cria um evento no Google Calendar espelhando a reunião. Retorna o event_id (ou None).
+def criar_evento_gcal(reuniao: Dict[str, Any]) -> Dict[str, Optional[str]]:
+    """Cria um evento no Google Calendar espelhando a reunião. Retorna um dict com as chaves 'gcal_event_id' e 'meet_link' (ambos podem ser None em caso de falha).
 
     Espera um dict com: reuniao_id, lead_nome, lead_email, data_hora (ISO/str ou datetime),
     duracao_min, tipo, local, timezone.
@@ -116,10 +117,81 @@ def criar_evento_gcal(reuniao: Dict[str, Any]) -> Optional[str]:
         "description": descricao,
         "start": {"dateTime": data_hora.isoformat(), "timeZone": tz},
         "end": {"dateTime": fim.isoformat(), "timeZone": tz},
+        "conferenceData": {
+            "createRequest": {
+                "requestId": f"gmt_meet_{reuniao.get('reuniao_id')}",
+                "conferenceSolutionKey": {"type": "hangoutLink"},
+            }
+        },
     }
     if reuniao.get("lead_email") and _convidar_attendees():
         evento["attendees"] = [{"email": reuniao["lead_email"]}]
 
     service = _build_service()
-    criado = service.events().insert(calendarId=calendar_id, body=evento).execute()
-    return criado.get("id")
+    criado = service.events().insert(
+        calendarId=calendar_id,
+        body=evento,
+        conferenceDataVersion=1,
+    ).execute()
+    return {
+        "gcal_event_id": criado.get("id"),
+        "meet_link": criado.get("hangoutLink"),
+    }
+
+
+def listar_slots_ocupados_gcal(
+    data_inicio_iso: str,
+    data_fim_iso: str,
+) -> set:
+    """Lê eventos do Google Calendar no intervalo informado e retorna um set de datetimes
+    UTC (sem microsegundos) que representam slots ocupados (a cada 30 min dentro do evento).
+
+    Usado por `verificar_disponibilidade` em tools.py para garantir que slots já bloqueados
+    no Google Calendar não sejam oferecidos ao visitante, mesmo que não estejam no Supabase.
+
+    Parâmetros em formato ISO 8601 com offset (ex.: "2026-07-14T13:00:00+01:00").
+    Retorna set vazio em caso de falha (best-effort: não interrompe a verificação).
+    """
+    from datetime import timezone, timedelta
+    try:
+        service = _build_service()
+        calendar_id = os.getenv("GOOGLE_CALENDAR_ID", "primary")
+        events_result = service.events().list(
+            calendarId=calendar_id,
+            timeMin=data_inicio_iso,
+            timeMax=data_fim_iso,
+            singleEvents=True,
+            orderBy="startTime",
+        ).execute()
+
+        ocupados: set = set()
+        passo = timedelta(minutes=30)
+
+        for event in events_result.get("items", []):
+            start_raw = event.get("start", {}).get("dateTime") or event.get("start", {}).get("date")
+            end_raw = event.get("end", {}).get("dateTime") or event.get("end", {}).get("date")
+            if not start_raw or not end_raw:
+                continue
+            try:
+                start_dt = datetime.fromisoformat(start_raw)
+                end_dt = datetime.fromisoformat(end_raw)
+                if start_dt.tzinfo is None:
+                    start_dt = start_dt.replace(tzinfo=timezone.utc)
+                if end_dt.tzinfo is None:
+                    end_dt = end_dt.replace(tzinfo=timezone.utc)
+                t = start_dt.astimezone(timezone.utc).replace(microsecond=0, second=0)
+                fim = end_dt.astimezone(timezone.utc).replace(microsecond=0, second=0)
+                while t < fim:
+                    ocupados.add(t)
+                    t += passo
+            except Exception:
+                continue
+
+        return ocupados
+
+    except Exception as gcal_err:
+        import logging
+        logging.getLogger(__name__).warning(
+            "Falha ao ler eventos do Google Calendar para disponibilidade: %s", gcal_err
+        )
+        return set()

@@ -45,19 +45,19 @@ def query_candidates(
                 if not query_embedding:
                     raise RuntimeError("search_type=vector requer embedding da query")
                 cur.execute(
-                    "select doc_path, chunk_ix, content, score, meta from public.kb_vector_search(%(vec)s, %(k)s, %(threshold)s, %(categoria)s, %(chunking)s)",
+                    "select doc_path, chunk_ix, content, score, meta from public.rag_vector_search(%(vec)s, %(k)s, %(threshold)s, %(categoria)s, %(chunking)s)",
                     {**params, "vec": vec_to_literal(query_embedding)},
                 )
             elif search_type == "text":
                 cur.execute(
-                    "select doc_path, chunk_ix, content, score, meta from public.kb_text_search(%(query)s, %(k)s, %(categoria)s, %(chunking)s)",
+                    "select doc_path, chunk_ix, content, score, meta from public.rag_text_search(%(query)s, %(k)s, %(categoria)s, %(chunking)s)",
                     params,
                 )
             elif search_type in ("hybrid", "hybrid_rrf"):
                 if query_embedding is None:
                     raise RuntimeError("search_type=hybrid requer embedding da query")
                 cur.execute(
-                    "select doc_path, chunk_ix, content, score, meta from public.kb_hybrid_search(%(query)s, %(vec)s, %(k)s, %(threshold)s, %(categoria)s, %(chunking)s)",
+                    "select doc_path, chunk_ix, content, score, meta from public.rag_hybrid_search(%(query)s, %(vec)s, %(k)s, %(threshold)s, %(categoria)s, %(chunking)s)",
                     {**params, "vec": vec_to_literal(query_embedding)},
                 )
             else:
