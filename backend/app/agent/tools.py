@@ -16,7 +16,7 @@ import base64
 import logging
 import os
 import re
-from datetime import datetime, date, timedelta, timezone
+from datetime import datetime, date, time, timedelta, timezone
 from zoneinfo import ZoneInfo
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -457,10 +457,10 @@ def verificar_disponibilidade(
                 from app.core.gcal import listar_slots_ocupados_gcal
                 from zoneinfo import ZoneInfo as _ZI
                 _tz = _ZI("Europe/Lisbon")
-                _inicio_range = datetime.combine(base, __import__('datetime').time(0, 0), tzinfo=_tz)
+                _inicio_range = datetime.combine(base, time(0, 0), tzinfo=_tz)
                 _fim_range = datetime.combine(
                     base + timedelta(days=max(dias_a_frente, 1)),
-                    __import__('datetime').time(23, 59, 59),
+                    time(23, 59, 59),
                     tzinfo=_tz,
                 )
                 gcal_ocupados = listar_slots_ocupados_gcal(

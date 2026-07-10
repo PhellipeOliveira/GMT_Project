@@ -77,14 +77,15 @@ finalizer_model = _chat_model("FINALIZER", "gpt-5-nano", "low", "low")
 IntentLiteral = Literal[
     "lead_cadastrar", "lead_obter", "lead_buscar", "lead_listar", "lead_atualizar",
     "duvida_responder",
-    "reuniao_verificar_agenda", "reuniao_agendar", "reuniao_remarcar",
-    "reuniao_cancelar", "reuniao_listar",
+    "reuniao_verificar_agenda", "reuniao_sugerir_horarios", "reuniao_agendar",
+    "reuniao_remarcar", "reuniao_cancelar", "reuniao_listar",
     "conversa_geral", "fora_de_escopo",
 ]
 
 LEAD_INTENTS = {"lead_cadastrar", "lead_obter", "lead_buscar", "lead_listar", "lead_atualizar"}
 DUVIDA_INTENTS = {"duvida_responder"}
-REUNIAO_INTENTS = {"reuniao_verificar_agenda", "reuniao_agendar", "reuniao_remarcar",
+REUNIAO_INTENTS = {"reuniao_verificar_agenda", "reuniao_sugerir_horarios",
+                   "reuniao_agendar", "reuniao_remarcar",
                    "reuniao_cancelar", "reuniao_listar"}
 
 INTENTS_REQUIRING_LEAD = {
