@@ -476,7 +476,7 @@ def verificar_disponibilidade(
     for d in range(0, max(dias_a_frente, 0)):
         dia = base + timedelta(days=d)
         for hi, hf, dur, fuso in janelas.get(dia.weekday(), []):
-            tz = ZoneInfo(fuso)  # localiza os slots no fuso da config (ex.: Europe/Lisbon)
+            tz = ZoneInfo(fuso or "Europe/Lisbon")  # localiza os slots no fuso da config (ex.: Europe/Lisbon)
             inicio = datetime.combine(dia, hi, tzinfo=tz)
             fim = datetime.combine(dia, hf, tzinfo=tz)
             passo = timedelta(minutes=dur)
@@ -493,99 +493,107 @@ def verificar_disponibilidade(
 
 
 @tool
-def sugerir_horarios_proximo_dia_util() -> Dict[str, Any]:
-    """Retorna exatamente 3 horários disponíveis do próximo dia útil (seg–sex, 13h–19h).
+def sugerir_horarios_proximo_dia_util(
+    data_referencia: Optional[str] = None,
+    max_dias: int = 14,
+) -> Dict[str, Any]:
+    """Sugere horários livres no primeiro dia seguinte com disponibilidade ativa na config."""
+    base = date.today()
+    if data_referencia:
+        try:
+            base = datetime.fromisoformat(data_referencia).date()
+        except Exception:
+            pass
 
-    Usado na abordagem híbrida: quando o visitante pede que o agente sugira horários,
-    este tool apresenta sempre 3 opções espaçadas — o primeiro slot disponível, um
-    intermediário e o último. Se quiser mais opções, o visitante consulta o link Cal.com.
-    """
-    from datetime import date as _date, timedelta as _td
-    from zoneinfo import ZoneInfo as _ZI
-
-    # Encontrar próximo dia útil (segunda=0 a sexta=4)
-    hoje = _date.today()
-    proximo = hoje + _td(days=1)
-    while proximo.weekday() >= 5:
-        proximo += _td(days=1)
-
-    # Reutilizar lógica de verificar_disponibilidade para esse dia
-    tz = _ZI("Europe/Lisbon")
+    nomes_dia = {
+        0: "segunda-feira",
+        1: "terça-feira",
+        2: "quarta-feira",
+        3: "quinta-feira",
+        4: "sexta-feira",
+        5: "sábado",
+        6: "domingo",
+    }
 
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "select dia_semana, hora_inicio, hora_fim, duracao_slot_min, fuso_horario "
-                "from public.disponibilidade_config where ativo = true and dia_semana = %s",
-                (proximo.weekday(),),
+                """
+                select
+                    'janela' as tipo,
+                    dia_semana,
+                    hora_inicio,
+                    hora_fim,
+                    duracao_slot_min,
+                    fuso_horario,
+                    null::timestamptz as data_hora
+                from public.disponibilidade_config
+                where ativo = true
+                union all
+                select
+                    'ocupado' as tipo,
+                    null::int,
+                    null::time,
+                    null::time,
+                    null::int,
+                    null::text,
+                    data_hora
+                from public.reunioes
+                where status_codigo = 'agendada'
+                  and data_hora >= now()
+                """
             )
-            janelas = cur.fetchall() or []
-            cur.execute(
-                "select data_hora from public.reunioes "
-                "where status_codigo='agendada' and data_hora >= now()"
-            )
-            from datetime import timezone as _tz_utc, datetime as _dt
-            ocupados_utc: set = set()
-            for (dh,) in cur.fetchall() or []:
-                if dh.tzinfo is None:
-                    dh = dh.replace(tzinfo=_tz_utc.utc)
-                ocupados_utc.add(dh.astimezone(_tz_utc.utc).replace(microsecond=0))
+            rows = cur.fetchall() or []
 
-    # Complementa com Google Calendar
-    try:
-        from app.core.gcal import listar_slots_ocupados_gcal
-        from datetime import time as _t
-        _ini = _dt.combine(proximo, _t(0, 0), tzinfo=tz)
-        _fim = _dt.combine(proximo, _t(23, 59, 59), tzinfo=tz)
-        ocupados_utc.update(listar_slots_ocupados_gcal(_ini.isoformat(), _fim.isoformat()))
-    except Exception as _e:
-        logger.warning("GCal não disponível para sugestão de horários: %s", _e)
+    janelas: Dict[int, List[Tuple[Any, Any, int, str]]] = {}
+    ocupados_utc = set()
+    for tipo, dow, hi, hf, dur, fuso, dh in rows:
+        if tipo == "janela":
+            if dow is not None and hi is not None and hf is not None and dur is not None:
+                janelas.setdefault(int(dow), []).append((hi, hf, int(dur), fuso or "Europe/Lisbon"))
+            continue
+        if dh is None:
+            continue
+        if dh.tzinfo is None:
+            dh = dh.replace(tzinfo=timezone.utc)
+        ocupados_utc.add(dh.astimezone(timezone.utc).replace(microsecond=0))
 
-    from datetime import datetime as _dt2, timezone as _tz2, timedelta as _td2
-    agora_utc = _dt2.now(_tz2.utc)
-    livres = []
-    for dow, hi, hf, dur, fuso in janelas:
-        _fuso = _ZI(fuso or "Europe/Lisbon")
-        inicio = _dt2.combine(proximo, hi, tzinfo=_fuso)
-        fim = _dt2.combine(proximo, hf, tzinfo=_fuso)
-        passo = _td2(minutes=int(dur))
-        t = inicio
-        while t + passo <= fim:
-            t_utc = t.astimezone(_tz2.utc).replace(microsecond=0)
-            if t_utc > agora_utc and t_utc not in ocupados_utc:
-                livres.append(t.isoformat())
-            t += passo
-    livres.sort()
+    agora_utc = datetime.now(timezone.utc)
+    limite = max(max_dias, 0)
+    for offset in range(1, limite + 1):
+        dia = base + timedelta(days=offset)
+        janelas_dia = janelas.get(dia.weekday(), [])
+        if not janelas_dia:
+            continue
 
-    if not livres:
-        return {
-            "message": f"Sem horários disponíveis no próximo dia útil ({proximo.strftime('%d/%m/%Y')}).",
-            "data": {
-                "data": proximo.isoformat(),
-                "sugestoes": [],
-                "total_disponiveis": 0,
-                "cal_link": "https://cal.com/phellipe-oliveira-ncbgsl/30min",
-            },
-        }
+        livres: List[str] = []
+        for hi, hf, dur, fuso in janelas_dia:
+            tz = ZoneInfo(fuso or "Europe/Lisbon")
+            inicio = datetime.combine(dia, hi, tzinfo=tz)
+            fim = datetime.combine(dia, hf, tzinfo=tz)
+            passo = timedelta(minutes=int(dur))
+            t = inicio
+            while t + passo <= fim:
+                t_utc = t.astimezone(timezone.utc).replace(microsecond=0)
+                if t_utc > agora_utc and t_utc not in ocupados_utc:
+                    livres.append(t.isoformat())
+                t += passo
 
-    # Selecionar 3 slots: primeiro, intermediário, último
-    n = len(livres)
-    if n == 1:
-        sugestoes = [livres[0]]
-    elif n == 2:
-        sugestoes = [livres[0], livres[-1]]
-    else:
-        sugestoes = [livres[0], livres[n // 2], livres[-1]]
+        livres.sort()
+        if livres:
+            nome_dia = nomes_dia.get(dia.weekday(), "dia")
+            return {
+                "message": f"{len(livres)} horários disponíveis em {nome_dia} ({dia.strftime('%d/%m/%Y')})",
+                "data": {
+                    "dia": dia.isoformat(),
+                    "nome_dia": nome_dia,
+                    "slots_disponiveis": livres,
+                },
+            }
 
     return {
-        "message": f"3 horários sugeridos para {proximo.strftime('%d/%m/%Y')} (próximo dia útil).",
-        "data": {
-            "data": proximo.isoformat(),
-            "data_formatada": proximo.strftime("%d/%m/%Y"),
-            "sugestoes": sugestoes,
-            "total_disponiveis": n,
-            "cal_link": "https://cal.com/phellipe-oliveira-ncbgsl/30min",
-        },
+        "message": f"Nenhum horário disponível nos próximos {limite} dias",
+        "data": {"slots_disponiveis": []},
     }
 
 
@@ -593,13 +601,11 @@ def sugerir_horarios_proximo_dia_util() -> Dict[str, Any]:
 def agendar_reuniao(
     lead_ref_ou_id: str,
     data_hora: str,
-    tipo: str = "online",
-    local: Optional[str] = None,
     email: Optional[str] = None,
     nome: Optional[str] = None,
     telefone: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Agenda uma reunião para um lead (tipo: online|presencial).
+    """Agenda uma reunião online para um lead.
 
     IDENTIDADE POR E-MAIL: se `email` for informado, ele é a fonte de verdade — o lead
     é resolvido/criado por esse e-mail (corrigindo nome/telefone), e a confirmação vai
@@ -607,16 +613,39 @@ def agendar_reuniao(
     Passe `email`/`nome` sempre que o visitante os fornecer, para não reaproveitar um
     e-mail antigo de um lead homônimo.
     """
-    if tipo not in ("online", "presencial"):
-        return {"error": {"message": "tipo inválido (use online|presencial)"}}
+    tipo = "online"
+    local = None
     try:
         dt = datetime.fromisoformat(data_hora)
     except Exception:
         return {"error": {"message": "data_hora inválida (use ISO YYYY-MM-DDTHH:MM)"}}
+    # Fonte de verdade de fuso: se vier naive, assume Europe/Lisbon.
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=ZoneInfo("Europe/Lisbon"))
     # tz-safe: aceita slot aware (com offset, vindo de verificar_disponibilidade) ou naive
     agora = datetime.now(dt.tzinfo) if dt.tzinfo else datetime.now()
     if dt < agora:
         return {"error": {"message": "Não é possível agendar em data passada."}}
+    if dt.weekday() in (5, 6):
+        return {
+            "error": {
+                "message": "Reuniões não disponíveis ao fim de semana. Use sugerir_horarios_proximo_dia_util para obter o próximo dia útil disponível."
+            }
+        }
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "select 1 from public.disponibilidade_config "
+                "where ativo=true and dia_semana=%s and hora_inicio <= %s and hora_fim > %s "
+                "limit 1",
+                (dt.weekday(), dt.time(), dt.time()),
+            )
+            if not cur.fetchone():
+                return {
+                    "error": {
+                        "message": "Horário fora da janela de disponibilidade configurada. Use verificar_disponibilidade ou sugerir_horarios_proximo_dia_util."
+                    }
+                }
     with get_conn() as conn:
         with conn.cursor() as cur:
             lead_id = None
@@ -694,21 +723,19 @@ def agendar_reuniao(
             ZoneInfo("Europe/Lisbon")
         )
         data_fmt = dt_local.strftime("%d/%m/%Y às %H:%M")
-        linha_local = f"Local: {local}\n" if local else ""
-
-        plataforma = "Google Meet" if tipo == "online" else (local or "a confirmar")
+        plataforma = "Google Meet"
         if lead_email:
             corpo_lead = (
                 f"Olá {lead_nome or ''},\n\n"
                 "A sua reunião com os especialistas da GMT (Growth Marketing Technology) está confirmada. "
                 "Obrigado pelo seu interesse!\n\n"
                 "DETALHES DA REUNIÃO\n"
-                f"• Data e hora: {data_fmt} (fuso Europe/Lisbon)\n"
+                f"• Data e hora: {data_fmt} (hora de Lisboa / Europe/Lisbon)\n"
                 f"• Duração: até {duracao_min} minutos\n"
-                f"• Formato: {'Online' if tipo == 'online' else 'Presencial'}\n"
-                f"• Plataforma: {'Google Meet' if tipo == 'online' else (local or 'a confirmar')}\n"
+                "• Formato: Online\n"
+                "• Plataforma: Google Meet\n"
                 f"• Link da reunião: {meet_link if meet_link else 'Será partilhado próximo à data da reunião.'}\n"
-                f"{linha_local}\n"
+                "\n"
                 "O QUE ESPERAR\n"
                 "Vamos perceber a sua necessidade e propor o próximo passo, de forma objetiva. "
                 "Se quiser, traga as suas principais dúvidas e o objetivo do seu projeto.\n\n"
@@ -750,10 +777,9 @@ def agendar_reuniao(
             f"• E-mail: {lead_email or '(sem e-mail)'}\n"
             f"• Telefone: {lead_telefone or '(sem telefone)'}\n\n"
             "REUNIÃO\n"
-            f"• Data e hora: {data_fmt} (Europe/Lisbon)\n"
+            f"• Data e hora: {data_fmt} (hora de Lisboa / Europe/Lisbon)\n"
             f"• Duração: até {duracao_min} min\n"
-            f"• Formato: {'Online' if tipo == 'online' else 'Presencial'} ({plataforma})\n"
-            f"{linha_local}"
+            f"• Formato: Online ({plataforma})\n"
             f"• Reunião ID: {reuniao_id}\n"
             f"• Lead ID: {lead_id}\n"
             f"{gcal_txt}\n"

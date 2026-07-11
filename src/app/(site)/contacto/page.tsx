@@ -58,6 +58,24 @@ export default function ContactoPage() {
           </div>
 
           <div>
+            <RevealOnScroll className="mb-8 rounded-lg border border-gmt-border bg-gmt-bg-alt p-6">
+              <p className="type-body text-gmt-text">
+                Prefere falar directamente? Agende uma reunião de 30 minutos.
+              </p>
+              <ul className="type-body mt-4 space-y-1 text-gmt-muted">
+                <li>• Online via Google Meet</li>
+                <li>• Segunda a sexta, das 13h às 19h (hora de Lisboa)</li>
+                <li>• Até 30 minutos</li>
+              </ul>
+              <a
+                href="https://cal.com/phellipe-oliveira-ncbgsl/30min"
+                target="_blank"
+                rel="noreferrer"
+                className="type-label mt-6 inline-flex items-center gap-2 rounded-full bg-black px-8 py-3.5 text-white transition-colors duration-300 hover:bg-black/80"
+              >
+                Agendar Reunião
+              </a>
+            </RevealOnScroll>
             <RevealOnScroll variant="media">
               <ContactForm />
             </RevealOnScroll>

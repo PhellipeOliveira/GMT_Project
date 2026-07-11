@@ -167,6 +167,27 @@ def router_node(state: AgentState) -> AgentState:
     slots = dict(state.get("slots") or {})
     errors = list(state.get("errors") or [])
     context = ensure_context(state)
+    lead_atual_update = None
+
+    # Cadastro silencioso por e-mail/nome para popular lead_atual sem expor lead_id ao visitante.
+    if slots.get("email") and not (state.get("lead_atual") and state["lead_atual"].get("lead_id")):
+        payload: Dict[str, Any] = {"email": str(slots.get("email")), "origem": "chat_site"}
+        if slots.get("nome"):
+            payload["nome"] = str(slots.get("nome"))
+        if slots.get("telefone"):
+            payload["telefone"] = str(slots.get("telefone"))
+        try:
+            resp = gmt_tools.cadastrar_lead.invoke(payload)
+            if not (resp or {}).get("error"):
+                lead_ctx = lead_context_from_result(resp or {})
+                if lead_ctx and lead_ctx.get("lead_id"):
+                    lead_atual_update = lead_ctx
+                    slots["lead_ref_ou_id"] = str(lead_ctx["lead_id"])
+        except Exception as e:
+            __import__("logging").getLogger(__name__).warning(
+                "Cadastro silencioso de lead falhou no router: %s", e
+            )
+
     missing: List[str] = []
     for name in REQUIRED_SLOTS.get(intent or "", []):
         if name == "lead_ref_ou_id" and (
@@ -195,6 +216,8 @@ def router_node(state: AgentState) -> AgentState:
             and not context.get("lead_resolution_attempted")):
         context["need_lead_resolution"] = True
     updates: AgentState = {"slots": slots, "context": context}
+    if lead_atual_update:
+        updates["lead_atual"] = lead_atual_update
     if errors:
         updates["errors"] = errors
     return updates
