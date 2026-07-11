@@ -171,11 +171,11 @@ def router_node(state: AgentState) -> AgentState:
 
     # Cadastro silencioso por e-mail/nome para popular lead_atual sem expor lead_id ao visitante.
     if slots.get("email") and not (state.get("lead_atual") and state["lead_atual"].get("lead_id")):
-        payload: Dict[str, Any] = {"email": str(slots.get("email")), "origem": "chat_site"}
+        payload = {"email": slots["email"], "origem": "chat_site"}
         if slots.get("nome"):
-            payload["nome"] = str(slots.get("nome"))
+            payload["nome"] = slots["nome"]
         if slots.get("telefone"):
-            payload["telefone"] = str(slots.get("telefone"))
+            payload["telefone"] = slots["telefone"]
         try:
             resp = gmt_tools.cadastrar_lead.invoke(payload)
             if not (resp or {}).get("error"):
@@ -187,6 +187,27 @@ def router_node(state: AgentState) -> AgentState:
             __import__("logging").getLogger(__name__).warning(
                 "Cadastro silencioso de lead falhou no router: %s", e
             )
+
+    # Atualização silenciosa de nome quando o lead já existe e chega nome mais confiável.
+    lead_base = dict(lead_atual_update or state.get("lead_atual") or {})
+    if lead_base.get("lead_id") and slots.get("nome"):
+        nome_novo = str(slots.get("nome")).strip()
+        nome_atual = str(lead_base.get("nome") or "").strip()
+        nome_atual_words = [w for w in nome_atual.split() if w]
+        nome_parece_fallback = bool(
+            nome_atual and "@" not in nome_atual and len(nome_atual_words) < 3
+        )
+        if nome_novo and (nome_atual != nome_novo or nome_parece_fallback):
+            lead_base["nome"] = nome_novo
+            lead_atual_update = lead_base
+            try:
+                gmt_tools.atualizar_lead.invoke(
+                    {"lead_id": str(lead_base["lead_id"]), "nome": nome_novo}
+                )
+            except Exception as e:
+                __import__("logging").getLogger(__name__).warning(
+                    "Atualizacao silenciosa de nome falhou no router: %s", e
+                )
 
     missing: List[str] = []
     for name in REQUIRED_SLOTS.get(intent or "", []):

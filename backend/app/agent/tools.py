@@ -63,6 +63,15 @@ def normalize_phone(s: str) -> str:
     return re.sub(r"\D+", "", s or "")
 
 
+def _nome_fallback_from_email(email: str) -> str:
+    """Nome temporário a partir da parte local do e-mail (ex.: social.data → Social Data)."""
+    local = (email or "").split("@", 1)[0].strip()
+    if not local:
+        return ""
+    formatted = re.sub(r"[._]+", " ", local).strip()
+    return formatted.title() if formatted else ""
+
+
 def is_uuid(s: str) -> bool:
     return bool(s) and bool(UUID_RE.match(s))
 
@@ -167,26 +176,31 @@ def upsert_lead_identidade(
 # ═══════════════════════════ LEADS ═══════════════════════════
 @tool
 def cadastrar_lead(
-    nome: str,
+    nome: Optional[str] = None,
     email: Optional[str] = None,
     telefone: Optional[str] = None,
     empresa: Optional[str] = None,
     origem: str = "chat_site",
     consentimento_lgpd: bool = False,
 ) -> Dict[str, Any]:
-    """Cadastra um lead. Exige nome e pelo menos email OU telefone.
+    """Cadastra um lead. Exige pelo menos email OU telefone (nome opcional).
+
+    Se nome não for informado e houver e-mail, usa a parte local do e-mail como
+    nome temporário (ex.: besolutionmindset@gmail.com → Besolutionmindset;
+    social.data@… → Social Data). Pode ser sobrescrito depois via atualizar_lead.
 
     Idempotente: se já existe um lead com o mesmo e-mail (ou telefone), ATUALIZA os
     campos informados em vez de duplicar — o e-mail é a identidade do lead.
     """
-    if not nome:
-        return {"error": {"message": "Campo 'nome' é obrigatório."}}
     if not (email or telefone):
         return {"error": {"message": "Informe pelo menos email ou telefone."}}
+    nome_eff = (nome or "").strip() or None
+    if not nome_eff and email:
+        nome_eff = _nome_fallback_from_email(email) or None
     with get_conn() as conn:
         with conn.cursor() as cur:
             lead_id, criado = upsert_lead_identidade(
-                cur, nome=nome, email=email, telefone=telefone, empresa=empresa,
+                cur, nome=nome_eff, email=email, telefone=telefone, empresa=empresa,
                 origem=origem, consentimento_lgpd=consentimento_lgpd,
             )
     # psycopg devolve colunas uuid como objetos uuid.UUID; upsert_lead_identidade já
@@ -196,7 +210,7 @@ def cadastrar_lead(
         return {"error": {"message": "Não foi possível cadastrar o lead."}}
     return {
         "message": "Lead cadastrado" if criado else "Lead já existente — dados atualizados",
-        "data": {"lead_id": lead_id, "nome": nome, "email": email,
+        "data": {"lead_id": lead_id, "nome": nome_eff, "email": email,
                  "empresa": empresa, "atualizado": not criado},
     }
 
