@@ -120,7 +120,7 @@ def criar_evento_gcal(reuniao: Dict[str, Any]) -> Dict[str, Optional[str]]:
         "conferenceData": {
             "createRequest": {
                 "requestId": f"gmt_meet_{reuniao.get('reuniao_id')}",
-                "conferenceSolutionKey": {"type": "hangoutLink"},
+                "conferenceSolutionKey": {"type": "hangoutsMeet"},
             }
         },
     }

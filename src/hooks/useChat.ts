@@ -10,7 +10,7 @@ import {
 const MESSAGES_KEY = "gmt:agent:messages";
 
 const WELCOME_MESSAGE: ChatMessage = {
-  id: "welcome",
+  id: "welcome-v2",
   role: "agent",
   content:
     "Olá! Sou o agente da GMT. Posso ajudar com dúvidas sobre serviços e agendamentos. Como posso ajudar?",
@@ -24,7 +24,25 @@ function loadMessages(): ChatMessage[] {
     const raw = sessionStorage.getItem(MESSAGES_KEY);
     if (!raw) return [WELCOME_MESSAGE];
     const parsed = JSON.parse(raw) as ChatMessage[];
-    return parsed.length > 0 ? parsed : [WELCOME_MESSAGE];
+    if (parsed.length === 0) return [WELCOME_MESSAGE];
+
+    const firstMessage = parsed[0];
+    const isLegacyWelcome =
+      firstMessage?.role === "agent" &&
+      typeof firstMessage?.id === "string" &&
+      firstMessage.id.startsWith("welcome");
+
+    if (isLegacyWelcome) {
+      const migrated = [...parsed];
+      migrated[0] = {
+        ...WELCOME_MESSAGE,
+        // Mantém o timestamp original para não "reordenar" histórico existente.
+        createdAt: firstMessage.createdAt ?? Date.now(),
+      };
+      return migrated;
+    }
+
+    return parsed;
   } catch {
     return [WELCOME_MESSAGE];
   }

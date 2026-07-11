@@ -65,7 +65,7 @@ export function MessageBubble({
 
             {showSlotPicker && (
               <div className="mt-2 flex flex-col gap-2">
-                {message.ui_hints.options.map((opt) => (
+                {message.ui_hints?.options?.map((opt) => (
                   <button
                     key={opt.value}
                     onClick={() => onSlotSelect(message.id, opt)}
