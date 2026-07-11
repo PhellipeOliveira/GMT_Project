@@ -750,7 +750,7 @@ def agendar_reuniao(
                 f"• Duração: até {duracao_min} minutos\n"
                 "• Formato: Online\n"
                 "• Plataforma: Google Meet\n"
-                f"• Link da reunião: {meet_link if meet_link else 'Será partilhado próximo à data da reunião.'}\n"
+                "• Link da reunião: Será enviado por e-mail até 24h antes da reunião.\n"
                 "\n"
                 "O QUE ESPERAR\n"
                 "Vamos perceber a sua necessidade e propor o próximo passo, de forma objetiva. "

@@ -117,12 +117,7 @@ def criar_evento_gcal(reuniao: Dict[str, Any]) -> Dict[str, Optional[str]]:
         "description": descricao,
         "start": {"dateTime": data_hora.isoformat(), "timeZone": tz},
         "end": {"dateTime": fim.isoformat(), "timeZone": tz},
-        "conferenceData": {
-            "createRequest": {
-                "requestId": f"gmt_meet_{reuniao.get('reuniao_id')}",
-                "conferenceSolutionKey": {"type": "hangoutsMeet"},
-            }
-        },
+        "colorId": "5",  # Banana — identifica eventos criados pelo chatbot GMT
     }
     if reuniao.get("lead_email") and _convidar_attendees():
         evento["attendees"] = [{"email": reuniao["lead_email"]}]
@@ -131,11 +126,10 @@ def criar_evento_gcal(reuniao: Dict[str, Any]) -> Dict[str, Optional[str]]:
     criado = service.events().insert(
         calendarId=calendar_id,
         body=evento,
-        conferenceDataVersion=1,
     ).execute()
     return {
         "gcal_event_id": criado.get("id"),
-        "meet_link": criado.get("hangoutLink"),
+        "meet_link": None,
     }
 
 
