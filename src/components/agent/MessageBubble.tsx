@@ -75,7 +75,7 @@ export function MessageBubble({
                   </button>
                 ))}
                 <button
-                  onClick={() => openCalPopup(message.ui_hints.fallback_url)}
+                  onClick={() => openCalPopup(message.ui_hints?.fallback_url)}
                   className="mt-1 text-left text-xs text-gray-400 underline"
                 >
                   Ver mais horários →
