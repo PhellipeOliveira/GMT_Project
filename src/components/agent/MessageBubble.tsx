@@ -1,17 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import type { ChatMessage } from "@/types/chat";
+import type { ChatMessage, SlotPickerOption } from "@/types/chat";
 
 type MessageBubbleProps = {
   message: ChatMessage;
+  onSlotSelect: (messageId: string, opt: SlotPickerOption) => void;
+  openCalPopup: (url?: string) => void;
 };
 
-export function MessageBubble({ message }: MessageBubbleProps) {
+export function MessageBubble({
+  message,
+  onSlotSelect,
+  openCalPopup,
+}: MessageBubbleProps) {
   const reduced = useReducedMotion();
   const isUser = message.role === "user";
+  const showSlotPicker =
+    message.ui_hints?.type === "slot_picker" &&
+    !message.slotPickerHandled &&
+    message.ui_hints.options.length > 0;
 
   return (
     <motion.div
@@ -31,7 +42,48 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             : "rounded-bl-md border border-gmt-border bg-gmt-bg-alt text-gmt-text",
         )}
       >
-        {message.content}
+        {isUser ? (
+          message.content
+        ) : (
+          <>
+            <ReactMarkdown
+              components={{
+                a: ({ href, children }) => (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline font-medium"
+                  >
+                    {children}
+                  </a>
+                ),
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
+
+            {showSlotPicker && (
+              <div className="mt-2 flex flex-col gap-2">
+                {message.ui_hints.options.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => onSlotSelect(message.id, opt)}
+                    className="text-left px-4 py-2 rounded-lg border border-blue-500 text-blue-700 hover:bg-blue-50 transition-colors text-sm font-medium"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => openCalPopup(message.ui_hints.fallback_url)}
+                  className="mt-1 text-left text-xs text-gray-400 underline"
+                >
+                  Ver mais horários →
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </motion.div>
   );

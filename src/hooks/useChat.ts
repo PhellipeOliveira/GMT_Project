@@ -13,7 +13,7 @@ const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome",
   role: "agent",
   content:
-    "Olá! Sou o agente da GMT. Posso ajudar com dúvidas sobre serviços, orçamentos e agendamentos. Como posso ajudar?",
+    "Olá! Sou o agente da GMT. Posso ajudar com dúvidas sobre serviços e agendamentos. Como posso ajudar?",
   createdAt: Date.now(),
 };
 
@@ -67,8 +67,10 @@ export function useChat() {
       setError(null);
 
       try {
-        const { reply } = await sendChatMessage(trimmed, sessionId);
+        const { reply, uiHints } = await sendChatMessage(trimmed, sessionId);
         const agentMessage = createMessage("agent", reply);
+        agentMessage.ui_hints = uiHints ?? null;
+        agentMessage.slotPickerHandled = false;
         setMessages((prev) => [...prev, agentMessage]);
         setStatus("idle");
       } catch {
@@ -84,11 +86,25 @@ export function useChat() {
     [sessionId, status],
   );
 
+  const markSlotPickerHandled = useCallback((messageId: string) => {
+    setMessages((prev) =>
+      prev.map((message) =>
+        message.id === messageId
+          ? {
+              ...message,
+              slotPickerHandled: true,
+            }
+          : message,
+      ),
+    );
+  }, []);
+
   return {
     messages,
     status,
     error,
     sendMessage,
+    markSlotPickerHandled,
     isLoading: status === "loading",
   };
 }

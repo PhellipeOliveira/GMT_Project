@@ -192,15 +192,17 @@ def cadastrar_lead(
     Idempotente: se já existe um lead com o mesmo e-mail (ou telefone), ATUALIZA os
     campos informados em vez de duplicar — o e-mail é a identidade do lead.
     """
-    if not (email or telefone):
-        return {"error": {"message": "Informe pelo menos email ou telefone."}}
+    email_eff = (email or "").strip() or None
+    telefone_eff = (telefone or "").strip() or None
+    if not (email_eff or telefone_eff):
+        return {"error": {"message": "Informe pelo menos email ou telefone para cadastrar."}}
     nome_eff = (nome or "").strip() or None
-    if not nome_eff and email:
-        nome_eff = _nome_fallback_from_email(email) or None
+    if not nome_eff and email_eff:
+        nome_eff = _nome_fallback_from_email(email_eff) or None
     with get_conn() as conn:
         with conn.cursor() as cur:
             lead_id, criado = upsert_lead_identidade(
-                cur, nome=nome_eff, email=email, telefone=telefone, empresa=empresa,
+                cur, nome=nome_eff, email=email_eff, telefone=telefone_eff, empresa=empresa,
                 origem=origem, consentimento_lgpd=consentimento_lgpd,
             )
     # psycopg devolve colunas uuid como objetos uuid.UUID; upsert_lead_identidade já
@@ -210,7 +212,7 @@ def cadastrar_lead(
         return {"error": {"message": "Não foi possível cadastrar o lead."}}
     return {
         "message": "Lead cadastrado" if criado else "Lead já existente — dados atualizados",
-        "data": {"lead_id": lead_id, "nome": nome_eff, "email": email,
+        "data": {"lead_id": lead_id, "nome": nome_eff, "email": email_eff,
                  "empresa": empresa, "atualizado": not criado},
     }
 

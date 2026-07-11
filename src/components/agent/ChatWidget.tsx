@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import Cal, { getCalApi } from "@calcom/embed-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAgentConfig } from "@/hooks/useAgentConfig";
 import { useChat } from "@/hooks/useChat";
@@ -16,7 +17,7 @@ import { ChatInput } from "@/components/agent/ChatInput";
 
 export function ChatWidget() {
   const { enabled, loaded } = useAgentConfig();
-  const { messages, sendMessage, isLoading } = useChat();
+  const { messages, sendMessage, markSlotPickerHandled, isLoading } = useChat();
   const reduced = useReducedMotion();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -33,6 +34,20 @@ export function ChatWidget() {
   const panelTransition = reduced
     ? { duration: 0 }
     : { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const };
+
+  const handleSlotSelect = (messageId: string, opt: { label: string }) => {
+    markSlotPickerHandled(messageId);
+    void sendMessage(opt.label);
+  };
+
+  const openCalPopup = async (url?: string) => {
+    const cal = await getCalApi();
+    const defaultLink = "phellipe-oliveira-ncbgsl/30min";
+    const calLink = (url ?? "").includes("cal.com/")
+      ? (url ?? "").split("cal.com/")[1] || defaultLink
+      : defaultLink;
+    cal("modal", { calLink });
+  };
 
   return (
     <div className="pointer-events-none fixed bottom-4 right-4 z-[70]">
@@ -78,8 +93,14 @@ export function ChatWidget() {
             )}
           >
             <ChatHeader onClose={() => setOpen(false)} />
-            <ChatMessages messages={messages} isLoading={isLoading} />
+            <ChatMessages
+              messages={messages}
+              isLoading={isLoading}
+              handleSlotSelect={handleSlotSelect}
+              openCalPopup={openCalPopup}
+            />
             <ChatInput onSend={sendMessage} disabled={isLoading} />
+            <Cal calLink="phellipe-oliveira-ncbgsl/30min" style={{ display: "none" }} />
           </motion.div>
         )}
       </AnimatePresence>

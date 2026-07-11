@@ -9,6 +9,7 @@ Exporta:
 
 from __future__ import annotations
 
+import json
 import re
 import uuid
 from typing import Any, Dict
@@ -57,6 +58,12 @@ def format_agent_response(result: Dict[str, Any]) -> Dict[str, Any]:
             if reply_text:
                 break
 
+    ui_hints = None
+    ui_match = re.search(r"%%UI%%(.*?)%%", reply_text, flags=re.DOTALL)
+    if ui_match:
+        ui_hints = json.loads((ui_match.group(1) or "").strip())
+        reply_text = re.sub(r"\s*%%UI%%.*?%%\s*", " ", reply_text, count=1, flags=re.DOTALL).strip()
+
     structured = {
         "message": reply_text,
         "intent": intent,
@@ -69,5 +76,6 @@ def format_agent_response(result: Dict[str, Any]) -> Dict[str, Any]:
         "intent": intent,
         "lead_id": lead_id,
         "structured": structured,
+        "ui_hints": ui_hints,
         "trace_id": "",
     }

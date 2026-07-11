@@ -52,7 +52,7 @@ export async function getAgentConfig(): Promise<AgentConfig> {
 export async function sendChatMessage(
   input: string,
   sessionId: string,
-): Promise<{ reply: string }> {
+): Promise<{ reply: string; uiHints: ChatApiResponse["ui_hints"] }> {
   const res = await fetch(`${API_URL}/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -75,5 +75,5 @@ export async function sendChatMessage(
     throw new Error("Resposta vazia do agente");
   }
 
-  return { reply };
+  return { reply, uiHints: data.ui_hints ?? null };
 }

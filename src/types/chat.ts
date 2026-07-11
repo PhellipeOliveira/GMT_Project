@@ -1,10 +1,25 @@
 export type ChatRole = "user" | "agent";
 
+export type SlotPickerOption = {
+  value: string;
+  label: string;
+};
+
+export type SlotPickerUiHints = {
+  type: "slot_picker";
+  options: SlotPickerOption[];
+  fallback_url: string;
+};
+
+export type ChatUiHints = SlotPickerUiHints;
+
 export type ChatMessage = {
   id: string;
   role: ChatRole;
   content: string;
   createdAt: number;
+  ui_hints?: ChatUiHints | null;
+  slotPickerHandled?: boolean;
 };
 
 export type ChatStatus = "idle" | "loading" | "error";
@@ -18,6 +33,7 @@ export type ChatApiResponse = {
   reply_text: string;
   intent: string;
   lead_id: string | null;
+  ui_hints?: ChatUiHints | null;
   structured?: {
     message?: string;
     intent?: string;

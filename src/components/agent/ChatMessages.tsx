@@ -8,6 +8,8 @@ import type { ChatMessage } from "@/types/chat";
 type ChatMessagesProps = {
   messages: ChatMessage[];
   isLoading: boolean;
+  handleSlotSelect: (messageId: string, opt: { value: string; label: string }) => void;
+  openCalPopup: (url?: string) => void;
 };
 
 function TypingIndicator() {
@@ -32,7 +34,12 @@ function TypingIndicator() {
   );
 }
 
-export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
+export function ChatMessages({
+  messages,
+  isLoading,
+  handleSlotSelect,
+  openCalPopup,
+}: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,7 +49,12 @@ export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 py-4">
       {messages.map((message) => (
-        <MessageBubble key={message.id} message={message} />
+        <MessageBubble
+          key={message.id}
+          message={message}
+          onSlotSelect={handleSlotSelect}
+          openCalPopup={openCalPopup}
+        />
       ))}
       {isLoading && <TypingIndicator />}
       <div ref={bottomRef} />
