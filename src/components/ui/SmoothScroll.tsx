@@ -26,7 +26,7 @@ export function SmoothScroll() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    const lenis = new Lenis();
+    const lenis = new Lenis({ allowNestedScroll: true });
 
     // Lenis conduz o ScrollTrigger.
     lenis.on("scroll", ScrollTrigger.update);

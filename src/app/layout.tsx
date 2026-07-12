@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   },
   description:
     "Agência especialista em automações, inteligência artificial e marketing digital para pequenas empresas. Lisboa, Portugal.",
+  icons: {
+    icon: [{ url: "/favicon.svg?v=2", type: "image/svg+xml" }],
+    shortcut: [{ url: "/favicon.svg?v=2", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({

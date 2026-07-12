@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { MessageBubble } from "@/components/agent/MessageBubble";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type { ChatMessage } from "@/types/chat";
 
 type ChatMessagesProps = {
@@ -40,14 +41,23 @@ export function ChatMessages({
   handleSlotSelect,
   openCalPopup,
 }: ChatMessagesProps) {
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }, [messages, isLoading, reducedMotion]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 py-4">
+    <div
+      ref={scrollRef}
+      className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-y-auto px-3 py-4"
+    >
       {messages.map((message) => (
         <MessageBubble
           key={message.id}
@@ -57,7 +67,6 @@ export function ChatMessages({
         />
       ))}
       {isLoading && <TypingIndicator />}
-      <div ref={bottomRef} />
     </div>
   );
 }
