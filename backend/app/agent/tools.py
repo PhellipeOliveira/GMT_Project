@@ -821,38 +821,161 @@ def agendar_reuniao(
 
 @tool
 def remarcar_reuniao(reuniao_id: str, nova_data_hora: str) -> Dict[str, Any]:
-    """Remarca uma reunião existente."""
+    """Remarca uma reunião: actualiza Supabase, actualiza Google Calendar e envia e-mail ao lead."""
     if not is_uuid(reuniao_id):
         return {"error": {"message": "reuniao_id inválido"}}
     try:
         dt = datetime.fromisoformat(nova_data_hora)
     except Exception:
         return {"error": {"message": "nova_data_hora inválida (use ISO)"}}
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=ZoneInfo("Europe/Lisbon"))
+
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 "update public.reunioes set data_hora=%s, status_codigo='remarcada', "
                 "lembrete_24h_enviado=false, lembrete_1h_enviado=false, atualizado_em=now() "
-                "where id=%s returning lead_id",
-                (dt, reuniao_id),
+                "where id=%s returning lead_id, gcal_event_id, "
+                "(select duracao_slot_min from public.disponibilidade_config "
+                " where ativo=true and dia_semana=%s and hora_inicio <= %s and hora_fim > %s "
+                " order by duracao_slot_min limit 1)",
+                (dt, reuniao_id, dt.weekday(), dt.time(), dt.time()),
             )
             row = cur.fetchone()
             if not row:
                 return {"error": {"message": "Reunião não encontrada"}}
-    return {"message": "Reunião remarcada", "data": {"reuniao_id": str(reuniao_id), "nova_data_hora": dt.isoformat(), "lead_id": str(row[0])}}
+            lead_id, gcal_event_id, duracao_min = row[0], row[1], int(row[2] or 60)
+            cur.execute("select nome, email from public.leads where id=%s", (lead_id,))
+            lrow = cur.fetchone()
+            lead_nome = lrow[0] if lrow else None
+            lead_email = lrow[1] if lrow else None
+
+    # Google Calendar — actualiza data/hora do evento (best-effort)
+    if gcal_event_id:
+        try:
+            from app.core.gcal import atualizar_evento_gcal
+            atualizar_evento_gcal(gcal_event_id, dt, duracao_min=duracao_min)
+        except Exception as e:
+            logger.warning("Falha ao actualizar evento GCal (reuniao %s): %s", reuniao_id, e)
+
+    # E-mail ao lead (best-effort)
+    try:
+        dt_local = dt.astimezone(ZoneInfo("Europe/Lisbon"))
+        data_fmt = dt_local.strftime("%d/%m/%Y às %H:%M")
+        if lead_email:
+            assunto = f"Reunião GMT remarcada — {data_fmt}"
+            corpo = (
+                f"Olá {lead_nome or ''},\n\n"
+                f"A sua reunião foi remarcada para {data_fmt} (hora de Lisboa).\n\n"
+                f"Duração prevista: até {duracao_min} minutos | Formato: Online\n\n"
+                "O convite de calendário actualizado será enviado em breve.\n"
+                "Para cancelar ou alterar novamente, escreva no chat do nosso website.\n\n"
+                "Até breve,\nEquipa GMT"
+            )
+            _enviar_e_registrar(
+                lead_id=str(lead_id),
+                tipo="atualizacao_reuniao",
+                destinatario=lead_email,
+                assunto=assunto,
+                corpo=corpo,
+                referencia_id=reuniao_id,
+            )
+        notificar_equipe_email.func(
+            tipo="alerta_equipe_reuniao",
+            assunto=f"[GMT] Reunião remarcada — {lead_nome or lead_id}",
+            mensagem=(
+                f"Reunião remarcada pelo agente.\n"
+                f"Lead: {lead_nome or '(sem nome)'} | {lead_email or '(sem e-mail)'}\n"
+                f"Nova data/hora: {data_fmt}\n"
+                f"Reunião ID: {reuniao_id}"
+            ),
+            referencia_id=reuniao_id,
+            lead_ref_ou_id=str(lead_id),
+        )
+    except Exception as e:
+        logger.warning("Falha ao enviar e-mails de remarcação (reuniao %s): %s", reuniao_id, e)
+
+    return {
+        "message": "Reunião remarcada",
+        "data": {
+            "reuniao_id": str(reuniao_id),
+            "nova_data_hora": dt.isoformat(),
+            "lead_id": str(lead_id),
+        },
+    }
 
 
 @tool
 def cancelar_reuniao(reuniao_id: str) -> Dict[str, Any]:
-    """Cancela uma reunião."""
+    """Cancela uma reunião: actualiza Supabase, remove do Google Calendar e envia e-mail ao lead."""
     if not is_uuid(reuniao_id):
         return {"error": {"message": "reuniao_id inválido"}}
+
     with get_conn() as conn:
         with conn.cursor() as cur:
-            cur.execute("update public.reunioes set status_codigo='cancelada', atualizado_em=now() where id=%s returning id",
-                        (reuniao_id,))
-            if not cur.fetchone():
+            cur.execute(
+                "update public.reunioes set status_codigo='cancelada', atualizado_em=now() "
+                "where id=%s returning lead_id, data_hora, gcal_event_id",
+                (reuniao_id,),
+            )
+            row = cur.fetchone()
+            if not row:
                 return {"error": {"message": "Reunião não encontrada"}}
+            lead_id, data_hora, gcal_event_id = row[0], row[1], row[2]
+            cur.execute("select nome, email from public.leads where id=%s", (lead_id,))
+            lrow = cur.fetchone()
+            lead_nome = lrow[0] if lrow else None
+            lead_email = lrow[1] if lrow else None
+
+    # Google Calendar — remove o evento (best-effort, nunca bloqueia)
+    if gcal_event_id:
+        try:
+            from app.core.gcal import cancelar_evento_gcal
+            cancelar_evento_gcal(gcal_event_id)
+        except Exception as e:
+            logger.warning("Falha ao cancelar evento GCal (reuniao %s): %s", reuniao_id, e)
+
+    # E-mail ao lead (best-effort)
+    try:
+        if lead_email and data_hora:
+            if data_hora.tzinfo is None:
+                data_hora = data_hora.replace(tzinfo=ZoneInfo("Europe/Lisbon"))
+            dt_local = data_hora.astimezone(ZoneInfo("Europe/Lisbon"))
+            data_fmt = dt_local.strftime("%d/%m/%Y às %H:%M")
+            assunto = f"Reunião GMT cancelada — {data_fmt}"
+            corpo = (
+                f"Olá {lead_nome or ''},\n\n"
+                f"A sua reunião agendada para {data_fmt} (hora de Lisboa) foi cancelada conforme solicitado.\n\n"
+                "Se quiser agendar uma nova reunião, pode fazê-lo a qualquer momento:\n"
+                "• Através do chat no nosso website\n"
+                "• Ou directamente em: https://cal.com/phellipe-oliveira-ncbgsl/30min\n\n"
+                "Até breve,\nEquipa GMT"
+            )
+            _enviar_e_registrar(
+                lead_id=str(lead_id),
+                tipo="atualizacao_reuniao",
+                destinatario=lead_email,
+                assunto=assunto,
+                corpo=corpo,
+                referencia_id=reuniao_id,
+            )
+        # Notifica equipe
+        notificar_equipe_email.func(
+            tipo="alerta_equipe_reuniao",
+            assunto=f"[GMT] Reunião cancelada — {lead_nome or lead_id}",
+            mensagem=(
+                f"Reunião cancelada pelo agente.\n"
+                f"Lead: {lead_nome or '(sem nome)'} | {lead_email or '(sem e-mail)'}\n"
+                f"Data/hora era: {data_fmt if data_hora else 'desconhecida'}\n"
+                f"Reunião ID: {reuniao_id}"
+            ),
+            referencia_id=reuniao_id,
+            lead_ref_ou_id=str(lead_id),
+        )
+    except Exception as e:
+        logger.warning("Falha ao enviar e-mails de cancelamento (reuniao %s): %s", reuniao_id, e)
+
     return {"message": "Reunião cancelada", "data": {"reuniao_id": reuniao_id, "status": "cancelada"}}
 
 

@@ -133,6 +133,55 @@ def criar_evento_gcal(reuniao: Dict[str, Any]) -> Dict[str, Optional[str]]:
     }
 
 
+def cancelar_evento_gcal(gcal_event_id: str) -> bool:
+    """Remove o evento do Google Calendar. Retorna True se removido, False se falhou.
+    Silencioso: nunca levanta excepção — o cancelamento no Supabase já foi confirmado."""
+    try:
+        service = _build_service()
+        calendar_id = os.getenv("GOOGLE_CALENDAR_ID", "primary")
+        service.events().delete(
+            calendarId=calendar_id,
+            eventId=gcal_event_id,
+        ).execute()
+        return True
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(
+            "Falha ao cancelar evento GCal %s: %s", gcal_event_id, e
+        )
+        return False
+
+
+def atualizar_evento_gcal(
+    gcal_event_id: str,
+    nova_data_hora: "datetime",
+    duracao_min: int = 60,
+    tz: str = "Europe/Lisbon",
+) -> bool:
+    """Actualiza data/hora de um evento existente no Google Calendar via patch.
+    Retorna True se actualizado, False se falhou. Nunca levanta excepção."""
+    try:
+        from datetime import timedelta
+        fim = nova_data_hora + timedelta(minutes=int(duracao_min))
+        service = _build_service()
+        calendar_id = os.getenv("GOOGLE_CALENDAR_ID", "primary")
+        service.events().patch(
+            calendarId=calendar_id,
+            eventId=gcal_event_id,
+            body={
+                "start": {"dateTime": nova_data_hora.isoformat(), "timeZone": tz},
+                "end":   {"dateTime": fim.isoformat(),            "timeZone": tz},
+            },
+        ).execute()
+        return True
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(
+            "Falha ao actualizar evento GCal %s: %s", gcal_event_id, e
+        )
+        return False
+
+
 def listar_slots_ocupados_gcal(
     data_inicio_iso: str,
     data_fim_iso: str,
