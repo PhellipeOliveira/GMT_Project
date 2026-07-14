@@ -120,7 +120,7 @@ export default async function PortfolioItemPage({
                   </span>
                   <PlaceholderMedia
                     id="PF-02"
-                    descricao="9:16"
+                    descricao="3:4"
                     cor={c.corPlaceholder}
                     className="w-20 shrink-0 rounded-md md:w-28"
                     sizes="112px"

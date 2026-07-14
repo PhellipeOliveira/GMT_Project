@@ -55,8 +55,8 @@ function thumb(id: string, slot: string): MediaSlot {
 function galeriaPf(id: string): MediaSlot {
   return spec({
     id,
-    ratio: [4, 3],
-    exportPx: { w: 1600, h: 1200 },
+    ratio: [16, 9],
+    exportPx: { w: 1920, h: 1080 },
     container: "aspect",
     objectFit: "cover",
     folder: "images",
@@ -300,14 +300,14 @@ export const MEDIA_SLOTS: Record<string, MediaSlot> = {
   }),
   "PF-02": spec({
     id: "PF-02",
-    ratio: [9, 16],
-    exportPx: { w: 1080, h: 1920 },
+    ratio: [3, 4],
+    exportPx: { w: 1200, h: 1600 },
     container: "aspect",
     objectFit: "cover",
     folder: "images",
     page: "Portfolio Geral",
     slot: "Grid hero + lista vertical",
-    designRef: "design_map_portfolio_geral_v2.json → 135×240 (~9:16)",
+    designRef: "design_map_portfolio_geral_v2.json → thumb 3:4",
   }),
   "PF-EB1": spec({
     id: "PF-EB1",
@@ -345,7 +345,7 @@ export const MEDIA_SLOTS: Record<string, MediaSlot> = {
   "PF-03": spec({
     id: "PF-03",
     ratio: [16, 9],
-    exportPx: { w: 2560, h: 1440 },
+    exportPx: { w: 1920, h: 1080 },
     container: "aspect",
     objectFit: "cover",
     folder: "images",
@@ -357,11 +357,6 @@ export const MEDIA_SLOTS: Record<string, MediaSlot> = {
   "PF-05": galeriaPf("PF-05"),
   "PF-06": galeriaPf("PF-06"),
   "PF-07": galeriaPf("PF-07"),
-  "PF-08": galeriaPf("PF-08"),
-  "PF-09": galeriaPf("PF-09"),
-  "PF-10": galeriaPf("PF-10"),
-  "PF-11": galeriaPf("PF-11"),
-  "PF-12": galeriaPf("PF-12"),
   "GL-01": spec({
     id: "GL-01",
     ratio: [7, 2],
