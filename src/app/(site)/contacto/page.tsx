@@ -46,14 +46,6 @@ export default function ContactoPage() {
                 concreta será a nossa resposta. Preencha o formulário — respondemos
                 em 24 horas.
               </RevealOnScroll>
-              <RevealOnScroll className="mt-8">
-                <a
-                  href="tel:+351913628211"
-                  className="type-label inline-flex items-center gap-2 text-gmt-text underline-offset-4 hover:underline"
-                >
-                  Prefere ligar? +351 913 628 211
-                </a>
-              </RevealOnScroll>
             </RevealSequence>
           </div>
 
