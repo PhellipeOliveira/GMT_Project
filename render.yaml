@@ -1,0 +1,28 @@
+# Blueprint Render — API do Agente GMT (FastAPI)
+# Repo: monorepo — frontend Next.js na raiz (Vercel), backend em backend/ (Render).
+#
+# Serviço JÁ existente no painel: alinhe Settings com este ficheiro OU ligue o Blueprint
+# em Dashboard → Blueprints → New Blueprint Instance → repo GMT_Project.
+# Se o nome do serviço no Render for diferente, renomeie `name` abaixo antes de sincronizar.
+#
+# Variáveis sensíveis (OPENAI_API_KEY, SUPABASE_DB_URL, RESEND_*, etc.) continuam
+# só no painel Render → Environment — não versionar aqui.
+
+services:
+  - type: web
+    name: gmt-agent-api
+    runtime: python
+    rootDir: backend
+    branch: main
+    autoDeployTrigger: commit
+    buildCommand: pip install --no-cache-dir -r requirements.txt
+    startCommand: PYTHONPATH=. uvicorn app.server.webapp:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    buildFilter:
+      paths:
+        - backend/**
+      ignoredPaths:
+        - backend/docs/**
+        - backend/tests/**
+        - backend/supabase/.temp/**
+        - backend/.env.example

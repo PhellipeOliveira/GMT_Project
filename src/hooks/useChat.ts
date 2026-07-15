@@ -87,6 +87,7 @@ export function useChat() {
       try {
         const { reply, uiHints } = await sendChatMessage(trimmed, sessionId);
         const agentMessage = createMessage("agent", reply);
+        agentMessage.reply_text = reply;
         agentMessage.ui_hints = uiHints ?? null;
         agentMessage.slotPickerHandled = false;
         setMessages((prev) => [...prev, agentMessage]);

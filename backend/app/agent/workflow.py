@@ -225,7 +225,12 @@ def router_node(state: AgentState) -> AgentState:
             for token in ("quer que eu agende", "podemos marcar", "agendar uma reunião", "marcar uma sessão")
         )
         if mentions_schedule or (has_identity and _is_short_affirmation(user_text) and invited_to_schedule):
-            intent = "reuniao_agendar" if slots.get("data_hora") else "reuniao_sugerir_horarios"
+            if slots.get("data_hora"):
+                intent = "reuniao_agendar"
+            elif slots.get("data_referencia"):
+                intent = "reuniao_verificar_agenda"
+            else:
+                intent = "reuniao_sugerir_horarios"
             context["intent_rewritten"] = "lead_cadastrar->reuniao_fluxo"
 
     # Guardrail anti-prompt-injection: bloqueia intents sensíveis no chat público.
@@ -449,7 +454,13 @@ def respond_final(state: AgentState) -> AgentState:
         if not msg:
             msg = ("Posso ajudar com os serviços da GMT, um orçamento ou agendar uma reunião. "
                    "Como posso ajudar?")
-        return {"context": ctx, "messages": AIMessage(content=msg)}
+        safe_msg = finalizer_model.invoke(
+            [
+                SystemMessage(content=FINALIZER_SYSTEM_PROMPT),
+                HumanMessage(content=f"Ações executadas:\n- {msg}"),
+            ]
+        )
+        return {"context": ctx, "messages": AIMessage(content=extract_text_content(safe_msg) or msg)}
 
     user_text = ""
     for m in reversed(state.get("messages") or []):

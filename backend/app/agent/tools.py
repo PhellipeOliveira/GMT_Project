@@ -905,6 +905,18 @@ def remarcar_reuniao(reuniao_id: str, nova_data_hora: str) -> Dict[str, Any]:
 
     with get_conn() as conn:
         with conn.cursor() as cur:
+            cur.execute("select data_hora from public.reunioes where id=%s", (reuniao_id,))
+            antiga = cur.fetchone()
+            if not antiga:
+                return {"error": {"message": "Reunião não encontrada"}}
+            dt_antiga = antiga[0]
+            if dt_antiga and dt_antiga.tzinfo is None:
+                dt_antiga = dt_antiga.replace(tzinfo=ZoneInfo("Europe/Lisbon"))
+            data_fmt_antiga = (
+                dt_antiga.astimezone(ZoneInfo("Europe/Lisbon")).strftime("%d/%m/%Y às %H:%M")
+                if dt_antiga
+                else "desconhecida"
+            )
             cur.execute(
                 "update public.reunioes set data_hora=%s, status_codigo='remarcada', "
                 "lembrete_24h_enviado=false, lembrete_1h_enviado=false, atualizado_em=now() "
@@ -952,6 +964,12 @@ def remarcar_reuniao(reuniao_id: str, nova_data_hora: str) -> Dict[str, Any]:
                 assunto=assunto,
                 corpo=corpo,
                 referencia_id=reuniao_id,
+                html_override=_build_html_remarcacao_reuniao(
+                    lead_nome=lead_nome or "",
+                    data_fmt_antiga=data_fmt_antiga,
+                    data_fmt_nova=data_fmt,
+                    duracao_min=duracao_min,
+                ),
             )
         notificar_equipe_email.func(
             tipo="alerta_equipe_reuniao",
@@ -1031,6 +1049,10 @@ def cancelar_reuniao(reuniao_id: str) -> Dict[str, Any]:
                 assunto=assunto,
                 corpo=corpo,
                 referencia_id=reuniao_id,
+                html_override=_build_html_cancelamento_reuniao(
+                    lead_nome=lead_nome or "",
+                    data_fmt=data_fmt,
+                ),
             )
         # Notifica equipe
         notificar_equipe_email.func(
@@ -1272,6 +1294,141 @@ def _build_html_confirmacao_reuniao(
                 <strong style="font-family:'Host Grotesk',Arial,sans-serif;font-size:15px;color:#000000;">Phellipe Oliveira</strong><br>
                 <span style="font-size:13px;color:#555555;">Growth Marketing Technology</span><br>
                 <a href="https://www.gmt.marketing" style="font-size:13px;color:#000000;text-decoration:underline;">www.gmt.marketing</a>
+              </td></tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </div>
+</body>
+</html>"""
+
+
+def _build_html_cancelamento_reuniao(
+    lead_nome: str,
+    data_fmt: str,
+    cal_url: str = "https://cal.com/phellipe-oliveira-ncbgsl/30min",
+) -> str:
+    """Retorna o HTML completo do e-mail de cancelamento de reunião."""
+    cta_button = (
+        f'<table cellpadding="0" cellspacing="0" border="0">'
+        f'<tr><td style="background-color:#0a84ff;border-radius:4px;">'
+        f'<a href="{cal_url}" style="display:inline-block;padding:13px 26px;'
+        f'font-family:Arial,sans-serif;font-weight:500;font-size:14px;'
+        f'color:#ffffff;text-decoration:none;">AGENDAR NOVA REUNIÃO</a>'
+        f'</td></tr></table>'
+    )
+    return """<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Host+Grotesk:wght@500;800&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:'DM Sans',Arial,sans-serif;">
+  <div style="width:100%;padding:40px 0;background-color:#ffffff;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+      <tr><td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#ffffff;border:1px solid #e0e0e0;border-collapse:collapse;">
+          <tr><td style="padding:40px 40px 20px 40px;">
+            <div style="display:inline-block;width:36px;height:36px;background-color:#000000;border-radius:50%;color:#ffffff;text-align:center;line-height:36px;font-family:Arial,sans-serif;font-weight:bold;font-size:11px;letter-spacing:0.5px;">GMT</div>
+          </td></tr>
+          <tr><td style="padding:0 40px 28px 40px;">
+            <p style="margin:0 0 6px 0;font-family:'Host Grotesk',Arial,sans-serif;font-size:30px;font-weight:800;color:#000000;line-height:1.2;">Reunião cancelada</p>
+            <p style="margin:0;font-size:15px;color:#666666;">O seu agendamento foi removido.</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 24px 40px;font-size:15px;line-height:1.7;color:#1a1a1a;">
+            <p style="margin:0;">Olá, <strong>""" + (lead_nome or "visitante") + """</strong>,</p>
+            <p style="margin:12px 0 0 0;">A sua reunião prevista para <strong>""" + data_fmt + """</strong> (hora de Lisboa) foi cancelada conforme solicitado.</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 32px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f6f6f6;border-radius:6px;border-collapse:collapse;">
+              <tr><td style="padding:22px 24px 10px 24px;">
+                <p style="margin:0;font-family:'Host Grotesk',Arial,sans-serif;font-size:11px;font-weight:500;color:#888888;text-transform:uppercase;letter-spacing:1px;">Detalhes da Reunião</p>
+              </td></tr>
+              <tr><td style="padding:8px 24px;">📅 &nbsp;<strong>""" + data_fmt + """</strong> <span style="color:#888888;font-size:13px;">(fuso Europe/Lisbon)</span></td></tr>
+              <tr><td style="padding:8px 24px 24px 24px;">❌ &nbsp;Reunião cancelada</td></tr>
+            </table>
+          </td></tr>
+          <tr><td style="padding:0 40px 28px 40px;font-size:15px;line-height:1.7;color:#1a1a1a;">
+            <p style="margin:0;">Se quiser agendar uma nova reunião, pode fazê-lo a qualquer momento através do chat no nosso website ou directamente aqui:</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 24px 40px;">""" + cta_button + """</td></tr>
+          <tr><td style="padding:0 40px 40px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #eeeeee;border-collapse:collapse;">
+              <tr><td style="padding-top:20px;font-size:13px;color:#888888;line-height:1.6;">
+                © GMT — Growth Marketing Technology | Se recebeu este e-mail por engano, ignore-o.
+              </td></tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </div>
+</body>
+</html>"""
+
+
+def _build_html_remarcacao_reuniao(
+    lead_nome: str,
+    data_fmt_antiga: str,
+    data_fmt_nova: str,
+    duracao_min: int,
+    cal_url: str = "https://cal.com/phellipe-oliveira-ncbgsl/30min",
+) -> str:
+    """Retorna o HTML completo do e-mail de remarcação de reunião."""
+    cta_button = (
+        f'<table cellpadding="0" cellspacing="0" border="0">'
+        f'<tr><td style="background-color:#0a84ff;border-radius:4px;">'
+        f'<a href="{cal_url}" style="display:inline-block;padding:13px 26px;'
+        f'font-family:Arial,sans-serif;font-weight:500;font-size:14px;'
+        f'color:#ffffff;text-decoration:none;">VER DISPONIBILIDADE</a>'
+        f'</td></tr></table>'
+    )
+    return """<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Host+Grotesk:wght@500;800&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:'DM Sans',Arial,sans-serif;">
+  <div style="width:100%;padding:40px 0;background-color:#ffffff;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+      <tr><td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#ffffff;border:1px solid #e0e0e0;border-collapse:collapse;">
+          <tr><td style="padding:40px 40px 20px 40px;">
+            <div style="display:inline-block;width:36px;height:36px;background-color:#000000;border-radius:50%;color:#ffffff;text-align:center;line-height:36px;font-family:Arial,sans-serif;font-weight:bold;font-size:11px;letter-spacing:0.5px;">GMT</div>
+          </td></tr>
+          <tr><td style="padding:0 40px 28px 40px;">
+            <p style="margin:0 0 6px 0;font-family:'Host Grotesk',Arial,sans-serif;font-size:30px;font-weight:800;color:#000000;line-height:1.2;">Reunião remarcada ✓</p>
+            <p style="margin:0;font-size:15px;color:#666666;">O seu agendamento foi actualizado.</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 24px 40px;font-size:15px;line-height:1.7;color:#1a1a1a;">
+            <p style="margin:0;">Olá, <strong>""" + (lead_nome or "visitante") + """</strong>,</p>
+            <p style="margin:12px 0 0 0;">A sua reunião foi remarcada. Veja os novos detalhes abaixo.</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 32px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f6f6f6;border-radius:6px;border-collapse:collapse;">
+              <tr><td style="padding:22px 24px 10px 24px;">
+                <p style="margin:0;font-family:'Host Grotesk',Arial,sans-serif;font-size:11px;font-weight:500;color:#888888;text-transform:uppercase;letter-spacing:1px;">Detalhes da Reunião</p>
+              </td></tr>
+              <tr><td style="padding:8px 24px;">📅 &nbsp;<strong>Nova data: """ + data_fmt_nova + """</strong> <span style="color:#888888;font-size:13px;">(fuso Europe/Lisbon)</span></td></tr>
+              <tr><td style="padding:8px 24px;">🗓 &nbsp;<span style="color:#aaa;text-decoration:line-through;">Anterior: """ + data_fmt_antiga + """</span></td></tr>
+              <tr><td style="padding:8px 24px;">⏱ &nbsp;Duração: até <strong>""" + str(duracao_min) + """ minutos</strong></td></tr>
+              <tr><td style="padding:8px 24px;">🎥 &nbsp;Online via <strong>Google Meet</strong></td></tr>
+              <tr><td style="padding:8px 24px 24px 24px;">O convite de calendário actualizado será enviado em breve.</td></tr>
+            </table>
+          </td></tr>
+          <tr><td style="padding:0 40px 28px 40px;font-size:15px;line-height:1.7;color:#1a1a1a;">
+            <p style="margin:0;">Se precisar de alterar novamente, escreva no chat do nosso website ou aceda directamente:</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 24px 40px;">""" + cta_button + """</td></tr>
+          <tr><td style="padding:0 40px 40px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #eeeeee;border-collapse:collapse;">
+              <tr><td style="padding-top:20px;font-size:13px;color:#888888;line-height:1.6;">
+                © GMT — Growth Marketing Technology | Se recebeu este e-mail por engano, ignore-o.
               </td></tr>
             </table>
           </td></tr>

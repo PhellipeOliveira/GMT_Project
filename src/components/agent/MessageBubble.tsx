@@ -8,7 +8,7 @@ import type { ChatMessage, SlotPickerOption } from "@/types/chat";
 
 type MessageBubbleProps = {
   message: ChatMessage;
-  onSlotSelect: (messageId: string, opt: SlotPickerOption) => void;
+  onSlotSelect: (opt: SlotPickerOption, messageId?: string) => void;
   openCalPopup: (url?: string) => void;
 };
 
@@ -60,7 +60,7 @@ export function MessageBubble({
                 ),
               }}
             >
-              {message.content}
+              {message.reply_text ?? message.content}
             </ReactMarkdown>
 
             {showSlotPicker && (
@@ -68,7 +68,7 @@ export function MessageBubble({
                 {message.ui_hints?.options?.map((opt) => (
                   <button
                     key={opt.value}
-                    onClick={() => onSlotSelect(message.id, opt)}
+                    onClick={() => onSlotSelect(opt, message.id)}
                     className="text-left px-4 py-2 rounded-lg border border-blue-500 text-blue-700 hover:bg-blue-50 transition-colors text-sm font-medium"
                   >
                     {opt.label}

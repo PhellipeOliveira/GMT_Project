@@ -35,18 +35,17 @@ export function ChatWidget() {
     ? { duration: 0 }
     : { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const };
 
-  const handleSlotSelect = (messageId: string, opt: { label: string }) => {
-    markSlotPickerHandled(messageId);
+  const handleSlotSelect = (opt: { label: string }, messageId?: string) => {
+    if (messageId) {
+      markSlotPickerHandled(messageId);
+    }
     void sendMessage(opt.label);
   };
 
   const openCalPopup = async (url?: string) => {
+    void url;
     const cal = await getCalApi();
-    const defaultLink = "phellipe-oliveira-ncbgsl/30min";
-    const calLink = (url ?? "").includes("cal.com/")
-      ? (url ?? "").split("cal.com/")[1] || defaultLink
-      : defaultLink;
-    cal("modal", { calLink });
+    cal("modal", { calLink: "phellipe-oliveira-ncbgsl/30min" });
   };
 
   return (

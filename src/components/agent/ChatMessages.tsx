@@ -9,7 +9,7 @@ import type { ChatMessage } from "@/types/chat";
 type ChatMessagesProps = {
   messages: ChatMessage[];
   isLoading: boolean;
-  handleSlotSelect: (messageId: string, opt: { value: string; label: string }) => void;
+  handleSlotSelect: (opt: { value: string; label: string }, messageId?: string) => void;
   openCalPopup: (url?: string) => void;
 };
 

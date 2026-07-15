@@ -17,6 +17,7 @@ export type ChatMessage = {
   id: string;
   role: ChatRole;
   content: string;
+  reply_text?: string;
   createdAt: number;
   ui_hints?: ChatUiHints | null;
   slotPickerHandled?: boolean;
@@ -32,6 +33,13 @@ export type AgentConfig = {
 export type ChatApiResponse = {
   reply_text: string;
   intent: string;
+  lead_id?: string | null;
+  structured?: {
+    message?: string;
+    intent?: string;
+    lead_id?: string | null;
+    data?: Record<string, unknown>;
+  };
   ui_hints?: ChatUiHints | null;
   trace_id?: string;
 };

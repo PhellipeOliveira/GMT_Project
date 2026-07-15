@@ -227,7 +227,21 @@ def cfg(session_id: str):
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "service": "agente-gmt"}
+    """Healthcheck para Render e diagnóstico de deploy (commit/branch quando em Render)."""
+    payload: dict[str, str] = {
+        "status": "ok",
+        "service": "agente-gmt",
+    }
+    for env_key, out_key in (
+        ("RENDER_GIT_COMMIT", "commit"),
+        ("RENDER_GIT_BRANCH", "branch"),
+        ("RENDER_DEPLOY_ID", "deploy_id"),
+        ("RENDER_SERVICE_NAME", "service_name"),
+    ):
+        value = (os.getenv(env_key) or "").strip()
+        if value:
+            payload[out_key] = value
+    return payload
 
 
 @app.get("/config")
