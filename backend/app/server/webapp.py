@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import html
 import json
 import os
 import time
@@ -316,16 +315,79 @@ async def cancel_meeting_by_email_link(token: str, req: Request):
     )
     result = cancelar_reuniao_via_token(token)
     if result.get("error"):
-        msg = html.escape(str(result["error"].get("message") or "Não foi possível validar o link."))
         return HTMLResponse(
-            content=f"<html><body><h2>Não foi possível concluir</h2><p>{msg}</p></body></html>",
+            content="""<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Host+Grotesk:wght@500;800&display=swap" rel="stylesheet"/>
+  <title>Link inválido — GMT</title>
+</head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:'DM Sans',Arial,sans-serif;">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;">
+    <div style="max-width:480px;width:100%;background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:48px 40px;text-align:center;">
+      <p style="font-size:48px;margin:0 0 16px 0;">❌</p>
+      <h1 style="font-family:'Host Grotesk',Arial,sans-serif;font-size:26px;font-weight:800;color:#1a1a1a;margin:0 0 8px 0;">
+        Link inválido ou já utilizado
+      </h1>
+      <p style="font-size:15px;color:#666;margin:0 0 32px 0;">
+        Este link já foi utilizado ou a reunião não foi encontrada.
+      </p>
+      <a href="https://cal.com/phellipe-oliveira-ncbgsl/30min"
+         style="display:inline-block;background:#0a84ff;color:#fff;text-decoration:none;padding:14px 28px;border-radius:6px;font-weight:500;font-size:15px;">
+        Agendar nova reunião
+      </a>
+      <p style="margin:24px 0 0 0;font-size:12px;color:#aaa;">
+        © GMT — Growth Marketing Technology
+      </p>
+    </div>
+  </div>
+</body>
+</html>""",
             status_code=400,
         )
+
+    # Remove do Google Calendar (best-effort)
+    gcal_event_id = (result.get("data") or {}).get("gcal_event_id")
+    if gcal_event_id:
+        try:
+            from app.core.gcal import cancelar_evento_gcal
+            cancelar_evento_gcal(gcal_event_id)
+        except Exception as e:
+            __import__("logging").getLogger(__name__).warning(
+                "Falha ao remover evento GCal (cancel endpoint): %s", e
+            )
+
     return HTMLResponse(
-        content=(
-            "<html><body>"
-            "<h2>Reunião cancelada com sucesso</h2>"
-            "<p>Se quiser, você pode agendar um novo horário pelo link que recebeu no e-mail.</p>"
-            "</body></html>"
-        )
+        content="""<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Host+Grotesk:wght@500;800&display=swap" rel="stylesheet"/>
+  <title>Reunião cancelada — GMT</title>
+</head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:'DM Sans',Arial,sans-serif;">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;">
+    <div style="max-width:480px;width:100%;background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:48px 40px;text-align:center;">
+      <p style="font-size:48px;margin:0 0 16px 0;">✅</p>
+      <h1 style="font-family:'Host Grotesk',Arial,sans-serif;font-size:26px;font-weight:800;color:#1a1a1a;margin:0 0 8px 0;">
+        Reunião cancelada com sucesso
+      </h1>
+      <p style="font-size:15px;color:#666;margin:0 0 32px 0;">
+        O seu agendamento foi removido. Receberá confirmação por e-mail.
+      </p>
+      <a href="https://cal.com/phellipe-oliveira-ncbgsl/30min"
+         style="display:inline-block;background:#0a84ff;color:#fff;text-decoration:none;padding:14px 28px;border-radius:6px;font-weight:500;font-size:15px;">
+        Agendar nova reunião
+      </a>
+      <p style="margin:24px 0 0 0;font-size:12px;color:#aaa;">
+        © GMT — Growth Marketing Technology
+      </p>
+    </div>
+  </div>
+</body>
+</html>""",
+        status_code=200,
     )
