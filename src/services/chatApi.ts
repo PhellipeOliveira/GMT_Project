@@ -68,8 +68,7 @@ export async function sendChatMessage(
   }
 
   const data = (await res.json()) as ChatApiResponse;
-  const reply =
-    data.reply_text?.trim() || data.structured?.message?.trim() || "";
+  const reply = data.reply_text?.trim() || "";
 
   if (!reply) {
     throw new Error("Resposta vazia do agente");

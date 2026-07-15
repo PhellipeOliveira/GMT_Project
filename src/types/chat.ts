@@ -32,13 +32,6 @@ export type AgentConfig = {
 export type ChatApiResponse = {
   reply_text: string;
   intent: string;
-  lead_id: string | null;
   ui_hints?: ChatUiHints | null;
-  structured?: {
-    message?: string;
-    intent?: string;
-    lead_id?: string | null;
-    data?: Record<string, unknown>;
-  };
   trace_id?: string;
 };

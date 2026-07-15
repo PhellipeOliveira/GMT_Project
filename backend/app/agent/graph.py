@@ -64,18 +64,9 @@ def format_agent_response(result: Dict[str, Any]) -> Dict[str, Any]:
         ui_hints = json.loads((ui_match.group(1) or "").strip())
         reply_text = re.sub(r"\s*%%UI%%.*?%%\s*", " ", reply_text, count=1, flags=re.DOTALL).strip()
 
-    structured = {
-        "message": reply_text,
-        "intent": intent,
-        "lead_id": lead_id,
-        "data": result.get("tool_result") or {},
-    }
-
     return {
         "reply_text": reply_text,
         "intent": intent,
-        "lead_id": lead_id,
-        "structured": structured,
         "ui_hints": ui_hints,
         "trace_id": "",
     }

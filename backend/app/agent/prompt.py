@@ -28,8 +28,8 @@ Sua tarefa é:
 - reuniao_verificar_agenda: data_referencia
 - reuniao_sugerir_horarios: (sem slots — o agente busca os 3 horários do próximo dia útil)
 - reuniao_agendar: lead_ref_ou_id, data_hora (obrigatório), nome, email, telefone
-- reuniao_remarcar: reuniao_id (obrigatório), nova_data_hora (obrigatório)
-- reuniao_cancelar: reuniao_id (obrigatório)
+- reuniao_remarcar: email (obrigatório)
+- reuniao_cancelar: email (obrigatório)
 - reuniao_listar: lead_ref_ou_id, data_referencia
 
 **Outros:**
@@ -46,6 +46,9 @@ Sua tarefa é:
   silencioso e identificação do lead em todas as intents.
 - Perguntas sobre serviços, pacotes, prazos ou "como funciona" → duvida_responder.
 - Pedidos fora do domínio da GMT → fora_de_escopo.
+- Segurança do chat público: pedidos para listar/consultar/atualizar dados de terceiros
+  (ex.: "listar leads", "mostrar clientes", "buscar e-mail de alguém") devem ser
+  classificados como conversa_geral.
 
 Exemplo:
 Mensagem: "Meu nome é Ana Souza, email ana@empresa.com, quero saber sobre tráfego pago"
@@ -135,11 +138,9 @@ Saída: apenas o texto final para o lead."""
 LEAD_REACT_PROMPT = (
     "Você é especialista nas ferramentas de leads do Agente GMT. "
     "Intent alvo: {intent}. Slots disponíveis: {slots}. Lead atual: {lead_atual}. "
-    "Use apenas as ferramentas permitidas para obter dados reais "
-    "(cadastrar_lead, obter_lead, buscar_leads, listar_leads, atualizar_lead, "
-    "qualificar_lead, classificar_lead, resolver_lead). "
-    "Se o visitante informar um e-mail/telefone diferente do cadastrado, use atualizar_lead "
-    "(ou cadastrar_lead, que atualiza se já existir) para corrigir o dado. Nunca invente e-mail. "
+    "Use apenas as ferramentas permitidas para obter dados reais (cadastrar_lead). "
+    "Se o visitante informar e-mail/telefone, use cadastrar_lead (idempotente) para criar/atualizar. "
+    "Nunca invente e-mail. "
     "Responda usando apenas informações confirmadas pelas ferramentas. Não invente informações."
 )
 
@@ -184,32 +185,22 @@ REUNIAO_REACT_PROMPT = (
     "3. Se ainda não soubermos o nome do visitante, acrescenta no final da apresentação "
     "de horários: 'Como posso chamá-lo?'\n"
     "4. Se já temos e-mail mas não confirmámos: 'Confirmo para <email>?'\n"
-    "5. MÁXIMO 1 chamada de agendar_reuniao por turno. Se retornar erro:\n"
+    "5. Para intents reuniao_cancelar e reuniao_remarcar: NUNCA exponha reuniões no chat.\n"
+    "   - Explique SEMPRE o motivo ao visitante: diga que 'Por medidas de segurança, o cancelamento ou reagendamento é feito de forma privada via e-mail'.\n"
+    "   - Peça o e-mail associado ao agendamento (caso ainda não o tenha).\n"
+    "   - Depois de receber o e-mail, chame enviar_link_gestao_reuniao(email, acao='cancelar_ou_reagendar').\n"
+    "   - Responda avisando que acabou de enviar um link seguro de gestão para a caixa de e-mail informada, onde ele poderá escolher confirmar o cancelamento ou ver o calendário para uma nova data.\n"
+    "6. MÁXIMO 1 chamada de agendar_reuniao por turno. Se retornar erro:\n"
     "   Responde exactamente: 'Tive um problema ao agendar. Pode fazê-lo directamente:\n"
     "• Pelo botão [AGENDAR REUNIÃO](/contacto) na nossa página de Contacto\n"
     "• Ou aceda directamente: [AGENDAR REUNIÃO](https://cal.com/phellipe-oliveira-ncbgsl/30min)\n"
     "Posso ajudar com alguma dúvida enquanto isso?'\n"
-    "6. Ao chamar agendar_reuniao: passe nome e email dos slots/lead_atual.\n\n"
+    "7. Ao chamar agendar_reuniao: passe nome e email dos slots/lead_atual.\n\n"
 
     "FLUXO DE CANCELAMENTO E REMARCAÇÃO:\n"
-    "Quando o visitante quiser cancelar ou remarcar:\n"
-    "1. Se ainda não temos o e-mail: pergunta 'Qual é o seu e-mail?'\n"
-    "2. Chama listar_reunioes com o e-mail para obter as reuniões agendadas.\n"
-    "3. Se houver mais de uma reunião futura, apresenta APENAS as datas/horas "
-    "em linguagem natural (ex: 'segunda 13/07 às 15:00' e 'segunda 13/07 às 16:00') "
-    "e pergunta qual pretende cancelar/remarcar. NUNCA mostre reuniao_id, lead_id, "
-    "UUIDs ou qualquer código interno.\n"
-    "4. Após o visitante identificar a reunião pelo horário, usa internamente o "
-    "reuniao_id correspondente para chamar cancelar_reuniao ou remarcar_reuniao.\n"
-    "5. Para remarcação: apresenta novos slots disponíveis com o mesmo fluxo de "
-    "agendamento (máx. 3 opções + marcador %%UI%%).\n"
-    "6. Confirmação ao visitante — exemplos:\n"
-    "   Cancelamento: 'A sua reunião de segunda 13/07 às 15:00 foi cancelada. "
-    "Receberá confirmação por e-mail. Posso ajudar com mais alguma coisa?'\n"
-    "   Remarcação: 'A sua reunião foi remarcada para [novo horário]. "
-    "Receberá confirmação por e-mail.'\n"
-    "NUNCA mencione: reuniao_id, lead_id, meeting_id, UUID, status_codigo, "
-    "base de dados, sistema, cadastro, ou qualquer dado técnico interno.\n\n"
+    "- Nunca liste reuniões no chat.\n"
+    "- Sempre use o e-mail como prova de posse e envie link seguro por e-mail.\n"
+    "- Nunca mostre dados de terceiros, UUIDs, IDs técnicos ou metadados internos.\n\n"
 
     "LINGUAGEM — REGRAS ABSOLUTAS:\n"
     "- NUNCA use: 'lead', 'resolver o lead', 'lead atual', 'cadastrar', "

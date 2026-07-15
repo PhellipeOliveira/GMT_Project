@@ -10,6 +10,7 @@ Fluxo linear e rapido para:
 from typing import Any, Dict, List, Literal, Optional, TypedDict, Annotated
 
 import os
+import re
 
 from dotenv import load_dotenv
 from langchain_core.messages import AnyMessage, AIMessage, HumanMessage, SystemMessage
@@ -88,6 +89,15 @@ REUNIAO_INTENTS = {"reuniao_verificar_agenda", "reuniao_sugerir_horarios",
                    "reuniao_agendar", "reuniao_remarcar",
                    "reuniao_cancelar", "reuniao_listar"}
 
+# Intents não permitidas no chat público (risco de enumeração/PII).
+PUBLIC_BLOCKED_INTENTS = {
+    "lead_obter",
+    "lead_buscar",
+    "lead_listar",
+    "lead_atualizar",
+    "reuniao_listar",
+}
+
 INTENTS_REQUIRING_LEAD = {
     "lead_obter", "lead_atualizar",
     "reuniao_agendar", "reuniao_listar",
@@ -100,8 +110,8 @@ REQUIRED_SLOTS: Dict[str, List[str]] = {
     "lead_atualizar": ["lead_ref_ou_id"],
     "duvida_responder": ["pergunta"],
     "reuniao_agendar": ["data_hora"],
-    "reuniao_remarcar": ["reuniao_id", "nova_data_hora"],
-    "reuniao_cancelar": ["reuniao_id"],
+    "reuniao_remarcar": ["email"],
+    "reuniao_cancelar": ["email"],
 }
 
 # Notificações automáticas disparadas após certas ações (efeitos colaterais)
@@ -111,7 +121,6 @@ REQUIRED_SLOTS: Dict[str, List[str]] = {
 # geraria um segundo e-mail genérico ("GMT — confirmacao reuniao").
 AUTO_NOTIFY = {
     "lead_cadastrar": ("confirmacao_cadastro", "alerta_equipe_cadastro"),
-    "reuniao_remarcar": ("atualizacao_reuniao", "alerta_equipe_reuniao"),
 }
 
 
@@ -132,6 +141,7 @@ class AgentState(TypedDict, total=False):
 
 
 parser_llm = model.with_structured_output(ParserResponse)
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 # ═══════════════════════════ Roteamento ═══════════════════════════
@@ -161,6 +171,10 @@ def parse_and_classify(state: AgentState) -> AgentState:
     return {"intent": parsed.intent, "slots": slots_dict}
 
 
+def _is_valid_email(s: str) -> bool:
+    return bool(s and EMAIL_RE.match((s or "").strip()))
+
+
 # ═══════════════════════════ Nó: router ═══════════════════════════
 def router_node(state: AgentState) -> AgentState:
     intent = state.get("intent")
@@ -168,6 +182,23 @@ def router_node(state: AgentState) -> AgentState:
     errors = list(state.get("errors") or [])
     context = ensure_context(state)
     lead_atual_update = None
+
+    # Guardrail anti-prompt-injection: bloqueia intents sensíveis no chat público.
+    if intent in PUBLIC_BLOCKED_INTENTS:
+        context["security_blocked"] = True
+        context["security_reason"] = f"intent_bloqueada:{intent}"
+        context["security_forced_reply"] = (
+            "Para proteger os dados dos clientes, não posso consultar ou alterar cadastros diretamente no chat. "
+            "Posso ajudar com dúvidas, novo agendamento ou enviar um link seguro para gerir a sua reunião por e-mail."
+        )
+        return {"intent": "conversa_geral", "context": context}
+
+    # Validação de e-mail para fluxos sensíveis.
+    if intent in {"reuniao_remarcar", "reuniao_cancelar"}:
+        email = str(slots.get("email") or "").strip().lower()
+        if email and not _is_valid_email(email):
+            slots.pop("email", None)
+            errors.append("Para continuar, preciso de um e-mail válido (ex.: nome@dominio.com).")
 
     # Cadastro silencioso por e-mail/nome para popular lead_atual sem expor lead_id ao visitante.
     if slots.get("email") and not (state.get("lead_atual") and state["lead_atual"].get("lead_id")):
@@ -339,6 +370,11 @@ def respond_final(state: AgentState) -> AgentState:
     intent = state.get("intent")
     ai_resps = list(ctx.get("ai_responses") or [])
 
+    forced = (ctx.get("security_forced_reply") or "").strip()
+    if forced:
+        ctx["security_forced_reply"] = ""
+        return {"context": ctx, "messages": AIMessage(content=forced)}
+
     # Caminho conversacional: sem ações de ferramenta, resposta natural com
     # captação progressiva de lead e incentivo à reunião (CONVERSA_SYSTEM_PROMPT).
     if intent in ("conversa_geral", "fora_de_escopo"):
@@ -410,8 +446,7 @@ graph.add_node("respond_final", respond_final)
 # ── Subgrafos ReAct ──
 leads_agent_graph = new_react.create_react_executor(
     model=model,
-    tools=[gmt_tools.cadastrar_lead, gmt_tools.obter_lead, gmt_tools.buscar_leads,
-           gmt_tools.listar_leads, gmt_tools.atualizar_lead, gmt_tools.resolver_lead],
+    tools=[gmt_tools.cadastrar_lead],
     prompt=LEAD_REACT_PROMPT, prompt_vars=["intent", "slots", "lead_atual"],
 )
 graph.add_node("leads_agent", leads_agent_graph)
@@ -426,8 +461,7 @@ graph.add_node("duvidas_agent", duvidas_agent_graph)
 reunioes_agent_graph = new_react.create_react_executor(
     model=model,
     tools=[gmt_tools.verificar_disponibilidade, gmt_tools.sugerir_horarios_proximo_dia_util, gmt_tools.agendar_reuniao,
-           gmt_tools.remarcar_reuniao, gmt_tools.cancelar_reuniao,
-           gmt_tools.listar_reunioes, gmt_tools.resolver_lead],
+           gmt_tools.enviar_link_gestao_reuniao],
     prompt=REUNIAO_REACT_PROMPT, prompt_vars=["intent", "slots", "lead_atual"],
 )
 graph.add_node("reunioes_agent", reunioes_agent_graph)

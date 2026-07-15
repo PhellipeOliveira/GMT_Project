@@ -13,6 +13,9 @@ Fase 2 (Agente Comercial — projeto separado, integração via webhook):
 """
 
 import base64
+import hashlib
+import hmac
+import json
 import logging
 import os
 import re
@@ -57,6 +60,8 @@ def get_conn():
 
 # ─────────────────────────── Helpers ───────────────────────────
 UUID_RE = re.compile(r"^[0-9a-fA-F-]{36}$")
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+CAL_COM_LINK = os.getenv("CAL_COM_LINK", "https://cal.com/phellipe-oliveira-ncbgsl/30min")
 
 
 def normalize_phone(s: str) -> str:
@@ -74,6 +79,73 @@ def _nome_fallback_from_email(email: str) -> str:
 
 def is_uuid(s: str) -> bool:
     return bool(s) and bool(UUID_RE.match(s))
+
+
+def _is_email(s: Optional[str]) -> bool:
+    return bool(s and EMAIL_RE.match((s or "").strip()))
+
+
+def _action_token_secret() -> str:
+    """Segredo HMAC para links de gestão de reunião via e-mail."""
+    secret = (
+        os.getenv("MEETING_ACTION_TOKEN_SECRET")
+        or os.getenv("ADMIN_API_TOKEN")
+        or ""
+    )
+    if not secret:
+        raise RuntimeError("MEETING_ACTION_TOKEN_SECRET (ou ADMIN_API_TOKEN) não configurado")
+    return secret
+
+
+def _b64url_encode(raw: bytes) -> str:
+    return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+
+def _b64url_decode(data: str) -> bytes:
+    pad = "=" * (-len(data) % 4)
+    return base64.urlsafe_b64decode(data + pad)
+
+
+def _sign_payload_b64(payload_b64: str) -> str:
+    return hmac.new(
+        _action_token_secret().encode("utf-8"),
+        payload_b64.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+
+def gerar_token_acao_reuniao(reuniao_id: str, email: str, acao: str, ttl_sec: int = 172800) -> str:
+    """Gera token assinado para ações de reunião (cancelar/reagendar)."""
+    payload = {
+        "rid": str(reuniao_id),
+        "email": (email or "").strip().lower(),
+        "act": acao,
+        "exp": int(datetime.now(timezone.utc).timestamp()) + max(int(ttl_sec), 60),
+    }
+    payload_b64 = _b64url_encode(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
+    sig = _sign_payload_b64(payload_b64)
+    return f"{payload_b64}.{sig}"
+
+
+def validar_token_acao_reuniao(token: str, acao_esperada: str) -> Dict[str, Any]:
+    """Valida token assinado e retorna payload com rid/email/act/exp."""
+    if not token or "." not in token:
+        raise ValueError("Token inválido")
+    payload_b64, sig = token.split(".", 1)
+    expected = _sign_payload_b64(payload_b64)
+    if not hmac.compare_digest(sig, expected):
+        raise ValueError("Assinatura inválida")
+    payload = json.loads(_b64url_decode(payload_b64).decode("utf-8"))
+    if payload.get("act") != acao_esperada:
+        raise ValueError("Ação inválida para este token")
+    exp = int(payload.get("exp") or 0)
+    if exp <= int(datetime.now(timezone.utc).timestamp()):
+        raise ValueError("Link expirado")
+    rid = str(payload.get("rid") or "")
+    email = str(payload.get("email") or "").strip().lower()
+    if not is_uuid(rid) or not _is_email(email):
+        raise ValueError("Payload inválido")
+    return {"rid": rid, "email": email, "act": payload.get("act"), "exp": exp}
 
 
 def resolve_lead_id_by_ref(cur, ref: str) -> Tuple[Optional[str], List[Dict[str, Any]]]:
@@ -979,6 +1051,38 @@ def cancelar_reuniao(reuniao_id: str) -> Dict[str, Any]:
     return {"message": "Reunião cancelada", "data": {"reuniao_id": reuniao_id, "status": "cancelada"}}
 
 
+def cancelar_reuniao_via_token(token: str) -> Dict[str, Any]:
+    """Cancela reunião a partir de token assinado enviado por e-mail ao titular."""
+    try:
+        payload = validar_token_acao_reuniao(token, "cancelar")
+    except Exception as e:
+        return {"error": {"message": str(e)}}
+
+    reuniao_id = payload["rid"]
+    email = payload["email"]
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "select r.id, r.status_codigo, l.email "
+                "from public.reunioes r join public.leads l on l.id = r.lead_id "
+                "where r.id=%s",
+                (reuniao_id,),
+            )
+            row = cur.fetchone()
+            if not row:
+                return {"error": {"message": "Reunião não encontrada"}}
+            lead_email = (row[2] or "").strip().lower()
+            if lead_email != email:
+                return {"error": {"message": "Token não corresponde ao titular da reunião"}}
+            if row[1] == "cancelada":
+                return {"message": "Reunião já estava cancelada", "data": {"reuniao_id": reuniao_id}}
+            cur.execute(
+                "update public.reunioes set status_codigo='cancelada', atualizado_em=now() where id=%s",
+                (reuniao_id,),
+            )
+    return {"message": "Reunião cancelada com sucesso", "data": {"reuniao_id": reuniao_id}}
+
+
 @tool
 def listar_reunioes(lead_ref_ou_id: Optional[str] = None) -> Dict[str, Any]:
     """Lista reuniões (todas ou de um lead específico)."""
@@ -998,6 +1102,86 @@ def listar_reunioes(lead_ref_ou_id: Optional[str] = None) -> Dict[str, Any]:
             rows = cur.fetchall() or []
     items = [{"reuniao_id": r[0], "lead_id": r[1], "data_hora": r[2].isoformat(), "tipo": r[3], "status": r[4]} for r in rows]
     return {"message": f"{len(items)} reuniões", "data": {"items": items}}
+
+
+@tool
+def enviar_link_gestao_reuniao(email: str, acao: str = "cancelar_ou_reagendar") -> Dict[str, Any]:
+    """Envia para o e-mail do visitante links seguros para cancelar/reagendar reunião.
+
+    Segurança: esta tool não devolve dados da reunião no chat. Apenas dispara o e-mail.
+    """
+    email_norm = (email or "").strip().lower()
+    if not _is_email(email_norm):
+        return {"error": {"message": "Informe um e-mail válido."}}
+
+    base_url = (
+        os.getenv("PUBLIC_API_BASE_URL")
+        or os.getenv("AGENT_API_URL")
+        or os.getenv("NEXT_PUBLIC_AGENT_API_URL")
+        or "http://localhost:8000"
+    ).rstrip("/")
+    ttl = int(os.getenv("MEETING_ACTION_TOKEN_TTL_SEC", "172800"))
+
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "select r.id, r.data_hora, r.status_codigo, l.id, l.nome "
+                "from public.reunioes r "
+                "join public.leads l on l.id = r.lead_id "
+                "where lower(l.email)=lower(%s) and r.status_codigo in ('agendada','remarcada') "
+                "and r.data_hora >= now() "
+                "order by r.data_hora asc limit 10",
+                (email_norm,),
+            )
+            rows = cur.fetchall() or []
+
+    corpo = [
+        "Olá!",
+        "",
+        "Recebemos o seu pedido para gerir reunião com a GMT.",
+        "",
+    ]
+    lead_id_ref: Optional[str] = None
+    if rows:
+        corpo.append("Para sua segurança, use um dos links abaixo para confirmar a reunião:")
+        corpo.append("")
+        for idx, (rid, data_hora, status_codigo, lead_id, _lead_nome) in enumerate(rows, start=1):
+            lead_id_ref = str(lead_id_ref or lead_id)
+            ts = data_hora.strftime("%d/%m/%Y às %H:%M")
+            cancel_token = gerar_token_acao_reuniao(str(rid), email_norm, "cancelar", ttl_sec=ttl)
+            cancel_link = f"{base_url}/meeting-actions/cancel?token={cancel_token}"
+            corpo.append(f"{idx}) {ts} ({status_codigo})")
+            if acao in ("cancelar", "cancelar_ou_reagendar"):
+                corpo.append(f"   - Cancelar esta reunião: {cancel_link}")
+            if acao in ("reagendar", "cancelar_ou_reagendar"):
+                corpo.append(f"   - Escolher novo horário: {CAL_COM_LINK}")
+            corpo.append("")
+    else:
+        corpo.extend([
+            "Não encontramos reuniões futuras com este e-mail neste momento.",
+            "",
+            f"Se desejar, pode agendar uma nova reunião aqui: {CAL_COM_LINK}",
+            "",
+        ])
+
+    corpo.extend([
+        "Se não foi você quem pediu esta ação, ignore este e-mail.",
+        "",
+        "Equipe GMT",
+    ])
+
+    _enviar_e_registrar(
+        lead_id=lead_id_ref,
+        tipo="atualizacao_reuniao",
+        destinatario=email_norm,
+        assunto="GMT — link seguro para gerir sua reunião",
+        corpo="\n".join(corpo),
+        referencia_id=None,
+    )
+    return {
+        "message": "Se existir reunião para este e-mail, enviámos um link seguro para confirmação.",
+        "data": {"enviado": True},
+    }
 
 
 # ═══════════════════════════ NOTIFICAÇÕES (E-MAIL) ═══════════════════════════
