@@ -43,6 +43,8 @@ from app.agent.helpers import (
 
 load_dotenv()
 
+_UI_MARKER_RE = re.compile(r"\s*%%UI%%.*?%%\s*", re.DOTALL)
+
 
 # ═══════════════════════════ Modelos LLM (config por tarefa via env) ═══════════════════════════
 # Cada papel (DEFAULT e FINALIZER) pode ter um modelo proprio,
@@ -454,13 +456,19 @@ def respond_final(state: AgentState) -> AgentState:
         if not msg:
             msg = ("Posso ajudar com os serviços da GMT, um orçamento ou agendar uma reunião. "
                    "Como posso ajudar?")
+        _ui_m = re.search(r"(%%UI%%.*?%%)", msg, re.DOTALL)
+        _ui_marker = _ui_m.group(1) if _ui_m else ""
+        raw_text_clean = _UI_MARKER_RE.sub(" ", msg).strip()
         safe_msg = finalizer_model.invoke(
             [
                 SystemMessage(content=FINALIZER_SYSTEM_PROMPT),
-                HumanMessage(content=f"Ações executadas:\n- {msg}"),
+                HumanMessage(content=f"Ações executadas:\n- {raw_text_clean}"),
             ]
         )
-        return {"context": ctx, "messages": AIMessage(content=extract_text_content(safe_msg) or msg)}
+        final_text = extract_text_content(safe_msg) or raw_text_clean
+        if _ui_marker:
+            final_text = final_text.rstrip() + "\n" + _ui_marker
+        return {"context": ctx, "messages": AIMessage(content=final_text)}
 
     user_text = ""
     for m in reversed(state.get("messages") or []):
@@ -479,12 +487,15 @@ def respond_final(state: AgentState) -> AgentState:
         # finalizador para evitar vazamento de termos técnicos/IDs na resposta final.
         last = state["messages"][-1]
         raw_reply = extract_text_content(last) or ""
+        _ui_m = re.search(r"(%%UI%%.*?%%)", raw_reply, re.DOTALL)
+        _ui_marker = _ui_m.group(1) if _ui_m else ""
+        raw_reply_clean = _UI_MARKER_RE.sub(" ", raw_reply).strip()
         tool_result = state.get("tool_result") or {}
         parts = []
         if user_text:
             parts.append(f"Prompt do lead: {user_text}")
-        if raw_reply:
-            parts.append("Ações executadas:\n- " + raw_reply)
+        if raw_reply_clean:
+            parts.append("Ações executadas:\n- " + raw_reply_clean)
         if tool_result:
             try:
                 data_txt = json.dumps(tool_result, ensure_ascii=False)
@@ -497,20 +508,31 @@ def respond_final(state: AgentState) -> AgentState:
                 HumanMessage(content="\n\n".join(parts)),
             ]
         )
+        final_text = extract_text_content(final_msg) or raw_reply_clean
+        if _ui_marker:
+            final_text = final_text.rstrip() + "\n" + _ui_marker
         ctx["ai_responses"] = []
-        return {"context": ctx, "messages": AIMessage(content=extract_text_content(final_msg) or "")}
+        return {"context": ctx, "messages": AIMessage(content=final_text)}
 
     parts = []
+    raw_text = "\n".join(actions_txt + errors_txt)
+    _ui_m = re.search(r"(%%UI%%.*?%%)", raw_text, re.DOTALL)
+    _ui_marker = _ui_m.group(1) if _ui_m else ""
+    actions_txt_clean = [_UI_MARKER_RE.sub(" ", t).strip() for t in actions_txt]
+    errors_txt_clean = [_UI_MARKER_RE.sub(" ", t).strip() for t in errors_txt]
     if user_text:
         parts.append(f"Prompt do lead: {user_text}")
-    if actions_txt:
-        parts.append("Ações executadas:\n" + "\n".join(f"- {t}" for t in actions_txt))
-    if errors_txt:
-        parts.append("Falhas:\n" + "\n".join(f"- {t}" for t in errors_txt))
+    if actions_txt_clean:
+        parts.append("Ações executadas:\n" + "\n".join(f"- {t}" for t in actions_txt_clean if t))
+    if errors_txt_clean:
+        parts.append("Falhas:\n" + "\n".join(f"- {t}" for t in errors_txt_clean if t))
     final_msg = finalizer_model.invoke([SystemMessage(content=FINALIZER_SYSTEM_PROMPT),
                                          HumanMessage(content="\n\n".join(parts))])
+    final_text = extract_text_content(final_msg) or ""
+    if _ui_marker:
+        final_text = final_text.rstrip() + "\n" + _ui_marker
     ctx["ai_responses"] = []
-    return {"context": ctx, "messages": AIMessage(content=extract_text_content(final_msg) or "")}
+    return {"context": ctx, "messages": AIMessage(content=final_text)}
 
 
 # ═══════════════════════════ Montagem do grafo ═══════════════════════════

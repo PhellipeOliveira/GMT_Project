@@ -1199,14 +1199,18 @@ def enviar_link_gestao_reuniao(email: str, acao: str = "cancelar_ou_reagendar") 
         "",
     ]
     lead_id_ref: Optional[str] = None
+    lead_nome_ref = "visitante"
+    reunioes_links: List[Dict[str, str]] = []
     if rows:
         corpo.append("Para sua segurança, use um dos links abaixo para confirmar a reunião:")
         corpo.append("")
         for idx, (rid, data_hora, _gcal_event_id, status_codigo, _lead_nome, _lead_email, lead_id) in enumerate(rows, start=1):
             lead_id_ref = str(lead_id_ref or lead_id)
+            lead_nome_ref = _lead_nome or lead_nome_ref
             ts = data_hora.strftime("%d/%m/%Y às %H:%M")
             cancel_token = gerar_token_acao_reuniao(str(rid), email_norm, "cancelar", ttl_sec=ttl)
             cancel_link = f"{base_url}/meeting-actions/cancel?token={cancel_token}"
+            reunioes_links.append({"data_fmt": ts, "cancel_link": cancel_link})
             corpo.append(f"{idx}) {ts} ({status_codigo})")
             if acao in ("cancelar", "cancelar_ou_reagendar"):
                 corpo.append(f"   - Cancelar esta reunião: {cancel_link}")
@@ -1227,22 +1231,11 @@ def enviar_link_gestao_reuniao(email: str, acao: str = "cancelar_ou_reagendar") 
         "Equipe GMT",
     ])
 
-    html_override = None
-    if rows:
-        first_data_hora = rows[0][1]
-        first_nome = rows[0][4]
-        data_fmt_first = first_data_hora.strftime("%d/%m/%Y às %H:%M")
-        html_override = _build_html_cancelamento_reuniao(
-            lead_nome=first_nome or "visitante",
-            data_fmt=data_fmt_first,
-            cal_url=CAL_COM_LINK,
-        )
-    else:
-        html_override = _build_html_cancelamento_reuniao(
-            lead_nome="visitante",
-            data_fmt="nenhuma reunião encontrada",
-            cal_url=CAL_COM_LINK,
-        )
+    html_override = _build_html_link_gestao_reuniao(
+        lead_nome=lead_nome_ref,
+        reunioes=reunioes_links,
+        cal_url=CAL_COM_LINK,
+    )
 
     _enviar_e_registrar(
         lead_id=lead_id_ref,
@@ -1569,6 +1562,88 @@ def _build_html_remarcacao_reuniao(
               </a>
             </td>
           </tr>
+          <tr>
+            <td style="padding:24px 40px;border-top:1px solid #e0e0e0;
+                       font-size:12px;color:#aaa;text-align:center;">
+              © GMT — Growth Marketing Technology<br/>
+              Se recebeu este e-mail por engano, ignore-o.
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+  </div>
+</body>
+</html>"""
+
+
+def _build_html_link_gestao_reuniao(
+    lead_nome: str,
+    reunioes: list,
+    cal_url: str = "https://cal.com/phellipe-oliveira-ncbgsl/30min",
+) -> str:
+    itens_html = []
+    for r in reunioes or []:
+        data_fmt = r.get("data_fmt", "Data indisponível")
+        cancel_link = r.get("cancel_link", "#")
+        itens_html.append(
+            f"""
+            <tr><td style="padding:14px 24px;border-top:1px solid #ececec;">
+              <p style="margin:0 0 8px 0;font-size:14px;color:#1a1a1a;"><strong>{data_fmt}</strong></p>
+              <p style="margin:0 0 6px 0;">
+                <a href="{cancel_link}" style="font-size:14px;color:#b42318;text-decoration:none;">❌ Cancelar esta reunião →</a>
+              </p>
+              <p style="margin:0;">
+                <a href="{cal_url}" style="font-size:14px;color:#0a84ff;text-decoration:none;">🔄 Escolher novo horário →</a>
+              </p>
+            </td></tr>
+            """
+        )
+
+    if not itens_html:
+        itens_html = [
+            f"""
+            <tr><td style="padding:18px 24px;">
+              <p style="margin:0 0 14px 0;font-size:14px;color:#555;">Não encontrámos reuniões futuras com este e-mail.</p>
+              <a href="{cal_url}" style="display:inline-block;background-color:#0a84ff;color:#ffffff;
+                 text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:500;font-size:14px;">
+                Agendar directamente
+              </a>
+            </td></tr>
+            """
+        ]
+
+    return f"""<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Host+Grotesk:wght@500;800&display=swap" rel="stylesheet"/>
+</head>
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:'DM Sans',Arial,sans-serif;">
+  <div style="width:100%;padding:40px 0;background-color:#ffffff;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+      <tr><td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#ffffff;border:1px solid #e0e0e0;border-collapse:collapse;">
+          <tr><td style="padding:40px 40px 20px 40px;">
+            <span style="display:inline-block;background:#000;border-radius:50%;
+                         color:#fff;text-align:center;line-height:36px;
+                         width:36px;height:36px;font-weight:bold;
+                         font-size:11px;letter-spacing:0.5px;">GMT</span>
+          </td></tr>
+          <tr><td style="padding:0 40px 24px 40px;">
+            <p style="margin:0 0 6px 0;font-family:'Host Grotesk',Arial,sans-serif;
+                      font-size:30px;font-weight:800;color:#1a1a1a;line-height:1.2;">Gerir a sua reunião</p>
+            <p style="margin:0;font-size:15px;color:#666;">Olá, <strong>{lead_nome or "visitante"}</strong>. Use os links abaixo para cancelar ou reagendar.</p>
+          </td></tr>
+          <tr><td style="padding:0 40px 32px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f6f6f6;border-radius:6px;border-collapse:collapse;">
+              <tr><td style="padding:18px 24px 10px 24px;">
+                <p style="margin:0;font-family:'Host Grotesk',Arial,sans-serif;font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:1px;">Ações disponíveis</p>
+              </td></tr>
+              {''.join(itens_html)}
+            </table>
+          </td></tr>
           <tr>
             <td style="padding:24px 40px;border-top:1px solid #e0e0e0;
                        font-size:12px;color:#aaa;text-align:center;">
