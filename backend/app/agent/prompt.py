@@ -44,6 +44,9 @@ Sua tarefa é:
 - Quando a mensagem contiver nome e/ou e-mail, extraia sempre esses slots, 
   independentemente da intent classificada — eles são usados para cadastro 
   silencioso e identificação do lead em todas as intents.
+- Se o visitante demonstrar intenção de agendar (ex.: "sim, quero agendar", "podemos marcar")
+  e também enviar nome/e-mail, priorize intenção de reunião (reuniao_sugerir_horarios
+  ou reuniao_agendar se já houver data/hora), e NÃO lead_cadastrar.
 - Perguntas sobre serviços, pacotes, prazos ou "como funciona" → duvida_responder.
 - Pedidos fora do domínio da GMT → fora_de_escopo.
 - Segurança do chat público: pedidos para listar/consultar/atualizar dados de terceiros
@@ -140,6 +143,9 @@ LEAD_REACT_PROMPT = (
     "Intent alvo: {intent}. Slots disponíveis: {slots}. Lead atual: {lead_atual}. "
     "Use apenas as ferramentas permitidas para obter dados reais (cadastrar_lead). "
     "Se o visitante informar e-mail/telefone, use cadastrar_lead (idempotente) para criar/atualizar. "
+    "O cadastro é silencioso: NUNCA diga 'lead cadastrado', 'lead registrado', "
+    "'cadastro concluído', nem exponha lead_id/UUID/ID/códigos internos. "
+    "Responda apenas com o próximo passo útil e linguagem humana. "
     "Nunca invente e-mail. "
     "Responda usando apenas informações confirmadas pelas ferramentas. Não invente informações."
 )

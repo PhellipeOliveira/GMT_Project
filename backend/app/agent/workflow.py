@@ -9,6 +9,7 @@ Fluxo linear e rapido para:
 
 from typing import Any, Dict, List, Literal, Optional, TypedDict, Annotated
 
+import json
 import os
 import re
 
@@ -175,6 +176,31 @@ def _is_valid_email(s: str) -> bool:
     return bool(s and EMAIL_RE.match((s or "").strip()))
 
 
+def _latest_human_text(messages: List[AnyMessage]) -> str:
+    for m in reversed(messages or []):
+        if isinstance(m, HumanMessage):
+            return extract_text_content(m).strip()
+    return ""
+
+
+def _previous_ai_text(messages: List[AnyMessage]) -> str:
+    seen_human = False
+    for m in reversed(messages or []):
+        if isinstance(m, HumanMessage):
+            if not seen_human:
+                seen_human = True
+                continue
+            break
+        if seen_human and isinstance(m, AIMessage):
+            return extract_text_content(m).strip()
+    return ""
+
+
+def _is_short_affirmation(text: str) -> bool:
+    cleaned = re.sub(r"[^\w\s]", "", (text or "").strip().lower())
+    return cleaned in {"sim", "ok", "certo", "claro", "quero", "pode", "pode ser", "yes", "y"}
+
+
 # ═══════════════════════════ Nó: router ═══════════════════════════
 def router_node(state: AgentState) -> AgentState:
     intent = state.get("intent")
@@ -182,6 +208,25 @@ def router_node(state: AgentState) -> AgentState:
     errors = list(state.get("errors") or [])
     context = ensure_context(state)
     lead_atual_update = None
+    messages = state.get("messages") or []
+
+    # Evita regressão de UX: quando o visitante confirma agendamento e envia nome/e-mail,
+    # seguimos diretamente para o fluxo de reunião (cadastro permanece silencioso).
+    if intent == "lead_cadastrar":
+        user_text = _latest_human_text(messages).lower()
+        prev_ai_text = _previous_ai_text(messages).lower()
+        has_identity = bool(slots.get("email") or slots.get("nome"))
+        mentions_schedule = any(
+            token in user_text
+            for token in ("agendar", "agendamento", "reunião", "reuniao", "marcar", "horário", "horario")
+        )
+        invited_to_schedule = any(
+            token in prev_ai_text
+            for token in ("quer que eu agende", "podemos marcar", "agendar uma reunião", "marcar uma sessão")
+        )
+        if mentions_schedule or (has_identity and _is_short_affirmation(user_text) and invited_to_schedule):
+            intent = "reuniao_agendar" if slots.get("data_hora") else "reuniao_sugerir_horarios"
+            context["intent_rewritten"] = "lead_cadastrar->reuniao_fluxo"
 
     # Guardrail anti-prompt-injection: bloqueia intents sensíveis no chat público.
     if intent in PUBLIC_BLOCKED_INTENTS:
@@ -267,7 +312,7 @@ def router_node(state: AgentState) -> AgentState:
             and not (state.get("lead_atual") and state["lead_atual"].get("lead_id"))
             and not context.get("lead_resolution_attempted")):
         context["need_lead_resolution"] = True
-    updates: AgentState = {"slots": slots, "context": context}
+    updates: AgentState = {"slots": slots, "context": context, "intent": intent}
     if lead_atual_update:
         updates["lead_atual"] = lead_atual_update
     if errors:
@@ -419,8 +464,30 @@ def respond_final(state: AgentState) -> AgentState:
         (errors_txt if not seg.get("ok", True) else actions_txt).append(txt)
 
     if not actions_txt and not errors_txt:
+        # Fallback seguro: mesmo sem segmentos estruturados, sempre passa pelo
+        # finalizador para evitar vazamento de termos técnicos/IDs na resposta final.
         last = state["messages"][-1]
-        return {"context": ctx, "messages": AIMessage(content=(extract_text_content(last) or ""))}
+        raw_reply = extract_text_content(last) or ""
+        tool_result = state.get("tool_result") or {}
+        parts = []
+        if user_text:
+            parts.append(f"Prompt do lead: {user_text}")
+        if raw_reply:
+            parts.append("Ações executadas:\n- " + raw_reply)
+        if tool_result:
+            try:
+                data_txt = json.dumps(tool_result, ensure_ascii=False)
+            except Exception:
+                data_txt = str(tool_result)
+            parts.append("Dados retornados pelas ferramentas:\n" + data_txt)
+        final_msg = finalizer_model.invoke(
+            [
+                SystemMessage(content=FINALIZER_SYSTEM_PROMPT),
+                HumanMessage(content="\n\n".join(parts)),
+            ]
+        )
+        ctx["ai_responses"] = []
+        return {"context": ctx, "messages": AIMessage(content=extract_text_content(final_msg) or "")}
 
     parts = []
     if user_text:
