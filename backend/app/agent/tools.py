@@ -421,8 +421,10 @@ def _rag_compor_resposta(pergunta: str, chunks: List[Dict[str, Any]]) -> str:
         for c in chunks
     )
     system = (
-        "Você é o agente de recepção da GMT (agência de automação, IA e marketing) na landing page.\n"
-        "Responda à dúvida do visitante em português do Brasil, de forma clara, acolhedora e objetiva.\n"
+        "Chamas-te Ara. És o assistente digital da GMT (Growth Marketing Technology), "
+        "uma agência portuguesa de IA, marketing digital e desenvolvimento web.\n"
+        "Respondes à dúvida do visitante em português de Portugal (PT-PT), "
+        "de forma clara, directa e calorosa.\n"
         "Regras:\n"
         "- Baseie-se SOMENTE nos trechos do KB fornecidos; nunca invente serviços, prazos ou preços.\n"
         "- Reproduza os termos exatamente como no KB (nomes de serviços, entregáveis, etapas).\n"
@@ -1211,7 +1213,11 @@ def enviar_link_gestao_reuniao(email: str, acao: str = "cancelar_ou_reagendar") 
         for idx, (rid, data_hora, _gcal_event_id, status_codigo, _lead_nome, _lead_email, lead_id) in enumerate(rows, start=1):
             lead_id_ref = str(lead_id_ref or lead_id)
             lead_nome_ref = _lead_nome or lead_nome_ref
-            ts = data_hora.strftime("%d/%m/%Y às %H:%M")
+            _lisbon = ZoneInfo("Europe/Lisbon")
+            if data_hora.tzinfo is None:
+                data_hora = data_hora.replace(tzinfo=ZoneInfo("UTC"))
+            _dt_local = data_hora.astimezone(_lisbon)
+            ts = _dt_local.strftime("%d/%m/%Y às %H:%M")
             cancel_token = gerar_token_acao_reuniao(str(rid), email_norm, "cancelar", ttl_sec=ttl)
             cancel_link = f"{base_url}/meeting-actions/cancel?token={cancel_token}"
             reunioes_links.append({"data_fmt": ts, "cancel_link": cancel_link})
