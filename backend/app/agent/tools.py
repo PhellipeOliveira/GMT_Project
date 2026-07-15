@@ -703,6 +703,10 @@ def agendar_reuniao(
     """
     tipo = "online"
     local = None
+    # Nome opcional: usa parte local do email como fallback
+    if not (nome or "").strip() and email:
+        local = email.split("@")[0]
+        nome = re.sub(r"[._\-]+", " ", local).strip().title() or "Visitante"
     try:
         dt = datetime.fromisoformat(data_hora)
     except Exception:

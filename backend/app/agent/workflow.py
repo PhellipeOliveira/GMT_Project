@@ -166,12 +166,25 @@ def route_intent(state: AgentState) -> str:
 def parse_and_classify(state: AgentState) -> AgentState:
     messages = state.get("messages") or []
     parsed = parser_llm.invoke([SystemMessage(content=PARSER_SYSTEM_PROMPT), *messages])
-    slots_dict = {}
+    parsed_slots = {}
     for slot_str in parsed.slots:
         if "=" in slot_str:
             name, value = slot_str.split("=", 1)
-            slots_dict[name.strip()] = value.strip()
-    return {"intent": parsed.intent, "slots": slots_dict}
+            parsed_slots[name.strip()] = value.strip()
+
+    # Slots acumulados da sessão (não sobrescrever, apenas completar)
+    existing_slots = (state.get("context") or {}).get("slots") or {}
+    if not existing_slots:
+        existing_slots = state.get("slots") or {}
+    new_slots = parsed_slots or {}
+    # Só actualiza keys com valor não-None/não-vazio nos novos slots
+    merged_slots = {
+        **existing_slots,
+        **{k: v for k, v in new_slots.items() if v not in (None, "", [], {})},
+    }
+    context = ensure_context(state)
+    context["slots"] = merged_slots
+    return {"intent": parsed.intent, "slots": merged_slots, "context": context}
 
 
 def _is_valid_email(s: str) -> bool:

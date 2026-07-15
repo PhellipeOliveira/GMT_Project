@@ -1,0 +1,2 @@
+ALTER TABLE public.leads ALTER COLUMN nome DROP NOT NULL;
+ALTER TABLE public.leads ALTER COLUMN nome SET DEFAULT '';

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import Cal, { getCalApi } from "@calcom/embed-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAgentConfig } from "@/hooks/useAgentConfig";
 import { useChat } from "@/hooks/useChat";
@@ -42,10 +41,9 @@ export function ChatWidget() {
     void sendMessage(opt.label);
   };
 
-  const openCalPopup = async (url?: string) => {
-    void url;
-    const cal = await getCalApi();
-    cal("modal", { calLink: "phellipe-oliveira-ncbgsl/30min" });
+  const openCalPopup = (url?: string) => {
+    const calUrl = url || "https://cal.com/phellipe-oliveira-ncbgsl/30min";
+    window.open(calUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -99,7 +97,6 @@ export function ChatWidget() {
               openCalPopup={openCalPopup}
             />
             <ChatInput onSend={sendMessage} disabled={isLoading} />
-            <Cal calLink="phellipe-oliveira-ncbgsl/30min" style={{ display: "none" }} />
           </motion.div>
         )}
       </AnimatePresence>
