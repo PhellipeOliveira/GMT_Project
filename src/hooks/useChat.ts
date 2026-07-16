@@ -13,7 +13,7 @@ const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome-v2",
   role: "agent",
   content:
-    "Olá! Sou o agente da GMT. Posso ajudar com dúvidas sobre serviços e agendamentos. Como posso ajudar?",
+    "Olá, sou o Santiago, da GMT. Se tiver alguma dúvida sobre a empresa, os nossos serviços ou projectos, é só dizer. Em que está a pensar?",
   createdAt: Date.now(),
 };
 

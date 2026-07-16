@@ -14,7 +14,7 @@ export function ChatHeader({ onClose }: ChatHeaderProps) {
           <Bot size={18} strokeWidth={1.75} />
         </div>
         <div>
-          <p className="text-sm font-medium text-gmt-text">Agente GMT</p>
+          <p className="text-sm font-medium text-gmt-text">Santiago</p>
           <p className="text-xs text-gmt-muted">Online</p>
         </div>
       </div>

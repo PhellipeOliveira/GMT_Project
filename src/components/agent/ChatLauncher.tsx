@@ -29,7 +29,7 @@ export function ChatLauncher({
       onClick={onClick}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
-      aria-label="Abrir chat com o agente GMT"
+      aria-label="Abrir chat com o Santiago"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}

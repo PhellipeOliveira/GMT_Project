@@ -253,8 +253,8 @@ def router_node(state: AgentState) -> AgentState:
         context["security_blocked"] = True
         context["security_reason"] = f"intent_bloqueada:{intent}"
         context["security_forced_reply"] = (
-            "Para proteger os dados dos clientes, não posso consultar ou alterar cadastros diretamente no chat. "
-            "Posso ajudar com dúvidas, novo agendamento ou enviar um link seguro para gerir a sua reunião por e-mail."
+            "Por uma questão de privacidade, não consigo consultar nem alterar dados de clientes por aqui. "
+            "Mas com todo o gosto ajudo com qualquer dúvida sobre a empresa, os nossos serviços ou projectos."
         )
         return {"intent": "conversa_geral", "context": context}
 
@@ -467,7 +467,7 @@ def respond_final(state: AgentState) -> AgentState:
         except Exception:
             msg = ""
         if not msg:
-            msg = ("Posso ajudar com os serviços da GMT, um orçamento ou agendar uma reunião. "
+            msg = ("Posso ajudar com dúvidas sobre serviços e agendamentos na GMT. "
                    "Como posso ajudar?")
         _ui_m = re.search(r"(%%UI%%.*?%%)", msg, re.DOTALL)
         _ui_marker = _ui_m.group(1) if _ui_m else ""
