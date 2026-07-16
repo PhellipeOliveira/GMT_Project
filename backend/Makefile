@@ -25,7 +25,7 @@ help:
 	@echo "    make test-connections - Valida OpenAI/Supabase/Resend (scripts/test_connections.py)"
 	@echo ""
 	@echo "  Knowledge Base (RAG)"
-	@echo "    make rag-ingest       - Ingere .md do KB (BASE_DIR=kb CATEGORIA= STRATEGY=markdown)"
+	@echo "    make rag-ingest       - Ingere .md do KB (BASE_DIR=docs_rag CATEGORIA= STRATEGY=markdown)"
 	@echo ""
 	@echo "  Supabase (schema canônico: supabase/migrations/)"
 	@echo "    make supabase-push    - Aplica as migrations no projeto linkado (supabase db push)"
@@ -73,11 +73,11 @@ test-connections:
 
 
 # ---- Knowledge Base (RAG) ----
-# Uso: make rag-ingest BASE_DIR=kb CATEGORIA=produto STRATEGY=markdown
+# Uso: make rag-ingest BASE_DIR=docs_rag CATEGORIA=produto STRATEGY=markdown
 rag-ingest:
 	PYTHONPATH=. BASE_DIR="$(BASE_DIR)" CATEGORIA="$(CATEGORIA)" STRATEGY="$(STRATEGY)" \
 		$(PY) -c "import os; from app.rag.ingest import ingest_dir; \
-		print(ingest_dir(os.getenv('BASE_DIR') or 'kb', \
+		print(ingest_dir(os.getenv('BASE_DIR') or 'docs_rag', \
 		strategy=os.getenv('STRATEGY') or 'markdown', \
 		categoria=os.getenv('CATEGORIA') or None), 'chunks upsertados')"
 

@@ -431,6 +431,11 @@ def _rag_compor_resposta(pergunta: str, chunks: List[Dict[str, Any]]) -> str:
         "- Reproduz os termos exactamente como no KB (nomes de serviços, entregáveis, etapas).\n"
         "- Não despejes todo o conteúdo no chat: dá o essencial e, quando fizer sentido, encaminha para a página certa do site (ex.: [Serviços](/servicos), [Portefólio](/portfolio), [Sobre](/sobre)).\n"
         "- Para valores/preços exatos: não inventes; explica o modelo com naturalidade.\n"
+        "- Economia conversacional: resolve com o menor número de palavras, sem perder clareza. Nunca respondas mais do que foi perguntado (ex.: 'Onde ficam?' → 'Estamos em Lisboa.').\n"
+        "- Profundidade gradual: não entregues tudo de uma vez; aprofunda só se o interesse crescer.\n"
+        "- Responde à necessidade implícita: uma pergunta sobre clientes/casos costuma aferir autoridade — dá um caso real e abre porta ao setor do visitante.\n"
+        "- Interpreta a intenção real, não as palavras: se o visitante disser 'não entendi', 'como assim?' ou '?', reformula em linguagem mais simples com um exemplo, em vez de repetir a resposta anterior.\n"
+        "- Nunca exponhas limitações internas (conteúdo em falta, base sem resultado, ferramenta, erro): se não souberes, diz apenas, com humildade, que vais confirmar com a equipa.\n"
         "- Marcar reunião não é o objetivo; só o sugeres se o visitante mostrar interesse, sem insistir."
     )
     user = f"Pergunta do visitante:\n{pergunta}\n\nTrechos do KB:\n{contexto}"
