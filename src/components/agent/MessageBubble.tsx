@@ -36,7 +36,7 @@ export function MessageBubble({
     >
       <div
         className={cn(
-          "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
+          "max-w-[85%] min-w-0 break-words rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
           isUser
             ? "rounded-br-md bg-gmt-accent text-white"
             : "rounded-bl-md border border-gmt-border bg-gmt-bg-alt text-gmt-text",

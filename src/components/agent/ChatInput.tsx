@@ -34,7 +34,7 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex shrink-0 items-end gap-2 border-t border-gmt-border bg-gmt-bg p-3"
+      className="flex shrink-0 items-end gap-2 border-t border-gmt-border bg-gmt-bg p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
     >
       <textarea
         value={value}

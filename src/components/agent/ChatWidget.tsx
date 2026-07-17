@@ -20,6 +20,7 @@ export function ChatWidget() {
   const reduced = useReducedMotion();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
 
   const sectionHint = useSectionAgentHint();
@@ -47,7 +48,7 @@ export function ChatWidget() {
   };
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-[70]">
+    <div className="chat-widget-shell pointer-events-none fixed bottom-5 right-5 z-[70]">
       <AnimatePresence mode="wait">
         {!open ? (
           <motion.div
@@ -82,14 +83,23 @@ export function ChatWidget() {
             transition={panelTransition}
             style={{ transformOrigin: "bottom right" }}
             className={cn(
-              "pointer-events-auto flex flex-col overflow-hidden rounded-2xl border border-gmt-border bg-gmt-bg shadow-2xl",
-              // Mobile: quase largura total com margens laterais, altura confortável (nunca fullscreen)
-              "w-[calc(100vw-2rem)] max-w-[420px] h-[70dvh] max-h-[560px]",
-              // Desktop: painel compacto e fixo no quadrante inferior direito
-              "sm:h-[480px] sm:max-h-[70vh] sm:w-[360px] sm:max-w-none",
+              "chat-widget-panel pointer-events-auto box-border flex min-w-0 flex-col border border-gmt-border bg-gmt-bg shadow-2xl",
+              // Mobile: fullscreen amigável para teclado e iOS Safari.
+              "fixed inset-0 h-[100dvh] w-screen max-w-[100vw] rounded-none",
+              // Desktop: painel no canto inferior direito.
+              "sm:relative sm:inset-auto sm:h-[480px] sm:w-[360px] sm:max-h-[70vh] sm:rounded-2xl",
+              expanded &&
+                "chat-widget-panel--expanded sm:h-[min(86vh,760px)] sm:w-[min(92vw,960px)] sm:max-h-[86vh] sm:max-w-[92vw]",
             )}
           >
-            <ChatHeader onClose={() => setOpen(false)} />
+            <ChatHeader
+              onClose={() => {
+                setOpen(false);
+                setExpanded(false);
+              }}
+              onToggleExpand={() => setExpanded((prev) => !prev)}
+              expanded={expanded}
+            />
             <ChatMessages
               messages={messages}
               isLoading={isLoading}

@@ -56,7 +56,7 @@ export function ChatMessages({
   return (
     <div
       ref={scrollRef}
-      className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-y-auto px-3 py-4"
+      className="flex min-h-0 flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto overscroll-y-auto px-3 py-4"
     >
       {messages.map((message) => (
         <MessageBubble
