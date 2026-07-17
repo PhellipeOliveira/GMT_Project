@@ -41,7 +41,7 @@ export function HomePortfolioRow({
           ) : (
             <>
               {resumo && (
-                <p className="type-body max-w-prose text-white">{resumo}</p>
+                <p className="type-body max-w-prose !text-white">{resumo}</p>
               )}
               {slug && (
                 <Link
